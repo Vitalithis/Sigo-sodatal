@@ -1,0 +1,13 @@
+// prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ... (Aquí pegas el modelo completo que definimos en el mensaje anterior: Usuario, Vehiculo, Mantencion, etc.)
+// Asegúrate de incluir todos los modelos desde "model Usuario" hasta "model Notificacion"
