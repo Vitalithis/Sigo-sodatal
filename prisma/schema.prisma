@@ -1,13 +1,537 @@
 // prisma/schema.prisma
 generator client {
   provider = "prisma-client-js"
+  engineType = "library"
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider = "postgresql"
 }
 
-// ... (Aquí pegas el modelo completo que definimos en el mensaje anterior: Usuario, Vehiculo, Mantencion, etc.)
-// Asegúrate de incluir todos los modelos desde "model Usuario" hasta "model Notificacion"
+model Usuario {
+  id                 String           @id @default(uuid())
+  nombre             String
+  rut                String           @unique
+  telefono           String
+  email              String           @unique
+  rol                Rol
+  vehiculo_id        String?
+  fecha_ingreso      DateTime
+  activo             Boolean          @default(true)
+  created_at         DateTime         @default(now())
+  vehiculo           Vehiculo?        @relation(fields: [vehiculo_id], references: [id])
+  rutas_base         RutaBase[]
+  rutas_dia          RutaDia[]
+  cuadraturas        Cuadratura[]
+  guias              GuiaDespacho[]
+  botellones_danados BotellonDanado[]
+  produccion         ProduccionDiaria[]
+  stock_camion       StockCamion[]
+  log_accesos        LogAcceso[]
+}
+
+enum Rol {
+  ADMIN
+  OFICINA
+  REPARTIDOR
+}
+
+model Vehiculo {
+  id                String           @id @default(uuid())
+  patente           String           @unique
+  marca             String
+  modelo            String
+  anio              Int
+  kilometraje_actual Int
+  estado            EstadoVehiculo   @default(ACTIVO)
+  created_at        DateTime         @default(now())
+  usuarios          Usuario[]
+  mantenciones      Mantencion[]
+  alertas           AlertaVehiculo[]
+  rutas_base        RutaBase[]
+  rutas_dia         RutaDia[]
+}
+
+enum EstadoVehiculo {
+  ACTIVO
+  EN_MANTENCION
+  FUERA_DE_SERVICIO
+}
+
+model Mantencion {
+  id               String               @id @default(uuid())
+  vehiculo_id      String
+  fecha            DateTime
+  tipo             String
+  kilometraje      Int
+  costo_repuestos  Float
+  mano_de_obra     Float
+  costo_total      Float
+  taller           String
+  observaciones    String?
+  created_at       DateTime             @default(now())
+  vehiculo         Vehiculo             @relation(fields: [vehiculo_id], references: [id])
+  repuestos        RepuestoMantencion[]
+}
+
+model RepuestoMantencion {
+  id             String     @id @default(uuid())
+  mantencion_id  String
+  nombre         String
+  cantidad       Int
+  costo_unitario Float
+  mantencion     Mantencion @relation(fields: [mantencion_id], references: [id])
+}
+
+model AlertaVehiculo {
+  id           String     @id @default(uuid())
+  vehiculo_id  String
+  tipo         TipoAlerta
+  valor_km     Int?
+  fecha_alerta DateTime?
+  activa       Boolean    @default(true)
+  vehiculo     Vehiculo   @relation(fields: [vehiculo_id], references: [id])
+}
+
+enum TipoAlerta {
+  KM
+  FECHA
+}
+
+model Producto {
+  id                 String              @id @default(uuid())
+  nombre             String
+  categoria          CategoriaProducto
+  precio_venta_nueva Float
+  precio_recarga     Float?
+  stock_minimo       Int                 @default(0)
+  activo             Boolean             @default(true)
+  comisiones         Comision[]
+  items_guia         ItemGuia[]
+  cuadratura_ventas  CuadraturaVenta[]
+  cuadratura_salida  CuadraturaSalida[]
+  cuadratura_retorno CuadraturaRetorno[]
+  stock_fabrica      StockFabrica?
+  stock_camion       StockCamion[]
+}
+
+enum CategoriaProducto {
+  BOTELLON10
+  BOTELLON20
+  SODA
+  OTRO
+}
+
+model Comision {
+  id                String          @id @default(uuid())
+  producto_id       String
+  tipo_transaccion  TipoTransaccion
+  tipo_cliente      TipoCliente
+  monto             Float
+  producto          Producto        @relation(fields: [producto_id], references: [id])
+}
+
+enum TipoTransaccion {
+  VENTA
+  RECARGA
+}
+
+enum TipoCliente {
+  DOMICILIO
+  EMPRESA
+}
+
+model Cliente {
+  id                 String            @id @default(uuid())
+  nombre             String
+  tipo               TipoCliente
+  direccion          String
+  telefono           String
+  email              String?
+  rut_empresa        String?
+  giro               String?
+  modalidad_pago     ModalidadPago     @default(INMEDIATO)
+  tipo_ruta          TipoRuta          @default(LLAMADO)
+  notas              String?
+  activo             Boolean           @default(true)
+  pedidos            Pedido[]
+  guias              GuiaDespacho[]
+  botellones_danados BotellonDanado[]
+  clientes_ruta      ClienteRutaBase[]
+  paradas            ParadaDia[]
+  dispensadores      Dispensador[]
+}
+
+enum ModalidadPago {
+  INMEDIATO
+  MENSUAL
+}
+
+enum TipoRuta {
+  FIJO
+  LLAMADO
+}
+
+model RutaBase {
+  id             String            @id @default(uuid())
+  nombre         String
+  dia_semana     DiaSemana
+  frecuencia     Frecuencia        @default(SEMANAL)
+  semana_alterna SemanaAlterna?
+  usuario_id     String
+  vehiculo_id    String
+  usuario        Usuario           @relation(fields: [usuario_id], references: [id])
+  vehiculo       Vehiculo          @relation(fields: [vehiculo_id], references: [id])
+  comunas        ComunaRuta[]
+  clientes       ClienteRutaBase[]
+  rutas_dia      RutaDia[]
+}
+
+enum DiaSemana {
+  LUNES
+  MARTES
+  MIERCOLES
+  JUEVES
+  VIERNES
+}
+
+enum Frecuencia {
+  SEMANAL
+  ALTERNA
+}
+
+enum SemanaAlterna {
+  PAR
+  IMPAR
+}
+
+model ComunaRuta {
+  id           String   @id @default(uuid())
+  ruta_base_id String
+  comuna       String
+  ruta_base    RutaBase @relation(fields: [ruta_base_id], references: [id])
+}
+
+model ClienteRutaBase {
+  id           String   @id @default(uuid())
+  ruta_base_id String
+  cliente_id   String
+  orden        Int
+  ruta_base    RutaBase @relation(fields: [ruta_base_id], references: [id])
+  cliente      Cliente  @relation(fields: [cliente_id], references: [id])
+}
+
+model RutaDia {
+  id           String      @id @default(uuid())
+  ruta_base_id String
+  fecha        DateTime
+  usuario_id   String
+  vehiculo_id  String
+  estado       EstadoRuta  @default(ACTIVA)
+  ruta_base    RutaBase    @relation(fields: [ruta_base_id], references: [id])
+  usuario      Usuario     @relation(fields: [usuario_id], references: [id])
+  vehiculo     Vehiculo    @relation(fields: [vehiculo_id], references: [id])
+  paradas      ParadaDia[]
+}
+
+enum EstadoRuta {
+  ACTIVA
+  CERRADA
+}
+
+model ParadaDia {
+  id                  String       @id @default(uuid())
+  ruta_dia_id         String
+  cliente_id          String
+  pedido_id           String?
+  orden               Int
+  estado              EstadoParada @default(PENDIENTE)
+  motivo_postergacion String?
+  ruta_dia            RutaDia      @relation(fields: [ruta_dia_id], references: [id])
+  cliente             Cliente      @relation(fields: [cliente_id], references: [id])
+  pedido              Pedido?      @relation(fields: [pedido_id], references: [id])
+}
+
+enum EstadoParada {
+  PENDIENTE
+  ENTREGADO
+  POSTERGADO
+}
+
+model Pedido {
+  id                  String       @id @default(uuid())
+  cliente_id          String
+  fecha_solicitada    DateTime
+  ruta_dia_id         String?
+  notas               String?
+  canal_origen        CanalOrigen
+  estado              EstadoPedido @default(PENDIENTE_CONFIRMACION)
+  usuario_registro_id String
+  created_at          DateTime     @default(now())
+  cliente             Cliente      @relation(fields: [cliente_id], references: [id])
+  items               PedidoItem[]
+  paradas             ParadaDia[]
+}
+
+enum CanalOrigen {
+  LLAMADO
+  WHATSAPP
+  WEB
+  WHATSAPP_BOT
+}
+
+enum EstadoPedido {
+  PENDIENTE_CONFIRMACION
+  CONFIRMADO
+  ASIGNADO
+  ENTREGADO
+  CANCELADO
+}
+
+model PedidoItem {
+  id               String          @id @default(uuid())
+  pedido_id        String
+  producto_id      String
+  tipo_transaccion TipoTransaccion
+  cantidad         Int
+  pedido           Pedido          @relation(fields: [pedido_id], references: [id])
+}
+
+model GuiaDespacho {
+  id                    String            @id @default(uuid())
+  numero_correlativo    Int               @unique @default(autoincrement())
+  fecha_emision         DateTime          @default(now())
+  cliente_id            String
+  direccion_entrega     String
+  usuario_repartidor_id String
+  estado                EstadoGuia        @default(EMITIDA)
+  nombre_receptor       String?
+  rut_receptor          String?
+  hora_entrega          DateTime?
+  observaciones         String?
+  total                 Float
+  motivo_anulacion      String?
+  cliente               Cliente           @relation(fields: [cliente_id], references: [id])
+  usuario_repartidor    Usuario           @relation(fields: [usuario_repartidor_id], references: [id])
+  items                 ItemGuia[]
+  cuadratura_ventas     CuadraturaVenta[]
+}
+
+enum EstadoGuia {
+  EMITIDA
+  ENTREGADA
+  PENDIENTE_FACTURACION
+  ANULADA
+}
+
+model ItemGuia {
+  id               String          @id @default(uuid())
+  guia_id          String
+  producto_id      String
+  tipo_transaccion TipoTransaccion
+  cantidad         Int
+  precio_unitario  Float
+  subtotal         Float
+  guia             GuiaDespacho    @relation(fields: [guia_id], references: [id])
+  producto         Producto        @relation(fields: [producto_id], references: [id])
+}
+
+model Cuadratura {
+  id              String           @id @default(uuid())
+  usuario_id      String
+  fecha           DateTime
+  estado          EstadoCuadratura @default(ABIERTA)
+  total_monetario Float            @default(0)
+  total_comision  Float            @default(0)
+  usuario         Usuario          @relation(fields: [usuario_id], references: [id])
+  salida          CuadraturaSalida[]
+  ventas          CuadraturaVenta[]
+  retorno         CuadraturaRetorno[]
+  botellones_vacios BotellonVacio[]
+}
+
+enum EstadoCuadratura {
+  ABIERTA
+  CERRADA
+}
+
+model CuadraturaSalida {
+  id            String     @id @default(uuid())
+  cuadratura_id String
+  producto_id   String
+  cantidad      Int
+  cuadratura    Cuadratura @relation(fields: [cuadratura_id], references: [id])
+  producto      Producto   @relation(fields: [producto_id], references: [id])
+}
+
+model CuadraturaVenta {
+  id                String          @id @default(uuid())
+  cuadratura_id     String
+  producto_id       String
+  tipo_transaccion  TipoTransaccion
+  cantidad          Int
+  tipo_cliente      TipoCliente
+  guia_id           String?
+  comision_calculada Float           @default(0)
+  cuadratura        Cuadratura      @relation(fields: [cuadratura_id], references: [id])
+  producto          Producto        @relation(fields: [producto_id], references: [id])
+  guia              GuiaDespacho?   @relation(fields: [guia_id], references: [id])
+}
+
+model CuadraturaRetorno {
+  id            String     @id @default(uuid())
+  cuadratura_id String
+  producto_id   String
+  cantidad      Int
+  cuadratura    Cuadratura @relation(fields: [cuadratura_id], references: [id])
+  producto      Producto   @relation(fields: [producto_id], references: [id])
+}
+
+model BotellonVacio {
+  id               String     @id @default(uuid())
+  cuadratura_id    String
+  cantidad_total   Int
+  cantidad_danados Int        @default(0)
+  cuadratura       Cuadratura @relation(fields: [cuadratura_id], references: [id])
+}
+
+model BotellonDanado {
+  id            String   @id @default(uuid())
+  cuadratura_id String
+  cliente_id    String
+  usuario_id    String
+  foto_url      String
+  descripcion   String?
+  created_at    DateTime @default(now())
+  cliente       Cliente  @relation(fields: [cliente_id], references: [id])
+  usuario       Usuario  @relation(fields: [usuario_id], references: [id])
+}
+
+model ProduccionDiaria {
+  id                  String   @id @default(uuid())
+  fecha               DateTime @unique
+  botellon10_cantidad Int      @default(0)
+  botellon20_cantidad Int      @default(0)
+  sodas_cantidad      Int      @default(0)
+  ph                  Float
+  ppm                 Float
+  observaciones       String?
+  usuario_id          String
+  usuario             Usuario  @relation(fields: [usuario_id], references: [id])
+}
+
+model TuboCO2 {
+  id                     String    @id @default(uuid())
+  fecha_llegada          DateTime
+  peso_kg                Int
+  rendimiento_estimado   Int
+  sodas_producidas_total Int       @default(0)
+  kg_consumidos          Float     @default(0)
+  fecha_cierre           DateTime?
+  activo                 Boolean   @default(true)
+}
+
+model StockFabrica {
+  id          String   @id @default(uuid())
+  producto_id String   @unique
+  cantidad    Int      @default(0)
+  updated_at  DateTime @updatedAt
+  producto    Producto @relation(fields: [producto_id], references: [id])
+}
+
+model StockCamion {
+  id          String   @id @default(uuid())
+  usuario_id  String
+  producto_id String
+  cantidad    Int      @default(0)
+  updated_at  DateTime @updatedAt
+  usuario     Usuario  @relation(fields: [usuario_id], references: [id])
+  producto    Producto @relation(fields: [producto_id], references: [id])
+
+  @@unique([usuario_id, producto_id])
+}
+
+model Configuracion {
+  id    String @id @default(uuid())
+  clave String @unique
+  valor String
+}
+
+model LogAcceso {
+  id         String   @id @default(uuid())
+  usuario_id String
+  fecha      DateTime @default(now())
+  ip         String
+  usuario    Usuario  @relation(fields: [usuario_id], references: [id])
+}
+
+model Dispensador {
+  id           String                 @id @default(uuid())
+  cliente_id   String
+  marca        String
+  modelo       String
+  numero_serie String?
+  foto_url     String?
+  estado       EstadoDispensador      @default(EN_CLIENTE)
+  cliente      Cliente                @relation(fields: [cliente_id], references: [id])
+  mantenciones MantencionDispensador[]
+}
+
+enum EstadoDispensador {
+  EN_CLIENTE
+  EN_TALLER
+  REEMPLAZADO_TEMPORALMENTE
+}
+
+model MantencionDispensador {
+  id                         String               @id @default(uuid())
+  dispensador_id             String
+  fecha_ingreso              DateTime
+  foto_ingreso_url           String
+  problema_reportado         String
+  diagnostico                String?
+  fecha_termino              DateTime?
+  foto_salida_url            String?
+  costo_repuestos            Float                @default(0)
+  mano_de_obra               Float                @default(0)
+  costo_total                Float                @default(0)
+  nombre_receptor_devolucion String?
+  maquina_reemplazo_id       String?
+  dispensador                Dispensador          @relation(fields: [dispensador_id], references: [id])
+  maquina_reemplazo          MaquinaReemplazo?    @relation(fields: [maquina_reemplazo_id], references: [id])
+  repuestos                  RepuestoDispensador[]
+}
+
+model RepuestoDispensador {
+  id            String                @id @default(uuid())
+  mantencion_id String
+  nombre        String
+  cantidad      Int
+  costo_unitario Float
+  mantencion    MantencionDispensador @relation(fields: [mantencion_id], references: [id])
+}
+
+model MaquinaReemplazo {
+  id             String                  @id @default(uuid())
+  marca          String
+  modelo         String
+  estado         EstadoMaquina           @default(DISPONIBLE)
+  cliente_id     String?
+  fecha_prestamo DateTime?
+  mantenciones   MantencionDispensador[]
+}
+
+enum EstadoMaquina {
+  DISPONIBLE
+  PRESTADA
+}
+
+model Notificacion {
+  id                 String   @id @default(uuid())
+  tipo               String
+  mensaje            String
+  usuario_destino_id String
+  leida              Boolean  @default(false)
+  created_at         DateTime @default(now())
+  metadata           Json?
+}
