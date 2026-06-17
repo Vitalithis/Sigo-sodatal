@@ -1,14 +1,8 @@
-import withPWAInit from 'next-pwa';
-
-const withPWA = withPWAInit({
-  dest: 'public',
-  register: true,
-  skipWaiting: true,
-  disable: process.env.NODE_ENV === 'development',
-});
-
+/** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Configuración de next.js
+  env: {
+    DATABASE_URL: "postgresql://postgres.urenwxsxxdvkqoxypflw:123ert6789daN%40%40@aws-1-sa-east-1.pooler.supabase.com:6543/postgres?pgbouncer=true",
+  },
 };
 
-export default withPWA(nextConfig);
+export default nextConfig;
