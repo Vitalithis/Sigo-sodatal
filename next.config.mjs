@@ -1,8 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  env: {
-    DATABASE_URL: "postgresql://postgres.urenwxsxxdvkqoxypflw:123ert6789daN%40%40@aws-1-sa-east-1.pooler.supabase.com:6543/postgres?pgbouncer=true",
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '10mb', // 💡 Esto amplía el límite para que Next.js acepte la foto pesada de la cámara
+    },
   },
+  // 💡 Nota: Quitamos la propiedad 'env' de aquí porque Prisma ya lee el archivo .env.local de forma nativa en el backend de forma segura.
 };
 
 export default nextConfig;
