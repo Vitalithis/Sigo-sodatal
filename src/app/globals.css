@@ -25,3 +25,10 @@ body {
     text-wrap: balance;
   }
 }
+/* Fuerza a que el contenedor interno de Next.js se pegue al techo */
+body > div, 
+main, 
+[data-nextjs-scroll-focus-boundary] {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}

@@ -1,18 +1,13 @@
 import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
 
-const prisma = new PrismaClient();
-
-// Fuerza a Next.js a permitir payloads gigantes en esta API
-export const config = {
-  api: {
-    bodyParser: {
-      sizeLimit: '10mb',
-    },
-  },
-};
+export const dynamic = 'force-dynamic';
 
 export async function POST(request: Request) {
+  // 💡 Movemos el "new PrismaClient()" AQUÍ ADENTRO.
+  // Al estar dentro de la función, Next.js NO lo ejecutará en frío al compilar el proyecto.
+  const prisma = new PrismaClient();
+
   try {
     const body = await request.json();
     const { cliente_id, marca, modelo, numero_serie, foto_url } = body;
@@ -21,21 +16,24 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Faltan campos obligatorios' }, { status: 400 });
     }
 
-    // Guardado directo en Supabase mediante el Prisma corregido
     const nuevoDispensador = await prisma.dispensador.create({
       data: {
         cliente_id,
         marca,
         modelo,
         numero_serie: numero_serie || null,
-        foto_url: foto_url || null, // Aquí cae el Base64 puro
+        foto_url: foto_url || null,
         estado: 'EN_CLIENTE',
       },
     });
 
     return NextResponse.json({ success: true, data: nuevoDispensador }, { status: 201 });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('ERROR CRÍTICO EN API DISPENSADORES:', error);
-    return NextResponse.json({ error: 'Error interno del servidor', details: error.message }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
+    return NextResponse.json({ error: 'Error interno del servidor', details: errorMessage }, { status: 500 });
+  } finally {
+    // Cerramos la conexión al terminar la petición para evitar fugas en la base de datos
+    await prisma.$disconnect();
   }
 }
