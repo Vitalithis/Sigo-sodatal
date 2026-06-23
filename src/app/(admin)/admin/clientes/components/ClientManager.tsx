@@ -170,7 +170,7 @@ export default function ClientManager({ initialClientes }: ClientManagerProps) {
     setFormData({
       nombre: cliente.nombre, tipo: cliente.tipo, direccion: cliente.direccion, telefono: cliente.telefono,
       email: cliente.email || '', rut_empresa: cliente.rut_empresa || '', giro: cliente.giro || '',
-      preferencia_factura: cliente.preferencia_factura, notes: cliente.notas || '',
+      preferencia_factura: cliente.preferencia_factura, notas: cliente.notas || '',
       activo: cliente.activo, botellones_prestados: cliente.botellones_prestados,
     });
     setIsModalOpen(true);
@@ -918,64 +918,129 @@ export default function ClientManager({ initialClientes }: ClientManagerProps) {
               )}
 
               {/* ================= CONTENIDO PESTAÑA: FINANZAS ================= */}
+              {/* ================= CONTENIDO PESTAÑA: FINANZAS (HISTORIAL DE COMPRAS) ================= */}
               {activeTab === 'finanzas' && (
                 <div className="space-y-6">
                   <form onSubmit={handleGuardarFinanzas} className="bg-white p-5 border rounded-xl space-y-4 shadow-xs">
                     <div className="flex justify-between items-center border-b pb-2">
-                      <h3 className="font-bold text-xs uppercase text-slate-900">Registrar Transacción Comercial</h3>
-                      <button type="button" onClick={() => exportarFinanzasCSV(clienteSeleccionado.nombre, clienteSeleccionado.movimientosFinancieros || [])} className="text-xs font-bold text-emerald-600 hover:underline">📥 Exportar CSV</button>
+                      <h3 className="font-bold text-xs uppercase text-slate-900">Registrar Nueva Compra del Cliente</h3>
+                      <button 
+                        type="button" 
+                        onClick={() => exportarFinanzasCSV(clienteSeleccionado.nombre, clienteSeleccionado.movimientosFinancieros || [])} 
+                        className="text-xs font-bold text-emerald-600 hover:underline flex items-center gap-1"
+                      >
+                        📥 Exportar Historial CSV
+                      </button>
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
                       <div className="flex flex-col gap-1">
-                        <label className="text-xs font-bold text-slate-900">Tipo Movimiento</label>
+                        <label className="text-xs font-bold text-slate-700 uppercase">Tipo de Compra</label>
                         <select 
                           value={finanzasForm.tipo} 
                           onChange={(e) => setFinanzasForm({...finanzasForm, tipo: e.target.value})} 
-                          className="border p-2 rounded-lg text-sm text-slate-900 bg-white"
+                          className="border border-slate-300 p-2 rounded-lg text-sm text-slate-900 bg-white outline-none"
                         >
-                          <option value="COMPRA_BOTELLON">Compra Botellón</option>
-                          <option value="PAGO_ARRIENDO">Pago Arriendo</option>
-                          <option value="GARANTIA">Garantía / Depósito</option>
+                          <option value="RECARGA">Recarga de Botellón</option>
+                          <option value="COMPRA_EQUIPO">Compra de Equipo</option>
+                          <option value="ACCESORIOS">Accesorios / Repuestos</option>
+                          <option value="OTRO">Otros</option>
                         </select>
                       </div>
+                      
                       <div className="flex flex-col gap-1">
-                        <label className="text-xs font-bold text-slate-900">Monto ($)</label>
+                        <label className="text-xs font-bold text-slate-700 uppercase">Total Venta ($) *</label>
                         <input 
                           type="number" 
+                          required
+                          placeholder="Ej: 15000"
                           value={finanzasForm.monto || ''} 
                           onChange={(e) => setFinanzasForm({...finanzasForm, monto: Number(e.target.value)})} 
-                          className="border p-2 rounded-lg text-sm text-slate-900 bg-white" 
+                          className="border border-slate-300 p-2 rounded-lg text-sm text-slate-900 bg-white outline-none" 
                         />
                       </div>
                     </div>
 
+                    {/* Campo Dinámico Inteligente según el Tipo de Cliente */}
                     <div className="flex flex-col gap-1">
-                      <label className="text-xs font-bold text-slate-900">Nº Documento / Referencia</label>
-                      <input 
-                        type="text" 
-                        value={finanzasForm.documento_ref} 
-                        onChange={(e) => setFinanzasForm({...finanzasForm, documento_ref: e.target.value})} 
-                        placeholder="Ej: Boleta 1042" 
-                        className="border p-2 rounded-lg text-sm text-slate-900 bg-white" 
-                      />
+                      {clienteSeleccionado.tipo === 'EMPRESA' ? (
+                        <>
+                          <label className="text-xs font-bold text-purple-900 uppercase flex items-center gap-1">
+                            📋 Número de Guía de Despacho *
+                          </label>
+                          <input 
+                            type="text" 
+                            required
+                            value={finanzasForm.documento_ref} 
+                            onChange={(e) => setFinanzasForm({...finanzasForm, documento_ref: e.target.value})} 
+                            placeholder="Ej: Guía Nº 4520" 
+                            className="border border-purple-300 p-2 rounded-lg text-sm text-slate-900 bg-white outline-none focus:ring-1 focus:ring-purple-500" 
+                          />
+                        </>
+                      ) : (
+                        <>
+                          <label className="text-xs font-bold text-green-900 uppercase flex items-center gap-1">
+                            🧾 Número de Boleta
+                          </label>
+                          <input 
+                            type="text" 
+                            value={finanzasForm.documento_ref} 
+                            onChange={(e) => setFinanzasForm({...finanzasForm, documento_ref: e.target.value})} 
+                            placeholder="Ej: Boleta Nº 98231 (Opcional)" 
+                            className="border border-green-300 p-2 rounded-lg text-sm text-slate-900 bg-white outline-none focus:ring-1 focus:ring-green-500" 
+                          />
+                        </>
+                      )}
                     </div>
 
                     <div className="flex flex-col gap-1">
-                      <label className="text-xs font-bold text-slate-900">Detalle / Notas adicionales</label>
+                      <label className="text-xs font-bold text-slate-700 uppercase">Detalle / Ítems Comprados</label>
                       <input 
                         type="text" 
                         value={finanzasForm.descripcion} 
                         onChange={(e) => setFinanzasForm({...finanzasForm, descripcion: e.target.value})} 
-                        placeholder="Glosa del movimiento..." 
-                        className="border p-2 rounded-lg text-sm text-slate-900 bg-white" 
+                        placeholder="Ej: 3 recargas de 20L + 1 dispensador de sobremesón" 
+                        className="border border-slate-300 p-2 rounded-lg text-sm text-slate-900 bg-white outline-none" 
                       />
                     </div>
 
-                    <button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-lg text-sm shadow-sm">
-                      Asentar Transacción
+                    <button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-lg text-sm shadow-sm transition-colors">
+                      🛒 Registrar en Historial de Compras
                     </button>
                   </form>
+
+                  {/* Tabla / Listado de Historial del Cliente */}
+                  <h3 className="font-bold text-xs uppercase text-slate-500 tracking-wider">Historial Cronológico de Compras</h3>
+                  <div className="space-y-3">
+                    {clienteSeleccionado.movimientosFinancieros && clienteSeleccionado.movimientosFinancieros.length > 0 ? (
+                      clienteSeleccionado.movimientosFinancieros.map((mov: any) => (
+                        <div key={mov.id} className="p-4 border rounded-xl bg-slate-50 flex justify-between items-center text-xs">
+                          <div className="space-y-1">
+                            <div className="flex items-center gap-2">
+                              <span className="font-bold text-slate-900 uppercase bg-slate-200 px-1.5 py-0.5 rounded text-[10px]">
+                                {mov.tipo.replace('_', ' ')}
+                              </span>
+                              <span className="text-slate-400 font-normal">{new Date(mov.fecha).toLocaleDateString()}</span>
+                            </div>
+                            <p className="text-slate-700 font-medium">{mov.descripcion || 'Sin descripción del detalle'}</p>
+                            {mov.documentoRef || mov.documento_ref ? (
+                              <p className="text-[11px] text-slate-500 font-semibold">
+                                {clienteSeleccionado.tipo === 'EMPRESA' ? '📦 Guía: ' : '🧾 Boleta: '} 
+                                {mov.documentoRef || mov.documento_ref}
+                              </p>
+                            ) : null}
+                          </div>
+                          <span className="font-bold text-slate-900 text-sm bg-white px-2 py-1 rounded-lg border">
+                            ${Number(mov.monto || 0).toLocaleString('es-CL')}
+                          </span>
+                        </div>
+                      ))
+                    ) : (
+                      <p className="text-xs text-slate-400 text-center py-6 border border-dashed rounded-xl">
+                        Este cliente aún no registra historial de compras cargado.
+                      </p>
+                    )}
+                  </div>
                 </div>
               )}
             </div>
