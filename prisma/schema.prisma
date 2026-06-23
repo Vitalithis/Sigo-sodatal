@@ -178,36 +178,42 @@ model Usuario {
 }
 
 model Vehiculo {
-  id                 String           @id @default(uuid())
-  patente            String           @unique
+  id                 String             @id @default(uuid())
+  patente            String             @unique
   marca              String
   modelo             String
   anio               Int
   kilometraje_actual Int
-  estado             EstadoVehiculo   @default(ACTIVO)
-  created_at         DateTime         @default(now())
+  estado             EstadoVehiculo     @default(ACTIVO)
+  created_at         DateTime           @default(now())
   usuarios           Usuario[]
   mantenciones       Mantencion[]
   alertas            AlertaVehiculo[]
   rutas_base         RutaBase[]
   rutas_dia          RutaDia[]
-  cargas_combustible  CargaCombustible[]
+  cargas_combustible CargaCombustible[]
 }
 
 model Mantencion {
-  id              String               @id @default(uuid())
-  vehiculo_id     String
-  fecha           DateTime
-  tipo            String
-  kilometraje     Int
-  costo_repuestos Float
-  mano_de_obra    Float
-  costo_total     Float
-  taller          String
-  observaciones   String?
-  created_at      DateTime             @default(now())
-  vehiculo        Vehiculo             @relation(fields: [vehiculo_id], references: [id])
-  repuestos       RepuestoMantencion[]
+  id          String   @id @default(uuid())
+  vehiculo_id String
+  vehiculo    Vehiculo @relation(fields: [vehiculo_id], references: [id], onDelete: Cascade)
+
+  // Nuevo campo de relación:
+  conductor_id String?
+  conductor    Conductor? @relation(fields: [conductor_id], references: [id], onDelete: SetNull)
+
+  fecha         DateTime
+  tipo          String
+  kilometraje   Int
+  mano_de_obra  Int
+  taller        String
+  observaciones String?
+  costo_total   Int
+  created_at    DateTime @default(now())
+
+  // Se remueve la línea repetida 'repuestos Json?' y dejamos solo la relación limpia:
+  repuestos RepuestoMantencion[]
 }
 
 model RepuestoMantencion {
@@ -216,7 +222,7 @@ model RepuestoMantencion {
   nombre         String
   cantidad       Int
   costo_unitario Float
-  mantencion     Mantencion @relation(fields: [mantencion_id], references: [id])
+  mantencion     Mantencion @relation(fields: [mantencion_id], references: [id], onDelete: Cascade)
 }
 
 model AlertaVehiculo {
@@ -230,13 +236,13 @@ model AlertaVehiculo {
 }
 
 model Producto {
-  id                 String             @id @default(uuid())
+  id                 String              @id @default(uuid())
   nombre             String
   categoria          CategoriaProducto
   precio_venta_nueva Float
   precio_recarga     Float?
-  stock_minimo       Int                @default(0)
-  activo             Boolean            @default(true)
+  stock_minimo       Int                 @default(0)
+  activo             Boolean             @default(true)
   comisiones         Comision[]
   items_guia         ItemGuia[]
   cuadratura_ventas  CuadraturaVenta[]
@@ -262,15 +268,15 @@ model Cliente {
   direccion            String
   telefono             String
   email                String?
-  rut_empresa          String?                
-  giro                 String?                
+  rut_empresa          String?
+  giro                 String?
   modalidad_pago       ModalidadPago          @default(INMEDIATO)
-  preferencia_factura  PreferenciaFacturacion @default(BOLETA) 
+  preferencia_factura  PreferenciaFacturacion @default(BOLETA)
   tipo_ruta            TipoRuta               @default(LLAMADO)
   notas                String?
   activo               Boolean                @default(true)
   botellones_prestados Int                    @default(0)
-  
+
   pedidos              Pedido[]
   guias                GuiaDespacho[]
   botellones_danados   BotellonDanado[]
@@ -312,15 +318,15 @@ model ClienteRutaBase {
 }
 
 model RutaDia {
-  id           String     @id @default(uuid())
+  id           String      @id @default(uuid())
   ruta_base_id String
   fecha        DateTime
   usuario_id   String
   vehiculo_id  String
-  estado       EstadoRuta @default(ACTIVA)
-  ruta_base    RutaBase   @relation(fields: [ruta_base_id], references: [id])
-  usuario      Usuario    @relation(fields: [usuario_id], references: [id])
-  vehiculo     Vehiculo   @relation(fields: [vehiculo_id], references: [id])
+  estado       EstadoRuta  @default(ACTIVA)
+  ruta_base    RutaBase    @relation(fields: [ruta_base_id], references: [id])
+  usuario      Usuario     @relation(fields: [usuario_id], references: [id])
+  vehiculo     Vehiculo    @relation(fields: [vehiculo_id], references: [id])
   paradas      ParadaDia[]
 }
 
@@ -372,7 +378,7 @@ model GuiaDespacho {
   estado                       EstadoGuia        @default(EMITIDA)
   metodo_pago                  MetodoPago        @default(EFECTIVO)
   botellones_prestados_entrega Int               @default(0)
-  numero_factura               Int?              
+  numero_factura               Int?
   fecha_facturacion            DateTime?
   nombre_receptor              String?
   rut_receptor                 String?
@@ -527,16 +533,16 @@ model LogAcceso {
 }
 
 model Dispensador {
-  id           String                @id @default(uuid())
-  cliente_id   String
-  marca        String
-  modelo       String
-  numero_serie String?               @unique
-  foto_url     String?               
-  precio_arriendo Int                @default(0) // 👈 ¡AÑADE ESTA LÍNEA!
-  estado       EstadoDispensador     @default(EN_CLIENTE)
-  cliente      Cliente               @relation(fields: [cliente_id], references: [id])
-  mantenciones MantencionDispensador[]
+  id              String                  @id @default(uuid())
+  cliente_id      String
+  marca           String
+  modelo          String
+  numero_serie    String?                 @unique
+  foto_url        String?
+  precio_arriendo Int                     @default(0) // 👈 ¡AÑADE ESTA LÍNEA!
+  estado          EstadoDispensador       @default(EN_CLIENTE)
+  cliente         Cliente                 @relation(fields: [cliente_id], references: [id])
+  mantenciones    MantencionDispensador[]
 }
 
 model MantencionDispensador {
@@ -544,7 +550,7 @@ model MantencionDispensador {
   dispensador_id             String
   fecha_ingreso              DateTime              @default(now())
   foto_ingreso_url           String
-  problema_reportated        String 
+  problema_reportated        String
   diagnostico                String?
   fecha_termino              DateTime?
   foto_salida_url            String?
@@ -583,29 +589,52 @@ model Notificacion {
   mensaje            String
   usuario_destino_id String
   leida              Boolean  @default(false)
-  created_at         DateTime @default(now()) 
+  created_at         DateTime @default(now())
   metadata           Json?
 }
+
 model HistorialFinanciero {
   id                       String                   @id @default(uuid())
   cliente_id               String
   fecha                    DateTime                 @default(now())
   tipo                     TipoMovimientoFinanciero
-  descripcion              String                   
-  monto                    Float                    
-  documento_ref            String?                  
+  descripcion              String
+  monto                    Float
+  documento_ref            String?
   sincronizado_facturacion Boolean                  @default(false)
   cliente                  Cliente                  @relation(fields: [cliente_id], references: [id], onDelete: Cascade)
 }
+
 model CargaCombustible {
-  id                 String   @id @default(uuid())
-  vehiculo_id        String
+  id          String   @id @default(uuid())
+  vehiculo_id String
+  vehiculo    Vehiculo @relation(fields: [vehiculo_id], references: [id], onDelete: Cascade)
+
+  // Nuevo campo de relación:
+  conductor_id String?
+  conductor    Conductor? @relation(fields: [conductor_id], references: [id], onDelete: SetNull)
+
   fecha              DateTime
   kilometraje        Int
-  litros             Float    // Usamos Float por si cargan decimales (ej: 45.5L)
-  monto              Float    // Usamos Float para mantener consistencia con tus otros montos
+  litros             Float
+  monto              Int
   taller_o_bencinera String
   numero_factura     Int?
   created_at         DateTime @default(now())
-  vehiculo           Vehiculo @relation(fields: [vehiculo_id], references: [id], onDelete: Cascade)
+}
+
+model Conductor {
+  id              String   @id @default(uuid())
+  rut             String   @unique // Clave única chilena (ej: 12.345.678-9)
+  nombre          String
+  apellido        String
+  telefono        String?
+  licencia_tipo   String // A4, A5, etc.
+  vencimiento_lic DateTime // Crítico para alertas de control
+  estado          String   @default("ACTIVO") // ACTIVO, INACTIVO, VACACIONES, LICENCIA
+  created_at      DateTime @default(now())
+
+  // Relaciones inversas
+  mantenciones      Mantencion[]
+  cargasCombustible CargaCombustible[]
 }

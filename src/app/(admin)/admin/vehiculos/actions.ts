@@ -2,7 +2,15 @@
 
 import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
-
+export interface ConductorInput {
+  rut: string;
+  nombre: string;
+  apellido: string;
+  telefono?: string | null;
+  licencia_tipo: string;
+  vencimiento_lic: string; // Formato YYYY-MM-DD desde el formulario
+  estado: 'ACTIVO' | 'INACTIVO' | 'VACACIONES' | 'LICENCIA';
+}
 export interface VehiculoInput {
   patente: string;
   marca: string;
@@ -14,6 +22,7 @@ export interface VehiculoInput {
 
 export interface MantencionInput {
   vehiculo_id: string;
+  conductor_id?: string | null; 
   fecha: string;
   tipo: string;
   kilometraje: number;
@@ -25,6 +34,7 @@ export interface MantencionInput {
 
 export interface CargaCombustibleInput {
   vehiculo_id: string;
+  conductor_id?: string | null;
   fecha: string;
   kilometraje: number;
   litros: number;
@@ -102,6 +112,7 @@ export async function registrarMantencionAction(data: MantencionInput) {
       const mantencion = await tx.mantencion.create({
         data: {
           vehiculo_id: data.vehiculo_id,
+          conductor_id: data.conductor_id || null,
           fecha: new Date(data.fecha),
           tipo: data.tipo,
           kilometraje: Number(data.kilometraje),
@@ -209,21 +220,28 @@ export async function eliminarAlertaAction(alertaId: string) {
 
 export async function registrarCargaCombustibleAction(data: CargaCombustibleInput) {
   try {
+    // 🛡️ Validación estricta: Si no viene factura o es menor/igual a 0, detenemos el flujo
+    if (!data.numero_factura || Number(data.numero_factura) <= 0) {
+      return { 
+        success: false, 
+        message: 'El número de factura es obligatorio para registrar cargas de combustible.' 
+      };
+    }
+
     const resultado = await prisma.$transaction(async (tx) => {
       
       const nuevaCarga = await tx.cargaCombustible.create({
         data: {
           vehiculo_id: data.vehiculo_id,
+          conductor_id: data.conductor_id || null, // Relación con chofer
           fecha: new Date(data.fecha),
           kilometraje: Number(data.kilometraje),
           litros: Number(data.litros),
           monto: Number(data.monto),
           taller_o_bencinera: data.taller_o_bencinera,
           
-          // Casamos estrictamente el número de factura
-          numero_factura: (data.numero_factura && Number(data.numero_factura) > 0) 
-            ? Number(data.numero_factura) 
-            : null
+          // ↴ Aquí ya es seguro pasar el número directamente como un entero puro
+          numero_factura: Number(data.numero_factura)
         }
       });
 
@@ -273,5 +291,72 @@ export async function obtenerCargasCombustibleAction(vehiculoId: string) {
     return { success: true, data: cargas };
   } catch (error: any) {
     return { success: false, message: error.message || 'Error al obtener el historial.' };
+  }
+}
+// ==========================================
+// ACTIONS DE CONDUCTORES / CHOFERES
+// ==========================================
+
+export async function crearConductorAction(data: ConductorInput) {
+  try {
+    const rutNormalizado = data.rut.toUpperCase().replace(/[^0-9Kk]/g, '');
+
+    const existe = await prisma.conductor.findUnique({
+      where: { rut: rutNormalizado }
+    });
+
+    if (existe) {
+      return { success: false, message: 'El RUT ya se encuentra asignado a un conductor.' };
+    }
+
+    const nuevoConductor = await prisma.conductor.create({
+      data: {
+        rut: rutNormalizado,
+        nombre: data.nombre,
+        apellido: data.apellido,
+        telefono: data.telefono || null,
+        licencia_tipo: data.licencia_tipo,
+        vencimiento_lic: new Date(data.vencimiento_lic),
+        estado: data.estado
+      }
+    });
+
+    revalidatePath('/admin/vehiculos'); // Ajusta si la ruta de visualización cambia
+    return { success: true, data: nuevoConductor };
+  } catch (error: any) {
+    return { success: false, message: error.message || 'Error al registrar conductor.' };
+  }
+}
+
+export async function editarConductorAction(id: string, data: Partial<ConductorInput>) {
+  try {
+    const actualizado = await prisma.conductor.update({
+      where: { id },
+      data: {
+        ...(data.nombre && { nombre: data.nombre }),
+        ...(data.apellido && { apellido: data.apellido }),
+        ...(data.telefono !== undefined && { telefono: data.telefono }),
+        ...(data.licencia_tipo && { licencia_tipo: data.licencia_tipo }),
+        ...(data.vencimiento_lic && { vencimiento_lic: new Date(data.vencimiento_lic) }),
+        ...(data.estado && { estado: data.estado })
+      }
+    });
+
+    revalidatePath('/admin/vehiculos');
+    return { success: true, data: actualizado };
+  } catch (error: any) {
+    return { success: false, message: error.message || 'Error al actualizar conductor.' };
+  }
+}
+
+export async function obtenerConductoresActivosAction() {
+  try {
+    const conductores = await prisma.conductor.findMany({
+      where: { estado: 'ACTIVO' },
+      orderBy: { apellido: 'asc' }
+    });
+    return { success: true, data: conductores };
+  } catch (error: any) {
+    return { success: false, message: 'No se pudo cargar la lista de choferes.' };
   }
 }

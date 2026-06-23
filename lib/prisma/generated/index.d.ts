@@ -193,6 +193,11 @@ export type HistorialFinanciero = $Result.DefaultSelection<Prisma.$HistorialFina
  * 
  */
 export type CargaCombustible = $Result.DefaultSelection<Prisma.$CargaCombustiblePayload>
+/**
+ * Model Conductor
+ * 
+ */
+export type Conductor = $Result.DefaultSelection<Prisma.$ConductorPayload>
 
 /**
  * Enums
@@ -966,6 +971,16 @@ export class PrismaClient<
     * ```
     */
   get cargaCombustible(): Prisma.CargaCombustibleDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.conductor`: Exposes CRUD operations for the **Conductor** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Conductors
+    * const conductors = await prisma.conductor.findMany()
+    * ```
+    */
+  get conductor(): Prisma.ConductorDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1435,7 +1450,8 @@ export namespace Prisma {
     MaquinaReemplazo: 'MaquinaReemplazo',
     Notificacion: 'Notificacion',
     HistorialFinanciero: 'HistorialFinanciero',
-    CargaCombustible: 'CargaCombustible'
+    CargaCombustible: 'CargaCombustible',
+    Conductor: 'Conductor'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1451,7 +1467,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "usuario" | "vehiculo" | "mantencion" | "repuestoMantencion" | "alertaVehiculo" | "producto" | "comision" | "cliente" | "rutaBase" | "comunaRuta" | "clienteRutaBase" | "rutaDia" | "paradaDia" | "pedido" | "pedidoItem" | "guiaDespacho" | "itemGuia" | "cuadratura" | "cuadraturaSalida" | "cuadraturaVenta" | "cuadraturaRetorno" | "botellonVacio" | "botellonDanado" | "produccionDiaria" | "tuboCO2" | "stockFabrica" | "stockCamion" | "configuracion" | "logAcceso" | "dispensador" | "mantencionDispensador" | "repuestoDispensador" | "maquinaReemplazo" | "notificacion" | "historialFinanciero" | "cargaCombustible"
+      modelProps: "usuario" | "vehiculo" | "mantencion" | "repuestoMantencion" | "alertaVehiculo" | "producto" | "comision" | "cliente" | "rutaBase" | "comunaRuta" | "clienteRutaBase" | "rutaDia" | "paradaDia" | "pedido" | "pedidoItem" | "guiaDespacho" | "itemGuia" | "cuadratura" | "cuadraturaSalida" | "cuadraturaVenta" | "cuadraturaRetorno" | "botellonVacio" | "botellonDanado" | "produccionDiaria" | "tuboCO2" | "stockFabrica" | "stockCamion" | "configuracion" | "logAcceso" | "dispensador" | "mantencionDispensador" | "repuestoDispensador" | "maquinaReemplazo" | "notificacion" | "historialFinanciero" | "cargaCombustible" | "conductor"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -4119,6 +4135,80 @@ export namespace Prisma {
           }
         }
       }
+      Conductor: {
+        payload: Prisma.$ConductorPayload<ExtArgs>
+        fields: Prisma.ConductorFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ConductorFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConductorPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ConductorFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConductorPayload>
+          }
+          findFirst: {
+            args: Prisma.ConductorFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConductorPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ConductorFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConductorPayload>
+          }
+          findMany: {
+            args: Prisma.ConductorFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConductorPayload>[]
+          }
+          create: {
+            args: Prisma.ConductorCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConductorPayload>
+          }
+          createMany: {
+            args: Prisma.ConductorCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ConductorCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConductorPayload>[]
+          }
+          delete: {
+            args: Prisma.ConductorDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConductorPayload>
+          }
+          update: {
+            args: Prisma.ConductorUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConductorPayload>
+          }
+          deleteMany: {
+            args: Prisma.ConductorDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ConductorUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ConductorUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConductorPayload>[]
+          }
+          upsert: {
+            args: Prisma.ConductorUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConductorPayload>
+          }
+          aggregate: {
+            args: Prisma.ConductorAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateConductor>
+          }
+          groupBy: {
+            args: Prisma.ConductorGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ConductorGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ConductorCountArgs<ExtArgs>
+            result: $Utils.Optional<ConductorCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -4263,6 +4353,7 @@ export namespace Prisma {
     notificacion?: NotificacionOmit
     historialFinanciero?: HistorialFinancieroOmit
     cargaCombustible?: CargaCombustibleOmit
+    conductor?: ConductorOmit
   }
 
   /* Types for Logging */
@@ -5008,6 +5099,46 @@ export namespace Prisma {
    */
   export type MaquinaReemplazoCountOutputTypeCountMantencionesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: MantencionDispensadorWhereInput
+  }
+
+
+  /**
+   * Count Type ConductorCountOutputType
+   */
+
+  export type ConductorCountOutputType = {
+    mantenciones: number
+    cargasCombustible: number
+  }
+
+  export type ConductorCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    mantenciones?: boolean | ConductorCountOutputTypeCountMantencionesArgs
+    cargasCombustible?: boolean | ConductorCountOutputTypeCountCargasCombustibleArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * ConductorCountOutputType without action
+   */
+  export type ConductorCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConductorCountOutputType
+     */
+    select?: ConductorCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * ConductorCountOutputType without action
+   */
+  export type ConductorCountOutputTypeCountMantencionesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MantencionWhereInput
+  }
+
+  /**
+   * ConductorCountOutputType without action
+   */
+  export type ConductorCountOutputTypeCountCargasCombustibleArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CargaCombustibleWhereInput
   }
 
 
@@ -7694,14 +7825,12 @@ export namespace Prisma {
 
   export type MantencionAvgAggregateOutputType = {
     kilometraje: number | null
-    costo_repuestos: number | null
     mano_de_obra: number | null
     costo_total: number | null
   }
 
   export type MantencionSumAggregateOutputType = {
     kilometraje: number | null
-    costo_repuestos: number | null
     mano_de_obra: number | null
     costo_total: number | null
   }
@@ -7709,42 +7838,42 @@ export namespace Prisma {
   export type MantencionMinAggregateOutputType = {
     id: string | null
     vehiculo_id: string | null
+    conductor_id: string | null
     fecha: Date | null
     tipo: string | null
     kilometraje: number | null
-    costo_repuestos: number | null
     mano_de_obra: number | null
-    costo_total: number | null
     taller: string | null
     observaciones: string | null
+    costo_total: number | null
     created_at: Date | null
   }
 
   export type MantencionMaxAggregateOutputType = {
     id: string | null
     vehiculo_id: string | null
+    conductor_id: string | null
     fecha: Date | null
     tipo: string | null
     kilometraje: number | null
-    costo_repuestos: number | null
     mano_de_obra: number | null
-    costo_total: number | null
     taller: string | null
     observaciones: string | null
+    costo_total: number | null
     created_at: Date | null
   }
 
   export type MantencionCountAggregateOutputType = {
     id: number
     vehiculo_id: number
+    conductor_id: number
     fecha: number
     tipo: number
     kilometraje: number
-    costo_repuestos: number
     mano_de_obra: number
-    costo_total: number
     taller: number
     observaciones: number
+    costo_total: number
     created_at: number
     _all: number
   }
@@ -7752,14 +7881,12 @@ export namespace Prisma {
 
   export type MantencionAvgAggregateInputType = {
     kilometraje?: true
-    costo_repuestos?: true
     mano_de_obra?: true
     costo_total?: true
   }
 
   export type MantencionSumAggregateInputType = {
     kilometraje?: true
-    costo_repuestos?: true
     mano_de_obra?: true
     costo_total?: true
   }
@@ -7767,42 +7894,42 @@ export namespace Prisma {
   export type MantencionMinAggregateInputType = {
     id?: true
     vehiculo_id?: true
+    conductor_id?: true
     fecha?: true
     tipo?: true
     kilometraje?: true
-    costo_repuestos?: true
     mano_de_obra?: true
-    costo_total?: true
     taller?: true
     observaciones?: true
+    costo_total?: true
     created_at?: true
   }
 
   export type MantencionMaxAggregateInputType = {
     id?: true
     vehiculo_id?: true
+    conductor_id?: true
     fecha?: true
     tipo?: true
     kilometraje?: true
-    costo_repuestos?: true
     mano_de_obra?: true
-    costo_total?: true
     taller?: true
     observaciones?: true
+    costo_total?: true
     created_at?: true
   }
 
   export type MantencionCountAggregateInputType = {
     id?: true
     vehiculo_id?: true
+    conductor_id?: true
     fecha?: true
     tipo?: true
     kilometraje?: true
-    costo_repuestos?: true
     mano_de_obra?: true
-    costo_total?: true
     taller?: true
     observaciones?: true
+    costo_total?: true
     created_at?: true
     _all?: true
   }
@@ -7896,14 +8023,14 @@ export namespace Prisma {
   export type MantencionGroupByOutputType = {
     id: string
     vehiculo_id: string
+    conductor_id: string | null
     fecha: Date
     tipo: string
     kilometraje: number
-    costo_repuestos: number
     mano_de_obra: number
-    costo_total: number
     taller: string
     observaciones: string | null
+    costo_total: number
     created_at: Date
     _count: MantencionCountAggregateOutputType | null
     _avg: MantencionAvgAggregateOutputType | null
@@ -7929,16 +8056,17 @@ export namespace Prisma {
   export type MantencionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     vehiculo_id?: boolean
+    conductor_id?: boolean
     fecha?: boolean
     tipo?: boolean
     kilometraje?: boolean
-    costo_repuestos?: boolean
     mano_de_obra?: boolean
-    costo_total?: boolean
     taller?: boolean
     observaciones?: boolean
+    costo_total?: boolean
     created_at?: boolean
     vehiculo?: boolean | VehiculoDefaultArgs<ExtArgs>
+    conductor?: boolean | Mantencion$conductorArgs<ExtArgs>
     repuestos?: boolean | Mantencion$repuestosArgs<ExtArgs>
     _count?: boolean | MantencionCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["mantencion"]>
@@ -7946,77 +8074,83 @@ export namespace Prisma {
   export type MantencionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     vehiculo_id?: boolean
+    conductor_id?: boolean
     fecha?: boolean
     tipo?: boolean
     kilometraje?: boolean
-    costo_repuestos?: boolean
     mano_de_obra?: boolean
-    costo_total?: boolean
     taller?: boolean
     observaciones?: boolean
+    costo_total?: boolean
     created_at?: boolean
     vehiculo?: boolean | VehiculoDefaultArgs<ExtArgs>
+    conductor?: boolean | Mantencion$conductorArgs<ExtArgs>
   }, ExtArgs["result"]["mantencion"]>
 
   export type MantencionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     vehiculo_id?: boolean
+    conductor_id?: boolean
     fecha?: boolean
     tipo?: boolean
     kilometraje?: boolean
-    costo_repuestos?: boolean
     mano_de_obra?: boolean
-    costo_total?: boolean
     taller?: boolean
     observaciones?: boolean
+    costo_total?: boolean
     created_at?: boolean
     vehiculo?: boolean | VehiculoDefaultArgs<ExtArgs>
+    conductor?: boolean | Mantencion$conductorArgs<ExtArgs>
   }, ExtArgs["result"]["mantencion"]>
 
   export type MantencionSelectScalar = {
     id?: boolean
     vehiculo_id?: boolean
+    conductor_id?: boolean
     fecha?: boolean
     tipo?: boolean
     kilometraje?: boolean
-    costo_repuestos?: boolean
     mano_de_obra?: boolean
-    costo_total?: boolean
     taller?: boolean
     observaciones?: boolean
+    costo_total?: boolean
     created_at?: boolean
   }
 
-  export type MantencionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "vehiculo_id" | "fecha" | "tipo" | "kilometraje" | "costo_repuestos" | "mano_de_obra" | "costo_total" | "taller" | "observaciones" | "created_at", ExtArgs["result"]["mantencion"]>
+  export type MantencionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "vehiculo_id" | "conductor_id" | "fecha" | "tipo" | "kilometraje" | "mano_de_obra" | "taller" | "observaciones" | "costo_total" | "created_at", ExtArgs["result"]["mantencion"]>
   export type MantencionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     vehiculo?: boolean | VehiculoDefaultArgs<ExtArgs>
+    conductor?: boolean | Mantencion$conductorArgs<ExtArgs>
     repuestos?: boolean | Mantencion$repuestosArgs<ExtArgs>
     _count?: boolean | MantencionCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type MantencionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     vehiculo?: boolean | VehiculoDefaultArgs<ExtArgs>
+    conductor?: boolean | Mantencion$conductorArgs<ExtArgs>
   }
   export type MantencionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     vehiculo?: boolean | VehiculoDefaultArgs<ExtArgs>
+    conductor?: boolean | Mantencion$conductorArgs<ExtArgs>
   }
 
   export type $MantencionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Mantencion"
     objects: {
       vehiculo: Prisma.$VehiculoPayload<ExtArgs>
+      conductor: Prisma.$ConductorPayload<ExtArgs> | null
       repuestos: Prisma.$RepuestoMantencionPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       vehiculo_id: string
+      conductor_id: string | null
       fecha: Date
       tipo: string
       kilometraje: number
-      costo_repuestos: number
       mano_de_obra: number
-      costo_total: number
       taller: string
       observaciones: string | null
+      costo_total: number
       created_at: Date
     }, ExtArgs["result"]["mantencion"]>
     composites: {}
@@ -8413,6 +8547,7 @@ export namespace Prisma {
   export interface Prisma__MantencionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     vehiculo<T extends VehiculoDefaultArgs<ExtArgs> = {}>(args?: Subset<T, VehiculoDefaultArgs<ExtArgs>>): Prisma__VehiculoClient<$Result.GetResult<Prisma.$VehiculoPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    conductor<T extends Mantencion$conductorArgs<ExtArgs> = {}>(args?: Subset<T, Mantencion$conductorArgs<ExtArgs>>): Prisma__ConductorClient<$Result.GetResult<Prisma.$ConductorPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     repuestos<T extends Mantencion$repuestosArgs<ExtArgs> = {}>(args?: Subset<T, Mantencion$repuestosArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RepuestoMantencionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -8445,14 +8580,14 @@ export namespace Prisma {
   interface MantencionFieldRefs {
     readonly id: FieldRef<"Mantencion", 'String'>
     readonly vehiculo_id: FieldRef<"Mantencion", 'String'>
+    readonly conductor_id: FieldRef<"Mantencion", 'String'>
     readonly fecha: FieldRef<"Mantencion", 'DateTime'>
     readonly tipo: FieldRef<"Mantencion", 'String'>
     readonly kilometraje: FieldRef<"Mantencion", 'Int'>
-    readonly costo_repuestos: FieldRef<"Mantencion", 'Float'>
-    readonly mano_de_obra: FieldRef<"Mantencion", 'Float'>
-    readonly costo_total: FieldRef<"Mantencion", 'Float'>
+    readonly mano_de_obra: FieldRef<"Mantencion", 'Int'>
     readonly taller: FieldRef<"Mantencion", 'String'>
     readonly observaciones: FieldRef<"Mantencion", 'String'>
+    readonly costo_total: FieldRef<"Mantencion", 'Int'>
     readonly created_at: FieldRef<"Mantencion", 'DateTime'>
   }
     
@@ -8852,6 +8987,25 @@ export namespace Prisma {
      * Limit how many Mantencions to delete.
      */
     limit?: number
+  }
+
+  /**
+   * Mantencion.conductor
+   */
+  export type Mantencion$conductorArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Conductor
+     */
+    select?: ConductorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Conductor
+     */
+    omit?: ConductorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConductorInclude<ExtArgs> | null
+    where?: ConductorWhereInput
   }
 
   /**
@@ -45361,6 +45515,7 @@ export namespace Prisma {
   export type CargaCombustibleMinAggregateOutputType = {
     id: string | null
     vehiculo_id: string | null
+    conductor_id: string | null
     fecha: Date | null
     kilometraje: number | null
     litros: number | null
@@ -45373,6 +45528,7 @@ export namespace Prisma {
   export type CargaCombustibleMaxAggregateOutputType = {
     id: string | null
     vehiculo_id: string | null
+    conductor_id: string | null
     fecha: Date | null
     kilometraje: number | null
     litros: number | null
@@ -45385,6 +45541,7 @@ export namespace Prisma {
   export type CargaCombustibleCountAggregateOutputType = {
     id: number
     vehiculo_id: number
+    conductor_id: number
     fecha: number
     kilometraje: number
     litros: number
@@ -45413,6 +45570,7 @@ export namespace Prisma {
   export type CargaCombustibleMinAggregateInputType = {
     id?: true
     vehiculo_id?: true
+    conductor_id?: true
     fecha?: true
     kilometraje?: true
     litros?: true
@@ -45425,6 +45583,7 @@ export namespace Prisma {
   export type CargaCombustibleMaxAggregateInputType = {
     id?: true
     vehiculo_id?: true
+    conductor_id?: true
     fecha?: true
     kilometraje?: true
     litros?: true
@@ -45437,6 +45596,7 @@ export namespace Prisma {
   export type CargaCombustibleCountAggregateInputType = {
     id?: true
     vehiculo_id?: true
+    conductor_id?: true
     fecha?: true
     kilometraje?: true
     litros?: true
@@ -45536,12 +45696,13 @@ export namespace Prisma {
   export type CargaCombustibleGroupByOutputType = {
     id: string
     vehiculo_id: string
+    conductor_id: string | null
     fecha: Date
     kilometraje: number
     litros: number
     monto: number
     taller_o_bencinera: string
-    numero_factura: number | null
+    numero_factura: number
     created_at: Date
     _count: CargaCombustibleCountAggregateOutputType | null
     _avg: CargaCombustibleAvgAggregateOutputType | null
@@ -45567,6 +45728,7 @@ export namespace Prisma {
   export type CargaCombustibleSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     vehiculo_id?: boolean
+    conductor_id?: boolean
     fecha?: boolean
     kilometraje?: boolean
     litros?: boolean
@@ -45575,11 +45737,13 @@ export namespace Prisma {
     numero_factura?: boolean
     created_at?: boolean
     vehiculo?: boolean | VehiculoDefaultArgs<ExtArgs>
+    conductor?: boolean | CargaCombustible$conductorArgs<ExtArgs>
   }, ExtArgs["result"]["cargaCombustible"]>
 
   export type CargaCombustibleSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     vehiculo_id?: boolean
+    conductor_id?: boolean
     fecha?: boolean
     kilometraje?: boolean
     litros?: boolean
@@ -45588,11 +45752,13 @@ export namespace Prisma {
     numero_factura?: boolean
     created_at?: boolean
     vehiculo?: boolean | VehiculoDefaultArgs<ExtArgs>
+    conductor?: boolean | CargaCombustible$conductorArgs<ExtArgs>
   }, ExtArgs["result"]["cargaCombustible"]>
 
   export type CargaCombustibleSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     vehiculo_id?: boolean
+    conductor_id?: boolean
     fecha?: boolean
     kilometraje?: boolean
     litros?: boolean
@@ -45601,11 +45767,13 @@ export namespace Prisma {
     numero_factura?: boolean
     created_at?: boolean
     vehiculo?: boolean | VehiculoDefaultArgs<ExtArgs>
+    conductor?: boolean | CargaCombustible$conductorArgs<ExtArgs>
   }, ExtArgs["result"]["cargaCombustible"]>
 
   export type CargaCombustibleSelectScalar = {
     id?: boolean
     vehiculo_id?: boolean
+    conductor_id?: boolean
     fecha?: boolean
     kilometraje?: boolean
     litros?: boolean
@@ -45615,31 +45783,36 @@ export namespace Prisma {
     created_at?: boolean
   }
 
-  export type CargaCombustibleOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "vehiculo_id" | "fecha" | "kilometraje" | "litros" | "monto" | "taller_o_bencinera" | "numero_factura" | "created_at", ExtArgs["result"]["cargaCombustible"]>
+  export type CargaCombustibleOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "vehiculo_id" | "conductor_id" | "fecha" | "kilometraje" | "litros" | "monto" | "taller_o_bencinera" | "numero_factura" | "created_at", ExtArgs["result"]["cargaCombustible"]>
   export type CargaCombustibleInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     vehiculo?: boolean | VehiculoDefaultArgs<ExtArgs>
+    conductor?: boolean | CargaCombustible$conductorArgs<ExtArgs>
   }
   export type CargaCombustibleIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     vehiculo?: boolean | VehiculoDefaultArgs<ExtArgs>
+    conductor?: boolean | CargaCombustible$conductorArgs<ExtArgs>
   }
   export type CargaCombustibleIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     vehiculo?: boolean | VehiculoDefaultArgs<ExtArgs>
+    conductor?: boolean | CargaCombustible$conductorArgs<ExtArgs>
   }
 
   export type $CargaCombustiblePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "CargaCombustible"
     objects: {
       vehiculo: Prisma.$VehiculoPayload<ExtArgs>
+      conductor: Prisma.$ConductorPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       vehiculo_id: string
+      conductor_id: string | null
       fecha: Date
       kilometraje: number
       litros: number
       monto: number
       taller_o_bencinera: string
-      numero_factura: number | null
+      numero_factura: number
       created_at: Date
     }, ExtArgs["result"]["cargaCombustible"]>
     composites: {}
@@ -46036,6 +46209,7 @@ export namespace Prisma {
   export interface Prisma__CargaCombustibleClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     vehiculo<T extends VehiculoDefaultArgs<ExtArgs> = {}>(args?: Subset<T, VehiculoDefaultArgs<ExtArgs>>): Prisma__VehiculoClient<$Result.GetResult<Prisma.$VehiculoPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    conductor<T extends CargaCombustible$conductorArgs<ExtArgs> = {}>(args?: Subset<T, CargaCombustible$conductorArgs<ExtArgs>>): Prisma__ConductorClient<$Result.GetResult<Prisma.$ConductorPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -46067,10 +46241,11 @@ export namespace Prisma {
   interface CargaCombustibleFieldRefs {
     readonly id: FieldRef<"CargaCombustible", 'String'>
     readonly vehiculo_id: FieldRef<"CargaCombustible", 'String'>
+    readonly conductor_id: FieldRef<"CargaCombustible", 'String'>
     readonly fecha: FieldRef<"CargaCombustible", 'DateTime'>
     readonly kilometraje: FieldRef<"CargaCombustible", 'Int'>
     readonly litros: FieldRef<"CargaCombustible", 'Float'>
-    readonly monto: FieldRef<"CargaCombustible", 'Float'>
+    readonly monto: FieldRef<"CargaCombustible", 'Int'>
     readonly taller_o_bencinera: FieldRef<"CargaCombustible", 'String'>
     readonly numero_factura: FieldRef<"CargaCombustible", 'Int'>
     readonly created_at: FieldRef<"CargaCombustible", 'DateTime'>
@@ -46475,6 +46650,25 @@ export namespace Prisma {
   }
 
   /**
+   * CargaCombustible.conductor
+   */
+  export type CargaCombustible$conductorArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Conductor
+     */
+    select?: ConductorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Conductor
+     */
+    omit?: ConductorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConductorInclude<ExtArgs> | null
+    where?: ConductorWhereInput
+  }
+
+  /**
    * CargaCombustible without action
    */
   export type CargaCombustibleDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -46490,6 +46684,1161 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: CargaCombustibleInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Conductor
+   */
+
+  export type AggregateConductor = {
+    _count: ConductorCountAggregateOutputType | null
+    _min: ConductorMinAggregateOutputType | null
+    _max: ConductorMaxAggregateOutputType | null
+  }
+
+  export type ConductorMinAggregateOutputType = {
+    id: string | null
+    rut: string | null
+    nombre: string | null
+    apellido: string | null
+    telefono: string | null
+    licencia_tipo: string | null
+    vencimiento_lic: Date | null
+    estado: string | null
+    created_at: Date | null
+  }
+
+  export type ConductorMaxAggregateOutputType = {
+    id: string | null
+    rut: string | null
+    nombre: string | null
+    apellido: string | null
+    telefono: string | null
+    licencia_tipo: string | null
+    vencimiento_lic: Date | null
+    estado: string | null
+    created_at: Date | null
+  }
+
+  export type ConductorCountAggregateOutputType = {
+    id: number
+    rut: number
+    nombre: number
+    apellido: number
+    telefono: number
+    licencia_tipo: number
+    vencimiento_lic: number
+    estado: number
+    created_at: number
+    _all: number
+  }
+
+
+  export type ConductorMinAggregateInputType = {
+    id?: true
+    rut?: true
+    nombre?: true
+    apellido?: true
+    telefono?: true
+    licencia_tipo?: true
+    vencimiento_lic?: true
+    estado?: true
+    created_at?: true
+  }
+
+  export type ConductorMaxAggregateInputType = {
+    id?: true
+    rut?: true
+    nombre?: true
+    apellido?: true
+    telefono?: true
+    licencia_tipo?: true
+    vencimiento_lic?: true
+    estado?: true
+    created_at?: true
+  }
+
+  export type ConductorCountAggregateInputType = {
+    id?: true
+    rut?: true
+    nombre?: true
+    apellido?: true
+    telefono?: true
+    licencia_tipo?: true
+    vencimiento_lic?: true
+    estado?: true
+    created_at?: true
+    _all?: true
+  }
+
+  export type ConductorAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Conductor to aggregate.
+     */
+    where?: ConductorWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Conductors to fetch.
+     */
+    orderBy?: ConductorOrderByWithRelationInput | ConductorOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ConductorWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Conductors from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Conductors.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Conductors
+    **/
+    _count?: true | ConductorCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ConductorMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ConductorMaxAggregateInputType
+  }
+
+  export type GetConductorAggregateType<T extends ConductorAggregateArgs> = {
+        [P in keyof T & keyof AggregateConductor]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateConductor[P]>
+      : GetScalarType<T[P], AggregateConductor[P]>
+  }
+
+
+
+
+  export type ConductorGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ConductorWhereInput
+    orderBy?: ConductorOrderByWithAggregationInput | ConductorOrderByWithAggregationInput[]
+    by: ConductorScalarFieldEnum[] | ConductorScalarFieldEnum
+    having?: ConductorScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ConductorCountAggregateInputType | true
+    _min?: ConductorMinAggregateInputType
+    _max?: ConductorMaxAggregateInputType
+  }
+
+  export type ConductorGroupByOutputType = {
+    id: string
+    rut: string
+    nombre: string
+    apellido: string
+    telefono: string | null
+    licencia_tipo: string
+    vencimiento_lic: Date
+    estado: string
+    created_at: Date
+    _count: ConductorCountAggregateOutputType | null
+    _min: ConductorMinAggregateOutputType | null
+    _max: ConductorMaxAggregateOutputType | null
+  }
+
+  type GetConductorGroupByPayload<T extends ConductorGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ConductorGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ConductorGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ConductorGroupByOutputType[P]>
+            : GetScalarType<T[P], ConductorGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ConductorSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    rut?: boolean
+    nombre?: boolean
+    apellido?: boolean
+    telefono?: boolean
+    licencia_tipo?: boolean
+    vencimiento_lic?: boolean
+    estado?: boolean
+    created_at?: boolean
+    mantenciones?: boolean | Conductor$mantencionesArgs<ExtArgs>
+    cargasCombustible?: boolean | Conductor$cargasCombustibleArgs<ExtArgs>
+    _count?: boolean | ConductorCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["conductor"]>
+
+  export type ConductorSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    rut?: boolean
+    nombre?: boolean
+    apellido?: boolean
+    telefono?: boolean
+    licencia_tipo?: boolean
+    vencimiento_lic?: boolean
+    estado?: boolean
+    created_at?: boolean
+  }, ExtArgs["result"]["conductor"]>
+
+  export type ConductorSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    rut?: boolean
+    nombre?: boolean
+    apellido?: boolean
+    telefono?: boolean
+    licencia_tipo?: boolean
+    vencimiento_lic?: boolean
+    estado?: boolean
+    created_at?: boolean
+  }, ExtArgs["result"]["conductor"]>
+
+  export type ConductorSelectScalar = {
+    id?: boolean
+    rut?: boolean
+    nombre?: boolean
+    apellido?: boolean
+    telefono?: boolean
+    licencia_tipo?: boolean
+    vencimiento_lic?: boolean
+    estado?: boolean
+    created_at?: boolean
+  }
+
+  export type ConductorOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "rut" | "nombre" | "apellido" | "telefono" | "licencia_tipo" | "vencimiento_lic" | "estado" | "created_at", ExtArgs["result"]["conductor"]>
+  export type ConductorInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    mantenciones?: boolean | Conductor$mantencionesArgs<ExtArgs>
+    cargasCombustible?: boolean | Conductor$cargasCombustibleArgs<ExtArgs>
+    _count?: boolean | ConductorCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type ConductorIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type ConductorIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $ConductorPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Conductor"
+    objects: {
+      mantenciones: Prisma.$MantencionPayload<ExtArgs>[]
+      cargasCombustible: Prisma.$CargaCombustiblePayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      rut: string
+      nombre: string
+      apellido: string
+      telefono: string | null
+      licencia_tipo: string
+      vencimiento_lic: Date
+      estado: string
+      created_at: Date
+    }, ExtArgs["result"]["conductor"]>
+    composites: {}
+  }
+
+  type ConductorGetPayload<S extends boolean | null | undefined | ConductorDefaultArgs> = $Result.GetResult<Prisma.$ConductorPayload, S>
+
+  type ConductorCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ConductorFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ConductorCountAggregateInputType | true
+    }
+
+  export interface ConductorDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Conductor'], meta: { name: 'Conductor' } }
+    /**
+     * Find zero or one Conductor that matches the filter.
+     * @param {ConductorFindUniqueArgs} args - Arguments to find a Conductor
+     * @example
+     * // Get one Conductor
+     * const conductor = await prisma.conductor.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ConductorFindUniqueArgs>(args: SelectSubset<T, ConductorFindUniqueArgs<ExtArgs>>): Prisma__ConductorClient<$Result.GetResult<Prisma.$ConductorPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Conductor that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ConductorFindUniqueOrThrowArgs} args - Arguments to find a Conductor
+     * @example
+     * // Get one Conductor
+     * const conductor = await prisma.conductor.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ConductorFindUniqueOrThrowArgs>(args: SelectSubset<T, ConductorFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ConductorClient<$Result.GetResult<Prisma.$ConductorPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Conductor that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConductorFindFirstArgs} args - Arguments to find a Conductor
+     * @example
+     * // Get one Conductor
+     * const conductor = await prisma.conductor.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ConductorFindFirstArgs>(args?: SelectSubset<T, ConductorFindFirstArgs<ExtArgs>>): Prisma__ConductorClient<$Result.GetResult<Prisma.$ConductorPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Conductor that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConductorFindFirstOrThrowArgs} args - Arguments to find a Conductor
+     * @example
+     * // Get one Conductor
+     * const conductor = await prisma.conductor.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ConductorFindFirstOrThrowArgs>(args?: SelectSubset<T, ConductorFindFirstOrThrowArgs<ExtArgs>>): Prisma__ConductorClient<$Result.GetResult<Prisma.$ConductorPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Conductors that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConductorFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Conductors
+     * const conductors = await prisma.conductor.findMany()
+     * 
+     * // Get first 10 Conductors
+     * const conductors = await prisma.conductor.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const conductorWithIdOnly = await prisma.conductor.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ConductorFindManyArgs>(args?: SelectSubset<T, ConductorFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConductorPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Conductor.
+     * @param {ConductorCreateArgs} args - Arguments to create a Conductor.
+     * @example
+     * // Create one Conductor
+     * const Conductor = await prisma.conductor.create({
+     *   data: {
+     *     // ... data to create a Conductor
+     *   }
+     * })
+     * 
+     */
+    create<T extends ConductorCreateArgs>(args: SelectSubset<T, ConductorCreateArgs<ExtArgs>>): Prisma__ConductorClient<$Result.GetResult<Prisma.$ConductorPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Conductors.
+     * @param {ConductorCreateManyArgs} args - Arguments to create many Conductors.
+     * @example
+     * // Create many Conductors
+     * const conductor = await prisma.conductor.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ConductorCreateManyArgs>(args?: SelectSubset<T, ConductorCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Conductors and returns the data saved in the database.
+     * @param {ConductorCreateManyAndReturnArgs} args - Arguments to create many Conductors.
+     * @example
+     * // Create many Conductors
+     * const conductor = await prisma.conductor.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Conductors and only return the `id`
+     * const conductorWithIdOnly = await prisma.conductor.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ConductorCreateManyAndReturnArgs>(args?: SelectSubset<T, ConductorCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConductorPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Conductor.
+     * @param {ConductorDeleteArgs} args - Arguments to delete one Conductor.
+     * @example
+     * // Delete one Conductor
+     * const Conductor = await prisma.conductor.delete({
+     *   where: {
+     *     // ... filter to delete one Conductor
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ConductorDeleteArgs>(args: SelectSubset<T, ConductorDeleteArgs<ExtArgs>>): Prisma__ConductorClient<$Result.GetResult<Prisma.$ConductorPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Conductor.
+     * @param {ConductorUpdateArgs} args - Arguments to update one Conductor.
+     * @example
+     * // Update one Conductor
+     * const conductor = await prisma.conductor.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ConductorUpdateArgs>(args: SelectSubset<T, ConductorUpdateArgs<ExtArgs>>): Prisma__ConductorClient<$Result.GetResult<Prisma.$ConductorPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Conductors.
+     * @param {ConductorDeleteManyArgs} args - Arguments to filter Conductors to delete.
+     * @example
+     * // Delete a few Conductors
+     * const { count } = await prisma.conductor.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ConductorDeleteManyArgs>(args?: SelectSubset<T, ConductorDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Conductors.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConductorUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Conductors
+     * const conductor = await prisma.conductor.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ConductorUpdateManyArgs>(args: SelectSubset<T, ConductorUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Conductors and returns the data updated in the database.
+     * @param {ConductorUpdateManyAndReturnArgs} args - Arguments to update many Conductors.
+     * @example
+     * // Update many Conductors
+     * const conductor = await prisma.conductor.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Conductors and only return the `id`
+     * const conductorWithIdOnly = await prisma.conductor.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ConductorUpdateManyAndReturnArgs>(args: SelectSubset<T, ConductorUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConductorPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Conductor.
+     * @param {ConductorUpsertArgs} args - Arguments to update or create a Conductor.
+     * @example
+     * // Update or create a Conductor
+     * const conductor = await prisma.conductor.upsert({
+     *   create: {
+     *     // ... data to create a Conductor
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Conductor we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ConductorUpsertArgs>(args: SelectSubset<T, ConductorUpsertArgs<ExtArgs>>): Prisma__ConductorClient<$Result.GetResult<Prisma.$ConductorPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Conductors.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConductorCountArgs} args - Arguments to filter Conductors to count.
+     * @example
+     * // Count the number of Conductors
+     * const count = await prisma.conductor.count({
+     *   where: {
+     *     // ... the filter for the Conductors we want to count
+     *   }
+     * })
+    **/
+    count<T extends ConductorCountArgs>(
+      args?: Subset<T, ConductorCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ConductorCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Conductor.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConductorAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ConductorAggregateArgs>(args: Subset<T, ConductorAggregateArgs>): Prisma.PrismaPromise<GetConductorAggregateType<T>>
+
+    /**
+     * Group by Conductor.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConductorGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ConductorGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ConductorGroupByArgs['orderBy'] }
+        : { orderBy?: ConductorGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ConductorGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetConductorGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Conductor model
+   */
+  readonly fields: ConductorFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Conductor.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ConductorClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    mantenciones<T extends Conductor$mantencionesArgs<ExtArgs> = {}>(args?: Subset<T, Conductor$mantencionesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MantencionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    cargasCombustible<T extends Conductor$cargasCombustibleArgs<ExtArgs> = {}>(args?: Subset<T, Conductor$cargasCombustibleArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CargaCombustiblePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Conductor model
+   */
+  interface ConductorFieldRefs {
+    readonly id: FieldRef<"Conductor", 'String'>
+    readonly rut: FieldRef<"Conductor", 'String'>
+    readonly nombre: FieldRef<"Conductor", 'String'>
+    readonly apellido: FieldRef<"Conductor", 'String'>
+    readonly telefono: FieldRef<"Conductor", 'String'>
+    readonly licencia_tipo: FieldRef<"Conductor", 'String'>
+    readonly vencimiento_lic: FieldRef<"Conductor", 'DateTime'>
+    readonly estado: FieldRef<"Conductor", 'String'>
+    readonly created_at: FieldRef<"Conductor", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Conductor findUnique
+   */
+  export type ConductorFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Conductor
+     */
+    select?: ConductorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Conductor
+     */
+    omit?: ConductorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConductorInclude<ExtArgs> | null
+    /**
+     * Filter, which Conductor to fetch.
+     */
+    where: ConductorWhereUniqueInput
+  }
+
+  /**
+   * Conductor findUniqueOrThrow
+   */
+  export type ConductorFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Conductor
+     */
+    select?: ConductorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Conductor
+     */
+    omit?: ConductorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConductorInclude<ExtArgs> | null
+    /**
+     * Filter, which Conductor to fetch.
+     */
+    where: ConductorWhereUniqueInput
+  }
+
+  /**
+   * Conductor findFirst
+   */
+  export type ConductorFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Conductor
+     */
+    select?: ConductorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Conductor
+     */
+    omit?: ConductorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConductorInclude<ExtArgs> | null
+    /**
+     * Filter, which Conductor to fetch.
+     */
+    where?: ConductorWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Conductors to fetch.
+     */
+    orderBy?: ConductorOrderByWithRelationInput | ConductorOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Conductors.
+     */
+    cursor?: ConductorWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Conductors from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Conductors.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Conductors.
+     */
+    distinct?: ConductorScalarFieldEnum | ConductorScalarFieldEnum[]
+  }
+
+  /**
+   * Conductor findFirstOrThrow
+   */
+  export type ConductorFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Conductor
+     */
+    select?: ConductorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Conductor
+     */
+    omit?: ConductorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConductorInclude<ExtArgs> | null
+    /**
+     * Filter, which Conductor to fetch.
+     */
+    where?: ConductorWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Conductors to fetch.
+     */
+    orderBy?: ConductorOrderByWithRelationInput | ConductorOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Conductors.
+     */
+    cursor?: ConductorWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Conductors from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Conductors.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Conductors.
+     */
+    distinct?: ConductorScalarFieldEnum | ConductorScalarFieldEnum[]
+  }
+
+  /**
+   * Conductor findMany
+   */
+  export type ConductorFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Conductor
+     */
+    select?: ConductorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Conductor
+     */
+    omit?: ConductorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConductorInclude<ExtArgs> | null
+    /**
+     * Filter, which Conductors to fetch.
+     */
+    where?: ConductorWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Conductors to fetch.
+     */
+    orderBy?: ConductorOrderByWithRelationInput | ConductorOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Conductors.
+     */
+    cursor?: ConductorWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Conductors from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Conductors.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Conductors.
+     */
+    distinct?: ConductorScalarFieldEnum | ConductorScalarFieldEnum[]
+  }
+
+  /**
+   * Conductor create
+   */
+  export type ConductorCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Conductor
+     */
+    select?: ConductorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Conductor
+     */
+    omit?: ConductorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConductorInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Conductor.
+     */
+    data: XOR<ConductorCreateInput, ConductorUncheckedCreateInput>
+  }
+
+  /**
+   * Conductor createMany
+   */
+  export type ConductorCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Conductors.
+     */
+    data: ConductorCreateManyInput | ConductorCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Conductor createManyAndReturn
+   */
+  export type ConductorCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Conductor
+     */
+    select?: ConductorSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Conductor
+     */
+    omit?: ConductorOmit<ExtArgs> | null
+    /**
+     * The data used to create many Conductors.
+     */
+    data: ConductorCreateManyInput | ConductorCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Conductor update
+   */
+  export type ConductorUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Conductor
+     */
+    select?: ConductorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Conductor
+     */
+    omit?: ConductorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConductorInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Conductor.
+     */
+    data: XOR<ConductorUpdateInput, ConductorUncheckedUpdateInput>
+    /**
+     * Choose, which Conductor to update.
+     */
+    where: ConductorWhereUniqueInput
+  }
+
+  /**
+   * Conductor updateMany
+   */
+  export type ConductorUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Conductors.
+     */
+    data: XOR<ConductorUpdateManyMutationInput, ConductorUncheckedUpdateManyInput>
+    /**
+     * Filter which Conductors to update
+     */
+    where?: ConductorWhereInput
+    /**
+     * Limit how many Conductors to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Conductor updateManyAndReturn
+   */
+  export type ConductorUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Conductor
+     */
+    select?: ConductorSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Conductor
+     */
+    omit?: ConductorOmit<ExtArgs> | null
+    /**
+     * The data used to update Conductors.
+     */
+    data: XOR<ConductorUpdateManyMutationInput, ConductorUncheckedUpdateManyInput>
+    /**
+     * Filter which Conductors to update
+     */
+    where?: ConductorWhereInput
+    /**
+     * Limit how many Conductors to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Conductor upsert
+   */
+  export type ConductorUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Conductor
+     */
+    select?: ConductorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Conductor
+     */
+    omit?: ConductorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConductorInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Conductor to update in case it exists.
+     */
+    where: ConductorWhereUniqueInput
+    /**
+     * In case the Conductor found by the `where` argument doesn't exist, create a new Conductor with this data.
+     */
+    create: XOR<ConductorCreateInput, ConductorUncheckedCreateInput>
+    /**
+     * In case the Conductor was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ConductorUpdateInput, ConductorUncheckedUpdateInput>
+  }
+
+  /**
+   * Conductor delete
+   */
+  export type ConductorDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Conductor
+     */
+    select?: ConductorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Conductor
+     */
+    omit?: ConductorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConductorInclude<ExtArgs> | null
+    /**
+     * Filter which Conductor to delete.
+     */
+    where: ConductorWhereUniqueInput
+  }
+
+  /**
+   * Conductor deleteMany
+   */
+  export type ConductorDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Conductors to delete
+     */
+    where?: ConductorWhereInput
+    /**
+     * Limit how many Conductors to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Conductor.mantenciones
+   */
+  export type Conductor$mantencionesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Mantencion
+     */
+    select?: MantencionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Mantencion
+     */
+    omit?: MantencionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MantencionInclude<ExtArgs> | null
+    where?: MantencionWhereInput
+    orderBy?: MantencionOrderByWithRelationInput | MantencionOrderByWithRelationInput[]
+    cursor?: MantencionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MantencionScalarFieldEnum | MantencionScalarFieldEnum[]
+  }
+
+  /**
+   * Conductor.cargasCombustible
+   */
+  export type Conductor$cargasCombustibleArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CargaCombustible
+     */
+    select?: CargaCombustibleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CargaCombustible
+     */
+    omit?: CargaCombustibleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CargaCombustibleInclude<ExtArgs> | null
+    where?: CargaCombustibleWhereInput
+    orderBy?: CargaCombustibleOrderByWithRelationInput | CargaCombustibleOrderByWithRelationInput[]
+    cursor?: CargaCombustibleWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CargaCombustibleScalarFieldEnum | CargaCombustibleScalarFieldEnum[]
+  }
+
+  /**
+   * Conductor without action
+   */
+  export type ConductorDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Conductor
+     */
+    select?: ConductorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Conductor
+     */
+    omit?: ConductorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConductorInclude<ExtArgs> | null
   }
 
 
@@ -46540,14 +47889,14 @@ export namespace Prisma {
   export const MantencionScalarFieldEnum: {
     id: 'id',
     vehiculo_id: 'vehiculo_id',
+    conductor_id: 'conductor_id',
     fecha: 'fecha',
     tipo: 'tipo',
     kilometraje: 'kilometraje',
-    costo_repuestos: 'costo_repuestos',
     mano_de_obra: 'mano_de_obra',
-    costo_total: 'costo_total',
     taller: 'taller',
     observaciones: 'observaciones',
+    costo_total: 'costo_total',
     created_at: 'created_at'
   };
 
@@ -46969,6 +48318,7 @@ export namespace Prisma {
   export const CargaCombustibleScalarFieldEnum: {
     id: 'id',
     vehiculo_id: 'vehiculo_id',
+    conductor_id: 'conductor_id',
     fecha: 'fecha',
     kilometraje: 'kilometraje',
     litros: 'litros',
@@ -46979,6 +48329,21 @@ export namespace Prisma {
   };
 
   export type CargaCombustibleScalarFieldEnum = (typeof CargaCombustibleScalarFieldEnum)[keyof typeof CargaCombustibleScalarFieldEnum]
+
+
+  export const ConductorScalarFieldEnum: {
+    id: 'id',
+    rut: 'rut',
+    nombre: 'nombre',
+    apellido: 'apellido',
+    telefono: 'telefono',
+    licencia_tipo: 'licencia_tipo',
+    vencimiento_lic: 'vencimiento_lic',
+    estado: 'estado',
+    created_at: 'created_at'
+  };
+
+  export type ConductorScalarFieldEnum = (typeof ConductorScalarFieldEnum)[keyof typeof ConductorScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -47612,32 +48977,34 @@ export namespace Prisma {
     NOT?: MantencionWhereInput | MantencionWhereInput[]
     id?: StringFilter<"Mantencion"> | string
     vehiculo_id?: StringFilter<"Mantencion"> | string
+    conductor_id?: StringNullableFilter<"Mantencion"> | string | null
     fecha?: DateTimeFilter<"Mantencion"> | Date | string
     tipo?: StringFilter<"Mantencion"> | string
     kilometraje?: IntFilter<"Mantencion"> | number
-    costo_repuestos?: FloatFilter<"Mantencion"> | number
-    mano_de_obra?: FloatFilter<"Mantencion"> | number
-    costo_total?: FloatFilter<"Mantencion"> | number
+    mano_de_obra?: IntFilter<"Mantencion"> | number
     taller?: StringFilter<"Mantencion"> | string
     observaciones?: StringNullableFilter<"Mantencion"> | string | null
+    costo_total?: IntFilter<"Mantencion"> | number
     created_at?: DateTimeFilter<"Mantencion"> | Date | string
     vehiculo?: XOR<VehiculoScalarRelationFilter, VehiculoWhereInput>
+    conductor?: XOR<ConductorNullableScalarRelationFilter, ConductorWhereInput> | null
     repuestos?: RepuestoMantencionListRelationFilter
   }
 
   export type MantencionOrderByWithRelationInput = {
     id?: SortOrder
     vehiculo_id?: SortOrder
+    conductor_id?: SortOrderInput | SortOrder
     fecha?: SortOrder
     tipo?: SortOrder
     kilometraje?: SortOrder
-    costo_repuestos?: SortOrder
     mano_de_obra?: SortOrder
-    costo_total?: SortOrder
     taller?: SortOrder
     observaciones?: SortOrderInput | SortOrder
+    costo_total?: SortOrder
     created_at?: SortOrder
     vehiculo?: VehiculoOrderByWithRelationInput
+    conductor?: ConductorOrderByWithRelationInput
     repuestos?: RepuestoMantencionOrderByRelationAggregateInput
   }
 
@@ -47647,30 +49014,31 @@ export namespace Prisma {
     OR?: MantencionWhereInput[]
     NOT?: MantencionWhereInput | MantencionWhereInput[]
     vehiculo_id?: StringFilter<"Mantencion"> | string
+    conductor_id?: StringNullableFilter<"Mantencion"> | string | null
     fecha?: DateTimeFilter<"Mantencion"> | Date | string
     tipo?: StringFilter<"Mantencion"> | string
     kilometraje?: IntFilter<"Mantencion"> | number
-    costo_repuestos?: FloatFilter<"Mantencion"> | number
-    mano_de_obra?: FloatFilter<"Mantencion"> | number
-    costo_total?: FloatFilter<"Mantencion"> | number
+    mano_de_obra?: IntFilter<"Mantencion"> | number
     taller?: StringFilter<"Mantencion"> | string
     observaciones?: StringNullableFilter<"Mantencion"> | string | null
+    costo_total?: IntFilter<"Mantencion"> | number
     created_at?: DateTimeFilter<"Mantencion"> | Date | string
     vehiculo?: XOR<VehiculoScalarRelationFilter, VehiculoWhereInput>
+    conductor?: XOR<ConductorNullableScalarRelationFilter, ConductorWhereInput> | null
     repuestos?: RepuestoMantencionListRelationFilter
   }, "id">
 
   export type MantencionOrderByWithAggregationInput = {
     id?: SortOrder
     vehiculo_id?: SortOrder
+    conductor_id?: SortOrderInput | SortOrder
     fecha?: SortOrder
     tipo?: SortOrder
     kilometraje?: SortOrder
-    costo_repuestos?: SortOrder
     mano_de_obra?: SortOrder
-    costo_total?: SortOrder
     taller?: SortOrder
     observaciones?: SortOrderInput | SortOrder
+    costo_total?: SortOrder
     created_at?: SortOrder
     _count?: MantencionCountOrderByAggregateInput
     _avg?: MantencionAvgOrderByAggregateInput
@@ -47685,14 +49053,14 @@ export namespace Prisma {
     NOT?: MantencionScalarWhereWithAggregatesInput | MantencionScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Mantencion"> | string
     vehiculo_id?: StringWithAggregatesFilter<"Mantencion"> | string
+    conductor_id?: StringNullableWithAggregatesFilter<"Mantencion"> | string | null
     fecha?: DateTimeWithAggregatesFilter<"Mantencion"> | Date | string
     tipo?: StringWithAggregatesFilter<"Mantencion"> | string
     kilometraje?: IntWithAggregatesFilter<"Mantencion"> | number
-    costo_repuestos?: FloatWithAggregatesFilter<"Mantencion"> | number
-    mano_de_obra?: FloatWithAggregatesFilter<"Mantencion"> | number
-    costo_total?: FloatWithAggregatesFilter<"Mantencion"> | number
+    mano_de_obra?: IntWithAggregatesFilter<"Mantencion"> | number
     taller?: StringWithAggregatesFilter<"Mantencion"> | string
     observaciones?: StringNullableWithAggregatesFilter<"Mantencion"> | string | null
+    costo_total?: IntWithAggregatesFilter<"Mantencion"> | number
     created_at?: DateTimeWithAggregatesFilter<"Mantencion"> | Date | string
   }
 
@@ -49923,27 +51291,31 @@ export namespace Prisma {
     NOT?: CargaCombustibleWhereInput | CargaCombustibleWhereInput[]
     id?: StringFilter<"CargaCombustible"> | string
     vehiculo_id?: StringFilter<"CargaCombustible"> | string
+    conductor_id?: StringNullableFilter<"CargaCombustible"> | string | null
     fecha?: DateTimeFilter<"CargaCombustible"> | Date | string
     kilometraje?: IntFilter<"CargaCombustible"> | number
     litros?: FloatFilter<"CargaCombustible"> | number
-    monto?: FloatFilter<"CargaCombustible"> | number
+    monto?: IntFilter<"CargaCombustible"> | number
     taller_o_bencinera?: StringFilter<"CargaCombustible"> | string
-    numero_factura?: IntNullableFilter<"CargaCombustible"> | number | null
+    numero_factura?: IntFilter<"CargaCombustible"> | number
     created_at?: DateTimeFilter<"CargaCombustible"> | Date | string
     vehiculo?: XOR<VehiculoScalarRelationFilter, VehiculoWhereInput>
+    conductor?: XOR<ConductorNullableScalarRelationFilter, ConductorWhereInput> | null
   }
 
   export type CargaCombustibleOrderByWithRelationInput = {
     id?: SortOrder
     vehiculo_id?: SortOrder
+    conductor_id?: SortOrderInput | SortOrder
     fecha?: SortOrder
     kilometraje?: SortOrder
     litros?: SortOrder
     monto?: SortOrder
     taller_o_bencinera?: SortOrder
-    numero_factura?: SortOrderInput | SortOrder
+    numero_factura?: SortOrder
     created_at?: SortOrder
     vehiculo?: VehiculoOrderByWithRelationInput
+    conductor?: ConductorOrderByWithRelationInput
   }
 
   export type CargaCombustibleWhereUniqueInput = Prisma.AtLeast<{
@@ -49952,25 +51324,28 @@ export namespace Prisma {
     OR?: CargaCombustibleWhereInput[]
     NOT?: CargaCombustibleWhereInput | CargaCombustibleWhereInput[]
     vehiculo_id?: StringFilter<"CargaCombustible"> | string
+    conductor_id?: StringNullableFilter<"CargaCombustible"> | string | null
     fecha?: DateTimeFilter<"CargaCombustible"> | Date | string
     kilometraje?: IntFilter<"CargaCombustible"> | number
     litros?: FloatFilter<"CargaCombustible"> | number
-    monto?: FloatFilter<"CargaCombustible"> | number
+    monto?: IntFilter<"CargaCombustible"> | number
     taller_o_bencinera?: StringFilter<"CargaCombustible"> | string
-    numero_factura?: IntNullableFilter<"CargaCombustible"> | number | null
+    numero_factura?: IntFilter<"CargaCombustible"> | number
     created_at?: DateTimeFilter<"CargaCombustible"> | Date | string
     vehiculo?: XOR<VehiculoScalarRelationFilter, VehiculoWhereInput>
+    conductor?: XOR<ConductorNullableScalarRelationFilter, ConductorWhereInput> | null
   }, "id">
 
   export type CargaCombustibleOrderByWithAggregationInput = {
     id?: SortOrder
     vehiculo_id?: SortOrder
+    conductor_id?: SortOrderInput | SortOrder
     fecha?: SortOrder
     kilometraje?: SortOrder
     litros?: SortOrder
     monto?: SortOrder
     taller_o_bencinera?: SortOrder
-    numero_factura?: SortOrderInput | SortOrder
+    numero_factura?: SortOrder
     created_at?: SortOrder
     _count?: CargaCombustibleCountOrderByAggregateInput
     _avg?: CargaCombustibleAvgOrderByAggregateInput
@@ -49985,13 +51360,92 @@ export namespace Prisma {
     NOT?: CargaCombustibleScalarWhereWithAggregatesInput | CargaCombustibleScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"CargaCombustible"> | string
     vehiculo_id?: StringWithAggregatesFilter<"CargaCombustible"> | string
+    conductor_id?: StringNullableWithAggregatesFilter<"CargaCombustible"> | string | null
     fecha?: DateTimeWithAggregatesFilter<"CargaCombustible"> | Date | string
     kilometraje?: IntWithAggregatesFilter<"CargaCombustible"> | number
     litros?: FloatWithAggregatesFilter<"CargaCombustible"> | number
-    monto?: FloatWithAggregatesFilter<"CargaCombustible"> | number
+    monto?: IntWithAggregatesFilter<"CargaCombustible"> | number
     taller_o_bencinera?: StringWithAggregatesFilter<"CargaCombustible"> | string
-    numero_factura?: IntNullableWithAggregatesFilter<"CargaCombustible"> | number | null
+    numero_factura?: IntWithAggregatesFilter<"CargaCombustible"> | number
     created_at?: DateTimeWithAggregatesFilter<"CargaCombustible"> | Date | string
+  }
+
+  export type ConductorWhereInput = {
+    AND?: ConductorWhereInput | ConductorWhereInput[]
+    OR?: ConductorWhereInput[]
+    NOT?: ConductorWhereInput | ConductorWhereInput[]
+    id?: StringFilter<"Conductor"> | string
+    rut?: StringFilter<"Conductor"> | string
+    nombre?: StringFilter<"Conductor"> | string
+    apellido?: StringFilter<"Conductor"> | string
+    telefono?: StringNullableFilter<"Conductor"> | string | null
+    licencia_tipo?: StringFilter<"Conductor"> | string
+    vencimiento_lic?: DateTimeFilter<"Conductor"> | Date | string
+    estado?: StringFilter<"Conductor"> | string
+    created_at?: DateTimeFilter<"Conductor"> | Date | string
+    mantenciones?: MantencionListRelationFilter
+    cargasCombustible?: CargaCombustibleListRelationFilter
+  }
+
+  export type ConductorOrderByWithRelationInput = {
+    id?: SortOrder
+    rut?: SortOrder
+    nombre?: SortOrder
+    apellido?: SortOrder
+    telefono?: SortOrderInput | SortOrder
+    licencia_tipo?: SortOrder
+    vencimiento_lic?: SortOrder
+    estado?: SortOrder
+    created_at?: SortOrder
+    mantenciones?: MantencionOrderByRelationAggregateInput
+    cargasCombustible?: CargaCombustibleOrderByRelationAggregateInput
+  }
+
+  export type ConductorWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    rut?: string
+    AND?: ConductorWhereInput | ConductorWhereInput[]
+    OR?: ConductorWhereInput[]
+    NOT?: ConductorWhereInput | ConductorWhereInput[]
+    nombre?: StringFilter<"Conductor"> | string
+    apellido?: StringFilter<"Conductor"> | string
+    telefono?: StringNullableFilter<"Conductor"> | string | null
+    licencia_tipo?: StringFilter<"Conductor"> | string
+    vencimiento_lic?: DateTimeFilter<"Conductor"> | Date | string
+    estado?: StringFilter<"Conductor"> | string
+    created_at?: DateTimeFilter<"Conductor"> | Date | string
+    mantenciones?: MantencionListRelationFilter
+    cargasCombustible?: CargaCombustibleListRelationFilter
+  }, "id" | "rut">
+
+  export type ConductorOrderByWithAggregationInput = {
+    id?: SortOrder
+    rut?: SortOrder
+    nombre?: SortOrder
+    apellido?: SortOrder
+    telefono?: SortOrderInput | SortOrder
+    licencia_tipo?: SortOrder
+    vencimiento_lic?: SortOrder
+    estado?: SortOrder
+    created_at?: SortOrder
+    _count?: ConductorCountOrderByAggregateInput
+    _max?: ConductorMaxOrderByAggregateInput
+    _min?: ConductorMinOrderByAggregateInput
+  }
+
+  export type ConductorScalarWhereWithAggregatesInput = {
+    AND?: ConductorScalarWhereWithAggregatesInput | ConductorScalarWhereWithAggregatesInput[]
+    OR?: ConductorScalarWhereWithAggregatesInput[]
+    NOT?: ConductorScalarWhereWithAggregatesInput | ConductorScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Conductor"> | string
+    rut?: StringWithAggregatesFilter<"Conductor"> | string
+    nombre?: StringWithAggregatesFilter<"Conductor"> | string
+    apellido?: StringWithAggregatesFilter<"Conductor"> | string
+    telefono?: StringNullableWithAggregatesFilter<"Conductor"> | string | null
+    licencia_tipo?: StringWithAggregatesFilter<"Conductor"> | string
+    vencimiento_lic?: DateTimeWithAggregatesFilter<"Conductor"> | Date | string
+    estado?: StringWithAggregatesFilter<"Conductor"> | string
+    created_at?: DateTimeWithAggregatesFilter<"Conductor"> | Date | string
   }
 
   export type UsuarioCreateInput = {
@@ -50222,27 +51676,27 @@ export namespace Prisma {
     fecha: Date | string
     tipo: string
     kilometraje: number
-    costo_repuestos: number
     mano_de_obra: number
-    costo_total: number
     taller: string
     observaciones?: string | null
+    costo_total: number
     created_at?: Date | string
     vehiculo: VehiculoCreateNestedOneWithoutMantencionesInput
+    conductor?: ConductorCreateNestedOneWithoutMantencionesInput
     repuestos?: RepuestoMantencionCreateNestedManyWithoutMantencionInput
   }
 
   export type MantencionUncheckedCreateInput = {
     id?: string
     vehiculo_id: string
+    conductor_id?: string | null
     fecha: Date | string
     tipo: string
     kilometraje: number
-    costo_repuestos: number
     mano_de_obra: number
-    costo_total: number
     taller: string
     observaciones?: string | null
+    costo_total: number
     created_at?: Date | string
     repuestos?: RepuestoMantencionUncheckedCreateNestedManyWithoutMantencionInput
   }
@@ -50252,27 +51706,27 @@ export namespace Prisma {
     fecha?: DateTimeFieldUpdateOperationsInput | Date | string
     tipo?: StringFieldUpdateOperationsInput | string
     kilometraje?: IntFieldUpdateOperationsInput | number
-    costo_repuestos?: FloatFieldUpdateOperationsInput | number
-    mano_de_obra?: FloatFieldUpdateOperationsInput | number
-    costo_total?: FloatFieldUpdateOperationsInput | number
+    mano_de_obra?: IntFieldUpdateOperationsInput | number
     taller?: StringFieldUpdateOperationsInput | string
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    costo_total?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     vehiculo?: VehiculoUpdateOneRequiredWithoutMantencionesNestedInput
+    conductor?: ConductorUpdateOneWithoutMantencionesNestedInput
     repuestos?: RepuestoMantencionUpdateManyWithoutMantencionNestedInput
   }
 
   export type MantencionUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     vehiculo_id?: StringFieldUpdateOperationsInput | string
+    conductor_id?: NullableStringFieldUpdateOperationsInput | string | null
     fecha?: DateTimeFieldUpdateOperationsInput | Date | string
     tipo?: StringFieldUpdateOperationsInput | string
     kilometraje?: IntFieldUpdateOperationsInput | number
-    costo_repuestos?: FloatFieldUpdateOperationsInput | number
-    mano_de_obra?: FloatFieldUpdateOperationsInput | number
-    costo_total?: FloatFieldUpdateOperationsInput | number
+    mano_de_obra?: IntFieldUpdateOperationsInput | number
     taller?: StringFieldUpdateOperationsInput | string
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    costo_total?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     repuestos?: RepuestoMantencionUncheckedUpdateManyWithoutMantencionNestedInput
   }
@@ -50280,14 +51734,14 @@ export namespace Prisma {
   export type MantencionCreateManyInput = {
     id?: string
     vehiculo_id: string
+    conductor_id?: string | null
     fecha: Date | string
     tipo: string
     kilometraje: number
-    costo_repuestos: number
     mano_de_obra: number
-    costo_total: number
     taller: string
     observaciones?: string | null
+    costo_total: number
     created_at?: Date | string
   }
 
@@ -50296,25 +51750,24 @@ export namespace Prisma {
     fecha?: DateTimeFieldUpdateOperationsInput | Date | string
     tipo?: StringFieldUpdateOperationsInput | string
     kilometraje?: IntFieldUpdateOperationsInput | number
-    costo_repuestos?: FloatFieldUpdateOperationsInput | number
-    mano_de_obra?: FloatFieldUpdateOperationsInput | number
-    costo_total?: FloatFieldUpdateOperationsInput | number
+    mano_de_obra?: IntFieldUpdateOperationsInput | number
     taller?: StringFieldUpdateOperationsInput | string
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    costo_total?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type MantencionUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     vehiculo_id?: StringFieldUpdateOperationsInput | string
+    conductor_id?: NullableStringFieldUpdateOperationsInput | string | null
     fecha?: DateTimeFieldUpdateOperationsInput | Date | string
     tipo?: StringFieldUpdateOperationsInput | string
     kilometraje?: IntFieldUpdateOperationsInput | number
-    costo_repuestos?: FloatFieldUpdateOperationsInput | number
-    mano_de_obra?: FloatFieldUpdateOperationsInput | number
-    costo_total?: FloatFieldUpdateOperationsInput | number
+    mano_de_obra?: IntFieldUpdateOperationsInput | number
     taller?: StringFieldUpdateOperationsInput | string
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    costo_total?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -52610,20 +54063,22 @@ export namespace Prisma {
     litros: number
     monto: number
     taller_o_bencinera: string
-    numero_factura?: number | null
+    numero_factura: number
     created_at?: Date | string
     vehiculo: VehiculoCreateNestedOneWithoutCargas_combustibleInput
+    conductor?: ConductorCreateNestedOneWithoutCargasCombustibleInput
   }
 
   export type CargaCombustibleUncheckedCreateInput = {
     id?: string
     vehiculo_id: string
+    conductor_id?: string | null
     fecha: Date | string
     kilometraje: number
     litros: number
     monto: number
     taller_o_bencinera: string
-    numero_factura?: number | null
+    numero_factura: number
     created_at?: Date | string
   }
 
@@ -52632,34 +54087,37 @@ export namespace Prisma {
     fecha?: DateTimeFieldUpdateOperationsInput | Date | string
     kilometraje?: IntFieldUpdateOperationsInput | number
     litros?: FloatFieldUpdateOperationsInput | number
-    monto?: FloatFieldUpdateOperationsInput | number
+    monto?: IntFieldUpdateOperationsInput | number
     taller_o_bencinera?: StringFieldUpdateOperationsInput | string
-    numero_factura?: NullableIntFieldUpdateOperationsInput | number | null
+    numero_factura?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     vehiculo?: VehiculoUpdateOneRequiredWithoutCargas_combustibleNestedInput
+    conductor?: ConductorUpdateOneWithoutCargasCombustibleNestedInput
   }
 
   export type CargaCombustibleUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     vehiculo_id?: StringFieldUpdateOperationsInput | string
+    conductor_id?: NullableStringFieldUpdateOperationsInput | string | null
     fecha?: DateTimeFieldUpdateOperationsInput | Date | string
     kilometraje?: IntFieldUpdateOperationsInput | number
     litros?: FloatFieldUpdateOperationsInput | number
-    monto?: FloatFieldUpdateOperationsInput | number
+    monto?: IntFieldUpdateOperationsInput | number
     taller_o_bencinera?: StringFieldUpdateOperationsInput | string
-    numero_factura?: NullableIntFieldUpdateOperationsInput | number | null
+    numero_factura?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type CargaCombustibleCreateManyInput = {
     id?: string
     vehiculo_id: string
+    conductor_id?: string | null
     fecha: Date | string
     kilometraje: number
     litros: number
     monto: number
     taller_o_bencinera: string
-    numero_factura?: number | null
+    numero_factura: number
     created_at?: Date | string
   }
 
@@ -52668,21 +54126,114 @@ export namespace Prisma {
     fecha?: DateTimeFieldUpdateOperationsInput | Date | string
     kilometraje?: IntFieldUpdateOperationsInput | number
     litros?: FloatFieldUpdateOperationsInput | number
-    monto?: FloatFieldUpdateOperationsInput | number
+    monto?: IntFieldUpdateOperationsInput | number
     taller_o_bencinera?: StringFieldUpdateOperationsInput | string
-    numero_factura?: NullableIntFieldUpdateOperationsInput | number | null
+    numero_factura?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type CargaCombustibleUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     vehiculo_id?: StringFieldUpdateOperationsInput | string
+    conductor_id?: NullableStringFieldUpdateOperationsInput | string | null
     fecha?: DateTimeFieldUpdateOperationsInput | Date | string
     kilometraje?: IntFieldUpdateOperationsInput | number
     litros?: FloatFieldUpdateOperationsInput | number
-    monto?: FloatFieldUpdateOperationsInput | number
+    monto?: IntFieldUpdateOperationsInput | number
     taller_o_bencinera?: StringFieldUpdateOperationsInput | string
-    numero_factura?: NullableIntFieldUpdateOperationsInput | number | null
+    numero_factura?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ConductorCreateInput = {
+    id?: string
+    rut: string
+    nombre: string
+    apellido: string
+    telefono?: string | null
+    licencia_tipo: string
+    vencimiento_lic: Date | string
+    estado?: string
+    created_at?: Date | string
+    mantenciones?: MantencionCreateNestedManyWithoutConductorInput
+    cargasCombustible?: CargaCombustibleCreateNestedManyWithoutConductorInput
+  }
+
+  export type ConductorUncheckedCreateInput = {
+    id?: string
+    rut: string
+    nombre: string
+    apellido: string
+    telefono?: string | null
+    licencia_tipo: string
+    vencimiento_lic: Date | string
+    estado?: string
+    created_at?: Date | string
+    mantenciones?: MantencionUncheckedCreateNestedManyWithoutConductorInput
+    cargasCombustible?: CargaCombustibleUncheckedCreateNestedManyWithoutConductorInput
+  }
+
+  export type ConductorUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rut?: StringFieldUpdateOperationsInput | string
+    nombre?: StringFieldUpdateOperationsInput | string
+    apellido?: StringFieldUpdateOperationsInput | string
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    licencia_tipo?: StringFieldUpdateOperationsInput | string
+    vencimiento_lic?: DateTimeFieldUpdateOperationsInput | Date | string
+    estado?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    mantenciones?: MantencionUpdateManyWithoutConductorNestedInput
+    cargasCombustible?: CargaCombustibleUpdateManyWithoutConductorNestedInput
+  }
+
+  export type ConductorUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rut?: StringFieldUpdateOperationsInput | string
+    nombre?: StringFieldUpdateOperationsInput | string
+    apellido?: StringFieldUpdateOperationsInput | string
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    licencia_tipo?: StringFieldUpdateOperationsInput | string
+    vencimiento_lic?: DateTimeFieldUpdateOperationsInput | Date | string
+    estado?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    mantenciones?: MantencionUncheckedUpdateManyWithoutConductorNestedInput
+    cargasCombustible?: CargaCombustibleUncheckedUpdateManyWithoutConductorNestedInput
+  }
+
+  export type ConductorCreateManyInput = {
+    id?: string
+    rut: string
+    nombre: string
+    apellido: string
+    telefono?: string | null
+    licencia_tipo: string
+    vencimiento_lic: Date | string
+    estado?: string
+    created_at?: Date | string
+  }
+
+  export type ConductorUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rut?: StringFieldUpdateOperationsInput | string
+    nombre?: StringFieldUpdateOperationsInput | string
+    apellido?: StringFieldUpdateOperationsInput | string
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    licencia_tipo?: StringFieldUpdateOperationsInput | string
+    vencimiento_lic?: DateTimeFieldUpdateOperationsInput | Date | string
+    estado?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ConductorUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rut?: StringFieldUpdateOperationsInput | string
+    nombre?: StringFieldUpdateOperationsInput | string
+    apellido?: StringFieldUpdateOperationsInput | string
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    licencia_tipo?: StringFieldUpdateOperationsInput | string
+    vencimiento_lic?: DateTimeFieldUpdateOperationsInput | Date | string
+    estado?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -53063,20 +54614,14 @@ export namespace Prisma {
     _max?: NestedEnumEstadoVehiculoFilter<$PrismaModel>
   }
 
-  export type FloatFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel>
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatFilter<$PrismaModel> | number
-  }
-
   export type VehiculoScalarRelationFilter = {
     is?: VehiculoWhereInput
     isNot?: VehiculoWhereInput
+  }
+
+  export type ConductorNullableScalarRelationFilter = {
+    is?: ConductorWhereInput | null
+    isNot?: ConductorWhereInput | null
   }
 
   export type RepuestoMantencionListRelationFilter = {
@@ -53092,20 +54637,19 @@ export namespace Prisma {
   export type MantencionCountOrderByAggregateInput = {
     id?: SortOrder
     vehiculo_id?: SortOrder
+    conductor_id?: SortOrder
     fecha?: SortOrder
     tipo?: SortOrder
     kilometraje?: SortOrder
-    costo_repuestos?: SortOrder
     mano_de_obra?: SortOrder
-    costo_total?: SortOrder
     taller?: SortOrder
     observaciones?: SortOrder
+    costo_total?: SortOrder
     created_at?: SortOrder
   }
 
   export type MantencionAvgOrderByAggregateInput = {
     kilometraje?: SortOrder
-    costo_repuestos?: SortOrder
     mano_de_obra?: SortOrder
     costo_total?: SortOrder
   }
@@ -53113,39 +54657,38 @@ export namespace Prisma {
   export type MantencionMaxOrderByAggregateInput = {
     id?: SortOrder
     vehiculo_id?: SortOrder
+    conductor_id?: SortOrder
     fecha?: SortOrder
     tipo?: SortOrder
     kilometraje?: SortOrder
-    costo_repuestos?: SortOrder
     mano_de_obra?: SortOrder
-    costo_total?: SortOrder
     taller?: SortOrder
     observaciones?: SortOrder
+    costo_total?: SortOrder
     created_at?: SortOrder
   }
 
   export type MantencionMinOrderByAggregateInput = {
     id?: SortOrder
     vehiculo_id?: SortOrder
+    conductor_id?: SortOrder
     fecha?: SortOrder
     tipo?: SortOrder
     kilometraje?: SortOrder
-    costo_repuestos?: SortOrder
     mano_de_obra?: SortOrder
-    costo_total?: SortOrder
     taller?: SortOrder
     observaciones?: SortOrder
+    costo_total?: SortOrder
     created_at?: SortOrder
   }
 
   export type MantencionSumOrderByAggregateInput = {
     kilometraje?: SortOrder
-    costo_repuestos?: SortOrder
     mano_de_obra?: SortOrder
     costo_total?: SortOrder
   }
 
-  export type FloatWithAggregatesFilter<$PrismaModel = never> = {
+  export type FloatFilter<$PrismaModel = never> = {
     equals?: number | FloatFieldRefInput<$PrismaModel>
     in?: number[] | ListFloatFieldRefInput<$PrismaModel>
     notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
@@ -53153,12 +54696,7 @@ export namespace Prisma {
     lte?: number | FloatFieldRefInput<$PrismaModel>
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedFloatFilter<$PrismaModel>
-    _min?: NestedFloatFilter<$PrismaModel>
-    _max?: NestedFloatFilter<$PrismaModel>
+    not?: NestedFloatFilter<$PrismaModel> | number
   }
 
   export type MantencionScalarRelationFilter = {
@@ -53198,6 +54736,22 @@ export namespace Prisma {
   export type RepuestoMantencionSumOrderByAggregateInput = {
     cantidad?: SortOrder
     costo_unitario?: SortOrder
+  }
+
+  export type FloatWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedFloatFilter<$PrismaModel>
+    _min?: NestedFloatFilter<$PrismaModel>
+    _max?: NestedFloatFilter<$PrismaModel>
   }
 
   export type EnumTipoAlertaFilter<$PrismaModel = never> = {
@@ -55042,6 +56596,7 @@ export namespace Prisma {
   export type CargaCombustibleCountOrderByAggregateInput = {
     id?: SortOrder
     vehiculo_id?: SortOrder
+    conductor_id?: SortOrder
     fecha?: SortOrder
     kilometraje?: SortOrder
     litros?: SortOrder
@@ -55061,6 +56616,7 @@ export namespace Prisma {
   export type CargaCombustibleMaxOrderByAggregateInput = {
     id?: SortOrder
     vehiculo_id?: SortOrder
+    conductor_id?: SortOrder
     fecha?: SortOrder
     kilometraje?: SortOrder
     litros?: SortOrder
@@ -55073,6 +56629,7 @@ export namespace Prisma {
   export type CargaCombustibleMinOrderByAggregateInput = {
     id?: SortOrder
     vehiculo_id?: SortOrder
+    conductor_id?: SortOrder
     fecha?: SortOrder
     kilometraje?: SortOrder
     litros?: SortOrder
@@ -55087,6 +56644,42 @@ export namespace Prisma {
     litros?: SortOrder
     monto?: SortOrder
     numero_factura?: SortOrder
+  }
+
+  export type ConductorCountOrderByAggregateInput = {
+    id?: SortOrder
+    rut?: SortOrder
+    nombre?: SortOrder
+    apellido?: SortOrder
+    telefono?: SortOrder
+    licencia_tipo?: SortOrder
+    vencimiento_lic?: SortOrder
+    estado?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type ConductorMaxOrderByAggregateInput = {
+    id?: SortOrder
+    rut?: SortOrder
+    nombre?: SortOrder
+    apellido?: SortOrder
+    telefono?: SortOrder
+    licencia_tipo?: SortOrder
+    vencimiento_lic?: SortOrder
+    estado?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type ConductorMinOrderByAggregateInput = {
+    id?: SortOrder
+    rut?: SortOrder
+    nombre?: SortOrder
+    apellido?: SortOrder
+    telefono?: SortOrder
+    licencia_tipo?: SortOrder
+    vencimiento_lic?: SortOrder
+    estado?: SortOrder
+    created_at?: SortOrder
   }
 
   export type VehiculoCreateNestedOneWithoutUsuariosInput = {
@@ -55731,6 +57324,12 @@ export namespace Prisma {
     connect?: VehiculoWhereUniqueInput
   }
 
+  export type ConductorCreateNestedOneWithoutMantencionesInput = {
+    create?: XOR<ConductorCreateWithoutMantencionesInput, ConductorUncheckedCreateWithoutMantencionesInput>
+    connectOrCreate?: ConductorCreateOrConnectWithoutMantencionesInput
+    connect?: ConductorWhereUniqueInput
+  }
+
   export type RepuestoMantencionCreateNestedManyWithoutMantencionInput = {
     create?: XOR<RepuestoMantencionCreateWithoutMantencionInput, RepuestoMantencionUncheckedCreateWithoutMantencionInput> | RepuestoMantencionCreateWithoutMantencionInput[] | RepuestoMantencionUncheckedCreateWithoutMantencionInput[]
     connectOrCreate?: RepuestoMantencionCreateOrConnectWithoutMantencionInput | RepuestoMantencionCreateOrConnectWithoutMantencionInput[]
@@ -55745,20 +57344,22 @@ export namespace Prisma {
     connect?: RepuestoMantencionWhereUniqueInput | RepuestoMantencionWhereUniqueInput[]
   }
 
-  export type FloatFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
-  }
-
   export type VehiculoUpdateOneRequiredWithoutMantencionesNestedInput = {
     create?: XOR<VehiculoCreateWithoutMantencionesInput, VehiculoUncheckedCreateWithoutMantencionesInput>
     connectOrCreate?: VehiculoCreateOrConnectWithoutMantencionesInput
     upsert?: VehiculoUpsertWithoutMantencionesInput
     connect?: VehiculoWhereUniqueInput
     update?: XOR<XOR<VehiculoUpdateToOneWithWhereWithoutMantencionesInput, VehiculoUpdateWithoutMantencionesInput>, VehiculoUncheckedUpdateWithoutMantencionesInput>
+  }
+
+  export type ConductorUpdateOneWithoutMantencionesNestedInput = {
+    create?: XOR<ConductorCreateWithoutMantencionesInput, ConductorUncheckedCreateWithoutMantencionesInput>
+    connectOrCreate?: ConductorCreateOrConnectWithoutMantencionesInput
+    upsert?: ConductorUpsertWithoutMantencionesInput
+    disconnect?: ConductorWhereInput | boolean
+    delete?: ConductorWhereInput | boolean
+    connect?: ConductorWhereUniqueInput
+    update?: XOR<XOR<ConductorUpdateToOneWithWhereWithoutMantencionesInput, ConductorUpdateWithoutMantencionesInput>, ConductorUncheckedUpdateWithoutMantencionesInput>
   }
 
   export type RepuestoMantencionUpdateManyWithoutMantencionNestedInput = {
@@ -55793,6 +57394,14 @@ export namespace Prisma {
     create?: XOR<MantencionCreateWithoutRepuestosInput, MantencionUncheckedCreateWithoutRepuestosInput>
     connectOrCreate?: MantencionCreateOrConnectWithoutRepuestosInput
     connect?: MantencionWhereUniqueInput
+  }
+
+  export type FloatFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
   }
 
   export type MantencionUpdateOneRequiredWithoutRepuestosNestedInput = {
@@ -57683,12 +59292,112 @@ export namespace Prisma {
     connect?: VehiculoWhereUniqueInput
   }
 
+  export type ConductorCreateNestedOneWithoutCargasCombustibleInput = {
+    create?: XOR<ConductorCreateWithoutCargasCombustibleInput, ConductorUncheckedCreateWithoutCargasCombustibleInput>
+    connectOrCreate?: ConductorCreateOrConnectWithoutCargasCombustibleInput
+    connect?: ConductorWhereUniqueInput
+  }
+
   export type VehiculoUpdateOneRequiredWithoutCargas_combustibleNestedInput = {
     create?: XOR<VehiculoCreateWithoutCargas_combustibleInput, VehiculoUncheckedCreateWithoutCargas_combustibleInput>
     connectOrCreate?: VehiculoCreateOrConnectWithoutCargas_combustibleInput
     upsert?: VehiculoUpsertWithoutCargas_combustibleInput
     connect?: VehiculoWhereUniqueInput
     update?: XOR<XOR<VehiculoUpdateToOneWithWhereWithoutCargas_combustibleInput, VehiculoUpdateWithoutCargas_combustibleInput>, VehiculoUncheckedUpdateWithoutCargas_combustibleInput>
+  }
+
+  export type ConductorUpdateOneWithoutCargasCombustibleNestedInput = {
+    create?: XOR<ConductorCreateWithoutCargasCombustibleInput, ConductorUncheckedCreateWithoutCargasCombustibleInput>
+    connectOrCreate?: ConductorCreateOrConnectWithoutCargasCombustibleInput
+    upsert?: ConductorUpsertWithoutCargasCombustibleInput
+    disconnect?: ConductorWhereInput | boolean
+    delete?: ConductorWhereInput | boolean
+    connect?: ConductorWhereUniqueInput
+    update?: XOR<XOR<ConductorUpdateToOneWithWhereWithoutCargasCombustibleInput, ConductorUpdateWithoutCargasCombustibleInput>, ConductorUncheckedUpdateWithoutCargasCombustibleInput>
+  }
+
+  export type MantencionCreateNestedManyWithoutConductorInput = {
+    create?: XOR<MantencionCreateWithoutConductorInput, MantencionUncheckedCreateWithoutConductorInput> | MantencionCreateWithoutConductorInput[] | MantencionUncheckedCreateWithoutConductorInput[]
+    connectOrCreate?: MantencionCreateOrConnectWithoutConductorInput | MantencionCreateOrConnectWithoutConductorInput[]
+    createMany?: MantencionCreateManyConductorInputEnvelope
+    connect?: MantencionWhereUniqueInput | MantencionWhereUniqueInput[]
+  }
+
+  export type CargaCombustibleCreateNestedManyWithoutConductorInput = {
+    create?: XOR<CargaCombustibleCreateWithoutConductorInput, CargaCombustibleUncheckedCreateWithoutConductorInput> | CargaCombustibleCreateWithoutConductorInput[] | CargaCombustibleUncheckedCreateWithoutConductorInput[]
+    connectOrCreate?: CargaCombustibleCreateOrConnectWithoutConductorInput | CargaCombustibleCreateOrConnectWithoutConductorInput[]
+    createMany?: CargaCombustibleCreateManyConductorInputEnvelope
+    connect?: CargaCombustibleWhereUniqueInput | CargaCombustibleWhereUniqueInput[]
+  }
+
+  export type MantencionUncheckedCreateNestedManyWithoutConductorInput = {
+    create?: XOR<MantencionCreateWithoutConductorInput, MantencionUncheckedCreateWithoutConductorInput> | MantencionCreateWithoutConductorInput[] | MantencionUncheckedCreateWithoutConductorInput[]
+    connectOrCreate?: MantencionCreateOrConnectWithoutConductorInput | MantencionCreateOrConnectWithoutConductorInput[]
+    createMany?: MantencionCreateManyConductorInputEnvelope
+    connect?: MantencionWhereUniqueInput | MantencionWhereUniqueInput[]
+  }
+
+  export type CargaCombustibleUncheckedCreateNestedManyWithoutConductorInput = {
+    create?: XOR<CargaCombustibleCreateWithoutConductorInput, CargaCombustibleUncheckedCreateWithoutConductorInput> | CargaCombustibleCreateWithoutConductorInput[] | CargaCombustibleUncheckedCreateWithoutConductorInput[]
+    connectOrCreate?: CargaCombustibleCreateOrConnectWithoutConductorInput | CargaCombustibleCreateOrConnectWithoutConductorInput[]
+    createMany?: CargaCombustibleCreateManyConductorInputEnvelope
+    connect?: CargaCombustibleWhereUniqueInput | CargaCombustibleWhereUniqueInput[]
+  }
+
+  export type MantencionUpdateManyWithoutConductorNestedInput = {
+    create?: XOR<MantencionCreateWithoutConductorInput, MantencionUncheckedCreateWithoutConductorInput> | MantencionCreateWithoutConductorInput[] | MantencionUncheckedCreateWithoutConductorInput[]
+    connectOrCreate?: MantencionCreateOrConnectWithoutConductorInput | MantencionCreateOrConnectWithoutConductorInput[]
+    upsert?: MantencionUpsertWithWhereUniqueWithoutConductorInput | MantencionUpsertWithWhereUniqueWithoutConductorInput[]
+    createMany?: MantencionCreateManyConductorInputEnvelope
+    set?: MantencionWhereUniqueInput | MantencionWhereUniqueInput[]
+    disconnect?: MantencionWhereUniqueInput | MantencionWhereUniqueInput[]
+    delete?: MantencionWhereUniqueInput | MantencionWhereUniqueInput[]
+    connect?: MantencionWhereUniqueInput | MantencionWhereUniqueInput[]
+    update?: MantencionUpdateWithWhereUniqueWithoutConductorInput | MantencionUpdateWithWhereUniqueWithoutConductorInput[]
+    updateMany?: MantencionUpdateManyWithWhereWithoutConductorInput | MantencionUpdateManyWithWhereWithoutConductorInput[]
+    deleteMany?: MantencionScalarWhereInput | MantencionScalarWhereInput[]
+  }
+
+  export type CargaCombustibleUpdateManyWithoutConductorNestedInput = {
+    create?: XOR<CargaCombustibleCreateWithoutConductorInput, CargaCombustibleUncheckedCreateWithoutConductorInput> | CargaCombustibleCreateWithoutConductorInput[] | CargaCombustibleUncheckedCreateWithoutConductorInput[]
+    connectOrCreate?: CargaCombustibleCreateOrConnectWithoutConductorInput | CargaCombustibleCreateOrConnectWithoutConductorInput[]
+    upsert?: CargaCombustibleUpsertWithWhereUniqueWithoutConductorInput | CargaCombustibleUpsertWithWhereUniqueWithoutConductorInput[]
+    createMany?: CargaCombustibleCreateManyConductorInputEnvelope
+    set?: CargaCombustibleWhereUniqueInput | CargaCombustibleWhereUniqueInput[]
+    disconnect?: CargaCombustibleWhereUniqueInput | CargaCombustibleWhereUniqueInput[]
+    delete?: CargaCombustibleWhereUniqueInput | CargaCombustibleWhereUniqueInput[]
+    connect?: CargaCombustibleWhereUniqueInput | CargaCombustibleWhereUniqueInput[]
+    update?: CargaCombustibleUpdateWithWhereUniqueWithoutConductorInput | CargaCombustibleUpdateWithWhereUniqueWithoutConductorInput[]
+    updateMany?: CargaCombustibleUpdateManyWithWhereWithoutConductorInput | CargaCombustibleUpdateManyWithWhereWithoutConductorInput[]
+    deleteMany?: CargaCombustibleScalarWhereInput | CargaCombustibleScalarWhereInput[]
+  }
+
+  export type MantencionUncheckedUpdateManyWithoutConductorNestedInput = {
+    create?: XOR<MantencionCreateWithoutConductorInput, MantencionUncheckedCreateWithoutConductorInput> | MantencionCreateWithoutConductorInput[] | MantencionUncheckedCreateWithoutConductorInput[]
+    connectOrCreate?: MantencionCreateOrConnectWithoutConductorInput | MantencionCreateOrConnectWithoutConductorInput[]
+    upsert?: MantencionUpsertWithWhereUniqueWithoutConductorInput | MantencionUpsertWithWhereUniqueWithoutConductorInput[]
+    createMany?: MantencionCreateManyConductorInputEnvelope
+    set?: MantencionWhereUniqueInput | MantencionWhereUniqueInput[]
+    disconnect?: MantencionWhereUniqueInput | MantencionWhereUniqueInput[]
+    delete?: MantencionWhereUniqueInput | MantencionWhereUniqueInput[]
+    connect?: MantencionWhereUniqueInput | MantencionWhereUniqueInput[]
+    update?: MantencionUpdateWithWhereUniqueWithoutConductorInput | MantencionUpdateWithWhereUniqueWithoutConductorInput[]
+    updateMany?: MantencionUpdateManyWithWhereWithoutConductorInput | MantencionUpdateManyWithWhereWithoutConductorInput[]
+    deleteMany?: MantencionScalarWhereInput | MantencionScalarWhereInput[]
+  }
+
+  export type CargaCombustibleUncheckedUpdateManyWithoutConductorNestedInput = {
+    create?: XOR<CargaCombustibleCreateWithoutConductorInput, CargaCombustibleUncheckedCreateWithoutConductorInput> | CargaCombustibleCreateWithoutConductorInput[] | CargaCombustibleUncheckedCreateWithoutConductorInput[]
+    connectOrCreate?: CargaCombustibleCreateOrConnectWithoutConductorInput | CargaCombustibleCreateOrConnectWithoutConductorInput[]
+    upsert?: CargaCombustibleUpsertWithWhereUniqueWithoutConductorInput | CargaCombustibleUpsertWithWhereUniqueWithoutConductorInput[]
+    createMany?: CargaCombustibleCreateManyConductorInputEnvelope
+    set?: CargaCombustibleWhereUniqueInput | CargaCombustibleWhereUniqueInput[]
+    disconnect?: CargaCombustibleWhereUniqueInput | CargaCombustibleWhereUniqueInput[]
+    delete?: CargaCombustibleWhereUniqueInput | CargaCombustibleWhereUniqueInput[]
+    connect?: CargaCombustibleWhereUniqueInput | CargaCombustibleWhereUniqueInput[]
+    update?: CargaCombustibleUpdateWithWhereUniqueWithoutConductorInput | CargaCombustibleUpdateWithWhereUniqueWithoutConductorInput[]
+    updateMany?: CargaCombustibleUpdateManyWithWhereWithoutConductorInput | CargaCombustibleUpdateManyWithWhereWithoutConductorInput[]
+    deleteMany?: CargaCombustibleScalarWhereInput | CargaCombustibleScalarWhereInput[]
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -58956,25 +60665,25 @@ export namespace Prisma {
     fecha: Date | string
     tipo: string
     kilometraje: number
-    costo_repuestos: number
     mano_de_obra: number
-    costo_total: number
     taller: string
     observaciones?: string | null
+    costo_total: number
     created_at?: Date | string
+    conductor?: ConductorCreateNestedOneWithoutMantencionesInput
     repuestos?: RepuestoMantencionCreateNestedManyWithoutMantencionInput
   }
 
   export type MantencionUncheckedCreateWithoutVehiculoInput = {
     id?: string
+    conductor_id?: string | null
     fecha: Date | string
     tipo: string
     kilometraje: number
-    costo_repuestos: number
     mano_de_obra: number
-    costo_total: number
     taller: string
     observaciones?: string | null
+    costo_total: number
     created_at?: Date | string
     repuestos?: RepuestoMantencionUncheckedCreateNestedManyWithoutMantencionInput
   }
@@ -59084,18 +60793,20 @@ export namespace Prisma {
     litros: number
     monto: number
     taller_o_bencinera: string
-    numero_factura?: number | null
+    numero_factura: number
     created_at?: Date | string
+    conductor?: ConductorCreateNestedOneWithoutCargasCombustibleInput
   }
 
   export type CargaCombustibleUncheckedCreateWithoutVehiculoInput = {
     id?: string
+    conductor_id?: string | null
     fecha: Date | string
     kilometraje: number
     litros: number
     monto: number
     taller_o_bencinera: string
-    numero_factura?: number | null
+    numero_factura: number
     created_at?: Date | string
   }
 
@@ -59163,14 +60874,14 @@ export namespace Prisma {
     NOT?: MantencionScalarWhereInput | MantencionScalarWhereInput[]
     id?: StringFilter<"Mantencion"> | string
     vehiculo_id?: StringFilter<"Mantencion"> | string
+    conductor_id?: StringNullableFilter<"Mantencion"> | string | null
     fecha?: DateTimeFilter<"Mantencion"> | Date | string
     tipo?: StringFilter<"Mantencion"> | string
     kilometraje?: IntFilter<"Mantencion"> | number
-    costo_repuestos?: FloatFilter<"Mantencion"> | number
-    mano_de_obra?: FloatFilter<"Mantencion"> | number
-    costo_total?: FloatFilter<"Mantencion"> | number
+    mano_de_obra?: IntFilter<"Mantencion"> | number
     taller?: StringFilter<"Mantencion"> | string
     observaciones?: StringNullableFilter<"Mantencion"> | string | null
+    costo_total?: IntFilter<"Mantencion"> | number
     created_at?: DateTimeFilter<"Mantencion"> | Date | string
   }
 
@@ -59256,12 +60967,13 @@ export namespace Prisma {
     NOT?: CargaCombustibleScalarWhereInput | CargaCombustibleScalarWhereInput[]
     id?: StringFilter<"CargaCombustible"> | string
     vehiculo_id?: StringFilter<"CargaCombustible"> | string
+    conductor_id?: StringNullableFilter<"CargaCombustible"> | string | null
     fecha?: DateTimeFilter<"CargaCombustible"> | Date | string
     kilometraje?: IntFilter<"CargaCombustible"> | number
     litros?: FloatFilter<"CargaCombustible"> | number
-    monto?: FloatFilter<"CargaCombustible"> | number
+    monto?: IntFilter<"CargaCombustible"> | number
     taller_o_bencinera?: StringFilter<"CargaCombustible"> | string
-    numero_factura?: IntNullableFilter<"CargaCombustible"> | number | null
+    numero_factura?: IntFilter<"CargaCombustible"> | number
     created_at?: DateTimeFilter<"CargaCombustible"> | Date | string
   }
 
@@ -59300,6 +61012,37 @@ export namespace Prisma {
   export type VehiculoCreateOrConnectWithoutMantencionesInput = {
     where: VehiculoWhereUniqueInput
     create: XOR<VehiculoCreateWithoutMantencionesInput, VehiculoUncheckedCreateWithoutMantencionesInput>
+  }
+
+  export type ConductorCreateWithoutMantencionesInput = {
+    id?: string
+    rut: string
+    nombre: string
+    apellido: string
+    telefono?: string | null
+    licencia_tipo: string
+    vencimiento_lic: Date | string
+    estado?: string
+    created_at?: Date | string
+    cargasCombustible?: CargaCombustibleCreateNestedManyWithoutConductorInput
+  }
+
+  export type ConductorUncheckedCreateWithoutMantencionesInput = {
+    id?: string
+    rut: string
+    nombre: string
+    apellido: string
+    telefono?: string | null
+    licencia_tipo: string
+    vencimiento_lic: Date | string
+    estado?: string
+    created_at?: Date | string
+    cargasCombustible?: CargaCombustibleUncheckedCreateNestedManyWithoutConductorInput
+  }
+
+  export type ConductorCreateOrConnectWithoutMantencionesInput = {
+    where: ConductorWhereUniqueInput
+    create: XOR<ConductorCreateWithoutMantencionesInput, ConductorUncheckedCreateWithoutMantencionesInput>
   }
 
   export type RepuestoMantencionCreateWithoutMantencionInput = {
@@ -59369,6 +61112,43 @@ export namespace Prisma {
     cargas_combustible?: CargaCombustibleUncheckedUpdateManyWithoutVehiculoNestedInput
   }
 
+  export type ConductorUpsertWithoutMantencionesInput = {
+    update: XOR<ConductorUpdateWithoutMantencionesInput, ConductorUncheckedUpdateWithoutMantencionesInput>
+    create: XOR<ConductorCreateWithoutMantencionesInput, ConductorUncheckedCreateWithoutMantencionesInput>
+    where?: ConductorWhereInput
+  }
+
+  export type ConductorUpdateToOneWithWhereWithoutMantencionesInput = {
+    where?: ConductorWhereInput
+    data: XOR<ConductorUpdateWithoutMantencionesInput, ConductorUncheckedUpdateWithoutMantencionesInput>
+  }
+
+  export type ConductorUpdateWithoutMantencionesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rut?: StringFieldUpdateOperationsInput | string
+    nombre?: StringFieldUpdateOperationsInput | string
+    apellido?: StringFieldUpdateOperationsInput | string
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    licencia_tipo?: StringFieldUpdateOperationsInput | string
+    vencimiento_lic?: DateTimeFieldUpdateOperationsInput | Date | string
+    estado?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    cargasCombustible?: CargaCombustibleUpdateManyWithoutConductorNestedInput
+  }
+
+  export type ConductorUncheckedUpdateWithoutMantencionesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rut?: StringFieldUpdateOperationsInput | string
+    nombre?: StringFieldUpdateOperationsInput | string
+    apellido?: StringFieldUpdateOperationsInput | string
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    licencia_tipo?: StringFieldUpdateOperationsInput | string
+    vencimiento_lic?: DateTimeFieldUpdateOperationsInput | Date | string
+    estado?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    cargasCombustible?: CargaCombustibleUncheckedUpdateManyWithoutConductorNestedInput
+  }
+
   export type RepuestoMantencionUpsertWithWhereUniqueWithoutMantencionInput = {
     where: RepuestoMantencionWhereUniqueInput
     update: XOR<RepuestoMantencionUpdateWithoutMantencionInput, RepuestoMantencionUncheckedUpdateWithoutMantencionInput>
@@ -59401,26 +61181,26 @@ export namespace Prisma {
     fecha: Date | string
     tipo: string
     kilometraje: number
-    costo_repuestos: number
     mano_de_obra: number
-    costo_total: number
     taller: string
     observaciones?: string | null
+    costo_total: number
     created_at?: Date | string
     vehiculo: VehiculoCreateNestedOneWithoutMantencionesInput
+    conductor?: ConductorCreateNestedOneWithoutMantencionesInput
   }
 
   export type MantencionUncheckedCreateWithoutRepuestosInput = {
     id?: string
     vehiculo_id: string
+    conductor_id?: string | null
     fecha: Date | string
     tipo: string
     kilometraje: number
-    costo_repuestos: number
     mano_de_obra: number
-    costo_total: number
     taller: string
     observaciones?: string | null
+    costo_total: number
     created_at?: Date | string
   }
 
@@ -59445,26 +61225,26 @@ export namespace Prisma {
     fecha?: DateTimeFieldUpdateOperationsInput | Date | string
     tipo?: StringFieldUpdateOperationsInput | string
     kilometraje?: IntFieldUpdateOperationsInput | number
-    costo_repuestos?: FloatFieldUpdateOperationsInput | number
-    mano_de_obra?: FloatFieldUpdateOperationsInput | number
-    costo_total?: FloatFieldUpdateOperationsInput | number
+    mano_de_obra?: IntFieldUpdateOperationsInput | number
     taller?: StringFieldUpdateOperationsInput | string
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    costo_total?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     vehiculo?: VehiculoUpdateOneRequiredWithoutMantencionesNestedInput
+    conductor?: ConductorUpdateOneWithoutMantencionesNestedInput
   }
 
   export type MantencionUncheckedUpdateWithoutRepuestosInput = {
     id?: StringFieldUpdateOperationsInput | string
     vehiculo_id?: StringFieldUpdateOperationsInput | string
+    conductor_id?: NullableStringFieldUpdateOperationsInput | string | null
     fecha?: DateTimeFieldUpdateOperationsInput | Date | string
     tipo?: StringFieldUpdateOperationsInput | string
     kilometraje?: IntFieldUpdateOperationsInput | number
-    costo_repuestos?: FloatFieldUpdateOperationsInput | number
-    mano_de_obra?: FloatFieldUpdateOperationsInput | number
-    costo_total?: FloatFieldUpdateOperationsInput | number
+    mano_de_obra?: IntFieldUpdateOperationsInput | number
     taller?: StringFieldUpdateOperationsInput | string
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    costo_total?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -64375,6 +66155,37 @@ export namespace Prisma {
     create: XOR<VehiculoCreateWithoutCargas_combustibleInput, VehiculoUncheckedCreateWithoutCargas_combustibleInput>
   }
 
+  export type ConductorCreateWithoutCargasCombustibleInput = {
+    id?: string
+    rut: string
+    nombre: string
+    apellido: string
+    telefono?: string | null
+    licencia_tipo: string
+    vencimiento_lic: Date | string
+    estado?: string
+    created_at?: Date | string
+    mantenciones?: MantencionCreateNestedManyWithoutConductorInput
+  }
+
+  export type ConductorUncheckedCreateWithoutCargasCombustibleInput = {
+    id?: string
+    rut: string
+    nombre: string
+    apellido: string
+    telefono?: string | null
+    licencia_tipo: string
+    vencimiento_lic: Date | string
+    estado?: string
+    created_at?: Date | string
+    mantenciones?: MantencionUncheckedCreateNestedManyWithoutConductorInput
+  }
+
+  export type ConductorCreateOrConnectWithoutCargasCombustibleInput = {
+    where: ConductorWhereUniqueInput
+    create: XOR<ConductorCreateWithoutCargasCombustibleInput, ConductorUncheckedCreateWithoutCargasCombustibleInput>
+  }
+
   export type VehiculoUpsertWithoutCargas_combustibleInput = {
     update: XOR<VehiculoUpdateWithoutCargas_combustibleInput, VehiculoUncheckedUpdateWithoutCargas_combustibleInput>
     create: XOR<VehiculoCreateWithoutCargas_combustibleInput, VehiculoUncheckedCreateWithoutCargas_combustibleInput>
@@ -64416,6 +66227,147 @@ export namespace Prisma {
     alertas?: AlertaVehiculoUncheckedUpdateManyWithoutVehiculoNestedInput
     rutas_base?: RutaBaseUncheckedUpdateManyWithoutVehiculoNestedInput
     rutas_dia?: RutaDiaUncheckedUpdateManyWithoutVehiculoNestedInput
+  }
+
+  export type ConductorUpsertWithoutCargasCombustibleInput = {
+    update: XOR<ConductorUpdateWithoutCargasCombustibleInput, ConductorUncheckedUpdateWithoutCargasCombustibleInput>
+    create: XOR<ConductorCreateWithoutCargasCombustibleInput, ConductorUncheckedCreateWithoutCargasCombustibleInput>
+    where?: ConductorWhereInput
+  }
+
+  export type ConductorUpdateToOneWithWhereWithoutCargasCombustibleInput = {
+    where?: ConductorWhereInput
+    data: XOR<ConductorUpdateWithoutCargasCombustibleInput, ConductorUncheckedUpdateWithoutCargasCombustibleInput>
+  }
+
+  export type ConductorUpdateWithoutCargasCombustibleInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rut?: StringFieldUpdateOperationsInput | string
+    nombre?: StringFieldUpdateOperationsInput | string
+    apellido?: StringFieldUpdateOperationsInput | string
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    licencia_tipo?: StringFieldUpdateOperationsInput | string
+    vencimiento_lic?: DateTimeFieldUpdateOperationsInput | Date | string
+    estado?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    mantenciones?: MantencionUpdateManyWithoutConductorNestedInput
+  }
+
+  export type ConductorUncheckedUpdateWithoutCargasCombustibleInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rut?: StringFieldUpdateOperationsInput | string
+    nombre?: StringFieldUpdateOperationsInput | string
+    apellido?: StringFieldUpdateOperationsInput | string
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    licencia_tipo?: StringFieldUpdateOperationsInput | string
+    vencimiento_lic?: DateTimeFieldUpdateOperationsInput | Date | string
+    estado?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    mantenciones?: MantencionUncheckedUpdateManyWithoutConductorNestedInput
+  }
+
+  export type MantencionCreateWithoutConductorInput = {
+    id?: string
+    fecha: Date | string
+    tipo: string
+    kilometraje: number
+    mano_de_obra: number
+    taller: string
+    observaciones?: string | null
+    costo_total: number
+    created_at?: Date | string
+    vehiculo: VehiculoCreateNestedOneWithoutMantencionesInput
+    repuestos?: RepuestoMantencionCreateNestedManyWithoutMantencionInput
+  }
+
+  export type MantencionUncheckedCreateWithoutConductorInput = {
+    id?: string
+    vehiculo_id: string
+    fecha: Date | string
+    tipo: string
+    kilometraje: number
+    mano_de_obra: number
+    taller: string
+    observaciones?: string | null
+    costo_total: number
+    created_at?: Date | string
+    repuestos?: RepuestoMantencionUncheckedCreateNestedManyWithoutMantencionInput
+  }
+
+  export type MantencionCreateOrConnectWithoutConductorInput = {
+    where: MantencionWhereUniqueInput
+    create: XOR<MantencionCreateWithoutConductorInput, MantencionUncheckedCreateWithoutConductorInput>
+  }
+
+  export type MantencionCreateManyConductorInputEnvelope = {
+    data: MantencionCreateManyConductorInput | MantencionCreateManyConductorInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CargaCombustibleCreateWithoutConductorInput = {
+    id?: string
+    fecha: Date | string
+    kilometraje: number
+    litros: number
+    monto: number
+    taller_o_bencinera: string
+    numero_factura: number
+    created_at?: Date | string
+    vehiculo: VehiculoCreateNestedOneWithoutCargas_combustibleInput
+  }
+
+  export type CargaCombustibleUncheckedCreateWithoutConductorInput = {
+    id?: string
+    vehiculo_id: string
+    fecha: Date | string
+    kilometraje: number
+    litros: number
+    monto: number
+    taller_o_bencinera: string
+    numero_factura: number
+    created_at?: Date | string
+  }
+
+  export type CargaCombustibleCreateOrConnectWithoutConductorInput = {
+    where: CargaCombustibleWhereUniqueInput
+    create: XOR<CargaCombustibleCreateWithoutConductorInput, CargaCombustibleUncheckedCreateWithoutConductorInput>
+  }
+
+  export type CargaCombustibleCreateManyConductorInputEnvelope = {
+    data: CargaCombustibleCreateManyConductorInput | CargaCombustibleCreateManyConductorInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type MantencionUpsertWithWhereUniqueWithoutConductorInput = {
+    where: MantencionWhereUniqueInput
+    update: XOR<MantencionUpdateWithoutConductorInput, MantencionUncheckedUpdateWithoutConductorInput>
+    create: XOR<MantencionCreateWithoutConductorInput, MantencionUncheckedCreateWithoutConductorInput>
+  }
+
+  export type MantencionUpdateWithWhereUniqueWithoutConductorInput = {
+    where: MantencionWhereUniqueInput
+    data: XOR<MantencionUpdateWithoutConductorInput, MantencionUncheckedUpdateWithoutConductorInput>
+  }
+
+  export type MantencionUpdateManyWithWhereWithoutConductorInput = {
+    where: MantencionScalarWhereInput
+    data: XOR<MantencionUpdateManyMutationInput, MantencionUncheckedUpdateManyWithoutConductorInput>
+  }
+
+  export type CargaCombustibleUpsertWithWhereUniqueWithoutConductorInput = {
+    where: CargaCombustibleWhereUniqueInput
+    update: XOR<CargaCombustibleUpdateWithoutConductorInput, CargaCombustibleUncheckedUpdateWithoutConductorInput>
+    create: XOR<CargaCombustibleCreateWithoutConductorInput, CargaCombustibleUncheckedCreateWithoutConductorInput>
+  }
+
+  export type CargaCombustibleUpdateWithWhereUniqueWithoutConductorInput = {
+    where: CargaCombustibleWhereUniqueInput
+    data: XOR<CargaCombustibleUpdateWithoutConductorInput, CargaCombustibleUncheckedUpdateWithoutConductorInput>
+  }
+
+  export type CargaCombustibleUpdateManyWithWhereWithoutConductorInput = {
+    where: CargaCombustibleScalarWhereInput
+    data: XOR<CargaCombustibleUpdateManyMutationInput, CargaCombustibleUncheckedUpdateManyWithoutConductorInput>
   }
 
   export type RutaBaseCreateManyUsuarioInput = {
@@ -64771,14 +66723,14 @@ export namespace Prisma {
 
   export type MantencionCreateManyVehiculoInput = {
     id?: string
+    conductor_id?: string | null
     fecha: Date | string
     tipo: string
     kilometraje: number
-    costo_repuestos: number
     mano_de_obra: number
-    costo_total: number
     taller: string
     observaciones?: string | null
+    costo_total: number
     created_at?: Date | string
   }
 
@@ -64809,12 +66761,13 @@ export namespace Prisma {
 
   export type CargaCombustibleCreateManyVehiculoInput = {
     id?: string
+    conductor_id?: string | null
     fecha: Date | string
     kilometraje: number
     litros: number
     monto: number
     taller_o_bencinera: string
-    numero_factura?: number | null
+    numero_factura: number
     created_at?: Date | string
   }
 
@@ -64875,39 +66828,39 @@ export namespace Prisma {
     fecha?: DateTimeFieldUpdateOperationsInput | Date | string
     tipo?: StringFieldUpdateOperationsInput | string
     kilometraje?: IntFieldUpdateOperationsInput | number
-    costo_repuestos?: FloatFieldUpdateOperationsInput | number
-    mano_de_obra?: FloatFieldUpdateOperationsInput | number
-    costo_total?: FloatFieldUpdateOperationsInput | number
+    mano_de_obra?: IntFieldUpdateOperationsInput | number
     taller?: StringFieldUpdateOperationsInput | string
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    costo_total?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    conductor?: ConductorUpdateOneWithoutMantencionesNestedInput
     repuestos?: RepuestoMantencionUpdateManyWithoutMantencionNestedInput
   }
 
   export type MantencionUncheckedUpdateWithoutVehiculoInput = {
     id?: StringFieldUpdateOperationsInput | string
+    conductor_id?: NullableStringFieldUpdateOperationsInput | string | null
     fecha?: DateTimeFieldUpdateOperationsInput | Date | string
     tipo?: StringFieldUpdateOperationsInput | string
     kilometraje?: IntFieldUpdateOperationsInput | number
-    costo_repuestos?: FloatFieldUpdateOperationsInput | number
-    mano_de_obra?: FloatFieldUpdateOperationsInput | number
-    costo_total?: FloatFieldUpdateOperationsInput | number
+    mano_de_obra?: IntFieldUpdateOperationsInput | number
     taller?: StringFieldUpdateOperationsInput | string
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    costo_total?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     repuestos?: RepuestoMantencionUncheckedUpdateManyWithoutMantencionNestedInput
   }
 
   export type MantencionUncheckedUpdateManyWithoutVehiculoInput = {
     id?: StringFieldUpdateOperationsInput | string
+    conductor_id?: NullableStringFieldUpdateOperationsInput | string | null
     fecha?: DateTimeFieldUpdateOperationsInput | Date | string
     tipo?: StringFieldUpdateOperationsInput | string
     kilometraje?: IntFieldUpdateOperationsInput | number
-    costo_repuestos?: FloatFieldUpdateOperationsInput | number
-    mano_de_obra?: FloatFieldUpdateOperationsInput | number
-    costo_total?: FloatFieldUpdateOperationsInput | number
+    mano_de_obra?: IntFieldUpdateOperationsInput | number
     taller?: StringFieldUpdateOperationsInput | string
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    costo_total?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -64999,31 +66952,34 @@ export namespace Prisma {
     fecha?: DateTimeFieldUpdateOperationsInput | Date | string
     kilometraje?: IntFieldUpdateOperationsInput | number
     litros?: FloatFieldUpdateOperationsInput | number
-    monto?: FloatFieldUpdateOperationsInput | number
+    monto?: IntFieldUpdateOperationsInput | number
     taller_o_bencinera?: StringFieldUpdateOperationsInput | string
-    numero_factura?: NullableIntFieldUpdateOperationsInput | number | null
+    numero_factura?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    conductor?: ConductorUpdateOneWithoutCargasCombustibleNestedInput
   }
 
   export type CargaCombustibleUncheckedUpdateWithoutVehiculoInput = {
     id?: StringFieldUpdateOperationsInput | string
+    conductor_id?: NullableStringFieldUpdateOperationsInput | string | null
     fecha?: DateTimeFieldUpdateOperationsInput | Date | string
     kilometraje?: IntFieldUpdateOperationsInput | number
     litros?: FloatFieldUpdateOperationsInput | number
-    monto?: FloatFieldUpdateOperationsInput | number
+    monto?: IntFieldUpdateOperationsInput | number
     taller_o_bencinera?: StringFieldUpdateOperationsInput | string
-    numero_factura?: NullableIntFieldUpdateOperationsInput | number | null
+    numero_factura?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type CargaCombustibleUncheckedUpdateManyWithoutVehiculoInput = {
     id?: StringFieldUpdateOperationsInput | string
+    conductor_id?: NullableStringFieldUpdateOperationsInput | string | null
     fecha?: DateTimeFieldUpdateOperationsInput | Date | string
     kilometraje?: IntFieldUpdateOperationsInput | number
     litros?: FloatFieldUpdateOperationsInput | number
-    monto?: FloatFieldUpdateOperationsInput | number
+    monto?: IntFieldUpdateOperationsInput | number
     taller_o_bencinera?: StringFieldUpdateOperationsInput | string
-    numero_factura?: NullableIntFieldUpdateOperationsInput | number | null
+    numero_factura?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -66072,6 +68028,108 @@ export namespace Prisma {
     mano_de_obra?: FloatFieldUpdateOperationsInput | number
     costo_total?: FloatFieldUpdateOperationsInput | number
     nombre_receptor_devolucion?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type MantencionCreateManyConductorInput = {
+    id?: string
+    vehiculo_id: string
+    fecha: Date | string
+    tipo: string
+    kilometraje: number
+    mano_de_obra: number
+    taller: string
+    observaciones?: string | null
+    costo_total: number
+    created_at?: Date | string
+  }
+
+  export type CargaCombustibleCreateManyConductorInput = {
+    id?: string
+    vehiculo_id: string
+    fecha: Date | string
+    kilometraje: number
+    litros: number
+    monto: number
+    taller_o_bencinera: string
+    numero_factura: number
+    created_at?: Date | string
+  }
+
+  export type MantencionUpdateWithoutConductorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fecha?: DateTimeFieldUpdateOperationsInput | Date | string
+    tipo?: StringFieldUpdateOperationsInput | string
+    kilometraje?: IntFieldUpdateOperationsInput | number
+    mano_de_obra?: IntFieldUpdateOperationsInput | number
+    taller?: StringFieldUpdateOperationsInput | string
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    costo_total?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    vehiculo?: VehiculoUpdateOneRequiredWithoutMantencionesNestedInput
+    repuestos?: RepuestoMantencionUpdateManyWithoutMantencionNestedInput
+  }
+
+  export type MantencionUncheckedUpdateWithoutConductorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    vehiculo_id?: StringFieldUpdateOperationsInput | string
+    fecha?: DateTimeFieldUpdateOperationsInput | Date | string
+    tipo?: StringFieldUpdateOperationsInput | string
+    kilometraje?: IntFieldUpdateOperationsInput | number
+    mano_de_obra?: IntFieldUpdateOperationsInput | number
+    taller?: StringFieldUpdateOperationsInput | string
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    costo_total?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    repuestos?: RepuestoMantencionUncheckedUpdateManyWithoutMantencionNestedInput
+  }
+
+  export type MantencionUncheckedUpdateManyWithoutConductorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    vehiculo_id?: StringFieldUpdateOperationsInput | string
+    fecha?: DateTimeFieldUpdateOperationsInput | Date | string
+    tipo?: StringFieldUpdateOperationsInput | string
+    kilometraje?: IntFieldUpdateOperationsInput | number
+    mano_de_obra?: IntFieldUpdateOperationsInput | number
+    taller?: StringFieldUpdateOperationsInput | string
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    costo_total?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CargaCombustibleUpdateWithoutConductorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fecha?: DateTimeFieldUpdateOperationsInput | Date | string
+    kilometraje?: IntFieldUpdateOperationsInput | number
+    litros?: FloatFieldUpdateOperationsInput | number
+    monto?: IntFieldUpdateOperationsInput | number
+    taller_o_bencinera?: StringFieldUpdateOperationsInput | string
+    numero_factura?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    vehiculo?: VehiculoUpdateOneRequiredWithoutCargas_combustibleNestedInput
+  }
+
+  export type CargaCombustibleUncheckedUpdateWithoutConductorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    vehiculo_id?: StringFieldUpdateOperationsInput | string
+    fecha?: DateTimeFieldUpdateOperationsInput | Date | string
+    kilometraje?: IntFieldUpdateOperationsInput | number
+    litros?: FloatFieldUpdateOperationsInput | number
+    monto?: IntFieldUpdateOperationsInput | number
+    taller_o_bencinera?: StringFieldUpdateOperationsInput | string
+    numero_factura?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CargaCombustibleUncheckedUpdateManyWithoutConductorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    vehiculo_id?: StringFieldUpdateOperationsInput | string
+    fecha?: DateTimeFieldUpdateOperationsInput | Date | string
+    kilometraje?: IntFieldUpdateOperationsInput | number
+    litros?: FloatFieldUpdateOperationsInput | number
+    monto?: IntFieldUpdateOperationsInput | number
+    taller_o_bencinera?: StringFieldUpdateOperationsInput | string
+    numero_factura?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 
