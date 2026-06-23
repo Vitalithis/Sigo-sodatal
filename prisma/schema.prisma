@@ -5,6 +5,7 @@
 generator client {
   provider   = "prisma-client-js"
   engineType = "library"
+  output     = "../lib/prisma/generated"
 }
 
 datasource db {
@@ -190,6 +191,7 @@ model Vehiculo {
   alertas            AlertaVehiculo[]
   rutas_base         RutaBase[]
   rutas_dia          RutaDia[]
+  cargas_combustible  CargaCombustible[]
 }
 
 model Mantencion {
@@ -581,7 +583,7 @@ model Notificacion {
   mensaje            String
   usuario_destino_id String
   leida              Boolean  @default(false)
-  created_at         DateTime @default(now()) // 💡 Corregido: @default(now()) en lugar de @now()
+  created_at         DateTime @default(now()) 
   metadata           Json?
 }
 model HistorialFinanciero {
@@ -594,4 +596,16 @@ model HistorialFinanciero {
   documento_ref            String?                  
   sincronizado_facturacion Boolean                  @default(false)
   cliente                  Cliente                  @relation(fields: [cliente_id], references: [id], onDelete: Cascade)
+}
+model CargaCombustible {
+  id                 String   @id @default(uuid())
+  vehiculo_id        String
+  fecha              DateTime
+  kilometraje        Int
+  litros             Float    // Usamos Float por si cargan decimales (ej: 45.5L)
+  monto              Float    // Usamos Float para mantener consistencia con tus otros montos
+  taller_o_bencinera String
+  numero_factura     Int?
+  created_at         DateTime @default(now())
+  vehiculo           Vehiculo @relation(fields: [vehiculo_id], references: [id], onDelete: Cascade)
 }

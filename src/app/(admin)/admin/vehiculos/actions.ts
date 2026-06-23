@@ -23,6 +23,16 @@ export interface MantencionInput {
   repuestos: { nombre: string; cantidad: number; costo_unitario: number }[];
 }
 
+export interface CargaCombustibleInput {
+  vehiculo_id: string;
+  fecha: string;
+  kilometraje: number;
+  litros: number;
+  monto: number;
+  taller_o_bencinera: string;
+  numero_factura?: number | null;
+}
+
 // ==========================================
 // ACTIONS DE VEHÍCULOS
 // ==========================================
@@ -31,7 +41,6 @@ export async function crearVehiculoAction(data: VehiculoInput) {
   try {
     const patenteNormalizada = data.patente.toUpperCase().replace(/[^A-Z0-9]/g, '');
     
-    // Cambiado de prisma.vehiculos a prisma.vehiculo (singular según tu schema)
     const existe = await prisma.vehiculo.findUnique({
       where: { patente: patenteNormalizada }
     });
@@ -60,7 +69,6 @@ export async function crearVehiculoAction(data: VehiculoInput) {
 
 export async function editarVehiculoAction(id: string, data: Partial<VehiculoInput>) {
   try {
-    // Cambiado a prisma.vehiculo
     const actualizado = await prisma.vehiculo.update({
       where: { id },
       data: {
@@ -91,7 +99,6 @@ export async function registrarMantencionAction(data: MantencionInput) {
     const costoTotal = costoRepuestosTotal + Number(data.mano_de_obra);
 
     const resultado = await prisma.$transaction(async (tx) => {
-      // Cambiado a tx.mantencion
       const mantencion = await tx.mantencion.create({
         data: {
           vehiculo_id: data.vehiculo_id,
@@ -106,7 +113,6 @@ export async function registrarMantencionAction(data: MantencionInput) {
         }
       });
 
-      // Cambiado a tx.repuestoMantencion (Prisma mapea repuestos_mantencion como camelCase)
       if (data.repuestos.length > 0) {
         await tx.repuestoMantencion.createMany({
           data: data.repuestos.map(r => ({
@@ -118,7 +124,6 @@ export async function registrarMantencionAction(data: MantencionInput) {
         });
       }
 
-      // Cambiado a tx.vehiculo
       const vehiculo = await tx.vehiculo.findUnique({ where: { id: data.vehiculo_id } });
       if (vehiculo && Number(data.kilometraje) > vehiculo.kilometraje_actual) {
         await tx.vehiculo.update({
@@ -127,7 +132,6 @@ export async function registrarMantencionAction(data: MantencionInput) {
         });
       }
 
-      // Cambiado a tx.alertaVehiculo y usando enum 'KM' en mayúsculas
       await tx.alertaVehiculo.updateMany({
         where: {
           vehiculo_id: data.vehiculo_id,
@@ -150,7 +154,6 @@ export async function registrarMantencionAction(data: MantencionInput) {
 
 export async function crearAlertaVehiculoAction(vehiculoId: string, tipo: 'KM' | 'FECHA', valorKm?: number, fechaAlerta?: string) {
   try {
-    // Cambiado a prisma.alertaVehiculo
     const nuevaAlerta = await prisma.alertaVehiculo.create({
       data: {
         vehiculo_id: vehiculoId,
@@ -167,7 +170,7 @@ export async function crearAlertaVehiculoAction(vehiculoId: string, tipo: 'KM' |
     return { success: false, message: 'No se pudo configurar la alerta preventiva.' };
   }
 }
-// Acción para modificar una alerta existente
+
 export async function modificarAlertaAction(
   alertaId: string,
   valores: { valor_km?: number; fecha_alerta?: string; tipo: 'KM' | 'FECHA' }
@@ -181,20 +184,94 @@ export async function modificarAlertaAction(
         fecha_alerta: valores.tipo === 'FECHA' && valores.fecha_alerta ? new Date(valores.fecha_alerta) : null,
       },
     });
+    revalidatePath('/admin/vehiculos');
     return { success: true };
   } catch (error: any) {
     return { success: false, message: error.message || 'Error al modificar la alerta.' };
   }
 }
 
-// Acción para eliminar/quitar una alerta manualmente
 export async function eliminarAlertaAction(alertaId: string) {
   try {
     await prisma.alertaVehiculo.delete({
       where: { id: alertaId },
     });
+    revalidatePath('/admin/vehiculos');
     return { success: true };
   } catch (error: any) {
     return { success: false, message: error.message || 'Error al eliminar la alerta.' };
+  }
+}
+
+// ==========================================
+// ACTIONS DE RENDIMIENTO DE COMBUSTIBLE
+// ==========================================
+
+export async function registrarCargaCombustibleAction(data: CargaCombustibleInput) {
+  try {
+    const resultado = await prisma.$transaction(async (tx) => {
+      
+      const nuevaCarga = await tx.cargaCombustible.create({
+        data: {
+          vehiculo_id: data.vehiculo_id,
+          fecha: new Date(data.fecha),
+          kilometraje: Number(data.kilometraje),
+          litros: Number(data.litros),
+          monto: Number(data.monto),
+          taller_o_bencinera: data.taller_o_bencinera,
+          
+          // Casamos estrictamente el número de factura
+          numero_factura: (data.numero_factura && Number(data.numero_factura) > 0) 
+            ? Number(data.numero_factura) 
+            : null
+        }
+      });
+
+      // Sincronizar el odómetro del vehículo si aplica
+      const vehiculo = await tx.vehiculo.findUnique({ where: { id: data.vehiculo_id } });
+      if (vehiculo && Number(data.kilometraje) > vehiculo.kilometraje_actual) {
+        await tx.vehiculo.update({
+          where: { id: data.vehiculo_id },
+          data: { kilometraje_actual: Number(data.kilometraje) }
+        });
+      }
+
+      // Desactivar alertas por KM
+      await tx.alertaVehiculo.updateMany({
+        where: {
+          vehiculo_id: data.vehiculo_id,
+          tipo: 'KM',
+          valor_km: { lte: Number(data.kilometraje) },
+          activa: true
+        },
+        data: { activa: false }
+      });
+
+      return nuevaCarga;
+    });
+
+    revalidatePath('/admin/vehiculos');
+    return { success: true, data: resultado };
+    
+  } catch (error: any) {
+    console.error("❌ ERROR DETECTADO EN registrarCargaCombustibleAction:", error);
+    return { success: false, message: error.message || 'Error al registrar la carga de combustible.' };
+  }
+}
+
+export async function obtenerCargasCombustibleAction(vehiculoId: string) {
+  try {
+    const cargas = await prisma.cargaCombustible.findMany({
+      where: {
+        vehiculo_id: vehiculoId,
+      },
+      orderBy: {
+        fecha: 'desc',
+      },
+    });
+    
+    return { success: true, data: cargas };
+  } catch (error: any) {
+    return { success: false, message: error.message || 'Error al obtener el historial.' };
   }
 }

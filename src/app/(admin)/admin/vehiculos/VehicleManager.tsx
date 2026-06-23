@@ -9,7 +9,8 @@ import {
   crearAlertaVehiculoAction,
   modificarAlertaAction,
   eliminarAlertaAction,
-  VehiculoInput
+  VehiculoInput,
+  registrarCargaCombustibleAction
 } from './actions';
 
 interface VehicleManagerProps {
@@ -22,7 +23,7 @@ export default function VehicleManager({ initialVehiculos }: VehicleManagerProps
   
   // Guardamos solo el ID del vehículo seleccionado para buscar siempre la data fresca de initialVehiculos
   const [vehiculoSeleccionadoId, setVehiculoSeleccionadoId] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'historial' | 'nueva-mantencion' | 'alertas'>('historial');
+  const [activeTab, setActiveTab] = useState<'historial' | 'nueva-mantencion' | 'alertas' | 'combustible'>('historial');
 
   // Encontrar la data reactiva del vehículo seleccionado
   const vehiculoSeleccionado = initialVehiculos.find(v => v.id === vehiculoSeleccionadoId) || null;
@@ -45,6 +46,21 @@ export default function VehicleManager({ initialVehiculos }: VehicleManagerProps
   // Formulario Alertas
   const [alertaForm, setAlertaForm] = useState({ tipo: 'KM', valor_km: '', fecha_alerta: '' });
   const [editandoAlertaId, setEditandoAlertaId] = useState<string | null>(null);
+
+  // Formulario Combustible
+  const [combustibleForm, setCombustibleForm] = useState({
+    fecha: new Date().toISOString().split('T')[0],
+    kilometraje: '',
+    litros: '',
+    monto: '',
+    bencinera: 'Copec',
+    numero_factura: '' 
+  });
+
+  // 🔎 Estados locales para Filtro y Paginación de Combustible
+  const [busquedaCombustible, setBusquedaCombustible] = useState('');
+  const [paginaActualCombustible, setPaginaActualCombustible] = useState(1);
+  const itemsPorPagina = 10;
 
   const handleOpenCreate = () => {
     setErrorForm(null);
@@ -98,7 +114,6 @@ export default function VehicleManager({ initialVehiculos }: VehicleManagerProps
       setMantencionForm({ tipo: 'PREVENTIVA', kilometraje: '', mano_de_obra: '', taller: '', observaciones: '', fecha: new Date().toISOString().split('T')[0] });
       setRepuestosList([]);
       router.refresh();
-      setVehiculoSeleccionadoId(null);
     }
   };
 
@@ -153,9 +168,36 @@ export default function VehicleManager({ initialVehiculos }: VehicleManagerProps
     }
   };
 
+  const handleGuardarCombustible = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!vehiculoSeleccionado) return;
+
+    const res = await registrarCargaCombustibleAction({
+      vehiculo_id: vehiculoSeleccionado.id,
+      fecha: combustibleForm.fecha,
+      kilometraje: Number(combustibleForm.kilometraje),
+      litros: Number(combustibleForm.litros),
+      monto: Number(combustibleForm.monto),
+      taller_o_bencinera: combustibleForm.bencinera,
+      numero_factura: Number(combustibleForm.numero_factura)
+    });
+
+    if (res.success) {
+      setCombustibleForm({
+        fecha: new Date().toISOString().split('T')[0],
+        kilometraje: '',
+        litros: '',
+        monto: '',
+        bencinera: 'Copec',
+        numero_factura: ''
+      });
+      setPaginaActualCombustible(1); // Resetea a la primera página tras guardar
+      router.refresh();
+    }
+  };
+
   return (
-  // Cambiamos 'space-y-6' por 'flex flex-col gap-6'
-  <div className="px-6 pb-6 pt-6 flex flex-col gap-6">
+    <div className="px-6 pb-6 pt-6 flex flex-col gap-6">
       {/* Encabezado */}
       <div className="flex justify-between items-center pt-6">
         <div>
@@ -182,6 +224,8 @@ export default function VehicleManager({ initialVehiculos }: VehicleManagerProps
             }
             return false;
           });
+
+          const totalCargas = vehiculo.cargas_combustible?.length || vehiculo.cargasCombustible?.length || 0;
 
           return (
             <div key={vehiculo.id} className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs relative flex flex-col justify-between space-y-4">
@@ -221,10 +265,17 @@ export default function VehicleManager({ initialVehiculos }: VehicleManagerProps
                 </select>
                 
                 <button 
-                  onClick={() => { setVehiculoSeleccionadoId(vehiculo.id); setActiveTab('historial'); setEditandoAlertaId(null); setAlertaForm({ tipo: 'KM', valor_km: '', fecha_alerta: '' }); }}
+                  onClick={() => { 
+                    setVehiculoSeleccionadoId(vehiculo.id); 
+                    setActiveTab('historial'); 
+                    setEditandoAlertaId(null); 
+                    setAlertaForm({ tipo: 'KM', valor_km: '', fecha_alerta: '' });
+                    setBusquedaCombustible(''); 
+                    setPaginaActualCombustible(1); 
+                  }}
                   className="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold px-3 py-1.5 rounded transition-colors"
                 >
-                  🔧 Bitácora Técnica ({vehiculo.mantenciones?.length || 0})
+                  🔧 Taller ({vehiculo.mantenciones?.length || 0}) | ⛽ ({totalCargas})
                 </button>
               </div>
             </div>
@@ -290,10 +341,11 @@ export default function VehicleManager({ initialVehiculos }: VehicleManagerProps
               <button onClick={() => setVehiculoSeleccionadoId(null)} className="text-white text-2xl font-semibold">&times;</button>
             </div>
 
-            <div className="flex border-b text-xs font-bold bg-slate-50">
-              <button onClick={() => setActiveTab('historial')} className={`flex-1 py-3 text-center ${activeTab === 'historial' ? 'bg-white border-b-2 border-blue-600 text-blue-600' : 'text-slate-600'}`}>🛠️ Historial</button>
-              <button onClick={() => setActiveTab('nueva-mantencion')} className={`flex-1 py-3 text-center ${activeTab === 'nueva-mantencion' ? 'bg-white border-b-2 border-blue-600 text-blue-600' : 'text-slate-600'}`}>➕ Registrar Taller</button>
-              <button onClick={() => setActiveTab('alertas')} className={`flex-1 py-3 text-center ${activeTab === 'alertas' ? 'bg-white border-b-2 border-blue-600 text-blue-600' : 'text-slate-600'}`}>⏰ Alertas</button>
+            <div className="flex border-b text-xs font-bold bg-slate-50 overflow-x-auto">
+              <button onClick={() => setActiveTab('historial')} className={`flex-1 py-3 px-2 text-center whitespace-nowrap ${activeTab === 'historial' ? 'bg-white border-b-2 border-blue-600 text-blue-600' : 'text-slate-600'}`}>🛠️ Historial</button>
+              <button onClick={() => setActiveTab('nueva-mantencion')} className={`flex-1 py-3 px-2 text-center whitespace-nowrap ${activeTab === 'nueva-mantencion' ? 'bg-white border-b-2 border-blue-600 text-blue-600' : 'text-slate-600'}`}>➕ Registrar Taller</button>
+              <button onClick={() => { setActiveTab('combustible'); setPaginaActualCombustible(1); }} className={`flex-1 py-3 px-2 text-center whitespace-nowrap ${activeTab === 'combustible' ? 'bg-white border-b-2 border-blue-600 text-blue-600' : 'text-slate-600'}`}>⛽ Combustible</button>
+              <button onClick={() => setActiveTab('alertas')} className={`flex-1 py-3 px-2 text-center whitespace-nowrap ${activeTab === 'alertas' ? 'bg-white border-b-2 border-blue-600 text-blue-600' : 'text-slate-600'}`}>⏰ Alertas</button>
             </div>
 
             <div className="flex-1 overflow-y-auto p-5 space-y-4">
@@ -373,6 +425,185 @@ export default function VehicleManager({ initialVehiculos }: VehicleManagerProps
                 </form>
               )}
 
+              {/* RENDIMIENTO DE COMBUSTIBLE */}
+              {activeTab === 'combustible' && (
+                <div className="space-y-4 text-xs">
+                  <form onSubmit={handleGuardarCombustible} className="border p-4 rounded-xl bg-slate-50 space-y-3 border-amber-200">
+                    <h4 className="font-bold text-amber-900 uppercase">⛽ Registrar Carga de Combustible</h4>
+                    
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="flex flex-col gap-1">
+                        <label className="font-bold text-slate-700 uppercase">Fecha Carga</label>
+                        <input type="date" required value={combustibleForm.fecha} onChange={(e) => setCombustibleForm({...combustibleForm, fecha: e.target.value})} className="border p-2 rounded text-sm bg-white text-slate-900" />
+                      </div>
+                      <div className="flex flex-col gap-1">
+                        <label className="font-bold text-slate-700 uppercase">Estación / Bencinera</label>
+                        <input type="text" required placeholder="Ej: Copec Ruta 5" value={combustibleForm.bencinera} onChange={(e) => setCombustibleForm({...combustibleForm, bencinera: e.target.value})} className="border p-2 rounded text-sm bg-white text-slate-900" />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold text-slate-700 uppercase mb-1">
+                        N° Factura *
+                      </label>
+                      <input
+                        type="number"
+                        required
+                        placeholder="Ej: 148920"
+                        value={combustibleForm.numero_factura} 
+                        onChange={(e) => setCombustibleForm({...combustibleForm, numero_factura: e.target.value})}
+                        className="w-full border p-2 rounded text-sm bg-white text-slate-900"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-3 gap-2">
+                      <div className="flex flex-col gap-1">
+                        <label className="font-bold text-slate-700 uppercase">Odómetro (km)</label>
+                        <input type="number" required placeholder="Ej: 180500" value={combustibleForm.kilometraje} onChange={(e) => setCombustibleForm({...combustibleForm, kilometraje: e.target.value})} className="border p-1.5 rounded bg-white text-sm text-slate-900" />
+                      </div>
+                      <div className="flex flex-col gap-1">
+                        <label className="font-bold text-slate-700 uppercase">Litros (L)</label>
+                        <input type="number" step="0.01" required placeholder="Ej: 45.5" value={combustibleForm.litros} onChange={(e) => setCombustibleForm({...combustibleForm, litros: e.target.value})} className="border p-1.5 rounded bg-white text-sm text-slate-900" />
+                      </div>
+                      <div className="flex flex-col gap-1">
+                        <label className="font-bold text-slate-700 uppercase">Total Pesos ($)</label>
+                        <input type="number" required placeholder="Ej: 55000" value={combustibleForm.monto} onChange={(e) => setCombustibleForm({...combustibleForm, monto: e.target.value})} className="border p-1.5 rounded bg-white text-sm text-slate-900" />
+                      </div>
+                    </div>
+
+                    <button type="submit" className="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold py-2 rounded text-sm shadow-sm transition-colors">
+                      Guardar Carga de Petróleo
+                    </button>
+                  </form>
+
+                  <div className="pt-2 border-t border-slate-200">
+                    <h4 className="font-bold text-slate-500 uppercase tracking-wider mb-2">Historial de Consumo</h4>
+                    
+                    {/* 🔍 Barra de Búsqueda */}
+                    <div className="mb-3">
+                      <input 
+                        type="text"
+                        placeholder="🔍 Buscar por Copec, Shell, Factura..."
+                        value={busquedaCombustible}
+                        onChange={(e) => {
+                          setBusquedaCombustible(e.target.value);
+                          setPaginaActualCombustible(1); 
+                        }}
+                        className="w-full border p-2 rounded-lg text-xs bg-white text-slate-900 border-slate-300 shadow-inner outline-none focus:border-blue-500"
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    {(() => {
+                      const listaCargasOriginal = vehiculoSeleccionado.cargas_combustible || vehiculoSeleccionado.cargasCombustible || [];
+
+                      if (listaCargasOriginal.length === 0) {
+                        return (
+                          <p className="text-center text-sm text-slate-500 italic py-4">
+                            No hay registros de combustible para este camión.
+                          </p>
+                        );
+                      }
+
+                      const cargasOrdenadas = listaCargasOriginal
+                        .slice()
+                        .sort((a: any, b: any) => Number(b.kilometraje) - Number(a.kilometraje));
+
+                      const cargasFiltradas = cargasOrdenadas.filter((c: any) => {
+                        const lugar = (c.taller_o_bencinera || c.bencinera || "").toLowerCase();
+                        const factura = String(c.numero_factura || "").toLowerCase();
+                        const termino = busquedaCombustible.toLowerCase();
+                        return lugar.includes(termino) || factura.includes(termino);
+                      });
+
+                      if (cargasFiltradas.length === 0) {
+                        return (
+                          <p className="text-center text-xs text-slate-400 italic py-4">
+                            Ningún registro coincide con "{busquedaCombustible}".
+                          </p>
+                        );
+                      }
+
+                      const totalItems = cargasFiltradas.length;
+                      const totalPaginas = Math.ceil(totalItems / itemsPorPagina);
+                      const indiceInicial = (paginaActualCombustible - 1) * itemsPorPagina;
+                      const cargasPaginadas = cargasFiltradas.slice(indiceInicial, indiceInicial + itemsPorPagina);
+
+                      return (
+                        <>
+                          {cargasPaginadas.map((c: any) => {
+                            const indexOriginal = cargasOrdenadas.findIndex((o: any) => o.id === c.id);
+                            const siguienteCarga = cargasOrdenadas[indexOriginal + 1];
+                            let rendimientoTexto = "Calculando en próxima carga...";
+                            
+                            if (siguienteCarga && Number(c.litros) > 0) {
+                              const kmsRecorridos = Number(c.kilometraje) - Number(siguienteCarga.kilometraje);
+                              if (kmsRecorridos > 0) {
+                                const rendimiento = kmsRecorridos / Number(c.litros);
+                                rendimientoTexto = `📈 Rendimiento: ${rendimiento.toFixed(2)} km/L`;
+                              }
+                            }
+
+                            const lugarCarga = c.taller_o_bencinera || c.bencinera || "Estación";
+
+                            return (
+                              <div key={c.id} className="p-3 border rounded-xl bg-white shadow-xs flex justify-between items-center border-slate-200">
+                                <div>
+                                  <div className="flex items-center gap-2">
+                                    <span className="font-bold text-slate-800">
+                                      {c.fecha ? new Date(c.fecha).toLocaleDateString('es-CL', { timeZone: 'UTC' }) : 'Sin fecha'}
+                                    </span>
+                                    <span className="text-[10px] bg-slate-100 px-1.5 py-0.5 rounded text-slate-600 font-medium uppercase">
+                                      {lugarCarga}
+                                    </span>
+                                    
+                                    {c.numero_factura && (
+                                      <span className="text-[10px] bg-blue-100 text-blue-800 px-1.5 py-0.5 rounded font-mono font-bold">
+                                        F: N° {c.numero_factura}
+                                      </span>
+                                    )}
+                                  </div>
+                                  <p className="text-slate-500 font-medium mt-1">
+                                    {c.litros} L por <b>${Number(c.monto).toLocaleString('es-CL')}</b> | {Number(c.kilometraje).toLocaleString('es-CL')} km
+                                  </p>
+                                  <p className="text-emerald-700 font-bold mt-0.5 text-[11px]">{rendimientoTexto}</p>
+                                </div>
+                              </div>
+                            );
+                          })}
+
+                          {/* 🔢 Controles de Paginación */}
+                          {totalPaginas > 1 && (
+                            <div className="flex justify-between items-center pt-3 mt-4 border-t border-slate-100 bg-white">
+                              <button
+                                type="button"
+                                disabled={paginaActualCombustible === 1}
+                                onClick={() => setPaginaActualCombustible(prev => prev - 1)}
+                                className="px-3 py-1 bg-slate-100 hover:bg-slate-200 disabled:opacity-50 text-slate-700 rounded font-bold transition-colors"
+                              >
+                                ◀ Anterior
+                              </button>
+                              <span className="text-slate-500 text-xs font-medium">
+                                Página <b>{paginaActualCombustible}</b> de {totalPaginas} ({totalItems} registros)
+                              </span>
+                              <button
+                                type="button"
+                                disabled={paginaActualCombustible === totalPaginas}
+                                onClick={() => setPaginaActualCombustible(prev => prev + 1)}
+                                className="px-3 py-1 bg-slate-100 hover:bg-slate-200 disabled:opacity-50 text-slate-700 rounded font-bold transition-colors"
+                              >
+                                Siguiente ▶
+                              </button>
+                            </div>
+                          )}
+                        </>
+                      );
+                    })()}
+                  </div>
+                </div>
+              )}
+
               {/* GESTIÓN DE ALERTAS */}
               {activeTab === 'alertas' && (
                 <div className="space-y-4 text-xs">
@@ -387,46 +618,51 @@ export default function VehicleManager({ initialVehiculos }: VehicleManagerProps
                     </div>
 
                     {alertaForm.tipo === 'KM' ? (
-                      <input type="number" required placeholder="Gatillar alerta al km..." value={alertaForm.valor_km} onChange={(e) => setAlertaForm({...alertaForm, valor_km: e.target.value})} className="border p-2 w-full rounded bg-white text-slate-900 text-sm" />
+                      <div className="flex flex-col gap-1">
+                        <label className="font-bold text-slate-700 uppercase">¿A qué Kilometraje avisar?</label>
+                        <input type="number" required placeholder="Ej: 150000" value={alertaForm.valor_km} onChange={(e) => setAlertaForm({...alertaForm, valor_km: e.target.value})} className="border p-2 rounded text-sm bg-white text-slate-900" />
+                      </div>
                     ) : (
-                      <input type="date" required value={alertaForm.fecha_alerta} onChange={(e) => setAlertaForm({...alertaForm, fecha_alerta: e.target.value})} className="border p-2 w-full rounded bg-white text-slate-900 text-sm" />
+                      <div className="flex flex-col gap-1">
+                        <label className="font-bold text-slate-700 uppercase">¿En qué fecha avisar?</label>
+                        <input type="date" required value={alertaForm.fecha_alerta} onChange={(e) => setAlertaForm({...alertaForm, fecha_alerta: e.target.value})} className="border p-2 rounded text-sm bg-white text-slate-900" />
+                      </div>
                     )}
 
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 pt-1">
                       {editandoAlertaId && (
-                        <button type="button" onClick={() => { setEditandoAlertaId(null); setAlertaForm({ tipo: 'KM', valor_km: '', fecha_alerta: '' }); }} className="bg-slate-200 text-slate-700 font-bold py-2 px-3 rounded">
-                          Cancelar
-                        </button>
+                        <button type="button" onClick={() => { setEditandoAlertaId(null); setAlertaForm({ tipo: 'KM', valor_km: '', fecha_alerta: '' }); }} className="flex-1 bg-slate-200 text-slate-700 font-bold py-2 rounded text-sm">Cancelar</button>
                       )}
-                      <button type="submit" disabled={isPending} className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded">
-                        {editandoAlertaId ? 'Actualizar Recordatorio' : 'Fijar Alerta Automática'}
-                      </button>
+                      <button type="submit" className="flex-1 bg-blue-600 text-white font-bold py-2 rounded text-sm shadow-sm">{editandoAlertaId ? 'Guardar Cambios' : 'Activar Recordatorio'}</button>
                     </div>
                   </form>
 
-                  <h4 className="font-bold text-slate-500 uppercase tracking-wider">Alertas Programadas</h4>
+                  <h4 className="font-bold text-slate-500 uppercase tracking-wider">Recordatorios Configurados</h4>
                   <div className="space-y-2">
-                    {vehiculoSeleccionado.alertas?.map((a: any) => (
-                      <div key={a.id} className="p-3 border rounded-xl flex justify-between items-center bg-white shadow-xs">
-                        <div>
-                          <p className="font-semibold text-slate-800 uppercase">Disparador por {a.tipo}</p>
-                          <p className="text-slate-500 font-medium mt-0.5">
-                            Valor límite: <b className="text-slate-700">{a.tipo === 'KM' ? `${a.valor_km?.toLocaleString('es-CL')} km` : new Date(a.fecha_alerta).toLocaleDateString('es-CL')}</b>
-                          </p>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <button type="button" onClick={() => handleIniciarEdicionAlerta(a)} className="bg-slate-100 hover:bg-slate-200 p-1.5 rounded text-slate-600" title="Modificar Kilometraje/Fecha">
-                            ✏️
-                          </button>
-                          <button type="button" onClick={() => handleQuitarAlerta(a.id)} className="bg-rose-50 hover:bg-rose-100 p-1.5 rounded text-rose-600" title="Quitar Manualmente">
-                            🗑️
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                    {(!vehiculoSeleccionado.alertas || vehiculoSeleccionado.alertas.length === 0) && (
-                      <p className="text-[11px] text-slate-400 italic text-center py-4">No hay alertas fijadas para esta unidad.</p>
-                    )}
+                    {vehiculoSeleccionado.alertas?.length > 0 ? (
+                      vehiculoSeleccionado.alertas.map((a: any) => {
+                        let vencida = false;
+                        if (a.tipo === 'KM') vencida = Number(vehiculoSeleccionado.kilometraje_actual) >= Number(a.valor_km);
+                        if (a.tipo === 'FECHA') vencida = new Date().setHours(0,0,0,0) >= new Date(a.fecha_alerta).setHours(0,0,0,0);
+
+                        return (
+                          <div key={a.id} className={`p-3 border rounded-xl flex justify-between items-center ${vencida ? 'bg-amber-50 border-amber-300' : 'bg-white'}`}>
+                            <div>
+                              <p className="font-bold text-slate-800">
+                                {a.tipo === 'KM' ? `A los ${Number(a.valor_km).toLocaleString('es-CL')} km` : `El ${new Date(a.fecha_alerta).toLocaleDateString('es-CL', { timeZone: 'UTC' })}`}
+                              </p>
+                              <span className={`text-[10px] font-bold uppercase ${vencida ? 'text-amber-700' : 'text-slate-400'}`}>
+                                {vencida ? '⚠️ Plazo Alcanzado / Requiere Revisión' : '⏳ Pendiente'}
+                              </span>
+                            </div>
+                            <div className="flex gap-2">
+                              <button onClick={() => handleIniciarEdicionAlerta(a)} className="text-blue-600 hover:text-blue-800 font-bold">Editar</button>
+                              <button onClick={() => handleQuitarAlerta(a.id)} className="text-rose-600 hover:text-rose-800 font-bold">Eliminar</button>
+                            </div>
+                          </div>
+                        );
+                      })
+                    ) : <p className="text-xs text-slate-400 text-center py-4">No hay recordatorios activos para este vehículo.</p>}
                   </div>
                 </div>
               )}

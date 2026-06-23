@@ -5,7 +5,7 @@ import VehicleManager from './VehicleManager';
 export const revalidate = 0;
 
 export default async function VehiculosPage() {
-  // Traemos los vehículos con sus mantenciones y alertas ordenados por patente
+  // Traemos los vehículos con sus mantenciones, alertas y combustible ordenados por patente
   const vehiculos = await prisma.vehiculo.findMany({
     include: {
       mantenciones: {
@@ -13,7 +13,12 @@ export default async function VehiculosPage() {
           fecha: 'desc'
         }
       },
-      alertas: true
+      alertas: true,
+      cargas_combustible: { 
+        orderBy: {
+          kilometraje: 'desc'
+        }
+      }
     },
     orderBy: {
       patente: 'asc'

@@ -113,3 +113,27 @@ export async function desactivarProductoAction(id: string) {
     return { success: false, message: error.message || 'Error desconocido al desactivar el producto.' };
   }
 }
+
+export interface CargaCombustibleInput {
+  vehiculo_id: string;
+  fecha: string;
+  kilometraje: number;
+  litros: number;
+  monto: number;
+  taller_o_bencinera: string;
+}
+
+export async function registrarCargaCombustibleAction(payload: CargaCombustibleInput) {
+  try {
+    // Aquí irá tu mutación de base de datos (Prisma, Supabase, pg, etc.)
+    // Ejemplo:
+    // await db.cargaCombustible.create({ data: payload });
+    
+    // Opcional: Aquí podrías actualizar automáticamente el kilometraje_actual del vehículo
+    // para que coincida con el de la última carga de combustible si es mayor.
+
+    return { success: true };
+  } catch (error: any) {
+    return { success: false, message: error.message || 'Error al registrar la carga.' };
+  }
+}
