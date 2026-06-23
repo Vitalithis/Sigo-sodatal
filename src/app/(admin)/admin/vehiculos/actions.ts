@@ -2,15 +2,17 @@
 
 import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
+
 export interface ConductorInput {
   rut: string;
-  nombre: string;
-  apellido: string;
-  telefono?: string | null;
-  licencia_tipo: string;
-  vencimiento_lic: string; // Formato YYYY-MM-DD desde el formulario
-  estado: 'ACTIVO' | 'INACTIVO' | 'VACACIONES' | 'LICENCIA';
+  nombre: string; // Nombre completo (ya que no existe el campo apellido en el esquema)
+  telefono: string;
+  email: string; // Campo obligatorio en tu modelo Usuario
+  licencia_tipo?: string | null;
+  vencimiento_lic?: string | null; // Formato YYYY-MM-DD desde el formulario
+  activo: boolean; // Tu esquema maneja 'activo: Boolean' en lugar de estados de string
 }
+
 export interface VehiculoInput {
   patente: string;
   marca: string;
@@ -22,7 +24,7 @@ export interface VehiculoInput {
 
 export interface MantencionInput {
   vehiculo_id: string;
-  conductor_id?: string | null; 
+  usuario_id?: string | null; // Cambiado conductor_id -> usuario_id según tu esquema
   fecha: string;
   tipo: string;
   kilometraje: number;
@@ -34,7 +36,7 @@ export interface MantencionInput {
 
 export interface CargaCombustibleInput {
   vehiculo_id: string;
-  conductor_id?: string | null;
+  usuario_id?: string | null; // Cambiado conductor_id -> usuario_id según tu esquema
   fecha: string;
   kilometraje: number;
   litros: number;
@@ -112,12 +114,11 @@ export async function registrarMantencionAction(data: MantencionInput) {
       const mantencion = await tx.mantencion.create({
         data: {
           vehiculo_id: data.vehiculo_id,
-          conductor_id: data.conductor_id || null,
+          usuario_id: data.usuario_id || null, // Corregido a usuario_id
           fecha: new Date(data.fecha),
           tipo: data.tipo,
           kilometraje: Number(data.kilometraje),
           mano_de_obra: Number(data.mano_de_obra),
-          costo_repuestos: costoRepuestosTotal,
           costo_total: costoTotal,
           taller: data.taller,
           observaciones: data.observaciones || ''
@@ -178,7 +179,7 @@ export async function crearAlertaVehiculoAction(vehiculoId: string, tipo: 'KM' |
     revalidatePath('/admin/vehiculos');
     return { success: true, data: nuevaAlerta };
   } catch (error: any) {
-    return { success: false, message: 'No se pudo configurar la alerta preventiva.' };
+    return { success: false, message: 'No se pudo configure la alerta preventiva.' };
   }
 }
 
@@ -220,7 +221,6 @@ export async function eliminarAlertaAction(alertaId: string) {
 
 export async function registrarCargaCombustibleAction(data: CargaCombustibleInput) {
   try {
-    // 🛡️ Validación estricta: Si no viene factura o es menor/igual a 0, detenemos el flujo
     if (!data.numero_factura || Number(data.numero_factura) <= 0) {
       return { 
         success: false, 
@@ -233,19 +233,16 @@ export async function registrarCargaCombustibleAction(data: CargaCombustibleInpu
       const nuevaCarga = await tx.cargaCombustible.create({
         data: {
           vehiculo_id: data.vehiculo_id,
-          conductor_id: data.conductor_id || null, // Relación con chofer
+          usuario_id: data.usuario_id || null, // Corregido a usuario_id
           fecha: new Date(data.fecha),
           kilometraje: Number(data.kilometraje),
           litros: Number(data.litros),
           monto: Number(data.monto),
           taller_o_bencinera: data.taller_o_bencinera,
-          
-          // ↴ Aquí ya es seguro pasar el número directamente como un entero puro
           numero_factura: Number(data.numero_factura)
         }
       });
 
-      // Sincronizar el odómetro del vehículo si aplica
       const vehiculo = await tx.vehiculo.findUnique({ where: { id: data.vehiculo_id } });
       if (vehiculo && Number(data.kilometraje) > vehiculo.kilometraje_actual) {
         await tx.vehiculo.update({
@@ -254,7 +251,6 @@ export async function registrarCargaCombustibleAction(data: CargaCombustibleInpu
         });
       }
 
-      // Desactivar alertas por KM
       await tx.alertaVehiculo.updateMany({
         where: {
           vehiculo_id: data.vehiculo_id,
@@ -293,35 +289,39 @@ export async function obtenerCargasCombustibleAction(vehiculoId: string) {
     return { success: false, message: error.message || 'Error al obtener el historial.' };
   }
 }
+
 // ==========================================
-// ACTIONS DE CONDUCTORES / CHOFERES
+// ACTIONS DE CONDUCTORES / CHOFERES (Mapeados al modelo Usuario y Rol REPARTIDOR)
 // ==========================================
 
 export async function crearConductorAction(data: ConductorInput) {
   try {
     const rutNormalizado = data.rut.toUpperCase().replace(/[^0-9Kk]/g, '');
 
-    const existe = await prisma.conductor.findUnique({
+    // Buscamos si existe el RUT en la tabla de usuarios
+    const existe = await prisma.usuario.findUnique({
       where: { rut: rutNormalizado }
     });
 
     if (existe) {
-      return { success: false, message: 'El RUT ya se encuentra asignado a un conductor.' };
+      return { success: false, message: 'El RUT ya se encuentra asignado a un usuario.' };
     }
 
-    const nuevoConductor = await prisma.conductor.create({
+    const nuevoConductor = await prisma.usuario.create({
       data: {
         rut: rutNormalizado,
         nombre: data.nombre,
-        apellido: data.apellido,
-        telefono: data.telefono || null,
-        licencia_tipo: data.licencia_tipo,
-        vencimiento_lic: new Date(data.vencimiento_lic),
-        estado: data.estado
+        telefono: data.telefono || '',
+        email: data.email,
+        rol: 'REPARTIDOR', // Rol para choferes según tus Enums
+        fecha_ingreso: new Date(),
+        activo: data.activo,
+        licencia_tipo: data.licencia_tipo || null,
+        vencimiento_lic: data.vencimiento_lic ? new Date(data.vencimiento_lic) : null
       }
     });
 
-    revalidatePath('/admin/vehiculos'); // Ajusta si la ruta de visualización cambia
+    revalidatePath('/admin/vehiculos');
     return { success: true, data: nuevoConductor };
   } catch (error: any) {
     return { success: false, message: error.message || 'Error al registrar conductor.' };
@@ -330,15 +330,15 @@ export async function crearConductorAction(data: ConductorInput) {
 
 export async function editarConductorAction(id: string, data: Partial<ConductorInput>) {
   try {
-    const actualizado = await prisma.conductor.update({
+    const actualizado = await prisma.usuario.update({
       where: { id },
       data: {
         ...(data.nombre && { nombre: data.nombre }),
-        ...(data.apellido && { apellido: data.apellido }),
-        ...(data.telefono !== undefined && { telefono: data.telefono }),
-        ...(data.licencia_tipo && { licencia_tipo: data.licencia_tipo }),
+        ...(data.telefono !== undefined && { telefono: data.telefono || '' }),
+        ...(data.email && { email: data.email }),
+        ...(data.licencia_tipo !== undefined && { licencia_tipo: data.licencia_tipo }),
         ...(data.vencimiento_lic && { vencimiento_lic: new Date(data.vencimiento_lic) }),
-        ...(data.estado && { estado: data.estado })
+        ...(data.activo !== undefined && { activo: data.activo })
       }
     });
 
@@ -351,9 +351,12 @@ export async function editarConductorAction(id: string, data: Partial<ConductorI
 
 export async function obtenerConductoresActivosAction() {
   try {
-    const conductores = await prisma.conductor.findMany({
-      where: { estado: 'ACTIVO' },
-      orderBy: { apellido: 'asc' }
+    const conductores = await prisma.usuario.findMany({
+      where: { 
+        rol: 'REPARTIDOR', // Filtramos para traer solo conductores
+        activo: true 
+      },
+      orderBy: { nombre: 'asc' } // Ordenado por nombre (ya que apellido no existe)
     });
     return { success: true, data: conductores };
   } catch (error: any) {
