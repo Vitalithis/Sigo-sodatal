@@ -2,7 +2,7 @@
 
 import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
-import { EstadoRuta, EstadoParada, EstadoPedido } from '@prisma/client';
+import { EstadoRuta, EstadoParada, EstadoPedido, TipoCliente, CanalOrigen } from '@prisma/client';
 
 /**
  * Obtiene todas las rutas reales y los pedidos flotantes para una fecha específica
@@ -153,5 +153,91 @@ export async function asignarPedidoARutaAction(pedidoId: string, rutaDiaId: stri
   } catch (error: any) {
     console.error('Error al vincular pedido:', error);
     return { success: false, message: 'No se pudo asignar el pedido al camión.' };
+  }
+}
+
+export async function buscarClientePorTelefonoAction(telefono: string) {
+  try {
+    const cliente = await prisma.cliente.findFirst({
+      where: { telefono: { contains: telefono } }
+    });
+    return { success: true, cliente };
+  } catch (error) {
+    return { success: false, cliente: null };
+  }
+}
+
+export async function obtenerProductosAction() {
+  try {
+    const productos = await prisma.producto.findMany(); // Sin el where, trae todo
+    return { success: true, productos };
+  } catch (error) {
+    return { success: false, productos: [] };
+  }
+}
+
+export async function guardarPedidoRapidoAction(datos: {
+  fecha_solicitada: string;
+  cliente_id?: string;
+  nuevo_cliente?: { nombre: string; telefono: string; direccion: string };
+  producto_id: string;
+  cantidad: number;
+}) {
+  try {
+    let clienteId = datos.cliente_id;
+
+    // Buscamos un usuario para asignarlo como creador del pedido (requisito de tu DB)
+    const usuarioRegistro = await prisma.usuario.findFirst();
+    if (!usuarioRegistro) throw new Error("No existe ningún usuario en el sistema para registrar la orden.");
+
+    // 1. Si no hay cliente_id, significa que es un cliente nuevo y debemos crearlo
+    if (!clienteId && datos.nuevo_cliente) {
+      const nuevo = await prisma.cliente.create({
+        data: {
+          nombre: datos.nuevo_cliente.nombre,
+          telefono: datos.nuevo_cliente.telefono,
+          direccion: datos.nuevo_cliente.direccion,
+          // 👇 SOLUCIÓN: Usamos el Enum importado de Prisma. 
+          // Si 'HOGAR' te da error, bórralo, pon el punto y elige una de tus opciones (ej: TipoCliente.PARTICULAR o TipoCliente.INDIVIDUAL)
+          tipo: TipoCliente.DOMICILIO, 
+        }
+      });
+      clienteId = nuevo.id;
+    }
+
+    if (!clienteId) throw new Error("No se pudo definir el cliente.");
+
+    // 2. Obtener el producto para guardar el precio histórico
+    const producto = await prisma.producto.findUnique({ where: { id: datos.producto_id } });
+    if (!producto) throw new Error("Producto no encontrado");
+
+    const fechaTarget = new Date(datos.fecha_solicitada + 'T12:00:00');
+
+    // 3. Crear el pedido
+    await prisma.pedido.create({
+      data: {
+        cliente_id: clienteId,
+        fecha_solicitada: fechaTarget,
+        estado: EstadoPedido.PENDIENTE_CONFIRMACION,
+        // 👇 SOLUCIÓN: Usamos el Enum importado de Prisma.
+        // Si 'LLAMADO' te da error, bórralo, pon el punto y elige tu opción (ej: CanalOrigen.TELEFONO, CanalOrigen.WHATSAPP, etc.)
+        canal_origen: CanalOrigen.LLAMADO, 
+        usuario_registro_id: usuarioRegistro.id, 
+        items: {
+          create: {
+            producto_id: producto.id,
+            cantidad: datos.cantidad,
+            tipo_transaccion: 'VENTA',
+            precio_historico: producto.precio_venta_nueva 
+          }
+        }
+      }
+    });
+
+    revalidatePath('/admin/rutas');
+    return { success: true };
+  } catch (error: any) {
+    console.error('Error al guardar pedido rápido:', error);
+    return { success: false, message: error.message };
   }
 }

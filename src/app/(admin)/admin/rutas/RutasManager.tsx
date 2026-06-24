@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import NuevoPedidoModal from './NuevoPedidoModal';
 import { obtenerRutasPorFechaAction, generarRutasDesdeBaseAction, asignarPedidoARutaAction } from './actions';
 
 export default function RutasManager() {
@@ -9,6 +10,7 @@ export default function RutasManager() {
   const [rutas, setRutas] = useState<any[]>([]);
   const [pedidos, setPedidos] = useState<any[]>([]);
   const [cargando, setCargando] = useState(false);
+  const [modalAbierto, setModalAbierto] = useState(false);
 
   // Mapeo para saber qué día de la semana cae en base al calendario
   const diasSemanaUnidad = ['DOMINGO', 'LUNES', 'MARTES', 'MIERCOLES', 'JUEVES', 'VIERNES', 'SABADO'];
@@ -155,7 +157,19 @@ export default function RutasManager() {
 
           {/* COLUMNA DERECHA: BOLSA DE PEDIDOS DE LA FECHA SELECCIONADA */}
           <div className="space-y-4">
-            <h2 className="text-lg font-bold text-gray-800 flex items-center gap-2">📥 Pedidos del Día ({pedidos.length})</h2>
+            
+            {/* TÍTULO DE LA COLUMNA DERECHA + BOTÓN NUEVO PEDIDO */}
+            <div className="flex justify-between items-center">
+              <h2 className="text-lg font-bold text-gray-800 flex items-center gap-2">
+                📥 Pedidos del Día ({pedidos.length})
+              </h2>
+              <button 
+                onClick={() => setModalAbierto(true)}
+                className="bg-green-600 hover:bg-green-700 text-white px-3 py-1.5 text-xs font-bold rounded shadow-sm transition-colors"
+              >
+                + Ingresar Pedido
+              </button>
+            </div>
             
             {pedidos.length === 0 ? (
               <div className="bg-white p-6 rounded-lg border border-gray-200 text-center text-sm text-gray-400">
@@ -210,6 +224,18 @@ export default function RutasManager() {
 
         </div>
       )}
+
+      {/* MODAL PARA CREAR PEDIDO RAPIDO */}
+      <NuevoPedidoModal 
+        fecha={fechaSeleccionada} 
+        isOpen={modalAbierto} 
+        onClose={() => setModalAbierto(false)} 
+        onSuccess={() => {
+          setModalAbierto(false);
+          cargarDatos(); // Recarga la lista para que el pedido aparezca al instante
+        }} 
+      />
+
     </div>
   );
 }
