@@ -13732,6 +13732,7 @@ export namespace Prisma {
     activo: boolean | null
     botellones_prestados: number | null
     preferencia_factura: $Enums.PreferenciaFacturacion | null
+    sector: string | null
   }
 
   export type ClienteMaxAggregateOutputType = {
@@ -13749,6 +13750,7 @@ export namespace Prisma {
     activo: boolean | null
     botellones_prestados: number | null
     preferencia_factura: $Enums.PreferenciaFacturacion | null
+    sector: string | null
   }
 
   export type ClienteCountAggregateOutputType = {
@@ -13766,6 +13768,7 @@ export namespace Prisma {
     activo: number
     botellones_prestados: number
     preferencia_factura: number
+    sector: number
     _all: number
   }
 
@@ -13793,6 +13796,7 @@ export namespace Prisma {
     activo?: true
     botellones_prestados?: true
     preferencia_factura?: true
+    sector?: true
   }
 
   export type ClienteMaxAggregateInputType = {
@@ -13810,6 +13814,7 @@ export namespace Prisma {
     activo?: true
     botellones_prestados?: true
     preferencia_factura?: true
+    sector?: true
   }
 
   export type ClienteCountAggregateInputType = {
@@ -13827,6 +13832,7 @@ export namespace Prisma {
     activo?: true
     botellones_prestados?: true
     preferencia_factura?: true
+    sector?: true
     _all?: true
   }
 
@@ -13931,6 +13937,7 @@ export namespace Prisma {
     activo: boolean
     botellones_prestados: number
     preferencia_factura: $Enums.PreferenciaFacturacion
+    sector: string
     _count: ClienteCountAggregateOutputType | null
     _avg: ClienteAvgAggregateOutputType | null
     _sum: ClienteSumAggregateOutputType | null
@@ -13967,6 +13974,7 @@ export namespace Prisma {
     activo?: boolean
     botellones_prestados?: boolean
     preferencia_factura?: boolean
+    sector?: boolean
     botellones_danados?: boolean | Cliente$botellones_danadosArgs<ExtArgs>
     clientes_ruta?: boolean | Cliente$clientes_rutaArgs<ExtArgs>
     dispensadores?: boolean | Cliente$dispensadoresArgs<ExtArgs>
@@ -13992,6 +14000,7 @@ export namespace Prisma {
     activo?: boolean
     botellones_prestados?: boolean
     preferencia_factura?: boolean
+    sector?: boolean
   }, ExtArgs["result"]["cliente"]>
 
   export type ClienteSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -14009,6 +14018,7 @@ export namespace Prisma {
     activo?: boolean
     botellones_prestados?: boolean
     preferencia_factura?: boolean
+    sector?: boolean
   }, ExtArgs["result"]["cliente"]>
 
   export type ClienteSelectScalar = {
@@ -14026,9 +14036,10 @@ export namespace Prisma {
     activo?: boolean
     botellones_prestados?: boolean
     preferencia_factura?: boolean
+    sector?: boolean
   }
 
-  export type ClienteOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nombre" | "tipo" | "direccion" | "telefono" | "email" | "rut_empresa" | "giro" | "modalidad_pago" | "tipo_ruta" | "notas" | "activo" | "botellones_prestados" | "preferencia_factura", ExtArgs["result"]["cliente"]>
+  export type ClienteOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nombre" | "tipo" | "direccion" | "telefono" | "email" | "rut_empresa" | "giro" | "modalidad_pago" | "tipo_ruta" | "notas" | "activo" | "botellones_prestados" | "preferencia_factura" | "sector", ExtArgs["result"]["cliente"]>
   export type ClienteInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     botellones_danados?: boolean | Cliente$botellones_danadosArgs<ExtArgs>
     clientes_ruta?: boolean | Cliente$clientes_rutaArgs<ExtArgs>
@@ -14068,6 +14079,7 @@ export namespace Prisma {
       activo: boolean
       botellones_prestados: number
       preferencia_factura: $Enums.PreferenciaFacturacion
+      sector: string
     }, ExtArgs["result"]["cliente"]>
     composites: {}
   }
@@ -14512,6 +14524,7 @@ export namespace Prisma {
     readonly activo: FieldRef<"Cliente", 'Boolean'>
     readonly botellones_prestados: FieldRef<"Cliente", 'Int'>
     readonly preferencia_factura: FieldRef<"Cliente", 'PreferenciaFacturacion'>
+    readonly sector: FieldRef<"Cliente", 'String'>
   }
     
 
@@ -46853,7 +46866,8 @@ export namespace Prisma {
     notas: 'notas',
     activo: 'activo',
     botellones_prestados: 'botellones_prestados',
-    preferencia_factura: 'preferencia_factura'
+    preferencia_factura: 'preferencia_factura',
+    sector: 'sector'
   };
 
   export type ClienteScalarFieldEnum = (typeof ClienteScalarFieldEnum)[keyof typeof ClienteScalarFieldEnum]
@@ -48246,6 +48260,7 @@ export namespace Prisma {
     activo?: BoolFilter<"Cliente"> | boolean
     botellones_prestados?: IntFilter<"Cliente"> | number
     preferencia_factura?: EnumPreferenciaFacturacionFilter<"Cliente"> | $Enums.PreferenciaFacturacion
+    sector?: StringFilter<"Cliente"> | string
     botellones_danados?: BotellonDanadoListRelationFilter
     clientes_ruta?: ClienteRutaBaseListRelationFilter
     dispensadores?: DispensadorListRelationFilter
@@ -48270,6 +48285,7 @@ export namespace Prisma {
     activo?: SortOrder
     botellones_prestados?: SortOrder
     preferencia_factura?: SortOrder
+    sector?: SortOrder
     botellones_danados?: BotellonDanadoOrderByRelationAggregateInput
     clientes_ruta?: ClienteRutaBaseOrderByRelationAggregateInput
     dispensadores?: DispensadorOrderByRelationAggregateInput
@@ -48297,6 +48313,7 @@ export namespace Prisma {
     activo?: BoolFilter<"Cliente"> | boolean
     botellones_prestados?: IntFilter<"Cliente"> | number
     preferencia_factura?: EnumPreferenciaFacturacionFilter<"Cliente"> | $Enums.PreferenciaFacturacion
+    sector?: StringFilter<"Cliente"> | string
     botellones_danados?: BotellonDanadoListRelationFilter
     clientes_ruta?: ClienteRutaBaseListRelationFilter
     dispensadores?: DispensadorListRelationFilter
@@ -48321,6 +48338,7 @@ export namespace Prisma {
     activo?: SortOrder
     botellones_prestados?: SortOrder
     preferencia_factura?: SortOrder
+    sector?: SortOrder
     _count?: ClienteCountOrderByAggregateInput
     _avg?: ClienteAvgOrderByAggregateInput
     _max?: ClienteMaxOrderByAggregateInput
@@ -48346,6 +48364,7 @@ export namespace Prisma {
     activo?: BoolWithAggregatesFilter<"Cliente"> | boolean
     botellones_prestados?: IntWithAggregatesFilter<"Cliente"> | number
     preferencia_factura?: EnumPreferenciaFacturacionWithAggregatesFilter<"Cliente"> | $Enums.PreferenciaFacturacion
+    sector?: StringWithAggregatesFilter<"Cliente"> | string
   }
 
   export type RutaBaseWhereInput = {
@@ -50924,6 +50943,7 @@ export namespace Prisma {
     activo?: boolean
     botellones_prestados?: number
     preferencia_factura?: $Enums.PreferenciaFacturacion
+    sector?: string
     botellones_danados?: BotellonDanadoCreateNestedManyWithoutClienteInput
     clientes_ruta?: ClienteRutaBaseCreateNestedManyWithoutClienteInput
     dispensadores?: DispensadorCreateNestedManyWithoutClienteInput
@@ -50948,6 +50968,7 @@ export namespace Prisma {
     activo?: boolean
     botellones_prestados?: number
     preferencia_factura?: $Enums.PreferenciaFacturacion
+    sector?: string
     botellones_danados?: BotellonDanadoUncheckedCreateNestedManyWithoutClienteInput
     clientes_ruta?: ClienteRutaBaseUncheckedCreateNestedManyWithoutClienteInput
     dispensadores?: DispensadorUncheckedCreateNestedManyWithoutClienteInput
@@ -50972,6 +50993,7 @@ export namespace Prisma {
     activo?: BoolFieldUpdateOperationsInput | boolean
     botellones_prestados?: IntFieldUpdateOperationsInput | number
     preferencia_factura?: EnumPreferenciaFacturacionFieldUpdateOperationsInput | $Enums.PreferenciaFacturacion
+    sector?: StringFieldUpdateOperationsInput | string
     botellones_danados?: BotellonDanadoUpdateManyWithoutClienteNestedInput
     clientes_ruta?: ClienteRutaBaseUpdateManyWithoutClienteNestedInput
     dispensadores?: DispensadorUpdateManyWithoutClienteNestedInput
@@ -50996,6 +51018,7 @@ export namespace Prisma {
     activo?: BoolFieldUpdateOperationsInput | boolean
     botellones_prestados?: IntFieldUpdateOperationsInput | number
     preferencia_factura?: EnumPreferenciaFacturacionFieldUpdateOperationsInput | $Enums.PreferenciaFacturacion
+    sector?: StringFieldUpdateOperationsInput | string
     botellones_danados?: BotellonDanadoUncheckedUpdateManyWithoutClienteNestedInput
     clientes_ruta?: ClienteRutaBaseUncheckedUpdateManyWithoutClienteNestedInput
     dispensadores?: DispensadorUncheckedUpdateManyWithoutClienteNestedInput
@@ -51020,6 +51043,7 @@ export namespace Prisma {
     activo?: boolean
     botellones_prestados?: number
     preferencia_factura?: $Enums.PreferenciaFacturacion
+    sector?: string
   }
 
   export type ClienteUpdateManyMutationInput = {
@@ -51037,6 +51061,7 @@ export namespace Prisma {
     activo?: BoolFieldUpdateOperationsInput | boolean
     botellones_prestados?: IntFieldUpdateOperationsInput | number
     preferencia_factura?: EnumPreferenciaFacturacionFieldUpdateOperationsInput | $Enums.PreferenciaFacturacion
+    sector?: StringFieldUpdateOperationsInput | string
   }
 
   export type ClienteUncheckedUpdateManyInput = {
@@ -51054,6 +51079,7 @@ export namespace Prisma {
     activo?: BoolFieldUpdateOperationsInput | boolean
     botellones_prestados?: IntFieldUpdateOperationsInput | number
     preferencia_factura?: EnumPreferenciaFacturacionFieldUpdateOperationsInput | $Enums.PreferenciaFacturacion
+    sector?: StringFieldUpdateOperationsInput | string
   }
 
   export type RutaBaseCreateInput = {
@@ -53953,6 +53979,7 @@ export namespace Prisma {
     activo?: SortOrder
     botellones_prestados?: SortOrder
     preferencia_factura?: SortOrder
+    sector?: SortOrder
   }
 
   export type ClienteAvgOrderByAggregateInput = {
@@ -53974,6 +54001,7 @@ export namespace Prisma {
     activo?: SortOrder
     botellones_prestados?: SortOrder
     preferencia_factura?: SortOrder
+    sector?: SortOrder
   }
 
   export type ClienteMinOrderByAggregateInput = {
@@ -53991,6 +54019,7 @@ export namespace Prisma {
     activo?: SortOrder
     botellones_prestados?: SortOrder
     preferencia_factura?: SortOrder
+    sector?: SortOrder
   }
 
   export type ClienteSumOrderByAggregateInput = {
@@ -61604,6 +61633,7 @@ export namespace Prisma {
     activo?: boolean
     botellones_prestados?: number
     preferencia_factura?: $Enums.PreferenciaFacturacion
+    sector?: string
     botellones_danados?: BotellonDanadoCreateNestedManyWithoutClienteInput
     dispensadores?: DispensadorCreateNestedManyWithoutClienteInput
     guias?: GuiaDespachoCreateNestedManyWithoutClienteInput
@@ -61627,6 +61657,7 @@ export namespace Prisma {
     activo?: boolean
     botellones_prestados?: number
     preferencia_factura?: $Enums.PreferenciaFacturacion
+    sector?: string
     botellones_danados?: BotellonDanadoUncheckedCreateNestedManyWithoutClienteInput
     dispensadores?: DispensadorUncheckedCreateNestedManyWithoutClienteInput
     guias?: GuiaDespachoUncheckedCreateNestedManyWithoutClienteInput
@@ -61695,6 +61726,7 @@ export namespace Prisma {
     activo?: BoolFieldUpdateOperationsInput | boolean
     botellones_prestados?: IntFieldUpdateOperationsInput | number
     preferencia_factura?: EnumPreferenciaFacturacionFieldUpdateOperationsInput | $Enums.PreferenciaFacturacion
+    sector?: StringFieldUpdateOperationsInput | string
     botellones_danados?: BotellonDanadoUpdateManyWithoutClienteNestedInput
     dispensadores?: DispensadorUpdateManyWithoutClienteNestedInput
     guias?: GuiaDespachoUpdateManyWithoutClienteNestedInput
@@ -61718,6 +61750,7 @@ export namespace Prisma {
     activo?: BoolFieldUpdateOperationsInput | boolean
     botellones_prestados?: IntFieldUpdateOperationsInput | number
     preferencia_factura?: EnumPreferenciaFacturacionFieldUpdateOperationsInput | $Enums.PreferenciaFacturacion
+    sector?: StringFieldUpdateOperationsInput | string
     botellones_danados?: BotellonDanadoUncheckedUpdateManyWithoutClienteNestedInput
     dispensadores?: DispensadorUncheckedUpdateManyWithoutClienteNestedInput
     guias?: GuiaDespachoUncheckedUpdateManyWithoutClienteNestedInput
@@ -62084,6 +62117,7 @@ export namespace Prisma {
     activo?: boolean
     botellones_prestados?: number
     preferencia_factura?: $Enums.PreferenciaFacturacion
+    sector?: string
     botellones_danados?: BotellonDanadoCreateNestedManyWithoutClienteInput
     clientes_ruta?: ClienteRutaBaseCreateNestedManyWithoutClienteInput
     dispensadores?: DispensadorCreateNestedManyWithoutClienteInput
@@ -62107,6 +62141,7 @@ export namespace Prisma {
     activo?: boolean
     botellones_prestados?: number
     preferencia_factura?: $Enums.PreferenciaFacturacion
+    sector?: string
     botellones_danados?: BotellonDanadoUncheckedCreateNestedManyWithoutClienteInput
     clientes_ruta?: ClienteRutaBaseUncheckedCreateNestedManyWithoutClienteInput
     dispensadores?: DispensadorUncheckedCreateNestedManyWithoutClienteInput
@@ -62200,6 +62235,7 @@ export namespace Prisma {
     activo?: BoolFieldUpdateOperationsInput | boolean
     botellones_prestados?: IntFieldUpdateOperationsInput | number
     preferencia_factura?: EnumPreferenciaFacturacionFieldUpdateOperationsInput | $Enums.PreferenciaFacturacion
+    sector?: StringFieldUpdateOperationsInput | string
     botellones_danados?: BotellonDanadoUpdateManyWithoutClienteNestedInput
     clientes_ruta?: ClienteRutaBaseUpdateManyWithoutClienteNestedInput
     dispensadores?: DispensadorUpdateManyWithoutClienteNestedInput
@@ -62223,6 +62259,7 @@ export namespace Prisma {
     activo?: BoolFieldUpdateOperationsInput | boolean
     botellones_prestados?: IntFieldUpdateOperationsInput | number
     preferencia_factura?: EnumPreferenciaFacturacionFieldUpdateOperationsInput | $Enums.PreferenciaFacturacion
+    sector?: StringFieldUpdateOperationsInput | string
     botellones_danados?: BotellonDanadoUncheckedUpdateManyWithoutClienteNestedInput
     clientes_ruta?: ClienteRutaBaseUncheckedUpdateManyWithoutClienteNestedInput
     dispensadores?: DispensadorUncheckedUpdateManyWithoutClienteNestedInput
@@ -62340,6 +62377,7 @@ export namespace Prisma {
     activo?: boolean
     botellones_prestados?: number
     preferencia_factura?: $Enums.PreferenciaFacturacion
+    sector?: string
     botellones_danados?: BotellonDanadoCreateNestedManyWithoutClienteInput
     clientes_ruta?: ClienteRutaBaseCreateNestedManyWithoutClienteInput
     dispensadores?: DispensadorCreateNestedManyWithoutClienteInput
@@ -62363,6 +62401,7 @@ export namespace Prisma {
     activo?: boolean
     botellones_prestados?: number
     preferencia_factura?: $Enums.PreferenciaFacturacion
+    sector?: string
     botellones_danados?: BotellonDanadoUncheckedCreateNestedManyWithoutClienteInput
     clientes_ruta?: ClienteRutaBaseUncheckedCreateNestedManyWithoutClienteInput
     dispensadores?: DispensadorUncheckedCreateNestedManyWithoutClienteInput
@@ -62444,6 +62483,7 @@ export namespace Prisma {
     activo?: BoolFieldUpdateOperationsInput | boolean
     botellones_prestados?: IntFieldUpdateOperationsInput | number
     preferencia_factura?: EnumPreferenciaFacturacionFieldUpdateOperationsInput | $Enums.PreferenciaFacturacion
+    sector?: StringFieldUpdateOperationsInput | string
     botellones_danados?: BotellonDanadoUpdateManyWithoutClienteNestedInput
     clientes_ruta?: ClienteRutaBaseUpdateManyWithoutClienteNestedInput
     dispensadores?: DispensadorUpdateManyWithoutClienteNestedInput
@@ -62467,6 +62507,7 @@ export namespace Prisma {
     activo?: BoolFieldUpdateOperationsInput | boolean
     botellones_prestados?: IntFieldUpdateOperationsInput | number
     preferencia_factura?: EnumPreferenciaFacturacionFieldUpdateOperationsInput | $Enums.PreferenciaFacturacion
+    sector?: StringFieldUpdateOperationsInput | string
     botellones_danados?: BotellonDanadoUncheckedUpdateManyWithoutClienteNestedInput
     clientes_ruta?: ClienteRutaBaseUncheckedUpdateManyWithoutClienteNestedInput
     dispensadores?: DispensadorUncheckedUpdateManyWithoutClienteNestedInput
@@ -62690,6 +62731,7 @@ export namespace Prisma {
     activo?: boolean
     botellones_prestados?: number
     preferencia_factura?: $Enums.PreferenciaFacturacion
+    sector?: string
     botellones_danados?: BotellonDanadoCreateNestedManyWithoutClienteInput
     clientes_ruta?: ClienteRutaBaseCreateNestedManyWithoutClienteInput
     dispensadores?: DispensadorCreateNestedManyWithoutClienteInput
@@ -62713,6 +62755,7 @@ export namespace Prisma {
     activo?: boolean
     botellones_prestados?: number
     preferencia_factura?: $Enums.PreferenciaFacturacion
+    sector?: string
     botellones_danados?: BotellonDanadoUncheckedCreateNestedManyWithoutClienteInput
     clientes_ruta?: ClienteRutaBaseUncheckedCreateNestedManyWithoutClienteInput
     dispensadores?: DispensadorUncheckedCreateNestedManyWithoutClienteInput
@@ -62853,6 +62896,7 @@ export namespace Prisma {
     activo?: BoolFieldUpdateOperationsInput | boolean
     botellones_prestados?: IntFieldUpdateOperationsInput | number
     preferencia_factura?: EnumPreferenciaFacturacionFieldUpdateOperationsInput | $Enums.PreferenciaFacturacion
+    sector?: StringFieldUpdateOperationsInput | string
     botellones_danados?: BotellonDanadoUpdateManyWithoutClienteNestedInput
     clientes_ruta?: ClienteRutaBaseUpdateManyWithoutClienteNestedInput
     dispensadores?: DispensadorUpdateManyWithoutClienteNestedInput
@@ -62876,6 +62920,7 @@ export namespace Prisma {
     activo?: BoolFieldUpdateOperationsInput | boolean
     botellones_prestados?: IntFieldUpdateOperationsInput | number
     preferencia_factura?: EnumPreferenciaFacturacionFieldUpdateOperationsInput | $Enums.PreferenciaFacturacion
+    sector?: StringFieldUpdateOperationsInput | string
     botellones_danados?: BotellonDanadoUncheckedUpdateManyWithoutClienteNestedInput
     clientes_ruta?: ClienteRutaBaseUncheckedUpdateManyWithoutClienteNestedInput
     dispensadores?: DispensadorUncheckedUpdateManyWithoutClienteNestedInput
@@ -64108,6 +64153,7 @@ export namespace Prisma {
     activo?: boolean
     botellones_prestados?: number
     preferencia_factura?: $Enums.PreferenciaFacturacion
+    sector?: string
     clientes_ruta?: ClienteRutaBaseCreateNestedManyWithoutClienteInput
     dispensadores?: DispensadorCreateNestedManyWithoutClienteInput
     guias?: GuiaDespachoCreateNestedManyWithoutClienteInput
@@ -64131,6 +64177,7 @@ export namespace Prisma {
     activo?: boolean
     botellones_prestados?: number
     preferencia_factura?: $Enums.PreferenciaFacturacion
+    sector?: string
     clientes_ruta?: ClienteRutaBaseUncheckedCreateNestedManyWithoutClienteInput
     dispensadores?: DispensadorUncheckedCreateNestedManyWithoutClienteInput
     guias?: GuiaDespachoUncheckedCreateNestedManyWithoutClienteInput
@@ -64227,6 +64274,7 @@ export namespace Prisma {
     activo?: BoolFieldUpdateOperationsInput | boolean
     botellones_prestados?: IntFieldUpdateOperationsInput | number
     preferencia_factura?: EnumPreferenciaFacturacionFieldUpdateOperationsInput | $Enums.PreferenciaFacturacion
+    sector?: StringFieldUpdateOperationsInput | string
     clientes_ruta?: ClienteRutaBaseUpdateManyWithoutClienteNestedInput
     dispensadores?: DispensadorUpdateManyWithoutClienteNestedInput
     guias?: GuiaDespachoUpdateManyWithoutClienteNestedInput
@@ -64250,6 +64298,7 @@ export namespace Prisma {
     activo?: BoolFieldUpdateOperationsInput | boolean
     botellones_prestados?: IntFieldUpdateOperationsInput | number
     preferencia_factura?: EnumPreferenciaFacturacionFieldUpdateOperationsInput | $Enums.PreferenciaFacturacion
+    sector?: StringFieldUpdateOperationsInput | string
     clientes_ruta?: ClienteRutaBaseUncheckedUpdateManyWithoutClienteNestedInput
     dispensadores?: DispensadorUncheckedUpdateManyWithoutClienteNestedInput
     guias?: GuiaDespachoUncheckedUpdateManyWithoutClienteNestedInput
@@ -64864,6 +64913,7 @@ export namespace Prisma {
     activo?: boolean
     botellones_prestados?: number
     preferencia_factura?: $Enums.PreferenciaFacturacion
+    sector?: string
     botellones_danados?: BotellonDanadoCreateNestedManyWithoutClienteInput
     clientes_ruta?: ClienteRutaBaseCreateNestedManyWithoutClienteInput
     guias?: GuiaDespachoCreateNestedManyWithoutClienteInput
@@ -64887,6 +64937,7 @@ export namespace Prisma {
     activo?: boolean
     botellones_prestados?: number
     preferencia_factura?: $Enums.PreferenciaFacturacion
+    sector?: string
     botellones_danados?: BotellonDanadoUncheckedCreateNestedManyWithoutClienteInput
     clientes_ruta?: ClienteRutaBaseUncheckedCreateNestedManyWithoutClienteInput
     guias?: GuiaDespachoUncheckedCreateNestedManyWithoutClienteInput
@@ -64968,6 +65019,7 @@ export namespace Prisma {
     activo?: BoolFieldUpdateOperationsInput | boolean
     botellones_prestados?: IntFieldUpdateOperationsInput | number
     preferencia_factura?: EnumPreferenciaFacturacionFieldUpdateOperationsInput | $Enums.PreferenciaFacturacion
+    sector?: StringFieldUpdateOperationsInput | string
     botellones_danados?: BotellonDanadoUpdateManyWithoutClienteNestedInput
     clientes_ruta?: ClienteRutaBaseUpdateManyWithoutClienteNestedInput
     guias?: GuiaDespachoUpdateManyWithoutClienteNestedInput
@@ -64991,6 +65043,7 @@ export namespace Prisma {
     activo?: BoolFieldUpdateOperationsInput | boolean
     botellones_prestados?: IntFieldUpdateOperationsInput | number
     preferencia_factura?: EnumPreferenciaFacturacionFieldUpdateOperationsInput | $Enums.PreferenciaFacturacion
+    sector?: StringFieldUpdateOperationsInput | string
     botellones_danados?: BotellonDanadoUncheckedUpdateManyWithoutClienteNestedInput
     clientes_ruta?: ClienteRutaBaseUncheckedUpdateManyWithoutClienteNestedInput
     guias?: GuiaDespachoUncheckedUpdateManyWithoutClienteNestedInput
@@ -65350,6 +65403,7 @@ export namespace Prisma {
     activo?: boolean
     botellones_prestados?: number
     preferencia_factura?: $Enums.PreferenciaFacturacion
+    sector?: string
     botellones_danados?: BotellonDanadoCreateNestedManyWithoutClienteInput
     clientes_ruta?: ClienteRutaBaseCreateNestedManyWithoutClienteInput
     dispensadores?: DispensadorCreateNestedManyWithoutClienteInput
@@ -65373,6 +65427,7 @@ export namespace Prisma {
     activo?: boolean
     botellones_prestados?: number
     preferencia_factura?: $Enums.PreferenciaFacturacion
+    sector?: string
     botellones_danados?: BotellonDanadoUncheckedCreateNestedManyWithoutClienteInput
     clientes_ruta?: ClienteRutaBaseUncheckedCreateNestedManyWithoutClienteInput
     dispensadores?: DispensadorUncheckedCreateNestedManyWithoutClienteInput
@@ -65412,6 +65467,7 @@ export namespace Prisma {
     activo?: BoolFieldUpdateOperationsInput | boolean
     botellones_prestados?: IntFieldUpdateOperationsInput | number
     preferencia_factura?: EnumPreferenciaFacturacionFieldUpdateOperationsInput | $Enums.PreferenciaFacturacion
+    sector?: StringFieldUpdateOperationsInput | string
     botellones_danados?: BotellonDanadoUpdateManyWithoutClienteNestedInput
     clientes_ruta?: ClienteRutaBaseUpdateManyWithoutClienteNestedInput
     dispensadores?: DispensadorUpdateManyWithoutClienteNestedInput
@@ -65435,6 +65491,7 @@ export namespace Prisma {
     activo?: BoolFieldUpdateOperationsInput | boolean
     botellones_prestados?: IntFieldUpdateOperationsInput | number
     preferencia_factura?: EnumPreferenciaFacturacionFieldUpdateOperationsInput | $Enums.PreferenciaFacturacion
+    sector?: StringFieldUpdateOperationsInput | string
     botellones_danados?: BotellonDanadoUncheckedUpdateManyWithoutClienteNestedInput
     clientes_ruta?: ClienteRutaBaseUncheckedUpdateManyWithoutClienteNestedInput
     dispensadores?: DispensadorUncheckedUpdateManyWithoutClienteNestedInput

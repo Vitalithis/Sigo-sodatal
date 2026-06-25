@@ -138,6 +138,7 @@ model Cliente {
   historial_financiero HistorialFinanciero[]
   paradas              ParadaDia[]
   pedidos              Pedido[]
+  sector String @default("GENERAL")
 }
 
 model RutaBase {

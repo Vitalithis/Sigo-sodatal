@@ -2,20 +2,23 @@
 
 import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
-import { EstadoRuta, EstadoParada, EstadoPedido, TipoCliente, CanalOrigen } from '@prisma/client';
+import { 
+  EstadoRuta, 
+  EstadoParada, 
+  EstadoPedido, 
+  Rol, 
+  EstadoVehiculo, 
+  DiaSemana 
+} from '@prisma/client';
 
 /**
  * Obtiene todas las rutas reales y los pedidos flotantes para una fecha específica
  */
 export async function obtenerRutasPorFechaAction(fechaStr: string) {
   try {
-    const inicioDia = new Date(fechaStr);
-    inicioDia.setHours(0, 0, 0, 0);
+    const inicioDia = new Date(`${fechaStr}T00:00:00.000Z`);
+    const finDia = new Date(`${fechaStr}T23:59:59.999Z`);
 
-    const finDia = new Date(fechaStr);
-    finDia.setHours(23, 59, 59, 999);
-
-    // 1. Buscar las rutas creadas para este día específico
     const rutasDia = await prisma.rutaDia.findMany({
       where: {
         fecha: { gte: inicioDia, lte: finDia }
@@ -35,238 +38,299 @@ export async function obtenerRutasPorFechaAction(fechaStr: string) {
       }
     });
 
-    // 2. Buscar todos los pedidos solicitados para esta fecha
     const pedidosDia = await prisma.pedido.findMany({
       where: {
-        fecha_solicitada: { gte: inicioDia, lte: finDia }
+        fecha_solicitada: { gte: inicioDia, lte: finDia },
+        estado: { not: EstadoPedido.CANCELADO } 
       },
       include: {
         cliente: true,
-        items: { include: { producto: true } }
+        items: true
       }
     });
 
-    return {
-      success: true,
-      rutas: rutasDia,
-      pedidos: pedidosDia
-    };
-  } catch (error: any) {
-    console.error('Error al obtener rutas por fecha:', error);
-    return { success: false, message: 'No se pudieron cargar los datos de la fecha.' };
+    return { success: true, rutas: rutasDia, pedidos: pedidosDia };
+  } catch (error) {
+    console.error('Error en obtenerRutasPorFechaAction:', error);
+    return { success: false, rutas: [], pedidos: [], message: "No se pudieron cargar las rutas diarias." };
   }
 }
 
 /**
- * Genera de forma automática las rutas del día basadas en la plantilla "RutaBase"
- * para el día de la semana correspondiente (LUNES, MARTES, etc.)
+ * Genera las Hojas de Ruta del Día basándose en las Plantillas Base (RutaBase).
  */
-export async function generarRutasDesdeBaseAction(fechaStr: string, diaSemanaClave: any) {
+export async function generarRutasDesdeBaseAction(fechaStr: string, diaSemana: DiaSemana) {
   try {
-    const fechaTarget = new Date(fechaStr);
-    fechaTarget.setHours(12, 0, 0, 0); // Evitar problemas de zona horaria
+    const fechaDestino = new Date(`${fechaStr}T12:00:00.000Z`);
+    const inicioDia = new Date(`${fechaStr}T00:00:00.000Z`);
+    const finDia = new Date(`${fechaStr}T23:59:59.999Z`);
 
-    // Buscar si hay plantillas configuradas para este día de la semana
     const plantillasBase = await prisma.rutaBase.findMany({
-      where: { dia_semana: diaSemanaClave },
-      include: {
-        clientes: { orderBy: { orden: 'asc' } }
-      }
+      where: { dia_semana: diaSemana }
     });
 
     if (plantillasBase.length === 0) {
-      return { success: false, message: 'No hay rutas base configuradas para este día de la semana.' };
+      return { 
+        success: false, 
+        message: `No existen plantillas de rutas base configuradas para el día ${diaSemana}.` 
+      };
     }
 
-    // Crear cada ruta base en el día real
-    for (const base of plantillasBase) {
-      const nuevaRutaDia = await prisma.rutaDia.create({
-        data: {
-          ruta_base_id: base.id,
-          fecha: fechaTarget,
-          usuario_id: base.usuario_id,
-          vehiculo_id: base.vehiculo_id,
-          estado: EstadoRuta.ACTIVA
+    let rutasCreadasContador = 0;
+
+    for (const plantilla of plantillasBase) {
+      const rutaExistente = await prisma.rutaDia.findFirst({
+        where: {
+          fecha: { gte: inicioDia, lte: finDia },
+          OR: [
+            { vehiculo_id: plantilla.vehiculo_id },
+            { usuario_id: plantilla.usuario_id }
+          ]
         }
       });
 
-      // Clonar los clientes fijos como paradas iniciales del día
-      if (base.clientes.length > 0) {
-        await prisma.paradaDia.createMany({
-          data: base.clientes.map((c) => ({
+      if (rutaExistente) {
+        continue; 
+      }
+
+      const nuevaRutaDia = await prisma.rutaDia.create({
+        data: {
+          fecha: fechaDestino,
+          estado: EstadoRuta.ACTIVA,
+          usuario_id: plantilla.usuario_id,
+          vehiculo_id: plantilla.vehiculo_id,
+          ruta_base_id: plantilla.id
+        }
+      });
+
+      rutasCreadasContador++;
+
+      const clientesFijos = await prisma.clienteRutaBase.findMany({
+        where: { ruta_base_id: plantilla.id },
+        orderBy: { orden: 'asc' }
+      });
+
+      for (const cf of clientesFijos) {
+        await prisma.paradaDia.create({
+          data: {
             ruta_dia_id: nuevaRutaDia.id,
-            cliente_id: c.cliente_id,
-            orden: c.orden,
+            cliente_id: cf.cliente_id,
+            orden: cf.orden,
             estado: EstadoParada.PENDIENTE
-          }))
+          }
         });
       }
     }
 
     revalidatePath('/admin/rutas');
-    return { success: true };
+
+    if (rutasCreadasContador === 0) {
+      return { 
+        success: true, 
+        message: "Las hojas de ruta para los furgones y choferes de hoy ya se encontraban iniciadas." 
+      };
+    }
+
+    return { 
+      success: true, 
+      message: `Se han generado exitosamente ${rutasCreadasContador} nueva(s) hoja(s) de ruta para la jornada.` 
+    };
+
   } catch (error: any) {
-    console.error('Error al generar rutas base:', error);
-    return { success: false, message: 'Error al procesar las plantillas base.' };
+    console.error('Error en generarRutasDesdeBaseAction:', error);
+    return { success: false, message: error.message || "Error al generar las hojas de ruta diarias." };
   }
 }
 
 /**
- * Enlaza un pedido dinámico (Llamado/Web) a una ruta en ejecución e incrementa el orden de parada
+ * ✨ NUEVA ACCIÓN: Trae el catálogo completo de productos activos
  */
-export async function asignarPedidoARutaAction(pedidoId: string, rutaDiaId: string) {
+export async function obtenerProductosAction() {
   try {
-    // 1. Obtener el pedido para saber quién es el cliente
-    const pedido = await prisma.pedido.findUnique({
-      where: { id: pedidoId }
+    const productos = await prisma.producto.findMany({
+      orderBy: { nombre: 'asc' }
+    });
+    return { success: true, productos };
+  } catch (error: any) {
+    console.error('Error en obtenerProductosAction:', error);
+    return { success: false, productos: [], message: error.message };
+  }
+}
+
+/**
+ * ✨ NUEVA ACCIÓN: Busca clientes por coincidencia de nombre o RUT en el modal rápido
+ */
+export async function buscarClientePorCriterioAction(criterio: string) {
+  try {
+    if (!criterio || criterio.trim().length < 2) return { success: true, clientes: [] };
+    
+    const clientes = await prisma.cliente.findMany({
+      where: {
+        OR: [
+          { nombre: { contains: criterio, mode: 'insensitive' } },
+          { rut: { contains: criterio, mode: 'insensitive' } }
+        ]
+      },
+      take: 7
+    });
+    return { success: true, clientes };
+  } catch (error: any) {
+    console.error('Error en buscarClientePorCriterioAction:', error);
+    return { success: false, clientes: [] };
+  }
+}
+
+/**
+ * ✨ NUEVA ACCIÓN: Guarda el pedido rápido e inserta el registro correspondiente
+ */
+export async function guardarPedidoRapidoAction(data: {
+  fecha: string;
+  clienteId?: string;
+  nombre: string;
+  telefono: string;
+  direccion: string;
+  sector: string;
+  productoId: string;
+  cantidad: number;
+}) {
+  try {
+    let finalClienteId = data.clienteId;
+
+    // Si es un cliente nuevo (no seleccionado de la lista), lo creamos dinámicamente
+    if (!finalClienteId) {
+      const nuevoCliente = await prisma.cliente.create({
+        data: {
+          nombre: data.nombre,
+          telefono: data.telefono,
+          direccion: data.direccion,
+          sector: data.sector,
+          tipo_cliente: "PARTICULAR"
+        }
+      });
+      finalClienteId = nuevoCliente.id;
+    }
+
+    const fechaSolicitada = new Date(`${data.fecha}T12:00:00.000Z`);
+
+    // Creamos el pedido comercial
+    await prisma.pedido.create({
+      data: {
+        cliente_id: finalClienteId,
+        fecha_solicitada: fechaSolicitada,
+        estado: EstadoPedido.PENDIENTE,
+        tipo_venta: "DIARIA",
+        items: {
+          create: {
+            producto_id: data.productoId,
+            cantidad: data.cantidad,
+            precio_unitario: 0 // Ajustar si manejas precios de venta dinámicos
+          }
+        }
+      }
     });
 
-    if (!pedido) return { success: false, message: 'Pedido no encontrado.' };
+    revalidatePath('/admin/rutas');
+    return { success: true, message: "Pedido rápido creado con éxito." };
+  } catch (error: any) {
+    console.error('Error en guardarPedidoRapidoAction:', error);
+    return { success: false, message: error.message || "Error al registrar el pedido rápido." };
+  }
+}
 
-    // 2. Contar cuántas paradas ya tiene el camión para dejar este al final
-    const conteoParadas = await prisma.paradaDia.count({
-      where: { ruta_dia_id: rutaDiaId }
+export async function cambiarOrdenParadaAction(paradaId: string, nuevoOrden: number) {
+  try {
+    await prisma.paradaDia.update({
+      where: { id: paradaId },
+      data: { orden: nuevoOrden }
     });
+    revalidatePath('/admin/rutas');
+    return { success: true };
+  } catch (error: any) {
+    console.error('Error en cambiarOrdenParadaAction:', error);
+    return { success: false, message: error.message };
+  }
+}
 
-    // 3. Crear la parada vinculada al pedido
+export async function asignarPedidoARutaAction(pedidoId: string, rutaDiaId: string, orden: number) {
+  try {
+    const pedido = await prisma.pedido.findUnique({ where: { id: pedidoId } });
+    if (!pedido) return { success: false, message: "Pedido no encontrado." };
+
     await prisma.paradaDia.create({
       data: {
         ruta_dia_id: rutaDiaId,
         cliente_id: pedido.cliente_id,
-        pedido_id: pedido.id,
-        orden: conteoParadas + 1,
+        pedido_id: pedidoId,
+        orden: orden,
         estado: EstadoParada.PENDIENTE
-      }
-    });
-
-    // 4. Actualizar el estado del Pedido original a ASIGNADO
-    await prisma.pedido.update({
-      where: { id: pedidoId },
-      data: { 
-        ruta_dia_id: rutaDiaId,
-        estado: EstadoPedido.ASIGNADO
       }
     });
 
     revalidatePath('/admin/rutas');
     return { success: true };
   } catch (error: any) {
-    console.error('Error al asignar pedido:', error);
-    return { success: false, message: 'No se pudo asignar el pedido al camión.' };
+    console.error('Error en asignarPedidoARutaAction:', error);
+    return { success: false, message: error.message };
   }
 }
 
-export async function buscarClientePorCriterioAction(criterio: string) {
+export async function getFormularioRutaBaseData() {
   try {
-    if (!criterio.trim()) return { success: true, clientes: [] };
-
-    const clientes = await prisma.cliente.findMany({
-      where: {
-        OR: [
-          { telefono: { contains: criterio, mode: 'insensitive' } },
-          { direccion: { contains: criterio, mode: 'insensitive' } },
-          { nombre: { contains: criterio, mode: 'insensitive' } }
-        ]
-      },
-      take: 6
+    const choferes = await prisma.usuario.findMany({
+      where: { rol: Rol.REPARTIDOR }, 
+      select: { id: true, nombre: true, apellido: true }
     });
 
-    return { success: true, clientes };
+    const vehiculos = await prisma.vehiculo.findMany({
+      where: { estado: EstadoVehiculo.ACTIVO },
+      select: { id: true, marca: true, modelo: true, patente: true }
+    });
+
+    return { success: true, choferes, vehiculos };
   } catch (error) {
-    console.error('Error al buscar cliente:', error);
-    return { success: false, clientes: [] };
+    console.error('Error en getFormularioRutaBaseData:', error);
+    return { success: false, choferes: [], vehiculos: [], message: "Error al cargar datos dinámicos." };
   }
 }
 
-export async function obtenerProductosAction() {
-  try {
-    const productos = await prisma.producto.findMany();
-    return { success: true, productos };
-  } catch (error) {
-    return { success: false, productos: [] };
-  }
-}
-
-export async function guardarPedidoRapidoAction(datos: {
-  fecha_solicitada: string; 
-  cliente_id?: string;
-  editando_existente?: boolean; 
-  nuevo_cliente?: {
-    nombre: string;
-    direccion: string;
-    telefono: string;
-    sector?: string;
-  };
-  producto_id: string;
-  cantidad: number;
+export async function guardarRutaBaseAction(data: {
+  nombre: string;
+  dia_semana: DiaSemana;
+  usuario_id: string;
+  vehiculo_id: string;
 }) {
   try {
-    const fechaAjustada = new Date(datos.fecha_solicitada);
-    fechaAjustada.setHours(12, 0, 0, 0);
-
-    let finalClienteId = datos.cliente_id;
-    
-    // CASO A: Cliente ya existe pero se modificaron sus datos desde el modal
-    if (finalClienteId && datos.editando_existente && datos.nuevo_cliente) {
-      await prisma.cliente.update({
-        where: { id: finalClienteId },
-        data: {
-          nombre: datos.nuevo_cliente.nombre,
-          direccion: datos.nuevo_cliente.direccion,
-          telefono: datos.nuevo_cliente.telefono,
-          sector: (datos.nuevo_cliente.sector || 'GENERAL').toUpperCase().trim(),
-        }
-      });
-    }
-    // CASO B: Es un cliente completamente nuevo
-    else if (!finalClienteId && datos.nuevo_cliente) {
-      const nuevoCli = await prisma.cliente.create({ 
-        data: {
-          nombre: datos.nuevo_cliente.nombre,
-          direccion: datos.nuevo_cliente.direccion,
-          telefono: datos.nuevo_cliente.telefono,
-          sector: (datos.nuevo_cliente.sector || 'GENERAL').toUpperCase().trim(),
-          tipo: 'DOMICILIO' 
-        } 
-      });
-      finalClienteId = nuevoCli.id;
-    }
-
-    // 🛡️ Buscar dinámicamente un usuario válido para evitar conflictos con esquemas de BD desalineados
-    const usuarioComodin = await prisma.usuario.findFirst({
-      select: { id: true }
-    });
-
-    if (!usuarioComodin) {
-      throw new Error("No hay usuarios registrados en el sistema para asociar este registro de pedido.");
-    }
-
-    // Crear el Pedido vinculando el ID del usuario real recuperado
-    const pedido = await prisma.pedido.create({
+    const nuevaRuta = await prisma.rutaBase.create({
       data: {
-        cliente_id: finalClienteId!,
-        fecha_solicitada: fechaAjustada,
-        canal_origen: 'WEB', 
-        usuario_registro_id: usuarioComodin.id, 
+        nombre: data.nombre,
+        dia_semana: data.dia_semana,
+        usuario_id: data.usuario_id,
+        vehiculo_id: data.vehiculo_id,
+        frecuencia: "SEMANAL"
       }
     });
 
-    // Crear el ítem del pedido
-    await prisma.pedidoItem.create({
-      data: {
-        pedido_id: pedido.id,
-        producto_id: datos.producto_id,
-        tipo_transaccion: 'VENTA',
-        cantidad: datos.cantidad,
-        precio_historico: 0 
-      }
-    });
-
-    revalidatePath('/admin/rutas'); 
-    return { success: true };
-
+    revalidatePath('/admin/rutas');
+    return { success: true, data: nuevaRuta };
   } catch (error: any) {
-    console.error('Error al guardar/actualizar pedido rápido:', error);
-    return { success: false, message: error.message };
+    console.error('Error al guardar ruta base:', error);
+    return { success: false, message: error.message || "Error al crear la plantilla base." };
+  }
+}
+
+export async function actualizarEstadoParadaAction(paradaId: string, nuevoEstado: EstadoParada) {
+  try {
+    if (!paradaId || !nuevoEstado) return { success: false, message: 'Parámetros inválidos.' };
+
+    await prisma.paradaDia.update({
+      where: { id: paradaId },
+      data: { estado: nuevoEstado }
+    });
+
+    revalidatePath('/admin/rutas');
+    return { success: true };
+  } catch (error: any) {
+    console.error('Error en actualizarEstadoParadaAction:', error);
+    return { success: false, message: error.message || "Error al actualizar estado de la parada." };
   }
 }
