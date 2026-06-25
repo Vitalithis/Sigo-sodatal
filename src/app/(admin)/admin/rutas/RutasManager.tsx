@@ -2,17 +2,15 @@
 
 import React, { useState, useEffect } from 'react';
 import NuevoPedidoModal from './NuevoPedidoModal';
-import { obtenerRutasPorFechaAction, generarRutasDesdeBaseAction, asignarPedidoARutaAction } from './actions';
+import { obtenerRutasPorFechaAction, generarRutasDesdeBaseAction } from './actions';
 
 export default function RutasManager() {
-  // Inicializa con la fecha de hoy en formato local YYYY-MM-DD
   const [fechaSeleccionada, setFechaSeleccionada] = useState(new Date().toISOString().split('T')[0]);
   const [rutas, setRutas] = useState<any[]>([]);
-  const [pedidos, setPedidos] = useState<any[]>([]);
+  const [pedidosFlotantes, setPedidosFlotantes] = useState<any[]>([]);
   const [cargando, setCargando] = useState(false);
   const [modalAbierto, setModalAbierto] = useState(false);
 
-  // Mapeo para saber qué día de la semana cae en base al calendario
   const diasSemanaUnidad = ['DOMINGO', 'LUNES', 'MARTES', 'MIERCOLES', 'JUEVES', 'VIERNES', 'SABADO'];
   const numDia = new Date(fechaSeleccionada + 'T12:00:00').getDay();
   const nombreDiaSemana = diasSemanaUnidad[numDia];
@@ -22,7 +20,9 @@ export default function RutasManager() {
     const res = await obtenerRutasPorFechaAction(fechaSeleccionada);
     if (res.success) {
       setRutas(res.rutas || []);
-      setPedidos(res.pedidos || []);
+      // Pedidos que aún no se suben a ninguna hoja de ruta
+      const flotantes = (res.pedidos || []).filter((p: any) => !p.ruta_dia_id);
+      setPedidosFlotantes(flotantes);
     }
     setCargando(false);
   };
@@ -40,187 +40,192 @@ export default function RutasManager() {
     }
   };
 
-  const manejarAsignarPedido = async (pedidoId: string, rutaDiaId: string) => {
-    const res = await asignarPedidoARutaAction(pedidoId, rutaDiaId);
-    if (res.success) {
-      await cargarDatos();
-    } else {
-      alert(res.message);
-    }
-  };
-
-  // Cambiar de día con las flechas
   const cambiarDia = (offset: number) => {
     const d = new Date(fechaSeleccionada + 'T12:00:00');
     d.setDate(d.getDate() + offset);
     setFechaSeleccionada(d.toISOString().split('T')[0]);
   };
 
+  // Función auxiliar para agrupar las paradas/pedidos de un repartidor por su sector
+  const agruparPorSector = (paradas: any[]) => {
+    return paradas.reduce((grupos: any, parada: any) => {
+      const sector = parada.cliente?.sector || 'SIN SECTOR ASIGNADO';
+      if (!grupos[sector]) grupos[sector] = [];
+      grupos[sector].push(parada);
+      return grupos;
+    }, {});
+  };
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 font-sans antialiased text-gray-900 selection:bg-blue-500 selection:text-white">
       
-      {/* BARRA DE NAVEGACIÓN TEMPORAL (LIBRE MOVIMIENTO) */}
-      <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
+      {/* BARRA DE NAVEGACIÓN TEMPORAL */}
+      <div className="bg-white p-3 rounded-lg border border-gray-200 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-3">
         <div className="flex items-center space-x-2">
-          <button onClick={() => cambiarDia(-1)} className="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-md text-sm font-medium transition-colors">
+          <button onClick={() => cambiarDia(-1)} className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded text-xs font-bold transition-colors">
             ⬅️ Anterior
           </button>
           <input 
             type="date" 
             value={fechaSeleccionada}
             onChange={(e) => setFechaSeleccionada(e.target.value)}
-            className="border border-gray-300 rounded-md p-1.5 text-sm font-medium focus:ring-2 focus:ring-blue-500 text-gray-800"
+            className="border border-gray-300 rounded p-1 text-xs font-bold focus:ring-2 focus:ring-blue-500 text-gray-800"
           />
-          <button onClick={() => cambiarDia(1)} className="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-md text-sm font-medium transition-colors">
+          <button onClick={() => cambiarDia(1)} className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded text-xs font-bold transition-colors">
             Siguiente ➡️
           </button>
         </div>
 
-        <div className="text-sm font-bold text-gray-700 bg-blue-50 px-4 py-2 rounded-md border border-blue-100">
+        <div className="text-xs font-extrabold text-gray-700 bg-blue-50 px-3 py-1.5 rounded border border-blue-100 uppercase tracking-wider">
           📅 Agenda: <span className="text-blue-700">{nombreDiaSemana}</span>
         </div>
 
-        {rutas.length === 0 && (
+        <div className="flex items-center gap-2">
           <button 
-            onClick={manejarGenerarBase}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium shadow-sm transition-colors"
+            onClick={() => setModalAbierto(true)}
+            className="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 text-xs font-bold rounded shadow-sm transition-colors"
           >
-            ⚡ Cargar Camiones Base
+            ➕ Ingresar Pedido
           </button>
-        )}
+          {rutas.length === 0 && (
+            <button 
+              onClick={manejarGenerarBase}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded text-xs font-bold shadow-sm transition-colors"
+            >
+              ⚡ Iniciar Hojas del Día
+            </button>
+          )}
+        </div>
       </div>
 
       {cargando ? (
-        <div className="text-center py-12 text-gray-500 font-medium">Procesando información de rutas...</div>
+        <div className="text-center py-12 text-gray-500 font-bold text-xs tracking-widest">PROCESANDO INFORMACIÓN...</div>
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="space-y-6">
           
-          {/* COLUMNA IZQUIERDA: RUTAS Y CAMIONES ACTIVOS EN ESA FECHA */}
-          <div className="lg:col-span-2 space-y-4">
-            <h2 className="text-lg font-bold text-gray-800 flex items-center gap-2">🚚 Distribución sobre Camión ({rutas.length})</h2>
-            
-            {rutas.length === 0 ? (
-              <div className="bg-gray-50 border-2 border-dashed border-gray-200 rounded-xl p-8 text-center text-gray-400 text-sm">
-                No hay camiones despachados ni rutas iniciadas para esta fecha.
-              </div>
-            ) : (
-              rutas.map((ruta) => (
-                <div key={ruta.id} className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
-                  <div className="bg-gray-800 text-white px-4 py-3 flex items-center justify-between">
-                    <div>
-                      <h3 className="font-bold text-sm">Camión: {ruta.vehiculo.marca} ({ruta.vehiculo.patente})</h3>
-                      <p className="text-xs text-gray-300">Repartidor: {ruta.usuario.nombre} {ruta.usuario.apellido || ''}</p>
-                    </div>
-                    <span className="bg-green-600 text-white text-xs px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">
-                      {ruta.estado}
+          {/* BOLSA DE PEDIDOS PENDIENTES (FLAG / FLOTANTES) */}
+          {pedidosFlotantes.length > 0 && (
+            <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
+              <h3 className="text-xs font-black text-amber-800 mb-2 uppercase tracking-tight">⚠️ Pedidos sin Asignar a Repartidor ({pedidosFlotantes.length})</h3>
+              <div className="flex flex-wrap gap-2">
+                {pedidosFlotantes.map((p: any) => (
+                  <div key={p.id} className="bg-white p-2 rounded border border-amber-300 text-xs shadow-sm flex items-center gap-2">
+                    <span className="bg-amber-100 text-amber-800 font-extrabold px-1.5 py-0.5 rounded text-[10px]">
+                      {p.items?.[0]?.cantidad || 1}x
                     </span>
-                  </div>
-
-                  {/* Listado de paradas del camión */}
-                  <div className="p-3 divide-y divide-gray-100">
-                    {ruta.paradas.length === 0 ? (
-                      <p className="text-xs text-gray-400 p-2 italic">Sin paradas asignadas aún.</p>
-                    ) : (
-                      ruta.paradas.map((parada: any) => (
-                        <div key={parada.id} className="py-2.5 flex items-center justify-between text-sm group">
-                          <div className="flex items-start gap-3">
-                            <span className="w-5 h-5 rounded-full bg-gray-100 text-gray-600 font-bold text-xs flex items-center justify-center flex-shrink-0 mt-0.5">
-                              {parada.orden}
-                            </span>
-                            <div>
-                              <p className="font-semibold text-gray-800">{parada.cliente.nombre}</p>
-                              <p className="text-xs text-gray-500">📍 {parada.cliente.direccion}</p>
-                              {parada.pedido ? (
-                                <span className="inline-block mt-1 text-[10px] bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded font-bold">
-                                  📦 Pedido Solicitado: {parada.pedido.items.map((i: any) => `${i.cantidad}x ${i.producto.nombre}`).join(', ')}
-                                </span>
-                              ) : (
-                                <span className="inline-block mt-1 text-[10px] bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded font-bold">
-                                  ⏰ Cliente de Ruta Fija
-                                </span>
-                              )}
-                            </div>
-                          </div>
-                          <span className={`text-xs font-bold px-2 py-0.5 rounded ${
-                            parada.estado === 'ENTREGADO' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'
-                          }`}>
-                            {parada.estado}
-                          </span>
-                        </div>
-                      ))
-                    )}
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
-
-          {/* COLUMNA DERECHA: BOLSA DE PEDIDOS DE LA FECHA SELECCIONADA */}
-          <div className="space-y-4">
-            
-            {/* TÍTULO DE LA COLUMNA DERECHA + BOTÓN NUEVO PEDIDO */}
-            <div className="flex justify-between items-center">
-              <h2 className="text-lg font-bold text-gray-800 flex items-center gap-2">
-                📥 Pedidos del Día ({pedidos.length})
-              </h2>
-              <button 
-                onClick={() => setModalAbierto(true)}
-                className="bg-green-600 hover:bg-green-700 text-white px-3 py-1.5 text-xs font-bold rounded shadow-sm transition-colors"
-              >
-                + Ingresar Pedido
-              </button>
-            </div>
-            
-            {pedidos.length === 0 ? (
-              <div className="bg-white p-6 rounded-lg border border-gray-200 text-center text-sm text-gray-400">
-                No hay pedidos de clientes registrados para este día.
-              </div>
-            ) : (
-              <div className="space-y-3">
-                {pedidos.map((p) => (
-                  <div key={p.id} className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm space-y-2">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <h4 className="font-bold text-sm text-gray-800">{p.cliente.nombre}</h4>
-                        <p className="text-xs text-gray-500">📍 {p.cliente.direccion}</p>
-                      </div>
-                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider ${
-                        p.estado === 'PENDIENTE_CONFIRMACION' ? 'bg-orange-100 text-orange-700' : 'bg-blue-100 text-blue-700'
-                      }`}>
-                        {p.estado}
-                      </span>
+                    <div>
+                      <p className="font-bold text-gray-800">{p.cliente?.nombre}</p>
+                      <p className="text-[10px] text-gray-500">📍 {p.cliente?.sector || 'Sin Sector'} - {p.cliente?.direccion}</p>
                     </div>
-
-                    <div className="text-xs bg-gray-50 p-2 rounded text-gray-600">
-                      <strong>Detalle:</strong> {p.items.map((i: any) => `${i.cantidad}x ${i.producto.nombre}`).join(', ')}
-                    </div>
-
-                    {/* Si el pedido no está asignado a ningún camión y hay rutas abiertas, se ofrece el botón de asignación */}
-                    {!p.ruta_dia_id && rutas.length > 0 ? (
-                      <div className="pt-2 border-t border-gray-100 space-y-1">
-                        <p className="text-[10px] font-semibold text-gray-400 uppercase">Subir a camión disponible:</p>
-                        <div className="flex flex-wrap gap-1">
-                          {rutas.map((r) => (
-                            <button
-                              key={r.id}
-                              onClick={() => manejarAsignarPedido(p.id, r.id)}
-                              className="bg-gray-100 hover:bg-blue-600 hover:text-white text-gray-700 text-xs px-2 py-1 rounded transition-colors font-medium border border-gray-200"
-                            >
-                              🚚 Patente: {r.vehiculo.patente}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    ) : p.ruta_dia_id ? (
-                      <p className="text-[11px] text-green-600 font-medium flex items-center gap-1 pt-1">
-                        ✅ Ya incorporado en hoja de ruta.
-                      </p>
-                    ) : null}
                   </div>
                 ))}
               </div>
-            )}
-          </div>
+            </div>
+          )}
+
+          {/* VISTA PRINCIPAL: LISTADO DE REPARTIDORES (PLANILLA COMPLETA) */}
+          {rutas.length === 0 ? (
+            <div className="bg-gray-50 border-2 border-dashed border-gray-200 rounded-xl p-12 text-center text-gray-400 text-xs font-medium">
+              No hay Hojas de Ruta activas. Presione "Iniciar Hojas del Día" para cargar los repartidores base.
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 gap-6">
+              {rutas.map((ruta) => {
+                const sectoresGrupales = agruparPorSector(ruta.paradas);
+
+                return (
+                  <div key={ruta.id} className="bg-white rounded-lg border border-gray-200 shadow-md overflow-hidden">
+                    
+                    {/* ENCABEZADO DEL REPARTIDOR (MÁXIMA PRIORIDAD HUMANA) */}
+                    <div className="bg-slate-800 text-white p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-gray-700">
+                      <div>
+                        <h2 className="text-sm font-black tracking-wide uppercase flex items-center gap-2">
+                          👤 Repartidor: <span className="text-blue-400">{ruta.usuario?.nombre}</span>
+                        </h2>
+                        <p className="text-[11px] text-gray-400 font-medium">Planilla de despachos asignados para hoy</p>
+                      </div>
+
+                      {/* MICRO BOTÓN DE ASIGNACIÓN DE VEHÍCULO DIARIO */}
+                      <div className="flex items-center gap-1.5 bg-slate-900 px-2.5 py-1 rounded border border-slate-700 self-start sm:self-center">
+                        <span className="text-[10px] text-gray-400 font-bold uppercase">Camión Diario:</span>
+                        <span className="bg-blue-600 text-white font-black text-[11px] px-2 py-0.5 rounded tracking-wider">
+                          🚚 {ruta.vehiculo?.marca || 'Base'} ({ruta.vehiculo?.patente || 'S/P'})
+                        </span>
+                        <button 
+                          onClick={() => alert('Próximamente: Cambiar vehículo rápido')} 
+                          className="text-[10px] bg-slate-700 hover:bg-slate-600 px-1 py-0.5 rounded transition-colors text-gray-300 font-bold"
+                        >
+                          ⚙️
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* CUERPO INTERNO: AGRUPACIONES AUTOMÁTICAS POR SECTOR */}
+                    <div className="p-2 bg-slate-50 space-y-4">
+                      {ruta.paradas.length === 0 ? (
+                        <p className="text-xs text-gray-400 p-4 italic text-center">Este repartidor no tiene entregas agendadas todavía.</p>
+                      ) : (
+                        Object.keys(sectoresGrupales).map((nombreSector) => (
+                          <div key={nombreSector} className="bg-white rounded border border-gray-200 shadow-sm overflow-hidden">
+                            
+                            {/* ENCABEZADO DE SECTOR ESTILO EXCEL */}
+                            <div className="bg-amber-400 text-slate-900 font-black text-xs px-3 py-1.5 uppercase tracking-wider flex items-center justify-between">
+                              <span>🗺️ Sector: {nombreSector}</span>
+                              <span className="bg-slate-900 text-white text-[10px] px-1.5 py-0.2 rounded font-bold">
+                                {sectoresGrupales[nombreSector].length} Entregas
+                              </span>
+                            </div>
+
+                            {/* TABLA DENSA INTERNA */}
+                            <div className="overflow-x-auto">
+                              <table className="w-full text-left text-xs divide-y divide-gray-200">
+                                <thead className="bg-slate-100 text-[10px] font-bold text-gray-500 uppercase tracking-tight">
+                                  <tr>
+                                    <th className="p-2 w-[50px] text-center">N°</th>
+                                    <th className="p-2 w-[60px] text-center">CANT</th>
+                                    <th className="p-2 w-[180px]">CLIENTE</th>
+                                    <th className="p-2">DIRECCIÓN DE DESPACHO</th>
+                                    <th className="p-2 w-[110px] text-center">ESTADO</th>
+                                  </tr>
+                                </thead>
+                                <tbody className="divide-y divide-gray-100 bg-white">
+                                  {sectoresGrupales[nombreSector].map((parada: any, index: number) => (
+                                    <tr key={parada.id} className="hover:bg-slate-50 transition-colors">
+                                      <td className="p-2 text-center font-bold text-gray-400">{index + 1}</td>
+                                      <td className="p-2 text-center">
+                                        <span className="bg-blue-50 text-blue-700 font-black px-1.5 py-0.5 rounded border border-blue-200 text-[11px]">
+                                          {parada.pedido?.items?.[0]?.cantidad || 'Fijo'}x
+                                        </span>
+                                      </td>
+                                      <td className="p-2 font-bold text-gray-900 truncate max-w-[180px]" title={parada.cliente?.nombre}>
+                                        {parada.cliente?.nombre}
+                                      </td>
+                                      <td className="p-2 text-gray-700 font-medium text-[12px]" title={parada.cliente?.direccion}>
+                                        📍 {parada.cliente?.direccion}
+                                      </td>
+                                      <td className="p-2 text-center">
+                                        <span className={`text-[10px] font-black px-2 py-0.5 rounded border uppercase tracking-tight ${
+                                          parada.estado === 'ENTREGADO' ? 'bg-green-50 text-green-700 border-green-200' : 'bg-slate-50 text-slate-600 border-slate-200'
+                                        }`}>
+                                          {parada.estado}
+                                        </span>
+                                      </td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
+
+                          </div>
+                        ))
+                      )}
+                    </div>
+
+                  </div>
+                );
+              })}
+            </div>
+          )}
 
         </div>
       )}
@@ -232,7 +237,7 @@ export default function RutasManager() {
         onClose={() => setModalAbierto(false)} 
         onSuccess={() => {
           setModalAbierto(false);
-          cargarDatos(); // Recarga la lista para que el pedido aparezca al instante
+          cargarDatos(); 
         }} 
       />
 
