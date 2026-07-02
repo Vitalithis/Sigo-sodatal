@@ -3,24 +3,21 @@
 import React, { useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import NuevaGuiaModal from './NuevaGuiaModal';
-import ConfirmarEntregaModal from './ConfirmarEntregaModal';
 import AnularGuiaModal from './AnularGuiaModal';
 import CierreMensualModal from './CierreMensualModal';
 import { exportarGuiaSQLAction } from './actions';
 
 const ESTADO_STYLES: Record<string, string> = {
-  EMITIDA: 'bg-blue-100 text-blue-700 border-blue-300',
-  ENTREGADA_PAGADA: 'bg-green-100 text-green-700 border-green-300',
+  ENTREGADA_EFECTIVO: 'bg-green-100 text-green-700 border-green-300',
+  ENTREGADA_TARJETA: 'bg-teal-100 text-teal-700 border-teal-300',
   ENTREGADA_CREDITO: 'bg-yellow-100 text-yellow-700 border-yellow-300',
-  FACTURADA: 'bg-purple-100 text-purple-700 border-purple-300',
   ANULADA: 'bg-red-100 text-red-700 border-red-300',
 };
 
 const ESTADO_LABELS: Record<string, string> = {
-  EMITIDA: 'Emitida',
-  ENTREGADA_PAGADA: 'Entregada (Pagada)',
+  ENTREGADA_EFECTIVO: 'Entregada (Efectivo)',
+  ENTREGADA_TARJETA: 'Entregada (Tarjeta)',
   ENTREGADA_CREDITO: 'Entregada (Crédito)',
-  FACTURADA: 'Facturada',
   ANULADA: 'Anulada',
 };
 
@@ -46,14 +43,12 @@ export default function GuiasManager({ initialGuias }: { initialGuias: any[] }) 
 
   const [modalNueva, setModalNueva] = useState(false);
   const [modalCierre, setModalCierre] = useState(false);
-  const [guiaEntrega, setGuiaEntrega] = useState<any>(null);
   const [guiaAnular, setGuiaAnular] = useState<any>(null);
   const [exportando, setExportando] = useState<string | null>(null);
 
   const refrescar = () => {
     setModalNueva(false);
     setModalCierre(false);
-    setGuiaEntrega(null);
     setGuiaAnular(null);
     router.refresh();
   };
@@ -200,21 +195,16 @@ export default function GuiasManager({ initialGuias }: { initialGuias: any[] }) 
                   >
                     {ESTADO_LABELS[g.estado]}
                   </span>
+                  {g.incluida_en_cierre && (
+                    <span className="block mt-1 text-[10px] font-bold text-purple-600">✔ Cerrada</span>
+                  )}
                 </td>
                 <td className="p-3 text-right font-bold text-gray-800">
                   ${g.total.toLocaleString('es-CL')}
                 </td>
                 <td className="p-3">
                   <div className="flex justify-center gap-1 flex-wrap">
-                    {g.estado === 'EMITIDA' && (
-                      <button
-                        onClick={() => setGuiaEntrega(g)}
-                        className="text-[11px] bg-green-50 text-green-700 border border-green-300 px-2 py-1 rounded font-semibold hover:bg-green-100"
-                      >
-                        ✅ Entregar
-                      </button>
-                    )}
-                    {(g.estado === 'EMITIDA' || g.estado === 'ENTREGADA_PAGADA' || g.estado === 'ENTREGADA_CREDITO') && (
+                    {g.estado !== 'ANULADA' && !g.incluida_en_cierre && (
                       <button
                         onClick={() => setGuiaAnular(g)}
                         className="text-[11px] bg-red-50 text-red-700 border border-red-300 px-2 py-1 rounded font-semibold hover:bg-red-100"
@@ -238,12 +228,6 @@ export default function GuiasManager({ initialGuias }: { initialGuias: any[] }) 
       </div>
 
       <NuevaGuiaModal isOpen={modalNueva} onClose={() => setModalNueva(false)} onSuccess={refrescar} />
-      <ConfirmarEntregaModal
-        guia={guiaEntrega}
-        isOpen={!!guiaEntrega}
-        onClose={() => setGuiaEntrega(null)}
-        onSuccess={refrescar}
-      />
       <AnularGuiaModal
         guia={guiaAnular}
         isOpen={!!guiaAnular}

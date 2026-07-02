@@ -43,7 +43,7 @@ export default function CierreMensualModal({
     if (res.success && res.sql) {
       descargarSQL(res.sql, res.filename!);
       alert(
-        `Cierre generado: ${res.totalGuias} guía(s) de ${res.totalClientes} cliente(s) marcadas como FACTURADA.`
+        `Cierre generado: ${res.totalGuias} guía(s) de ${res.totalClientes} cliente(s) marcadas como incluidas en el cierre.`
       );
       onSuccess();
     } else {
@@ -64,8 +64,8 @@ export default function CierreMensualModal({
         <div className="p-5 space-y-3">
           <p className="text-xs text-gray-600">
             Agrupa todas las guías <strong>ENTREGADA_CREDITO</strong> de clientes con modalidad{' '}
-            <strong>MENSUAL</strong> emitidas en el periodo, genera el SQL consolidado por cliente para
-            facturación, y las marca como <strong>FACTURADA</strong>.
+            <strong>MENSUAL</strong> emitidas en el periodo que aún no se hayan cerrado, genera el SQL
+            consolidado por cliente para facturación, y las marca como <strong>incluidas en el cierre</strong>.
           </p>
 
           <div className="grid grid-cols-2 gap-3">

@@ -46,7 +46,11 @@ export default function NuevaGuiaModal({
   const [cantidadTemp, setCantidadTemp] = useState(1);
 
   // Otros
-  const [metodoPago, setMetodoPago] = useState<'EFECTIVO' | 'TARJETA' | 'TRANSFERENCIA' | 'GUIA_MENSUAL'>('EFECTIVO');
+  const [metodoPago, setMetodoPago] = useState<'EFECTIVO' | 'TARJETA' | 'GUIA_MENSUAL'>('EFECTIVO');
+
+  // Receptor de la entrega (la guía se crea y entrega en un solo paso)
+  const [nombreReceptor, setNombreReceptor] = useState('');
+  const [rutReceptor, setRutReceptor] = useState('');
   const [botellonesPrestados, setBotellonesPrestados] = useState(0);
   const [observaciones, setObservaciones] = useState('');
 
@@ -145,6 +149,8 @@ export default function NuevaGuiaModal({
     setMetodoPago('EFECTIVO');
     setBotellonesPrestados(0);
     setObservaciones('');
+    setNombreReceptor('');
+    setRutReceptor('');
   };
 
   const guardarGuia = async (e: React.FormEvent) => {
@@ -152,6 +158,7 @@ export default function NuevaGuiaModal({
     if (!clienteSeleccionado) return alert('Debes seleccionar un cliente registrado.');
     if (!repartidorId) return alert('Debes asignar un repartidor.');
     if (items.length === 0) return alert('Agrega al menos un producto a la guía.');
+    if (!nombreReceptor.trim()) return alert('Debes indicar el nombre de quien recibe.');
 
     setGuardando(true);
     const payload: ItemGuiaInput[] = items.map((i) => ({
@@ -166,6 +173,8 @@ export default function NuevaGuiaModal({
       direccion_entrega: direccionEntrega,
       usuario_repartidor_id: repartidorId,
       metodo_pago: metodoPago,
+      nombre_receptor: nombreReceptor.trim(),
+      rut_receptor: rutReceptor.trim() || undefined,
       observaciones: observaciones || undefined,
       botellones_prestados_entrega: botellonesPrestados,
       items: payload,
@@ -186,7 +195,7 @@ export default function NuevaGuiaModal({
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-xl shadow-xl w-full max-w-2xl max-h-[92vh] overflow-y-auto">
         <div className="bg-blue-600 px-4 py-3 flex justify-between items-center text-white sticky top-0 z-10">
-          <h3 className="font-bold">📄 Nueva Guía de Despacho</h3>
+          <h3 className="font-bold">📄 Nueva Guía de Despacho (Entregada)</h3>
           <button type="button" onClick={onClose} className="text-white hover:text-gray-200 font-bold">
             ✕
           </button>
@@ -404,6 +413,33 @@ export default function NuevaGuiaModal({
 
           <div className="border-t border-gray-200 my-2"></div>
 
+          {/* Receptor de la entrega — la guía se crea y entrega en un solo paso */}
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-[11px] font-semibold text-gray-500 mb-0.5 uppercase">
+                Nombre de quien recibe
+              </label>
+              <input
+                type="text"
+                value={nombreReceptor}
+                onChange={(e) => setNombreReceptor(e.target.value)}
+                className="w-full border border-gray-300 rounded px-3 py-1.5 text-sm"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-[11px] font-semibold text-gray-500 mb-0.5 uppercase">
+                RUT de quien recibe (opcional)
+              </label>
+              <input
+                type="text"
+                value={rutReceptor}
+                onChange={(e) => setRutReceptor(e.target.value)}
+                className="w-full border border-gray-300 rounded px-3 py-1.5 text-sm"
+              />
+            </div>
+          </div>
+
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="block text-[11px] font-semibold text-gray-500 mb-0.5 uppercase">
@@ -416,7 +452,6 @@ export default function NuevaGuiaModal({
               >
                 <option value="EFECTIVO">Efectivo</option>
                 <option value="TARJETA">Tarjeta</option>
-                <option value="TRANSFERENCIA">Transferencia</option>
                 <option value="GUIA_MENSUAL">Guía Mensual (crédito)</option>
               </select>
             </div>
@@ -451,7 +486,7 @@ export default function NuevaGuiaModal({
             disabled={guardando}
             className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded shadow-sm mt-2 disabled:opacity-50 transition-colors text-sm"
           >
-            {guardando ? 'Guardando...' : '📄 Emitir Guía de Despacho'}
+            {guardando ? 'Guardando...' : '✅ Registrar Guía Entregada'}
           </button>
         </form>
       </div>

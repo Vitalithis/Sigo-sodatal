@@ -377,10 +377,9 @@ export type PreferenciaFacturacion = (typeof PreferenciaFacturacion)[keyof typeo
 
 
 export const EstadoGuia: {
-  EMITIDA: 'EMITIDA',
-  ENTREGADA_PAGADA: 'ENTREGADA_PAGADA',
+  ENTREGADA_EFECTIVO: 'ENTREGADA_EFECTIVO',
+  ENTREGADA_TARJETA: 'ENTREGADA_TARJETA',
   ENTREGADA_CREDITO: 'ENTREGADA_CREDITO',
-  FACTURADA: 'FACTURADA',
   ANULADA: 'ANULADA'
 };
 
@@ -23007,14 +23006,12 @@ export namespace Prisma {
     numero_correlativo: number | null
     total: number | null
     botellones_prestados_entrega: number | null
-    numero_factura: number | null
   }
 
   export type GuiaDespachoSumAggregateOutputType = {
     numero_correlativo: number | null
     total: number | null
     botellones_prestados_entrega: number | null
-    numero_factura: number | null
   }
 
   export type GuiaDespachoMinAggregateOutputType = {
@@ -23032,9 +23029,9 @@ export namespace Prisma {
     total: number | null
     motivo_anulacion: string | null
     botellones_prestados_entrega: number | null
-    fecha_facturacion: Date | null
     metodo_pago: $Enums.MetodoPago | null
-    numero_factura: number | null
+    incluida_en_cierre: boolean | null
+    fecha_cierre: Date | null
   }
 
   export type GuiaDespachoMaxAggregateOutputType = {
@@ -23052,9 +23049,9 @@ export namespace Prisma {
     total: number | null
     motivo_anulacion: string | null
     botellones_prestados_entrega: number | null
-    fecha_facturacion: Date | null
     metodo_pago: $Enums.MetodoPago | null
-    numero_factura: number | null
+    incluida_en_cierre: boolean | null
+    fecha_cierre: Date | null
   }
 
   export type GuiaDespachoCountAggregateOutputType = {
@@ -23072,9 +23069,9 @@ export namespace Prisma {
     total: number
     motivo_anulacion: number
     botellones_prestados_entrega: number
-    fecha_facturacion: number
     metodo_pago: number
-    numero_factura: number
+    incluida_en_cierre: number
+    fecha_cierre: number
     _all: number
   }
 
@@ -23083,14 +23080,12 @@ export namespace Prisma {
     numero_correlativo?: true
     total?: true
     botellones_prestados_entrega?: true
-    numero_factura?: true
   }
 
   export type GuiaDespachoSumAggregateInputType = {
     numero_correlativo?: true
     total?: true
     botellones_prestados_entrega?: true
-    numero_factura?: true
   }
 
   export type GuiaDespachoMinAggregateInputType = {
@@ -23108,9 +23103,9 @@ export namespace Prisma {
     total?: true
     motivo_anulacion?: true
     botellones_prestados_entrega?: true
-    fecha_facturacion?: true
     metodo_pago?: true
-    numero_factura?: true
+    incluida_en_cierre?: true
+    fecha_cierre?: true
   }
 
   export type GuiaDespachoMaxAggregateInputType = {
@@ -23128,9 +23123,9 @@ export namespace Prisma {
     total?: true
     motivo_anulacion?: true
     botellones_prestados_entrega?: true
-    fecha_facturacion?: true
     metodo_pago?: true
-    numero_factura?: true
+    incluida_en_cierre?: true
+    fecha_cierre?: true
   }
 
   export type GuiaDespachoCountAggregateInputType = {
@@ -23148,9 +23143,9 @@ export namespace Prisma {
     total?: true
     motivo_anulacion?: true
     botellones_prestados_entrega?: true
-    fecha_facturacion?: true
     metodo_pago?: true
-    numero_factura?: true
+    incluida_en_cierre?: true
+    fecha_cierre?: true
     _all?: true
   }
 
@@ -23255,9 +23250,9 @@ export namespace Prisma {
     total: number
     motivo_anulacion: string | null
     botellones_prestados_entrega: number
-    fecha_facturacion: Date | null
     metodo_pago: $Enums.MetodoPago
-    numero_factura: number | null
+    incluida_en_cierre: boolean
+    fecha_cierre: Date | null
     _count: GuiaDespachoCountAggregateOutputType | null
     _avg: GuiaDespachoAvgAggregateOutputType | null
     _sum: GuiaDespachoSumAggregateOutputType | null
@@ -23294,9 +23289,9 @@ export namespace Prisma {
     total?: boolean
     motivo_anulacion?: boolean
     botellones_prestados_entrega?: boolean
-    fecha_facturacion?: boolean
     metodo_pago?: boolean
-    numero_factura?: boolean
+    incluida_en_cierre?: boolean
+    fecha_cierre?: boolean
     cuadratura_ventas?: boolean | GuiaDespacho$cuadratura_ventasArgs<ExtArgs>
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
     usuario_repartidor?: boolean | UsuarioDefaultArgs<ExtArgs>
@@ -23319,9 +23314,9 @@ export namespace Prisma {
     total?: boolean
     motivo_anulacion?: boolean
     botellones_prestados_entrega?: boolean
-    fecha_facturacion?: boolean
     metodo_pago?: boolean
-    numero_factura?: boolean
+    incluida_en_cierre?: boolean
+    fecha_cierre?: boolean
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
     usuario_repartidor?: boolean | UsuarioDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["guiaDespacho"]>
@@ -23341,9 +23336,9 @@ export namespace Prisma {
     total?: boolean
     motivo_anulacion?: boolean
     botellones_prestados_entrega?: boolean
-    fecha_facturacion?: boolean
     metodo_pago?: boolean
-    numero_factura?: boolean
+    incluida_en_cierre?: boolean
+    fecha_cierre?: boolean
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
     usuario_repartidor?: boolean | UsuarioDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["guiaDespacho"]>
@@ -23363,12 +23358,12 @@ export namespace Prisma {
     total?: boolean
     motivo_anulacion?: boolean
     botellones_prestados_entrega?: boolean
-    fecha_facturacion?: boolean
     metodo_pago?: boolean
-    numero_factura?: boolean
+    incluida_en_cierre?: boolean
+    fecha_cierre?: boolean
   }
 
-  export type GuiaDespachoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "numero_correlativo" | "fecha_emision" | "cliente_id" | "direccion_entrega" | "usuario_repartidor_id" | "estado" | "nombre_receptor" | "rut_receptor" | "hora_entrega" | "observaciones" | "total" | "motivo_anulacion" | "botellones_prestados_entrega" | "fecha_facturacion" | "metodo_pago" | "numero_factura", ExtArgs["result"]["guiaDespacho"]>
+  export type GuiaDespachoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "numero_correlativo" | "fecha_emision" | "cliente_id" | "direccion_entrega" | "usuario_repartidor_id" | "estado" | "nombre_receptor" | "rut_receptor" | "hora_entrega" | "observaciones" | "total" | "motivo_anulacion" | "botellones_prestados_entrega" | "metodo_pago" | "incluida_en_cierre" | "fecha_cierre", ExtArgs["result"]["guiaDespacho"]>
   export type GuiaDespachoInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     cuadratura_ventas?: boolean | GuiaDespacho$cuadratura_ventasArgs<ExtArgs>
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
@@ -23408,9 +23403,9 @@ export namespace Prisma {
       total: number
       motivo_anulacion: string | null
       botellones_prestados_entrega: number
-      fecha_facturacion: Date | null
       metodo_pago: $Enums.MetodoPago
-      numero_factura: number | null
+      incluida_en_cierre: boolean
+      fecha_cierre: Date | null
     }, ExtArgs["result"]["guiaDespacho"]>
     composites: {}
   }
@@ -23852,9 +23847,9 @@ export namespace Prisma {
     readonly total: FieldRef<"GuiaDespacho", 'Float'>
     readonly motivo_anulacion: FieldRef<"GuiaDespacho", 'String'>
     readonly botellones_prestados_entrega: FieldRef<"GuiaDespacho", 'Int'>
-    readonly fecha_facturacion: FieldRef<"GuiaDespacho", 'DateTime'>
     readonly metodo_pago: FieldRef<"GuiaDespacho", 'MetodoPago'>
-    readonly numero_factura: FieldRef<"GuiaDespacho", 'Int'>
+    readonly incluida_en_cierre: FieldRef<"GuiaDespacho", 'Boolean'>
+    readonly fecha_cierre: FieldRef<"GuiaDespacho", 'DateTime'>
   }
     
 
@@ -46972,9 +46967,9 @@ export namespace Prisma {
     total: 'total',
     motivo_anulacion: 'motivo_anulacion',
     botellones_prestados_entrega: 'botellones_prestados_entrega',
-    fecha_facturacion: 'fecha_facturacion',
     metodo_pago: 'metodo_pago',
-    numero_factura: 'numero_factura'
+    incluida_en_cierre: 'incluida_en_cierre',
+    fecha_cierre: 'fecha_cierre'
   };
 
   export type GuiaDespachoScalarFieldEnum = (typeof GuiaDespachoScalarFieldEnum)[keyof typeof GuiaDespachoScalarFieldEnum]
@@ -48850,9 +48845,9 @@ export namespace Prisma {
     total?: FloatFilter<"GuiaDespacho"> | number
     motivo_anulacion?: StringNullableFilter<"GuiaDespacho"> | string | null
     botellones_prestados_entrega?: IntFilter<"GuiaDespacho"> | number
-    fecha_facturacion?: DateTimeNullableFilter<"GuiaDespacho"> | Date | string | null
     metodo_pago?: EnumMetodoPagoFilter<"GuiaDespacho"> | $Enums.MetodoPago
-    numero_factura?: IntNullableFilter<"GuiaDespacho"> | number | null
+    incluida_en_cierre?: BoolFilter<"GuiaDespacho"> | boolean
+    fecha_cierre?: DateTimeNullableFilter<"GuiaDespacho"> | Date | string | null
     cuadratura_ventas?: CuadraturaVentaListRelationFilter
     cliente?: XOR<ClienteScalarRelationFilter, ClienteWhereInput>
     usuario_repartidor?: XOR<UsuarioScalarRelationFilter, UsuarioWhereInput>
@@ -48874,9 +48869,9 @@ export namespace Prisma {
     total?: SortOrder
     motivo_anulacion?: SortOrderInput | SortOrder
     botellones_prestados_entrega?: SortOrder
-    fecha_facturacion?: SortOrderInput | SortOrder
     metodo_pago?: SortOrder
-    numero_factura?: SortOrderInput | SortOrder
+    incluida_en_cierre?: SortOrder
+    fecha_cierre?: SortOrderInput | SortOrder
     cuadratura_ventas?: CuadraturaVentaOrderByRelationAggregateInput
     cliente?: ClienteOrderByWithRelationInput
     usuario_repartidor?: UsuarioOrderByWithRelationInput
@@ -48901,9 +48896,9 @@ export namespace Prisma {
     total?: FloatFilter<"GuiaDespacho"> | number
     motivo_anulacion?: StringNullableFilter<"GuiaDespacho"> | string | null
     botellones_prestados_entrega?: IntFilter<"GuiaDespacho"> | number
-    fecha_facturacion?: DateTimeNullableFilter<"GuiaDespacho"> | Date | string | null
     metodo_pago?: EnumMetodoPagoFilter<"GuiaDespacho"> | $Enums.MetodoPago
-    numero_factura?: IntNullableFilter<"GuiaDespacho"> | number | null
+    incluida_en_cierre?: BoolFilter<"GuiaDespacho"> | boolean
+    fecha_cierre?: DateTimeNullableFilter<"GuiaDespacho"> | Date | string | null
     cuadratura_ventas?: CuadraturaVentaListRelationFilter
     cliente?: XOR<ClienteScalarRelationFilter, ClienteWhereInput>
     usuario_repartidor?: XOR<UsuarioScalarRelationFilter, UsuarioWhereInput>
@@ -48925,9 +48920,9 @@ export namespace Prisma {
     total?: SortOrder
     motivo_anulacion?: SortOrderInput | SortOrder
     botellones_prestados_entrega?: SortOrder
-    fecha_facturacion?: SortOrderInput | SortOrder
     metodo_pago?: SortOrder
-    numero_factura?: SortOrderInput | SortOrder
+    incluida_en_cierre?: SortOrder
+    fecha_cierre?: SortOrderInput | SortOrder
     _count?: GuiaDespachoCountOrderByAggregateInput
     _avg?: GuiaDespachoAvgOrderByAggregateInput
     _max?: GuiaDespachoMaxOrderByAggregateInput
@@ -48953,9 +48948,9 @@ export namespace Prisma {
     total?: FloatWithAggregatesFilter<"GuiaDespacho"> | number
     motivo_anulacion?: StringNullableWithAggregatesFilter<"GuiaDespacho"> | string | null
     botellones_prestados_entrega?: IntWithAggregatesFilter<"GuiaDespacho"> | number
-    fecha_facturacion?: DateTimeNullableWithAggregatesFilter<"GuiaDespacho"> | Date | string | null
     metodo_pago?: EnumMetodoPagoWithAggregatesFilter<"GuiaDespacho"> | $Enums.MetodoPago
-    numero_factura?: IntNullableWithAggregatesFilter<"GuiaDespacho"> | number | null
+    incluida_en_cierre?: BoolWithAggregatesFilter<"GuiaDespacho"> | boolean
+    fecha_cierre?: DateTimeNullableWithAggregatesFilter<"GuiaDespacho"> | Date | string | null
   }
 
   export type ItemGuiaWhereInput = {
@@ -51538,7 +51533,7 @@ export namespace Prisma {
     numero_correlativo?: number
     fecha_emision?: Date | string
     direccion_entrega: string
-    estado?: $Enums.EstadoGuia
+    estado: $Enums.EstadoGuia
     nombre_receptor?: string | null
     rut_receptor?: string | null
     hora_entrega?: Date | string | null
@@ -51546,9 +51541,9 @@ export namespace Prisma {
     total: number
     motivo_anulacion?: string | null
     botellones_prestados_entrega?: number
-    fecha_facturacion?: Date | string | null
     metodo_pago?: $Enums.MetodoPago
-    numero_factura?: number | null
+    incluida_en_cierre?: boolean
+    fecha_cierre?: Date | string | null
     cuadratura_ventas?: CuadraturaVentaCreateNestedManyWithoutGuiaInput
     cliente: ClienteCreateNestedOneWithoutGuiasInput
     usuario_repartidor: UsuarioCreateNestedOneWithoutGuiasInput
@@ -51562,7 +51557,7 @@ export namespace Prisma {
     cliente_id: string
     direccion_entrega: string
     usuario_repartidor_id: string
-    estado?: $Enums.EstadoGuia
+    estado: $Enums.EstadoGuia
     nombre_receptor?: string | null
     rut_receptor?: string | null
     hora_entrega?: Date | string | null
@@ -51570,9 +51565,9 @@ export namespace Prisma {
     total: number
     motivo_anulacion?: string | null
     botellones_prestados_entrega?: number
-    fecha_facturacion?: Date | string | null
     metodo_pago?: $Enums.MetodoPago
-    numero_factura?: number | null
+    incluida_en_cierre?: boolean
+    fecha_cierre?: Date | string | null
     cuadratura_ventas?: CuadraturaVentaUncheckedCreateNestedManyWithoutGuiaInput
     items?: ItemGuiaUncheckedCreateNestedManyWithoutGuiaInput
   }
@@ -51589,9 +51584,9 @@ export namespace Prisma {
     total?: FloatFieldUpdateOperationsInput | number
     motivo_anulacion?: NullableStringFieldUpdateOperationsInput | string | null
     botellones_prestados_entrega?: IntFieldUpdateOperationsInput | number
-    fecha_facturacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     metodo_pago?: EnumMetodoPagoFieldUpdateOperationsInput | $Enums.MetodoPago
-    numero_factura?: NullableIntFieldUpdateOperationsInput | number | null
+    incluida_en_cierre?: BoolFieldUpdateOperationsInput | boolean
+    fecha_cierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     cuadratura_ventas?: CuadraturaVentaUpdateManyWithoutGuiaNestedInput
     cliente?: ClienteUpdateOneRequiredWithoutGuiasNestedInput
     usuario_repartidor?: UsuarioUpdateOneRequiredWithoutGuiasNestedInput
@@ -51613,9 +51608,9 @@ export namespace Prisma {
     total?: FloatFieldUpdateOperationsInput | number
     motivo_anulacion?: NullableStringFieldUpdateOperationsInput | string | null
     botellones_prestados_entrega?: IntFieldUpdateOperationsInput | number
-    fecha_facturacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     metodo_pago?: EnumMetodoPagoFieldUpdateOperationsInput | $Enums.MetodoPago
-    numero_factura?: NullableIntFieldUpdateOperationsInput | number | null
+    incluida_en_cierre?: BoolFieldUpdateOperationsInput | boolean
+    fecha_cierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     cuadratura_ventas?: CuadraturaVentaUncheckedUpdateManyWithoutGuiaNestedInput
     items?: ItemGuiaUncheckedUpdateManyWithoutGuiaNestedInput
   }
@@ -51627,7 +51622,7 @@ export namespace Prisma {
     cliente_id: string
     direccion_entrega: string
     usuario_repartidor_id: string
-    estado?: $Enums.EstadoGuia
+    estado: $Enums.EstadoGuia
     nombre_receptor?: string | null
     rut_receptor?: string | null
     hora_entrega?: Date | string | null
@@ -51635,9 +51630,9 @@ export namespace Prisma {
     total: number
     motivo_anulacion?: string | null
     botellones_prestados_entrega?: number
-    fecha_facturacion?: Date | string | null
     metodo_pago?: $Enums.MetodoPago
-    numero_factura?: number | null
+    incluida_en_cierre?: boolean
+    fecha_cierre?: Date | string | null
   }
 
   export type GuiaDespachoUpdateManyMutationInput = {
@@ -51652,9 +51647,9 @@ export namespace Prisma {
     total?: FloatFieldUpdateOperationsInput | number
     motivo_anulacion?: NullableStringFieldUpdateOperationsInput | string | null
     botellones_prestados_entrega?: IntFieldUpdateOperationsInput | number
-    fecha_facturacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     metodo_pago?: EnumMetodoPagoFieldUpdateOperationsInput | $Enums.MetodoPago
-    numero_factura?: NullableIntFieldUpdateOperationsInput | number | null
+    incluida_en_cierre?: BoolFieldUpdateOperationsInput | boolean
+    fecha_cierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type GuiaDespachoUncheckedUpdateManyInput = {
@@ -51672,9 +51667,9 @@ export namespace Prisma {
     total?: FloatFieldUpdateOperationsInput | number
     motivo_anulacion?: NullableStringFieldUpdateOperationsInput | string | null
     botellones_prestados_entrega?: IntFieldUpdateOperationsInput | number
-    fecha_facturacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     metodo_pago?: EnumMetodoPagoFieldUpdateOperationsInput | $Enums.MetodoPago
-    numero_factura?: NullableIntFieldUpdateOperationsInput | number | null
+    incluida_en_cierre?: BoolFieldUpdateOperationsInput | boolean
+    fecha_cierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ItemGuiaCreateInput = {
@@ -54459,16 +54454,15 @@ export namespace Prisma {
     total?: SortOrder
     motivo_anulacion?: SortOrder
     botellones_prestados_entrega?: SortOrder
-    fecha_facturacion?: SortOrder
     metodo_pago?: SortOrder
-    numero_factura?: SortOrder
+    incluida_en_cierre?: SortOrder
+    fecha_cierre?: SortOrder
   }
 
   export type GuiaDespachoAvgOrderByAggregateInput = {
     numero_correlativo?: SortOrder
     total?: SortOrder
     botellones_prestados_entrega?: SortOrder
-    numero_factura?: SortOrder
   }
 
   export type GuiaDespachoMaxOrderByAggregateInput = {
@@ -54486,9 +54480,9 @@ export namespace Prisma {
     total?: SortOrder
     motivo_anulacion?: SortOrder
     botellones_prestados_entrega?: SortOrder
-    fecha_facturacion?: SortOrder
     metodo_pago?: SortOrder
-    numero_factura?: SortOrder
+    incluida_en_cierre?: SortOrder
+    fecha_cierre?: SortOrder
   }
 
   export type GuiaDespachoMinOrderByAggregateInput = {
@@ -54506,16 +54500,15 @@ export namespace Prisma {
     total?: SortOrder
     motivo_anulacion?: SortOrder
     botellones_prestados_entrega?: SortOrder
-    fecha_facturacion?: SortOrder
     metodo_pago?: SortOrder
-    numero_factura?: SortOrder
+    incluida_en_cierre?: SortOrder
+    fecha_cierre?: SortOrder
   }
 
   export type GuiaDespachoSumOrderByAggregateInput = {
     numero_correlativo?: SortOrder
     total?: SortOrder
     botellones_prestados_entrega?: SortOrder
-    numero_factura?: SortOrder
   }
 
   export type EnumEstadoGuiaWithAggregatesFilter<$PrismaModel = never> = {
@@ -58973,7 +58966,7 @@ export namespace Prisma {
     numero_correlativo?: number
     fecha_emision?: Date | string
     direccion_entrega: string
-    estado?: $Enums.EstadoGuia
+    estado: $Enums.EstadoGuia
     nombre_receptor?: string | null
     rut_receptor?: string | null
     hora_entrega?: Date | string | null
@@ -58981,9 +58974,9 @@ export namespace Prisma {
     total: number
     motivo_anulacion?: string | null
     botellones_prestados_entrega?: number
-    fecha_facturacion?: Date | string | null
     metodo_pago?: $Enums.MetodoPago
-    numero_factura?: number | null
+    incluida_en_cierre?: boolean
+    fecha_cierre?: Date | string | null
     cuadratura_ventas?: CuadraturaVentaCreateNestedManyWithoutGuiaInput
     cliente: ClienteCreateNestedOneWithoutGuiasInput
     items?: ItemGuiaCreateNestedManyWithoutGuiaInput
@@ -58995,7 +58988,7 @@ export namespace Prisma {
     fecha_emision?: Date | string
     cliente_id: string
     direccion_entrega: string
-    estado?: $Enums.EstadoGuia
+    estado: $Enums.EstadoGuia
     nombre_receptor?: string | null
     rut_receptor?: string | null
     hora_entrega?: Date | string | null
@@ -59003,9 +58996,9 @@ export namespace Prisma {
     total: number
     motivo_anulacion?: string | null
     botellones_prestados_entrega?: number
-    fecha_facturacion?: Date | string | null
     metodo_pago?: $Enums.MetodoPago
-    numero_factura?: number | null
+    incluida_en_cierre?: boolean
+    fecha_cierre?: Date | string | null
     cuadratura_ventas?: CuadraturaVentaUncheckedCreateNestedManyWithoutGuiaInput
     items?: ItemGuiaUncheckedCreateNestedManyWithoutGuiaInput
   }
@@ -59361,9 +59354,9 @@ export namespace Prisma {
     total?: FloatFilter<"GuiaDespacho"> | number
     motivo_anulacion?: StringNullableFilter<"GuiaDespacho"> | string | null
     botellones_prestados_entrega?: IntFilter<"GuiaDespacho"> | number
-    fecha_facturacion?: DateTimeNullableFilter<"GuiaDespacho"> | Date | string | null
     metodo_pago?: EnumMetodoPagoFilter<"GuiaDespacho"> | $Enums.MetodoPago
-    numero_factura?: IntNullableFilter<"GuiaDespacho"> | number | null
+    incluida_en_cierre?: BoolFilter<"GuiaDespacho"> | boolean
+    fecha_cierre?: DateTimeNullableFilter<"GuiaDespacho"> | Date | string | null
   }
 
   export type LogAccesoUpsertWithWhereUniqueWithoutUsuarioInput = {
@@ -60908,7 +60901,7 @@ export namespace Prisma {
     numero_correlativo?: number
     fecha_emision?: Date | string
     direccion_entrega: string
-    estado?: $Enums.EstadoGuia
+    estado: $Enums.EstadoGuia
     nombre_receptor?: string | null
     rut_receptor?: string | null
     hora_entrega?: Date | string | null
@@ -60916,9 +60909,9 @@ export namespace Prisma {
     total: number
     motivo_anulacion?: string | null
     botellones_prestados_entrega?: number
-    fecha_facturacion?: Date | string | null
     metodo_pago?: $Enums.MetodoPago
-    numero_factura?: number | null
+    incluida_en_cierre?: boolean
+    fecha_cierre?: Date | string | null
     cuadratura_ventas?: CuadraturaVentaCreateNestedManyWithoutGuiaInput
     usuario_repartidor: UsuarioCreateNestedOneWithoutGuiasInput
     items?: ItemGuiaCreateNestedManyWithoutGuiaInput
@@ -60930,7 +60923,7 @@ export namespace Prisma {
     fecha_emision?: Date | string
     direccion_entrega: string
     usuario_repartidor_id: string
-    estado?: $Enums.EstadoGuia
+    estado: $Enums.EstadoGuia
     nombre_receptor?: string | null
     rut_receptor?: string | null
     hora_entrega?: Date | string | null
@@ -60938,9 +60931,9 @@ export namespace Prisma {
     total: number
     motivo_anulacion?: string | null
     botellones_prestados_entrega?: number
-    fecha_facturacion?: Date | string | null
     metodo_pago?: $Enums.MetodoPago
-    numero_factura?: number | null
+    incluida_en_cierre?: boolean
+    fecha_cierre?: Date | string | null
     cuadratura_ventas?: CuadraturaVentaUncheckedCreateNestedManyWithoutGuiaInput
     items?: ItemGuiaUncheckedCreateNestedManyWithoutGuiaInput
   }
@@ -63013,7 +63006,7 @@ export namespace Prisma {
     numero_correlativo?: number
     fecha_emision?: Date | string
     direccion_entrega: string
-    estado?: $Enums.EstadoGuia
+    estado: $Enums.EstadoGuia
     nombre_receptor?: string | null
     rut_receptor?: string | null
     hora_entrega?: Date | string | null
@@ -63021,9 +63014,9 @@ export namespace Prisma {
     total: number
     motivo_anulacion?: string | null
     botellones_prestados_entrega?: number
-    fecha_facturacion?: Date | string | null
     metodo_pago?: $Enums.MetodoPago
-    numero_factura?: number | null
+    incluida_en_cierre?: boolean
+    fecha_cierre?: Date | string | null
     cuadratura_ventas?: CuadraturaVentaCreateNestedManyWithoutGuiaInput
     cliente: ClienteCreateNestedOneWithoutGuiasInput
     usuario_repartidor: UsuarioCreateNestedOneWithoutGuiasInput
@@ -63036,7 +63029,7 @@ export namespace Prisma {
     cliente_id: string
     direccion_entrega: string
     usuario_repartidor_id: string
-    estado?: $Enums.EstadoGuia
+    estado: $Enums.EstadoGuia
     nombre_receptor?: string | null
     rut_receptor?: string | null
     hora_entrega?: Date | string | null
@@ -63044,9 +63037,9 @@ export namespace Prisma {
     total: number
     motivo_anulacion?: string | null
     botellones_prestados_entrega?: number
-    fecha_facturacion?: Date | string | null
     metodo_pago?: $Enums.MetodoPago
-    numero_factura?: number | null
+    incluida_en_cierre?: boolean
+    fecha_cierre?: Date | string | null
     cuadratura_ventas?: CuadraturaVentaUncheckedCreateNestedManyWithoutGuiaInput
   }
 
@@ -63117,9 +63110,9 @@ export namespace Prisma {
     total?: FloatFieldUpdateOperationsInput | number
     motivo_anulacion?: NullableStringFieldUpdateOperationsInput | string | null
     botellones_prestados_entrega?: IntFieldUpdateOperationsInput | number
-    fecha_facturacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     metodo_pago?: EnumMetodoPagoFieldUpdateOperationsInput | $Enums.MetodoPago
-    numero_factura?: NullableIntFieldUpdateOperationsInput | number | null
+    incluida_en_cierre?: BoolFieldUpdateOperationsInput | boolean
+    fecha_cierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     cuadratura_ventas?: CuadraturaVentaUpdateManyWithoutGuiaNestedInput
     cliente?: ClienteUpdateOneRequiredWithoutGuiasNestedInput
     usuario_repartidor?: UsuarioUpdateOneRequiredWithoutGuiasNestedInput
@@ -63140,9 +63133,9 @@ export namespace Prisma {
     total?: FloatFieldUpdateOperationsInput | number
     motivo_anulacion?: NullableStringFieldUpdateOperationsInput | string | null
     botellones_prestados_entrega?: IntFieldUpdateOperationsInput | number
-    fecha_facturacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     metodo_pago?: EnumMetodoPagoFieldUpdateOperationsInput | $Enums.MetodoPago
-    numero_factura?: NullableIntFieldUpdateOperationsInput | number | null
+    incluida_en_cierre?: BoolFieldUpdateOperationsInput | boolean
+    fecha_cierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     cuadratura_ventas?: CuadraturaVentaUncheckedUpdateManyWithoutGuiaNestedInput
   }
 
@@ -63683,7 +63676,7 @@ export namespace Prisma {
     numero_correlativo?: number
     fecha_emision?: Date | string
     direccion_entrega: string
-    estado?: $Enums.EstadoGuia
+    estado: $Enums.EstadoGuia
     nombre_receptor?: string | null
     rut_receptor?: string | null
     hora_entrega?: Date | string | null
@@ -63691,9 +63684,9 @@ export namespace Prisma {
     total: number
     motivo_anulacion?: string | null
     botellones_prestados_entrega?: number
-    fecha_facturacion?: Date | string | null
     metodo_pago?: $Enums.MetodoPago
-    numero_factura?: number | null
+    incluida_en_cierre?: boolean
+    fecha_cierre?: Date | string | null
     cliente: ClienteCreateNestedOneWithoutGuiasInput
     usuario_repartidor: UsuarioCreateNestedOneWithoutGuiasInput
     items?: ItemGuiaCreateNestedManyWithoutGuiaInput
@@ -63706,7 +63699,7 @@ export namespace Prisma {
     cliente_id: string
     direccion_entrega: string
     usuario_repartidor_id: string
-    estado?: $Enums.EstadoGuia
+    estado: $Enums.EstadoGuia
     nombre_receptor?: string | null
     rut_receptor?: string | null
     hora_entrega?: Date | string | null
@@ -63714,9 +63707,9 @@ export namespace Prisma {
     total: number
     motivo_anulacion?: string | null
     botellones_prestados_entrega?: number
-    fecha_facturacion?: Date | string | null
     metodo_pago?: $Enums.MetodoPago
-    numero_factura?: number | null
+    incluida_en_cierre?: boolean
+    fecha_cierre?: Date | string | null
     items?: ItemGuiaUncheckedCreateNestedManyWithoutGuiaInput
   }
 
@@ -63828,9 +63821,9 @@ export namespace Prisma {
     total?: FloatFieldUpdateOperationsInput | number
     motivo_anulacion?: NullableStringFieldUpdateOperationsInput | string | null
     botellones_prestados_entrega?: IntFieldUpdateOperationsInput | number
-    fecha_facturacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     metodo_pago?: EnumMetodoPagoFieldUpdateOperationsInput | $Enums.MetodoPago
-    numero_factura?: NullableIntFieldUpdateOperationsInput | number | null
+    incluida_en_cierre?: BoolFieldUpdateOperationsInput | boolean
+    fecha_cierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     cliente?: ClienteUpdateOneRequiredWithoutGuiasNestedInput
     usuario_repartidor?: UsuarioUpdateOneRequiredWithoutGuiasNestedInput
     items?: ItemGuiaUpdateManyWithoutGuiaNestedInput
@@ -63851,9 +63844,9 @@ export namespace Prisma {
     total?: FloatFieldUpdateOperationsInput | number
     motivo_anulacion?: NullableStringFieldUpdateOperationsInput | string | null
     botellones_prestados_entrega?: IntFieldUpdateOperationsInput | number
-    fecha_facturacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     metodo_pago?: EnumMetodoPagoFieldUpdateOperationsInput | $Enums.MetodoPago
-    numero_factura?: NullableIntFieldUpdateOperationsInput | number | null
+    incluida_en_cierre?: BoolFieldUpdateOperationsInput | boolean
+    fecha_cierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     items?: ItemGuiaUncheckedUpdateManyWithoutGuiaNestedInput
   }
 
@@ -65738,7 +65731,7 @@ export namespace Prisma {
     fecha_emision?: Date | string
     cliente_id: string
     direccion_entrega: string
-    estado?: $Enums.EstadoGuia
+    estado: $Enums.EstadoGuia
     nombre_receptor?: string | null
     rut_receptor?: string | null
     hora_entrega?: Date | string | null
@@ -65746,9 +65739,9 @@ export namespace Prisma {
     total: number
     motivo_anulacion?: string | null
     botellones_prestados_entrega?: number
-    fecha_facturacion?: Date | string | null
     metodo_pago?: $Enums.MetodoPago
-    numero_factura?: number | null
+    incluida_en_cierre?: boolean
+    fecha_cierre?: Date | string | null
   }
 
   export type LogAccesoCreateManyUsuarioInput = {
@@ -65921,9 +65914,9 @@ export namespace Prisma {
     total?: FloatFieldUpdateOperationsInput | number
     motivo_anulacion?: NullableStringFieldUpdateOperationsInput | string | null
     botellones_prestados_entrega?: IntFieldUpdateOperationsInput | number
-    fecha_facturacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     metodo_pago?: EnumMetodoPagoFieldUpdateOperationsInput | $Enums.MetodoPago
-    numero_factura?: NullableIntFieldUpdateOperationsInput | number | null
+    incluida_en_cierre?: BoolFieldUpdateOperationsInput | boolean
+    fecha_cierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     cuadratura_ventas?: CuadraturaVentaUpdateManyWithoutGuiaNestedInput
     cliente?: ClienteUpdateOneRequiredWithoutGuiasNestedInput
     items?: ItemGuiaUpdateManyWithoutGuiaNestedInput
@@ -65943,9 +65936,9 @@ export namespace Prisma {
     total?: FloatFieldUpdateOperationsInput | number
     motivo_anulacion?: NullableStringFieldUpdateOperationsInput | string | null
     botellones_prestados_entrega?: IntFieldUpdateOperationsInput | number
-    fecha_facturacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     metodo_pago?: EnumMetodoPagoFieldUpdateOperationsInput | $Enums.MetodoPago
-    numero_factura?: NullableIntFieldUpdateOperationsInput | number | null
+    incluida_en_cierre?: BoolFieldUpdateOperationsInput | boolean
+    fecha_cierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     cuadratura_ventas?: CuadraturaVentaUncheckedUpdateManyWithoutGuiaNestedInput
     items?: ItemGuiaUncheckedUpdateManyWithoutGuiaNestedInput
   }
@@ -65964,9 +65957,9 @@ export namespace Prisma {
     total?: FloatFieldUpdateOperationsInput | number
     motivo_anulacion?: NullableStringFieldUpdateOperationsInput | string | null
     botellones_prestados_entrega?: IntFieldUpdateOperationsInput | number
-    fecha_facturacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     metodo_pago?: EnumMetodoPagoFieldUpdateOperationsInput | $Enums.MetodoPago
-    numero_factura?: NullableIntFieldUpdateOperationsInput | number | null
+    incluida_en_cierre?: BoolFieldUpdateOperationsInput | boolean
+    fecha_cierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type LogAccesoUpdateWithoutUsuarioInput = {
@@ -66710,7 +66703,7 @@ export namespace Prisma {
     fecha_emision?: Date | string
     direccion_entrega: string
     usuario_repartidor_id: string
-    estado?: $Enums.EstadoGuia
+    estado: $Enums.EstadoGuia
     nombre_receptor?: string | null
     rut_receptor?: string | null
     hora_entrega?: Date | string | null
@@ -66718,9 +66711,9 @@ export namespace Prisma {
     total: number
     motivo_anulacion?: string | null
     botellones_prestados_entrega?: number
-    fecha_facturacion?: Date | string | null
     metodo_pago?: $Enums.MetodoPago
-    numero_factura?: number | null
+    incluida_en_cierre?: boolean
+    fecha_cierre?: Date | string | null
   }
 
   export type HistorialFinancieroCreateManyClienteInput = {
@@ -66842,9 +66835,9 @@ export namespace Prisma {
     total?: FloatFieldUpdateOperationsInput | number
     motivo_anulacion?: NullableStringFieldUpdateOperationsInput | string | null
     botellones_prestados_entrega?: IntFieldUpdateOperationsInput | number
-    fecha_facturacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     metodo_pago?: EnumMetodoPagoFieldUpdateOperationsInput | $Enums.MetodoPago
-    numero_factura?: NullableIntFieldUpdateOperationsInput | number | null
+    incluida_en_cierre?: BoolFieldUpdateOperationsInput | boolean
+    fecha_cierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     cuadratura_ventas?: CuadraturaVentaUpdateManyWithoutGuiaNestedInput
     usuario_repartidor?: UsuarioUpdateOneRequiredWithoutGuiasNestedInput
     items?: ItemGuiaUpdateManyWithoutGuiaNestedInput
@@ -66864,9 +66857,9 @@ export namespace Prisma {
     total?: FloatFieldUpdateOperationsInput | number
     motivo_anulacion?: NullableStringFieldUpdateOperationsInput | string | null
     botellones_prestados_entrega?: IntFieldUpdateOperationsInput | number
-    fecha_facturacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     metodo_pago?: EnumMetodoPagoFieldUpdateOperationsInput | $Enums.MetodoPago
-    numero_factura?: NullableIntFieldUpdateOperationsInput | number | null
+    incluida_en_cierre?: BoolFieldUpdateOperationsInput | boolean
+    fecha_cierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     cuadratura_ventas?: CuadraturaVentaUncheckedUpdateManyWithoutGuiaNestedInput
     items?: ItemGuiaUncheckedUpdateManyWithoutGuiaNestedInput
   }
@@ -66885,9 +66878,9 @@ export namespace Prisma {
     total?: FloatFieldUpdateOperationsInput | number
     motivo_anulacion?: NullableStringFieldUpdateOperationsInput | string | null
     botellones_prestados_entrega?: IntFieldUpdateOperationsInput | number
-    fecha_facturacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     metodo_pago?: EnumMetodoPagoFieldUpdateOperationsInput | $Enums.MetodoPago
-    numero_factura?: NullableIntFieldUpdateOperationsInput | number | null
+    incluida_en_cierre?: BoolFieldUpdateOperationsInput | boolean
+    fecha_cierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type HistorialFinancieroUpdateWithoutClienteInput = {

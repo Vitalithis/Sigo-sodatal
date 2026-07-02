@@ -231,7 +231,7 @@ model GuiaDespacho {
   cliente_id                   String
   direccion_entrega            String
   usuario_repartidor_id        String
-  estado                       EstadoGuia        @default(EMITIDA)
+  estado                       EstadoGuia
   nombre_receptor              String?
   rut_receptor                 String?
   hora_entrega                 DateTime?
@@ -595,7 +595,6 @@ enum PreferenciaFacturacion {
 }
 
 enum EstadoGuia {
-  EMITIDA
   ENTREGADA_EFECTIVO
   ENTREGADA_TARJETA
   ENTREGADA_CREDITO

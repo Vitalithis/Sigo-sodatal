@@ -2,7 +2,7 @@
 
 import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
-import { MetodoPago, TipoTransaccion } from '@prisma/client';
+import { MetodoPago, ModalidadPago, TipoTransaccion } from '@prisma/client';
 
 // ────────────────────────────────────────────────────────────────
 // Tipos
@@ -19,15 +19,11 @@ export interface NuevaGuiaInput {
   direccion_entrega: string;
   usuario_repartidor_id: string;
   metodo_pago: MetodoPago;
+  nombre_receptor: string;
+  rut_receptor?: string;
   observaciones?: string;
   botellones_prestados_entrega?: number;
   items: ItemGuiaInput[];
-}
-
-export interface ConfirmarEntregaInput {
-  nombre_receptor: string;
-  rut_receptor?: string;
-  metodo_pago: MetodoPago;
 }
 
 // ────────────────────────────────────────────────────────────────
@@ -82,13 +78,29 @@ export async function obtenerProductosGuiaAction() {
 // ────────────────────────────────────────────────────────────────
 // CRUD de Guías
 // ────────────────────────────────────────────────────────────────
+// Deriva el estado de entrega según el método de pago real. Si el cliente es
+// de modalidad MENSUAL o el método de pago es GUIA_MENSUAL, la guía queda
+// ENTREGADA_CREDITO (pendiente de cierre mensual); en cualquier otro caso
+// queda ENTREGADA_EFECTIVO o ENTREGADA_TARJETA según corresponda.
+function derivarEstadoEntrega(metodoPago: MetodoPago, modalidadPago: ModalidadPago): 'ENTREGADA_CREDITO' | 'ENTREGADA_EFECTIVO' | 'ENTREGADA_TARJETA' {
+  if (metodoPago === 'GUIA_MENSUAL' || modalidadPago === 'MENSUAL') return 'ENTREGADA_CREDITO';
+  if (metodoPago === 'TARJETA') return 'ENTREGADA_TARJETA';
+  return 'ENTREGADA_EFECTIVO';
+}
+
+// La guía se crea y entrega en un solo paso: ya incluye receptor y método de
+// pago real, así que nace directamente en su estado de entrega definitivo.
 export async function crearGuiaAction(data: NuevaGuiaInput) {
   try {
     if (!data.cliente_id) return { success: false, message: 'Debes seleccionar un cliente.' };
     if (!data.usuario_repartidor_id) return { success: false, message: 'Debes asignar un repartidor.' };
+    if (!data.nombre_receptor?.trim()) return { success: false, message: 'Debes indicar el nombre de quien recibe.' };
     if (!data.items || data.items.length === 0) {
       return { success: false, message: 'Debes agregar al menos un producto a la guía.' };
     }
+
+    const cliente = await prisma.cliente.findUnique({ where: { id: data.cliente_id } });
+    if (!cliente) return { success: false, message: 'El cliente seleccionado no existe.' };
 
     const itemsData = data.items.map((it) => ({
       producto_id: it.producto_id,
@@ -98,6 +110,7 @@ export async function crearGuiaAction(data: NuevaGuiaInput) {
       subtotal: Number((it.cantidad * it.precio_unitario).toFixed(2)),
     }));
     const total = Number(itemsData.reduce((acc, i) => acc + i.subtotal, 0).toFixed(2));
+    const estado = derivarEstadoEntrega(data.metodo_pago, cliente.modalidad_pago);
 
     const guia = await prisma.guiaDespacho.create({
       data: {
@@ -105,10 +118,13 @@ export async function crearGuiaAction(data: NuevaGuiaInput) {
         direccion_entrega: data.direccion_entrega,
         usuario_repartidor_id: data.usuario_repartidor_id,
         metodo_pago: data.metodo_pago,
+        nombre_receptor: data.nombre_receptor,
+        rut_receptor: data.rut_receptor || null,
+        hora_entrega: new Date(),
         observaciones: data.observaciones || null,
         botellones_prestados_entrega: data.botellones_prestados_entrega || 0,
         total,
-        estado: 'EMITIDA',
+        estado,
         items: { create: itemsData },
       },
     });
@@ -121,45 +137,6 @@ export async function crearGuiaAction(data: NuevaGuiaInput) {
   }
 }
 
-// Confirmar la entrega en terreno. Si el cliente es de modalidad MENSUAL o el
-// método de pago es GUIA_MENSUAL, la guía queda ENTREGADA_CREDITO (pendiente
-// de cierre mensual); en cualquier otro caso queda ENTREGADA_PAGADA.
-export async function confirmarEntregaGuiaAction(id: string, payload: ConfirmarEntregaInput) {
-  try {
-    const guia = await prisma.guiaDespacho.findUnique({
-      where: { id },
-      include: { cliente: true },
-    });
-    if (!guia) return { success: false, message: 'La guía no existe.' };
-    if (guia.estado !== 'EMITIDA') {
-      return { success: false, message: 'Solo se pueden confirmar guías en estado EMITIDA.' };
-    }
-    if (!payload.nombre_receptor?.trim()) {
-      return { success: false, message: 'Debes indicar el nombre de quien recibe.' };
-    }
-
-    const esCredito = payload.metodo_pago === 'GUIA_MENSUAL' || guia.cliente.modalidad_pago === 'MENSUAL';
-    const nuevoEstado = esCredito ? 'ENTREGADA_CREDITO' : 'ENTREGADA_PAGADA';
-
-    await prisma.guiaDespacho.update({
-      where: { id },
-      data: {
-        estado: nuevoEstado,
-        nombre_receptor: payload.nombre_receptor,
-        rut_receptor: payload.rut_receptor || null,
-        hora_entrega: new Date(),
-        metodo_pago: payload.metodo_pago,
-      },
-    });
-
-    revalidatePath('/admin/guias');
-    return { success: true };
-  } catch (error: any) {
-    console.error('Error al confirmar entrega:', error);
-    return { success: false, message: error.message || 'Error al confirmar la entrega.' };
-  }
-}
-
 export async function anularGuiaAction(id: string, motivo: string) {
   try {
     if (!motivo || motivo.trim().length < 3) {
@@ -168,8 +145,8 @@ export async function anularGuiaAction(id: string, motivo: string) {
     const guia = await prisma.guiaDespacho.findUnique({ where: { id } });
     if (!guia) return { success: false, message: 'La guía no existe.' };
     if (guia.estado === 'ANULADA') return { success: false, message: 'La guía ya está anulada.' };
-    if (guia.estado === 'FACTURADA') {
-      return { success: false, message: 'No se puede anular una guía ya facturada.' };
+    if (guia.incluida_en_cierre) {
+      return { success: false, message: 'No se puede anular una guía ya incluida en un cierre mensual.' };
     }
 
     await prisma.guiaDespacho.update({
@@ -257,7 +234,8 @@ export async function exportarGuiaSQLAction(id: string) {
 }
 
 // Cierre mensual: agrupa guías ENTREGADA_CREDITO de clientes MENSUAL dentro del
-// periodo indicado, genera el SQL consolidado por cliente y las marca FACTURADA.
+// periodo indicado que aún no se hayan cerrado, genera el SQL consolidado por
+// cliente y las marca como incluidas en el cierre.
 export async function exportarCierreMensualAction(mes: number, anio: number) {
   try {
     const inicio = new Date(anio, mes - 1, 1);
@@ -266,6 +244,7 @@ export async function exportarCierreMensualAction(mes: number, anio: number) {
     const guias = await prisma.guiaDespacho.findMany({
       where: {
         estado: 'ENTREGADA_CREDITO',
+        incluida_en_cierre: false,
         fecha_emision: { gte: inicio, lt: fin },
         cliente: { modalidad_pago: 'MENSUAL' },
       },
@@ -300,14 +279,14 @@ export async function exportarCierreMensualAction(mes: number, anio: number) {
       arr.forEach((g) => lines.push(generarInsertGuiaSQL(g)));
     }
 
-    // Marcamos como facturadas para que no vuelvan a salir en el próximo cierre.
-    // El número de factura real lo asigna el sistema de facturación externo;
-    // queda en null para completarlo manualmente después.
+    // Marcamos como incluidas en el cierre para que no vuelvan a salir en el
+    // próximo. El estado sigue siendo ENTREGADA_CREDITO (solo refleja cómo se
+    // entregó); la facturación real la asigna el sistema externo.
     await prisma.$transaction(
       guias.map((g) =>
         prisma.guiaDespacho.update({
           where: { id: g.id },
-          data: { estado: 'FACTURADA', fecha_facturacion: new Date() },
+          data: { incluida_en_cierre: true, fecha_cierre: new Date() },
         })
       )
     );
