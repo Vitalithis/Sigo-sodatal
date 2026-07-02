@@ -180,9 +180,6 @@ export async function buscarClientePorCriterioAction(criterio: string) {
   }
 }
 
-/**
- * ✨ NUEVA ACCIÓN: Guarda el pedido rápido e inserta el registro correspondiente
- */
 export async function guardarPedidoRapidoAction(data: {
   fecha: string;
   clienteId?: string;
@@ -192,11 +189,11 @@ export async function guardarPedidoRapidoAction(data: {
   sector: string;
   productoId: string;
   cantidad: number;
+  usuarioRegistroId: string; // 👈 necesitas pasar el id del usuario logueado
 }) {
   try {
     let finalClienteId = data.clienteId;
 
-    // Si es un cliente nuevo (no seleccionado de la lista), lo creamos dinámicamente
     if (!finalClienteId) {
       const nuevoCliente = await prisma.cliente.create({
         data: {
@@ -204,7 +201,7 @@ export async function guardarPedidoRapidoAction(data: {
           telefono: data.telefono,
           direccion: data.direccion,
           sector: data.sector,
-          tipo_cliente: "PARTICULAR"
+          tipo: "DOMICILIO", // 👈 antes: tipo_cliente: "PARTICULAR"
         }
       });
       finalClienteId = nuevoCliente.id;
@@ -212,18 +209,19 @@ export async function guardarPedidoRapidoAction(data: {
 
     const fechaSolicitada = new Date(`${data.fecha}T12:00:00.000Z`);
 
-    // Creamos el pedido comercial
     await prisma.pedido.create({
       data: {
         cliente_id: finalClienteId,
         fecha_solicitada: fechaSolicitada,
-        estado: EstadoPedido.PENDIENTE,
-        tipo_venta: "DIARIA",
+        estado: EstadoPedido.PENDIENTE_CONFIRMACION, // 👈 antes: PENDIENTE
+        canal_origen: "LLAMADO", // 👈 campo obligatorio que faltaba
+        usuario_registro_id: data.usuarioRegistroId, // 👈 campo obligatorio que faltaba
         items: {
           create: {
             producto_id: data.productoId,
             cantidad: data.cantidad,
-            precio_unitario: 0 // Ajustar si manejas precios de venta dinámicos
+            tipo_transaccion: "VENTA", // 👈 campo obligatorio que faltaba
+            precio_historico: 0 // 👈 antes: precio_unitario
           }
         }
       }
@@ -236,7 +234,6 @@ export async function guardarPedidoRapidoAction(data: {
     return { success: false, message: error.message || "Error al registrar el pedido rápido." };
   }
 }
-
 export async function cambiarOrdenParadaAction(paradaId: string, nuevoOrden: number) {
   try {
     await prisma.paradaDia.update({

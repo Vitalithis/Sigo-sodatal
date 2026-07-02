@@ -27,6 +27,6 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts"
-  ],
+, "src/app/(admin)/admin/guias/ConfirmarEntregaModaltsx"  ],
   "exclude": ["node_modules"]
 }
