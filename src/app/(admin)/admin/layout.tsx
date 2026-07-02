@@ -41,9 +41,24 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <span className="mr-3 text-lg">🚚</span> Vehículos y Flota
           </Link>
 
-          {/* 👇 NUEVO: Enlace a Rutas y Despacho 👇 */}
+          {/* Enlace a Choferes */}
+          <Link href="/admin/choferes" className="flex items-center px-3 py-2 text-sm font-medium rounded-md hover:bg-[#495057] hover:text-white transition-colors">
+            <span className="mr-3 text-lg">🧑‍✈️</span> Choferes
+          </Link>
+
+          {/* Enlace a Rutas y Despacho */}
           <Link href="/admin/rutas" className="flex items-center px-3 py-2 text-sm font-medium rounded-md hover:bg-[#495057] hover:text-white transition-colors">
             <span className="mr-3 text-lg">🗺️</span> Rutas y Despacho
+          </Link>
+
+          {/* Enlace a Rutas Base (plantillas semanales) */}
+          <Link href="/admin/rutas-base" className="flex items-center px-3 py-2 text-sm font-medium rounded-md hover:bg-[#495057] hover:text-white transition-colors">
+            <span className="mr-3 text-lg">📅</span> Rutas Base
+          </Link>
+
+          {/* Enlace a Guías de Despacho */}
+          <Link href="/admin/guias" className="flex items-center px-3 py-2 text-sm font-medium rounded-md hover:bg-[#495057] hover:text-white transition-colors">
+            <span className="mr-3 text-lg">🧾</span> Guías de Despacho
           </Link>
 
           {/* Enlace a Productos */}

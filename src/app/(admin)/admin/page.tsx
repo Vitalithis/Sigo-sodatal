@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import { obtenerMetricasDashboardAction } from './actions';
 
 export const metadata = {
@@ -38,7 +39,7 @@ export default async function AdminDashboardPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         
         {/* TARJETA INFO (Caja Estimada) */}
-        <div className="bg-[#17a2b8] text-white rounded-lg shadow-sm relative overflow-hidden flex flex-col justify-between h-32 p-4 group hover:shadow-md transition-shadow">
+        <Link href="/admin/guias" className="bg-[#17a2b8] text-white rounded-lg shadow-sm relative overflow-hidden flex flex-col justify-between h-32 p-4 group hover:shadow-md transition-shadow">
           <div>
             <span className="text-3xl font-bold tracking-tight">
               ${metricas.ingresos.toLocaleString('es-CL')}
@@ -50,13 +51,13 @@ export default async function AdminDashboardPage() {
           <div className="absolute right-3 bottom-8 text-5xl text-black/10 font-bold transition-transform group-hover:scale-110 select-none pointer-events-none">
             💸
           </div>
-          <div className="text-xs bg-black/15 text-center py-1.5 -mx-4 -mb-4 rounded-b-lg text-white/95 hover:bg-black/25 cursor-pointer transition-colors font-medium">
-            Ver Hojas de Ruta ➜
+          <div className="text-xs bg-black/15 text-center py-1.5 -mx-4 -mb-4 rounded-b-lg text-white/95 group-hover:bg-black/25 transition-colors font-medium">
+            Ver Guías de Despacho ➜
           </div>
-        </div>
+        </Link>
 
         {/* TARJETA SUCCESS (Avance de Pedidos) */}
-        <div className="bg-[#28a745] text-white rounded-lg shadow-sm relative overflow-hidden flex flex-col justify-between h-32 p-4 group hover:shadow-md transition-shadow">
+        <Link href="/admin/rutas" className="bg-[#28a745] text-white rounded-lg shadow-sm relative overflow-hidden flex flex-col justify-between h-32 p-4 group hover:shadow-md transition-shadow">
           <div>
             <span className="text-3xl font-bold tracking-tight">
               {metricas.pedidos.entregados} / {metricas.pedidos.total}
@@ -75,13 +76,13 @@ export default async function AdminDashboardPage() {
               style={{ width: `${metricas.pedidos.porcentaje}%` }}
             ></div>
           </div>
-          <div className="text-xs bg-black/15 text-center py-1.5 -mx-4 -mb-4 rounded-b-lg text-white/95 hover:bg-black/25 cursor-pointer transition-colors font-medium">
+          <div className="text-xs bg-black/15 text-center py-1.5 -mx-4 -mb-4 rounded-b-lg text-white/95 group-hover:bg-black/25 transition-colors font-medium">
             Gestionar Pedidos ({metricas.pedidos.porcentaje}%) ➜
           </div>
-        </div>
+        </Link>
 
         {/* TARJETA WARNING (Flota Activa) */}
-        <div className="bg-[#ffc107] text-[#212529] rounded-lg shadow-sm relative overflow-hidden flex flex-col justify-between h-32 p-4 group hover:shadow-md transition-shadow">
+        <Link href="/admin/vehiculos" className="bg-[#ffc107] text-[#212529] rounded-lg shadow-sm relative overflow-hidden flex flex-col justify-between h-32 p-4 group hover:shadow-md transition-shadow">
           <div>
             <span className="text-3xl font-bold tracking-tight">
               {metricas.flota.activos} / {metricas.flota.totales}
@@ -93,13 +94,13 @@ export default async function AdminDashboardPage() {
           <div className="absolute right-4 bottom-8 text-5xl text-black/5 font-bold transition-transform group-hover:scale-110 select-none pointer-events-none">
             🚚
           </div>
-          <div className="text-xs bg-black/5 text-center py-1.5 -mx-4 -mb-4 rounded-b-lg text-black/70 hover:bg-black/10 cursor-pointer transition-colors font-medium">
+          <div className="text-xs bg-black/5 text-center py-1.5 -mx-4 -mb-4 rounded-b-lg text-black/70 group-hover:bg-black/10 transition-colors font-medium">
             Ver Estado de Flota ➜
           </div>
-        </div>
+        </Link>
 
         {/* TARJETA DANGER (Alertas Críticas) */}
-        <div className="bg-[#dc3545] text-white rounded-lg shadow-sm relative overflow-hidden flex flex-col justify-between h-32 p-4 group hover:shadow-md transition-shadow">
+        <Link href="/admin/vehiculos" className="bg-[#dc3545] text-white rounded-lg shadow-sm relative overflow-hidden flex flex-col justify-between h-32 p-4 group hover:shadow-md transition-shadow">
           <div>
             <span className="text-3xl font-bold tracking-tight">
               {metricas.alertas + metricas.productosCriticos}
@@ -111,10 +112,10 @@ export default async function AdminDashboardPage() {
           <div className="absolute right-4 bottom-8 text-5xl text-black/10 font-bold transition-transform group-hover:scale-110 select-none pointer-events-none">
             ⚠️
           </div>
-          <div className="text-xs bg-black/15 text-center py-1.5 -mx-4 -mb-4 rounded-b-lg text-white/95 hover:bg-black/25 cursor-pointer transition-colors font-medium">
+          <div className="text-xs bg-black/15 text-center py-1.5 -mx-4 -mb-4 rounded-b-lg text-white/95 group-hover:bg-black/25 transition-colors font-medium">
             Ver Incidentes Técnicos ➜
           </div>
-        </div>
+        </Link>
 
       </div>
 

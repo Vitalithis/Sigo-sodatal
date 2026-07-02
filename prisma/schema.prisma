@@ -239,9 +239,9 @@ model GuiaDespacho {
   total                        Float
   motivo_anulacion             String?
   botellones_prestados_entrega Int               @default(0)
-  fecha_facturacion            DateTime?
   metodo_pago                  MetodoPago        @default(EFECTIVO)
-  numero_factura               Int?
+  incluida_en_cierre           Boolean           @default(false)
+  fecha_cierre                 DateTime?
   cuadratura_ventas            CuadraturaVenta[]
   cliente                      Cliente           @relation(fields: [cliente_id], references: [id])
   usuario_repartidor           Usuario           @relation(fields: [usuario_repartidor_id], references: [id])
@@ -596,9 +596,9 @@ enum PreferenciaFacturacion {
 
 enum EstadoGuia {
   EMITIDA
-  ENTREGADA_PAGADA
+  ENTREGADA_EFECTIVO
+  ENTREGADA_TARJETA
   ENTREGADA_CREDITO
-  FACTURADA
   ANULADA
 }
 

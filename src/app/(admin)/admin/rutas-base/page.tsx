@@ -1,6 +1,6 @@
 import React from 'react';
 import RutasBaseManager from './RutasBaseManager';
-import { obtenerRutasBaseAction } from '@/app/(admin)/rutas-base/actions';
+import { obtenerRutasBaseAction } from '@/app/(admin)/admin/rutas-base/actions';
 import { obtenerChoferesAction, obtenerVehiculosAction } from '@/app/(admin)/admin/choferes/actions';
 
 export const metadata = {
