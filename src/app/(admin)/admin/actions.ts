@@ -161,14 +161,19 @@ export async function obtenerMetricasDashboardAction() {
     const mañana = new Date(hoy);
     mañana.setDate(mañana.getDate() + 1);
 
-    // 1. Consultas optimizadas ejecutadas en paralelo
+    // 1. Todas las consultas van en el MISMO Promise.all, incluyendo las
+    //    guías del día (antes se pedían aparte, después del Promise.all,
+    //    lo que agregaba un viaje de red extra y secuencial a la base
+    //    solo para esa página). Además usamos `select`/`aggregate` en vez
+    //    de traer filas u objetos completos que no se necesitan.
     const [
       totalPedidosHoy,
       pedidosEntregadosHoy,
       vehiculosActivos,
       vehiculosTotales,
       alertasActivas,
-      productosParaEvaluar
+      productosParaEvaluar,
+      ingresosHoyAgg
     ] = await Promise.all([
       // Total Pedidos solicitados para hoy
       prisma.pedido.count({
@@ -187,10 +192,22 @@ export async function obtenerMetricasDashboardAction() {
       prisma.vehiculo.count(),
       // Alertas preventivas de vehículos vigentes
       prisma.alertaVehiculo.count({ where: { activa: true } }),
-      // Traemos productos activos con su stock para evaluar el quiebre de stock en memoria (Evita errores de tipos)
+      // Solo los campos necesarios para evaluar quiebre de stock (antes traía el producto completo)
       prisma.producto.findMany({
         where: { activo: true },
-        include: { stock_fabrica: true }
+        select: {
+          stock_minimo: true,
+          stock_fabrica: { select: { cantidad: true } }
+        }
+      }),
+      // Ingresos del día: la suma se calcula en la base con aggregate,
+      // en vez de traer todas las filas y sumarlas en memoria con reduce()
+      prisma.guiaDespacho.aggregate({
+        where: {
+          fecha_emision: { gte: hoy, lt: mañana },
+          estado: { not: 'ANULADA' }
+        },
+        _sum: { total: true }
       })
     ]);
 
@@ -200,15 +217,7 @@ export async function obtenerMetricasDashboardAction() {
       return cantidadActual <= p.stock_minimo;
     }).length;
 
-    // 3. Calcular ingresos diarios sumando las guías de despacho emitidas hoy que no estén anuladas
-    const guiasHoy = await prisma.guiaDespacho.findMany({
-      where: {
-        fecha_emision: { gte: hoy, lt: mañana },
-        estado: { not: 'ANULADA' }
-      },
-      select: { total: true }
-    });
-    const ingresosHoy = guiasHoy.reduce((sum, g) => sum + g.total, 0);
+    const ingresosHoy = ingresosHoyAgg._sum.total ?? 0;
 
     return {
       success: true,
