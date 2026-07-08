@@ -1,0 +1,424 @@
+'use server';
+
+import { prisma } from '@/lib/prisma';
+import { createClient } from '@/lib/supabase/server';
+import { revalidatePath } from 'next/cache';
+import { TipoTransaccion, TipoCliente, MetodoPago } from '@/lib/prisma/generated';
+
+// ────────────────────────────────────────────────────────────────
+// Tipos
+// ────────────────────────────────────────────────────────────────
+export interface ItemSalidaInput {
+  producto_id: string;
+  cantidad: number;
+}
+
+export interface SalidaInput {
+  usuario_id: string;
+  fecha: string; // YYYY-MM-DD
+  items: ItemSalidaInput[];
+}
+
+export interface ItemVentaInput {
+  producto_id: string;
+  tipo_transaccion: TipoTransaccion;
+  tipo_cliente: TipoCliente;
+  cantidad: number;
+  metodo_pago: MetodoPago;
+  guia_id?: string | null;
+}
+
+export interface ItemRetornoInput {
+  producto_id: string;
+  cantidad: number;
+}
+
+export interface BotellonesVaciosInput {
+  cantidad_total: number;
+  cantidad_danados: number;
+}
+
+export interface CierreCuadraturaInput {
+  cuadratura_id: string;
+  ventas: ItemVentaInput[];
+  retorno: ItemRetornoInput[];
+  botellones_vacios: BotellonesVaciosInput;
+}
+
+// ────────────────────────────────────────────────────────────────
+// Consultas
+// ────────────────────────────────────────────────────────────────
+export async function obtenerCuadraturasAction(desde?: string, hasta?: string, usuario_id?: string) {
+  try {
+    const where: any = {};
+    if (usuario_id) where.usuario_id = usuario_id;
+    if (desde || hasta) {
+      where.fecha = {};
+      if (desde) where.fecha.gte = new Date(`${desde}T00:00:00`);
+      if (hasta) where.fecha.lte = new Date(`${hasta}T23:59:59`);
+    }
+
+    const cuadraturas = await prisma.cuadratura.findMany({
+      where,
+      include: {
+        usuario: { select: { nombre: true, apellido: true, rol: true } },
+        _count: { select: { ventas: true, retorno: true } },
+      },
+      orderBy: { fecha: 'desc' },
+      take: 60,
+    });
+
+    return { success: true, cuadraturas };
+  } catch (error: any) {
+    return { success: false, cuadraturas: [], message: error.message };
+  }
+}
+
+export async function obtenerCuadraturaDetalleAction(id: string) {
+  try {
+    const cuadratura = await prisma.cuadratura.findUnique({
+      where: { id },
+      include: {
+        usuario: { select: { nombre: true, apellido: true, rol: true, recibe_comision: true } },
+        salida: { include: { producto: true } },
+        ventas: { include: { producto: true, guia: { select: { numero_correlativo: true } } } },
+        retorno: { include: { producto: true } },
+        botellones_vacios: true,
+      },
+    });
+    if (!cuadratura) return { success: false, message: 'La cuadratura no existe.' };
+    return { success: true, cuadratura };
+  } catch (error: any) {
+    return { success: false, message: error.message };
+  }
+}
+
+export async function obtenerRepartidoresCuadraturaAction() {
+  try {
+    const repartidores = await prisma.usuario.findMany({
+      where: { rol: 'REPARTIDOR', activo: true },
+      orderBy: { nombre: 'asc' },
+      select: { id: true, nombre: true, apellido: true, recibe_comision: true },
+    });
+    return { success: true, repartidores };
+  } catch (error: any) {
+    return { success: false, repartidores: [], message: error.message };
+  }
+}
+
+export async function obtenerProductosCuadraturaAction() {
+  try {
+    const productos = await prisma.producto.findMany({
+      where: { activo: true },
+      orderBy: { nombre: 'asc' },
+    });
+    return { success: true, productos };
+  } catch (error: any) {
+    return { success: false, productos: [], message: error.message };
+  }
+}
+
+export async function obtenerStockAction() {
+  try {
+    const [stockFabrica, stockCamion] = await Promise.all([
+      prisma.stockFabrica.findMany({ include: { producto: true }, orderBy: { producto: { nombre: 'asc' } } }),
+      prisma.stockCamion.findMany({
+        include: { producto: true, usuario: { select: { nombre: true, apellido: true } } },
+        orderBy: [{ usuario: { nombre: 'asc' } }, { producto: { nombre: 'asc' } }],
+      }),
+    ]);
+    return { success: true, stockFabrica, stockCamion };
+  } catch (error: any) {
+    return { success: false, stockFabrica: [], stockCamion: [], message: error.message };
+  }
+}
+
+// Guías emitidas ese día por ese repartidor, para poder vincularlas a una
+// venta de la cuadratura y así no duplicar el monto (regla de negocio).
+export async function obtenerGuiasRepartidorDiaAction(usuario_id: string, fecha: string) {
+  try {
+    if (!usuario_id || !fecha) return { success: true, guias: [] };
+    const inicio = new Date(`${fecha}T00:00:00`);
+    const fin = new Date(`${fecha}T23:59:59`);
+    const guias = await prisma.guiaDespacho.findMany({
+      where: {
+        usuario_repartidor_id: usuario_id,
+        estado: { not: 'ANULADA' },
+        fecha_emision: { gte: inicio, lte: fin },
+      },
+      include: { cliente: { select: { nombre: true } } },
+      orderBy: { numero_correlativo: 'asc' },
+    });
+    return { success: true, guias };
+  } catch (error: any) {
+    return { success: false, guias: [], message: error.message };
+  }
+}
+
+// ────────────────────────────────────────────────────────────────
+// SALIDA (apertura de cuadratura)
+// ────────────────────────────────────────────────────────────────
+export async function registrarSalidaAction(data: SalidaInput) {
+  try {
+    if (!data.usuario_id) return { success: false, message: 'Debes seleccionar un repartidor.' };
+    if (!data.fecha) return { success: false, message: 'Debes indicar la fecha.' };
+    const items = (data.items || []).filter((it) => it.cantidad > 0);
+    if (items.length === 0) {
+      return { success: false, message: 'Debes indicar al menos un producto con cantidad mayor a 0.' };
+    }
+
+    const fechaNormalizada = new Date(`${data.fecha}T00:00:00`);
+    const alertas: string[] = [];
+
+    const cuadraturaId = await prisma.$transaction(async (tx) => {
+      let cuadratura = await tx.cuadratura.findFirst({
+        where: { usuario_id: data.usuario_id, fecha: fechaNormalizada },
+        include: { salida: true },
+      });
+
+      if (cuadratura && cuadratura.estado === 'CERRADA') {
+        throw new Error('La cuadratura de ese día ya está cerrada. Un ADMIN debe reabrirla antes de modificar la salida.');
+      }
+
+      // Si ya existía una salida (edición antes del cierre), revertimos sus
+      // efectos de stock para volver a aplicarlos limpios con los nuevos valores.
+      if (cuadratura) {
+        for (const s of cuadratura.salida) {
+          await tx.stockFabrica.upsert({
+            where: { producto_id: s.producto_id },
+            create: { producto_id: s.producto_id, cantidad: s.cantidad },
+            update: { cantidad: { increment: s.cantidad } },
+          });
+          await tx.stockCamion.upsert({
+            where: { usuario_id_producto_id: { usuario_id: data.usuario_id, producto_id: s.producto_id } },
+            create: { usuario_id: data.usuario_id, producto_id: s.producto_id, cantidad: 0 },
+            update: { cantidad: { decrement: s.cantidad } },
+          });
+        }
+        await tx.cuadraturaSalida.deleteMany({ where: { cuadratura_id: cuadratura.id } });
+      } else {
+        cuadratura = await tx.cuadratura.create({
+          data: { usuario_id: data.usuario_id, fecha: fechaNormalizada, estado: 'ABIERTA' },
+          include: { salida: true },
+        });
+      }
+
+      for (const it of items) {
+        await tx.cuadraturaSalida.create({
+          data: { cuadratura_id: cuadratura.id, producto_id: it.producto_id, cantidad: it.cantidad },
+        });
+
+        // Regla: stock fábrica baja, stock camión sube. El stock nunca bloquea, solo alerta.
+        const stockFabricaActual = await tx.stockFabrica.findUnique({ where: { producto_id: it.producto_id } });
+        const nuevaCantidadFabrica = (stockFabricaActual?.cantidad || 0) - it.cantidad;
+
+        await tx.stockFabrica.upsert({
+          where: { producto_id: it.producto_id },
+          create: { producto_id: it.producto_id, cantidad: nuevaCantidadFabrica },
+          update: { cantidad: { decrement: it.cantidad } },
+        });
+        await tx.stockCamion.upsert({
+          where: { usuario_id_producto_id: { usuario_id: data.usuario_id, producto_id: it.producto_id } },
+          create: { usuario_id: data.usuario_id, producto_id: it.producto_id, cantidad: it.cantidad },
+          update: { cantidad: { increment: it.cantidad } },
+        });
+
+        const producto = await tx.producto.findUnique({ where: { id: it.producto_id } });
+        if (nuevaCantidadFabrica < 0) {
+          alertas.push(`Stock de fábrica de ${producto?.nombre || 'un producto'} quedó negativo (${nuevaCantidadFabrica}).`);
+        } else if (producto && nuevaCantidadFabrica < producto.stock_minimo) {
+          alertas.push(`Stock de fábrica de ${producto.nombre} quedó bajo el mínimo (${nuevaCantidadFabrica}/${producto.stock_minimo}).`);
+        }
+      }
+
+      return cuadratura.id;
+    });
+
+    revalidatePath('/admin/cuadratura');
+    return { success: true, cuadratura_id: cuadraturaId, alertas };
+  } catch (error: any) {
+    return { success: false, message: error.message || 'No se pudo registrar la salida.' };
+  }
+}
+
+// ────────────────────────────────────────────────────────────────
+// CIERRE (regreso: ventas, retorno, botellones vacíos)
+// ────────────────────────────────────────────────────────────────
+export async function registrarCierreCuadraturaAction(data: CierreCuadraturaInput) {
+  try {
+    if (!data.cuadratura_id) return { success: false, message: 'Cuadratura no válida.' };
+
+    const alertas: string[] = [];
+
+    await prisma.$transaction(async (tx) => {
+      const cuadratura = await tx.cuadratura.findUnique({
+        where: { id: data.cuadratura_id },
+        include: { ventas: true, retorno: true, usuario: true },
+      });
+      if (!cuadratura) throw new Error('La cuadratura no existe.');
+      if (cuadratura.estado === 'CERRADA') {
+        throw new Error('Esta cuadratura ya está cerrada. Un ADMIN debe reabrirla antes de volver a registrar el cierre.');
+      }
+
+      const usuario = cuadratura.usuario;
+
+      // Si ya tenía un cierre previo (caso: fue reabierta), revertimos sus
+      // efectos de stock antes de aplicar los nuevos valores.
+      for (const v of cuadratura.ventas) {
+        await tx.stockCamion.upsert({
+          where: { usuario_id_producto_id: { usuario_id: cuadratura.usuario_id, producto_id: v.producto_id } },
+          create: { usuario_id: cuadratura.usuario_id, producto_id: v.producto_id, cantidad: v.cantidad },
+          update: { cantidad: { increment: v.cantidad } },
+        });
+      }
+      for (const r of cuadratura.retorno) {
+        await tx.stockFabrica.upsert({
+          where: { producto_id: r.producto_id },
+          create: { producto_id: r.producto_id, cantidad: 0 },
+          update: { cantidad: { decrement: r.cantidad } },
+        });
+        await tx.stockCamion.upsert({
+          where: { usuario_id_producto_id: { usuario_id: cuadratura.usuario_id, producto_id: r.producto_id } },
+          create: { usuario_id: cuadratura.usuario_id, producto_id: r.producto_id, cantidad: r.cantidad },
+          update: { cantidad: { increment: r.cantidad } },
+        });
+      }
+      await tx.cuadraturaVenta.deleteMany({ where: { cuadratura_id: cuadratura.id } });
+      await tx.cuadraturaRetorno.deleteMany({ where: { cuadratura_id: cuadratura.id } });
+      await tx.botellonVacio.deleteMany({ where: { cuadratura_id: cuadratura.id } });
+
+      let totalEfectivo = 0, totalTarjeta = 0, totalTransferencia = 0, totalGuiaMensual = 0, totalComision = 0;
+
+      for (const v of data.ventas.filter((it) => it.cantidad > 0)) {
+        const producto = await tx.producto.findUnique({ where: { id: v.producto_id } });
+        if (!producto) continue;
+
+        // Regla: solo REPARTIDOR con comisión activa genera comisión; OFICINA siempre $0.
+        let comision = 0;
+        if (usuario.rol === 'REPARTIDOR' && usuario.recibe_comision) {
+          const comisionCfg = await tx.comision.findFirst({
+            where: { producto_id: v.producto_id, tipo_transaccion: v.tipo_transaccion, tipo_cliente: v.tipo_cliente },
+          });
+          comision = (comisionCfg?.monto || 0) * v.cantidad;
+        }
+        totalComision += comision;
+
+        await tx.cuadraturaVenta.create({
+          data: {
+            cuadratura_id: cuadratura.id,
+            producto_id: v.producto_id,
+            tipo_transaccion: v.tipo_transaccion,
+            tipo_cliente: v.tipo_cliente,
+            cantidad: v.cantidad,
+            metodo_pago: v.metodo_pago,
+            guia_id: v.guia_id || null,
+            comision_calculada: comision,
+          },
+        });
+
+        // Regla: si ya viene con guía de despacho, ese monto ya se cobró al
+        // emitir la guía, así que no se duplica en los totales de la cuadratura.
+        if (!v.guia_id) {
+          const precio = v.tipo_transaccion === 'RECARGA' ? producto.precio_recarga ?? 0 : producto.precio_venta_nueva;
+          const monto = precio * v.cantidad;
+          if (v.metodo_pago === 'EFECTIVO') totalEfectivo += monto;
+          else if (v.metodo_pago === 'TARJETA') totalTarjeta += monto;
+          else if (v.metodo_pago === 'TRANSFERENCIA') totalTransferencia += monto;
+          else if (v.metodo_pago === 'GUIA_MENSUAL') totalGuiaMensual += monto;
+        }
+
+        // Regla: stock camión baja al confirmarse venta/recarga (con o sin guía).
+        await tx.stockCamion.upsert({
+          where: { usuario_id_producto_id: { usuario_id: cuadratura.usuario_id, producto_id: v.producto_id } },
+          create: { usuario_id: cuadratura.usuario_id, producto_id: v.producto_id, cantidad: -v.cantidad },
+          update: { cantidad: { decrement: v.cantidad } },
+        });
+      }
+
+      for (const r of data.retorno.filter((it) => it.cantidad > 0)) {
+        await tx.cuadraturaRetorno.create({
+          data: { cuadratura_id: cuadratura.id, producto_id: r.producto_id, cantidad: r.cantidad },
+        });
+        // Regla: stock fábrica sube y stock camión baja con retorno de productos llenos.
+        await tx.stockFabrica.upsert({
+          where: { producto_id: r.producto_id },
+          create: { producto_id: r.producto_id, cantidad: r.cantidad },
+          update: { cantidad: { increment: r.cantidad } },
+        });
+        await tx.stockCamion.upsert({
+          where: { usuario_id_producto_id: { usuario_id: cuadratura.usuario_id, producto_id: r.producto_id } },
+          create: { usuario_id: cuadratura.usuario_id, producto_id: r.producto_id, cantidad: -r.cantidad },
+          update: { cantidad: { decrement: r.cantidad } },
+        });
+      }
+
+      if (data.botellones_vacios && data.botellones_vacios.cantidad_total > 0) {
+        await tx.botellonVacio.create({
+          data: {
+            cuadratura_id: cuadratura.id,
+            cantidad_total: data.botellones_vacios.cantidad_total,
+            cantidad_danados: data.botellones_vacios.cantidad_danados || 0,
+          },
+        });
+      }
+
+      await tx.cuadratura.update({
+        where: { id: cuadratura.id },
+        data: {
+          estado: 'CERRADA',
+          total_efectivo: totalEfectivo,
+          total_tarjeta: totalTarjeta,
+          total_transferencia: totalTransferencia,
+          total_guia_mensual: totalGuiaMensual,
+          total_comision: totalComision,
+        },
+      });
+
+      // Alertas visuales de stock camión negativo tras el cierre (no bloquea).
+      const stocksCamionFinal = await tx.stockCamion.findMany({ where: { usuario_id: cuadratura.usuario_id } });
+      for (const sc of stocksCamionFinal) {
+        if (sc.cantidad < 0) {
+          const producto = await tx.producto.findUnique({ where: { id: sc.producto_id } });
+          alertas.push(`Stock en camión de ${producto?.nombre || 'un producto'} quedó negativo (${sc.cantidad}). Revisa las cantidades ingresadas.`);
+        }
+      }
+    });
+
+    revalidatePath('/admin/cuadratura');
+    return { success: true, alertas };
+  } catch (error: any) {
+    return { success: false, message: error.message || 'No se pudo registrar el cierre de la cuadratura.' };
+  }
+}
+
+// ────────────────────────────────────────────────────────────────
+// REAPERTURA (solo ADMIN)
+// ────────────────────────────────────────────────────────────────
+export async function reabrirCuadraturaAction(cuadraturaId: string, motivo: string) {
+  try {
+    if (!motivo || motivo.trim().length < 3) {
+      return { success: false, message: 'Debes indicar un motivo para reabrir la cuadratura.' };
+    }
+
+    const supabase = createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    const rol = user?.user_metadata?.rol;
+    if (rol !== 'ADMIN') {
+      return { success: false, message: 'Solo un ADMIN puede reabrir una cuadratura cerrada.' };
+    }
+
+    const cuadratura = await prisma.cuadratura.findUnique({ where: { id: cuadraturaId } });
+    if (!cuadratura) return { success: false, message: 'La cuadratura no existe.' };
+    if (cuadratura.estado === 'ABIERTA') return { success: false, message: 'La cuadratura ya está abierta.' };
+
+    await prisma.cuadratura.update({
+      where: { id: cuadraturaId },
+      data: { estado: 'ABIERTA', motivo_reapertura: motivo.trim(), fecha_reapertura: new Date() },
+    });
+
+    revalidatePath('/admin/cuadratura');
+    return { success: true };
+  } catch (error: any) {
+    return { success: false, message: error.message || 'No se pudo reabrir la cuadratura.' };
+  }
+}
