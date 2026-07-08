@@ -66,6 +66,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <span className="mr-3 text-lg">🥤</span> Catálogo Productos
           </Link>
 
+          {/* Enlace a Producción y CO2 */}
+          <Link href="/admin/produccion" className="flex items-center px-3 py-2 text-sm font-medium rounded-md hover:bg-[#495057] hover:text-white transition-colors">
+            <span className="mr-3 text-lg">🏭</span> Producción y CO₂
+          </Link>
+
         </nav>
 
         {/* Pie de la Barra Lateral */}
