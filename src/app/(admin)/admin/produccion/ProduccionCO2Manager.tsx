@@ -411,9 +411,9 @@ export default function ProduccionCO2Manager({ produccionInicial, tubosIniciales
           </div>
         </div>
       ) : (
-        <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
-          {/* Indicador visual del tubo activo */}
-          <div className="xl:col-span-1 space-y-6">
+        <div className="space-y-6">
+          {/* Fila superior: tubo activo, nuevo tubo y configuración lado a lado */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
             <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
               <h2 className="text-xs font-black text-gray-700 uppercase tracking-wider mb-3 pb-1.5 border-b border-gray-100">
                 🧯 Tubo activo
@@ -584,8 +584,8 @@ export default function ProduccionCO2Manager({ produccionInicial, tubosIniciales
             </div>
           </div>
 
-          {/* Historial de tubos */}
-          <div className="xl:col-span-3 bg-white p-4 rounded-lg border border-gray-200 shadow-sm h-fit">
+          {/* Historial de tubos: ancho completo debajo de las tarjetas de control */}
+          <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
             <h2 className="text-xs font-black text-gray-700 uppercase tracking-wider mb-3 pb-1.5 border-b border-gray-100">
               📜 Historial de tubos de CO₂
             </h2>
