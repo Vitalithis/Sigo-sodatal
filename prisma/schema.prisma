@@ -88,15 +88,21 @@ model AlertaVehiculo {
   activa       Boolean    @default(true)
   vehiculo     Vehiculo   @relation(fields: [vehiculo_id], references: [id])
 }
+model Categoria {
+  id        String     @id @default(uuid())
+  nombre    String
+  productos Producto[]
+}
 
 model Producto {
-  id                 String              @id @default(uuid())
+  id                 String     @id @default(uuid())
   nombre             String
-  categoria          CategoriaProducto
+  categoria_id       String     // Campo de relación
+  categoria          Categoria  @relation(fields: [categoria_id], references: [id])
   precio_venta_nueva Float
   precio_recarga     Float?
-  stock_minimo       Int                 @default(0)
-  activo             Boolean             @default(true)
+  stock_minimo       Int        @default(0)
+  activo             Boolean    @default(true)
   comisiones         Comision[]
   cuadratura_retorno CuadraturaRetorno[]
   cuadratura_salida  CuadraturaSalida[]
@@ -495,6 +501,8 @@ model Cuadratura {
   ventas              CuadraturaVenta[]
 }
 
+
+
 enum Rol {
   ADMIN
   OFICINA
@@ -510,13 +518,6 @@ enum EstadoVehiculo {
 enum TipoAlerta {
   KM
   FECHA
-}
-
-enum CategoriaProducto {
-  BOTELLON10
-  BOTELLON20
-  SODA
-  OTRO
 }
 
 enum TipoTransaccion {

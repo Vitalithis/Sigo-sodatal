@@ -2,108 +2,65 @@
 
 import { prisma } from '@/src/lib/prisma';
 import { revalidatePath } from 'next/cache';
-import { CategoriaProducto, Prisma } from '@prisma/client';
 
-export interface ProductoInput {
-  nombre: string;
-  categoria: CategoriaProducto;
-  precio_venta_nueva: number;
-  precio_recarga: number | null;
-  stock_minimo: number;
-  activo: boolean;
+export async function obtenerProductosAction() {
+  try {
+    const productos = await prisma.producto.findMany({
+      where: { activo: true },
+      orderBy: { nombre: 'asc' },
+      include: { categoria: true } // Esto traerá el nombre de la categoría
+    });
+    return { success: true, productos };
+  } catch (error: any) {
+    return { success: false, productos: [], message: error.message };
+  }
 }
 
-export async function crearProductoAction(data: ProductoInput) {
+export async function crearProductoAction(datos: {
+  nombre: string;
+  precio_venta_nueva: number;
+  precio_recarga?: number;
+  stock_minimo: number;
+  categoria_id: string; // Recibimos el ID de la relación
+}) {
   try {
-    if (!data.nombre?.trim() || !data.categoria) {
-      return { success: false, message: 'El nombre y la categoría son obligatorios.' };
+    // Validar existencia de categoría
+    const categoria = await prisma.categoria.findUnique({
+      where: { id: datos.categoria_id }
+    });
+
+    if (!categoria) {
+      return { success: false, message: 'La categoría seleccionada no existe.' };
     }
 
     await prisma.producto.create({
       data: {
-        nombre: data.nombre.trim(),
-        categoria: data.categoria,
-        precio_venta_nueva: data.precio_venta_nueva,
-        precio_recarga: data.precio_recarga,
-        stock_minimo: data.stock_minimo,
-        activo: data.activo,
-      },
-    });
-
-    revalidatePath('/admin/productos');
-    return { success: true };
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'Error desconocido al crear el producto.';
-    return { success: false, message };
-  }
-}
-
-export async function editarProductoAction(id: string, data: ProductoInput) {
-  try {
-    if (!id) return { success: false, message: 'ID de producto no válido.' };
-    if (!data.nombre?.trim() || !data.categoria) {
-      return { success: false, message: 'El nombre y la categoría son obligatorios.' };
-    }
-
-    await prisma.producto.update({
-      where: { id },
-      data: {
-        nombre: data.nombre.trim(),
-        categoria: data.categoria,
-        precio_venta_nueva: data.precio_venta_nueva,
-        precio_recarga: data.precio_recarga,
-        stock_minimo: data.stock_minimo,
-        activo: data.activo,
-      },
-    });
-
-    revalidatePath('/admin/productos');
-    return { success: true };
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'Error desconocido al editar el producto.';
-    return { success: false, message };
-  }
-}
-
-export async function eliminarProductoAction(id: string) {
-  try {
-    if (!id) return { success: false, message: 'ID de producto no válido.' };
-
-    await prisma.producto.delete({
-      where: { id },
-    });
-
-    revalidatePath('/admin/productos');
-    return { success: true };
-  } catch (error) {
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      if (error.code === 'P2003') {
-        return {
-          success: false,
-          errorType: 'FOREIGN_KEY_VIOLATION',
-          message: 'No se puede eliminar porque está vinculado a registros existentes.',
-        };
+        nombre: datos.nombre,
+        precio_venta_nueva: Number(datos.precio_venta_nueva),
+        precio_recarga: datos.precio_recarga ? Number(datos.precio_recarga) : null,
+        stock_minimo: Number(datos.stock_minimo),
+        activo: true,
+        categoria_id: datos.categoria_id // Asignación directa de la relación
       }
-    }
+    });
 
-    const message = error instanceof Error ? error.message : 'Error desconocido al eliminar el producto.';
-    return { success: false, message };
+    revalidatePath('/admin/productos');
+    return { success: true };
+  } catch (error: any) {
+    console.error("Error al crear producto:", error);
+    return { success: false, message: 'Error al guardar el producto.' };
   }
 }
 
 export async function desactivarProductoAction(id: string) {
   try {
-    if (!id) return { success: false, message: 'ID de producto no válido.' };
-
     await prisma.producto.update({
       where: { id },
-      data: { activo: false },
+      data: { activo: false }
     });
-
     revalidatePath('/admin/productos');
     return { success: true };
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'Error desconocido al desactivar el producto.';
-    return { success: false, message };
+  } catch (error: any) {
+    return { success: false, message: error.message };
   }
 }

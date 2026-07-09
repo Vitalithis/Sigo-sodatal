@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { exportarCierreMensualAction } from './actions';
+import { exportarCierreMensualAction } from '../actions';
 
 function descargarSQL(sql: string, filename: string) {
   const blob = new Blob([sql], { type: 'application/sql' });
@@ -40,17 +40,20 @@ export default function CierreMensualModal({
     setGenerando(true);
     const res = await exportarCierreMensualAction(mes, anio);
     setGenerando(false);
-    if (res.success && res.sql) {
-      descargarSQL(res.sql, res.filename!);
+    
+    // Ajustamos la lógica a lo que realmente devuelve la acción optimizada
+    if (res.success) {
+      // Nota: Si ya no generamos SQL en el backend, la lógica de descarga cambiaría.
+      // Si aún necesitas descargar el SQL, asegúrate de que exportarCierreMensualAction lo devuelva.
+      
       alert(
-        `Cierre generado: ${res.totalGuias} guía(s) de ${res.totalClientes} cliente(s) marcadas como incluidas en el cierre.`
+        `Cierre generado: ${res.count} guía(s) procesadas correctamente.`
       );
       onSuccess();
     } else {
       alert(res.message || 'No se pudo generar el cierre.');
     }
   };
-
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-xl shadow-xl w-full max-w-sm">

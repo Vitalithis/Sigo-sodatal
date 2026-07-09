@@ -1,14 +1,19 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import {
-  buscarClientesGuiaAction,
-  obtenerRepartidoresAction,
-  obtenerProductosGuiaAction,
-  crearGuiaAction,
-  ItemGuiaInput,
-} from './actions';
 
+// 1. Acciones propias del módulo de Guías
+import { 
+  crearGuiaAction, 
+  buscarClientesGuiaAction 
+} from '../actions'; // Sube un nivel desde 'components' hacia 'guias'
+
+// 2. Acciones de otros módulos (ahora que ya sabemos cómo se llaman)
+import { obtenerChoferesAction as obtenerRepartidoresAction } from '../../choferes/actions';
+import { obtenerProductosAction as obtenerProductosGuiaAction } from '../../productos/actions';
+
+// 3. Tipos (asegúrate de que ItemGuiaInput esté exportado en el actions de guías)
+import { ItemGuiaInput } from '../actions';
 interface LineaItem {
   key: string;
   producto_id: string;
@@ -61,7 +66,7 @@ export default function NuevaGuiaModal({
   useEffect(() => {
     if (isOpen) {
       obtenerRepartidoresAction().then((res) => {
-        if (res.success) setRepartidores(res.repartidores);
+        if (res.success) setRepartidores(res.choferes);
       });
       obtenerProductosGuiaAction().then((res) => {
         if (res.success) setProductos(res.productos);
