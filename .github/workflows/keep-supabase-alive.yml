@@ -1,0 +1,22 @@
+﻿name: Mantener Sigo-Sodatal Activo
+on:
+  schedule:
+    - cron: "0 10 * * *"
+  workflow_dispatch:
+
+jobs:
+  ping-supabase:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ejecutar Ping a la API de Supabase
+        run: |
+          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
+            "${{ secrets.SUPABASE_URL }}/auth/v1/health")
+          
+          if [ "$HTTP_STATUS" -eq 200 ]; then
+            echo "Ping ejecutado con éxito. El estado es 200 OK."
+          else
+            echo "Fallo en el ping. Código HTTP recibido: $HTTP_STATUS"
+            exit 1
+          fi
