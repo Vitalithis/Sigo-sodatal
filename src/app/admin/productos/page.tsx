@@ -1,5 +1,5 @@
 import React from 'react';
-import { prisma } from '@/src/lib/prisma';
+import { prisma } from '@/lib/prisma';
 import ProductManager from './components/ProductManager';
 
 export const dynamic = 'force-dynamic';

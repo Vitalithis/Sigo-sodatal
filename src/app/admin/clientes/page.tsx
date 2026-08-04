@@ -1,6 +1,6 @@
 import React from 'react';
 // Asegúrate de apuntar a donde tengas configurada tu instancia de Prisma
-import { prisma } from '@/src/lib/prisma'; 
+import { prisma } from '@/lib/prisma'; 
 import ClientManager from './components/ClientManager';
 
 // Forzamos a que Next.js no cachee estáticamente esta página de administración

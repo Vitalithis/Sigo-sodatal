@@ -28,21 +28,18 @@ export async function middleware(request: NextRequest) {
   );
 
   const path = request.nextUrl.pathname;
-  
-  // SOLUCIÓN VIABLE: Detectar toda navegación interna de Next.js (incluyendo clics)
-  const isNextRouting = 
-    request.headers.get('RSC') === '1' || 
-    request.headers.get('Next-Router-Prefetch') === '1' || 
+
+  const isNextRouting =
+    request.headers.get('RSC') === '1' ||
+    request.headers.get('Next-Router-Prefetch') === '1' ||
     request.headers.get('Purpose') === 'prefetch';
 
   let user = null;
 
   if (isNextRouting) {
-    // Navegación SPA interna: lectura ultra rápida de la cookie local
     const { data: { session } } = await supabase.auth.getSession();
     user = session?.user || null;
   } else {
-    // Hard Reload / Primera visita: petición de red real para máxima seguridad
     const { data } = await supabase.auth.getUser();
     user = data.user || null;
   }
@@ -53,8 +50,22 @@ export async function middleware(request: NextRequest) {
 
   if (user) {
     const rol = user.user_metadata?.rol;
+    const esPendiente = !rol || rol === 'PENDIENTE';
 
+    // Punto de entrada (login o raíz): redirige según estado
     if (path === '/login' || path === '/') {
+      if (esPendiente) return NextResponse.redirect(new URL('/pendiente', request.url));
+      if (rol === 'REPARTIDOR') return NextResponse.redirect(new URL('/repartidor', request.url));
+      return NextResponse.redirect(new URL('/admin', request.url));
+    }
+
+    // Sin rol asignado: solo puede estar en /pendiente
+    if (esPendiente && path !== '/pendiente') {
+      return NextResponse.redirect(new URL('/pendiente', request.url));
+    }
+
+    // Ya tiene rol: no debería quedarse varado en /pendiente
+    if (!esPendiente && path === '/pendiente') {
       if (rol === 'REPARTIDOR') return NextResponse.redirect(new URL('/repartidor', request.url));
       return NextResponse.redirect(new URL('/admin', request.url));
     }
@@ -65,15 +76,18 @@ export async function middleware(request: NextRequest) {
       }
 
       if (rol === 'OFICINA') {
-        const forbiddenForOficina = path.startsWith('/admin/choferes') || path.includes('/comisiones');
+        const forbiddenForOficina =
+          path.startsWith('/admin/flota') ||
+          path.startsWith('/admin/roles') ||
+          path.includes('/comisiones');
         if (forbiddenForOficina) {
           return NextResponse.redirect(new URL('/admin', request.url));
         }
       }
     }
-    
+
     if (path.startsWith('/repartidor') && rol !== 'REPARTIDOR') {
-         return NextResponse.redirect(new URL('/admin', request.url));
+      return NextResponse.redirect(new URL('/admin', request.url));
     }
   }
 

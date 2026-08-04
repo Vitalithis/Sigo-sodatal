@@ -1,9 +1,9 @@
 'use server';
 
-import { prisma } from '@/src/lib/prisma';
+import { prisma } from '@/lib/prisma';
 import { createClient } from '@/src/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
-import { TipoTransaccion, TipoCliente, MetodoPago } from '@/src/lib/prisma/generated';
+import { TipoTransaccion, TipoCliente, MetodoPago } from '@/lib/prisma/generated';
 
 // ────────────────────────────────────────────────────────────────
 // Tipos

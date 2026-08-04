@@ -9,7 +9,7 @@ import {
 } from '../actions'; // Sube un nivel desde 'components' hacia 'guias'
 
 // 2. Acciones de otros módulos (ahora que ya sabemos cómo se llaman)
-import { obtenerChoferesAction as obtenerRepartidoresAction } from '../../choferes/actions';
+import { obtenerChoferesAction as obtenerRepartidoresAction } from '../../flota/actions';
 import { obtenerProductosAction as obtenerProductosGuiaAction } from '../../productos/actions';
 
 // 3. Tipos (asegúrate de que ItemGuiaInput esté exportado en el actions de guías)

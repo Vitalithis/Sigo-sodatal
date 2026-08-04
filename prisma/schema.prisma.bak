@@ -89,10 +89,17 @@ model AlertaVehiculo {
   vehiculo     Vehiculo   @relation(fields: [vehiculo_id], references: [id])
 }
 
+model Categoria {
+  id        String     @id @default(uuid())
+  nombre    String
+  productos Producto[]
+}
+
 model Producto {
   id                 String              @id @default(uuid())
   nombre             String
-  categoria          CategoriaProducto
+  categoria_id       String // Campo de relación
+  categoria          Categoria           @relation(fields: [categoria_id], references: [id])
   precio_venta_nueva Float
   precio_recarga     Float?
   stock_minimo       Int                 @default(0)
@@ -270,6 +277,8 @@ model Cuadratura {
   total_guia_mensual  Float               @default(0)
   total_tarjeta       Float               @default(0)
   total_transferencia Float               @default(0)
+  motivo_reapertura   String?
+  fecha_reapertura    DateTime?
   botellones_vacios   BotellonVacio[]
   usuario             Usuario             @relation(fields: [usuario_id], references: [id])
   retorno             CuadraturaRetorno[]
@@ -491,13 +500,6 @@ enum EstadoVehiculo {
 enum TipoAlerta {
   KM
   FECHA
-}
-
-enum CategoriaProducto {
-  BOTELLON10
-  BOTELLON20
-  SODA
-  OTRO
 }
 
 enum TipoTransaccion {

@@ -39,11 +39,6 @@ export type RepuestoMantencion = $Result.DefaultSelection<Prisma.$RepuestoManten
  */
 export type AlertaVehiculo = $Result.DefaultSelection<Prisma.$AlertaVehiculoPayload>
 /**
- * Model Categoria
- * 
- */
-export type Categoria = $Result.DefaultSelection<Prisma.$CategoriaPayload>
-/**
  * Model Producto
  * 
  */
@@ -390,6 +385,16 @@ export const TipoMovimientoFinanciero: {
 
 export type TipoMovimientoFinanciero = (typeof TipoMovimientoFinanciero)[keyof typeof TipoMovimientoFinanciero]
 
+
+export const CategoriaProducto: {
+  BOTELLON10: 'BOTELLON10',
+  BOTELLON20: 'BOTELLON20',
+  SODA: 'SODA',
+  OTRO: 'OTRO'
+};
+
+export type CategoriaProducto = (typeof CategoriaProducto)[keyof typeof CategoriaProducto]
+
 }
 
 export type Rol = $Enums.Rol
@@ -475,6 +480,10 @@ export const EstadoGuia: typeof $Enums.EstadoGuia
 export type TipoMovimientoFinanciero = $Enums.TipoMovimientoFinanciero
 
 export const TipoMovimientoFinanciero: typeof $Enums.TipoMovimientoFinanciero
+
+export type CategoriaProducto = $Enums.CategoriaProducto
+
+export const CategoriaProducto: typeof $Enums.CategoriaProducto
 
 /**
  * ##  Prisma Client ʲˢ
@@ -646,16 +655,6 @@ export class PrismaClient<
     * ```
     */
   get alertaVehiculo(): Prisma.AlertaVehiculoDelegate<ExtArgs, ClientOptions>;
-
-  /**
-   * `prisma.categoria`: Exposes CRUD operations for the **Categoria** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more Categorias
-    * const categorias = await prisma.categoria.findMany()
-    * ```
-    */
-  get categoria(): Prisma.CategoriaDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.producto`: Exposes CRUD operations for the **Producto** model.
@@ -1405,7 +1404,6 @@ export namespace Prisma {
     Mantencion: 'Mantencion',
     RepuestoMantencion: 'RepuestoMantencion',
     AlertaVehiculo: 'AlertaVehiculo',
-    Categoria: 'Categoria',
     Producto: 'Producto',
     Comision: 'Comision',
     Cliente: 'Cliente',
@@ -1452,7 +1450,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "usuario" | "vehiculo" | "mantencion" | "repuestoMantencion" | "alertaVehiculo" | "categoria" | "producto" | "comision" | "cliente" | "rutaBase" | "comunaRuta" | "clienteRutaBase" | "rutaDia" | "paradaDia" | "pedido" | "pedidoItem" | "guiaDespacho" | "itemGuia" | "cuadratura" | "cuadraturaSalida" | "cuadraturaVenta" | "cuadraturaRetorno" | "botellonVacio" | "botellonDanado" | "produccionDiaria" | "tuboCO2" | "stockFabrica" | "stockCamion" | "configuracion" | "logAcceso" | "dispensador" | "mantencionDispensador" | "repuestoDispensador" | "maquinaReemplazo" | "notificacion" | "historialFinanciero" | "cargaCombustible"
+      modelProps: "usuario" | "vehiculo" | "mantencion" | "repuestoMantencion" | "alertaVehiculo" | "producto" | "comision" | "cliente" | "rutaBase" | "comunaRuta" | "clienteRutaBase" | "rutaDia" | "paradaDia" | "pedido" | "pedidoItem" | "guiaDespacho" | "itemGuia" | "cuadratura" | "cuadraturaSalida" | "cuadraturaVenta" | "cuadraturaRetorno" | "botellonVacio" | "botellonDanado" | "produccionDiaria" | "tuboCO2" | "stockFabrica" | "stockCamion" | "configuracion" | "logAcceso" | "dispensador" | "mantencionDispensador" | "repuestoDispensador" | "maquinaReemplazo" | "notificacion" | "historialFinanciero" | "cargaCombustible"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1823,80 +1821,6 @@ export namespace Prisma {
           count: {
             args: Prisma.AlertaVehiculoCountArgs<ExtArgs>
             result: $Utils.Optional<AlertaVehiculoCountAggregateOutputType> | number
-          }
-        }
-      }
-      Categoria: {
-        payload: Prisma.$CategoriaPayload<ExtArgs>
-        fields: Prisma.CategoriaFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.CategoriaFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CategoriaPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.CategoriaFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CategoriaPayload>
-          }
-          findFirst: {
-            args: Prisma.CategoriaFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CategoriaPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.CategoriaFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CategoriaPayload>
-          }
-          findMany: {
-            args: Prisma.CategoriaFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CategoriaPayload>[]
-          }
-          create: {
-            args: Prisma.CategoriaCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CategoriaPayload>
-          }
-          createMany: {
-            args: Prisma.CategoriaCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.CategoriaCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CategoriaPayload>[]
-          }
-          delete: {
-            args: Prisma.CategoriaDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CategoriaPayload>
-          }
-          update: {
-            args: Prisma.CategoriaUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CategoriaPayload>
-          }
-          deleteMany: {
-            args: Prisma.CategoriaDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.CategoriaUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.CategoriaUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CategoriaPayload>[]
-          }
-          upsert: {
-            args: Prisma.CategoriaUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CategoriaPayload>
-          }
-          aggregate: {
-            args: Prisma.CategoriaAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateCategoria>
-          }
-          groupBy: {
-            args: Prisma.CategoriaGroupByArgs<ExtArgs>
-            result: $Utils.Optional<CategoriaGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.CategoriaCountArgs<ExtArgs>
-            result: $Utils.Optional<CategoriaCountAggregateOutputType> | number
           }
         }
       }
@@ -4307,7 +4231,6 @@ export namespace Prisma {
     mantencion?: MantencionOmit
     repuestoMantencion?: RepuestoMantencionOmit
     alertaVehiculo?: AlertaVehiculoOmit
-    categoria?: CategoriaOmit
     producto?: ProductoOmit
     comision?: ComisionOmit
     cliente?: ClienteOmit
@@ -4634,37 +4557,6 @@ export namespace Prisma {
 
 
   /**
-   * Count Type CategoriaCountOutputType
-   */
-
-  export type CategoriaCountOutputType = {
-    productos: number
-  }
-
-  export type CategoriaCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    productos?: boolean | CategoriaCountOutputTypeCountProductosArgs
-  }
-
-  // Custom InputTypes
-  /**
-   * CategoriaCountOutputType without action
-   */
-  export type CategoriaCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the CategoriaCountOutputType
-     */
-    select?: CategoriaCountOutputTypeSelect<ExtArgs> | null
-  }
-
-  /**
-   * CategoriaCountOutputType without action
-   */
-  export type CategoriaCountOutputTypeCountProductosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: ProductoWhereInput
-  }
-
-
-  /**
    * Count Type ProductoCountOutputType
    */
 
@@ -4674,8 +4566,8 @@ export namespace Prisma {
     cuadratura_salida: number
     cuadratura_ventas: number
     items_guia: number
-    stock_camion: number
     pedidoItems: number
+    stock_camion: number
   }
 
   export type ProductoCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4684,8 +4576,8 @@ export namespace Prisma {
     cuadratura_salida?: boolean | ProductoCountOutputTypeCountCuadratura_salidaArgs
     cuadratura_ventas?: boolean | ProductoCountOutputTypeCountCuadratura_ventasArgs
     items_guia?: boolean | ProductoCountOutputTypeCountItems_guiaArgs
-    stock_camion?: boolean | ProductoCountOutputTypeCountStock_camionArgs
     pedidoItems?: boolean | ProductoCountOutputTypeCountPedidoItemsArgs
+    stock_camion?: boolean | ProductoCountOutputTypeCountStock_camionArgs
   }
 
   // Custom InputTypes
@@ -4737,15 +4629,15 @@ export namespace Prisma {
   /**
    * ProductoCountOutputType without action
    */
-  export type ProductoCountOutputTypeCountStock_camionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: StockCamionWhereInput
+  export type ProductoCountOutputTypeCountPedidoItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PedidoItemWhereInput
   }
 
   /**
    * ProductoCountOutputType without action
    */
-  export type ProductoCountOutputTypeCountPedidoItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: PedidoItemWhereInput
+  export type ProductoCountOutputTypeCountStock_camionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: StockCamionWhereInput
   }
 
 
@@ -11374,1042 +11266,6 @@ export namespace Prisma {
 
 
   /**
-   * Model Categoria
-   */
-
-  export type AggregateCategoria = {
-    _count: CategoriaCountAggregateOutputType | null
-    _min: CategoriaMinAggregateOutputType | null
-    _max: CategoriaMaxAggregateOutputType | null
-  }
-
-  export type CategoriaMinAggregateOutputType = {
-    id: string | null
-    nombre: string | null
-  }
-
-  export type CategoriaMaxAggregateOutputType = {
-    id: string | null
-    nombre: string | null
-  }
-
-  export type CategoriaCountAggregateOutputType = {
-    id: number
-    nombre: number
-    _all: number
-  }
-
-
-  export type CategoriaMinAggregateInputType = {
-    id?: true
-    nombre?: true
-  }
-
-  export type CategoriaMaxAggregateInputType = {
-    id?: true
-    nombre?: true
-  }
-
-  export type CategoriaCountAggregateInputType = {
-    id?: true
-    nombre?: true
-    _all?: true
-  }
-
-  export type CategoriaAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which Categoria to aggregate.
-     */
-    where?: CategoriaWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Categorias to fetch.
-     */
-    orderBy?: CategoriaOrderByWithRelationInput | CategoriaOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: CategoriaWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Categorias from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Categorias.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned Categorias
-    **/
-    _count?: true | CategoriaCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: CategoriaMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: CategoriaMaxAggregateInputType
-  }
-
-  export type GetCategoriaAggregateType<T extends CategoriaAggregateArgs> = {
-        [P in keyof T & keyof AggregateCategoria]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateCategoria[P]>
-      : GetScalarType<T[P], AggregateCategoria[P]>
-  }
-
-
-
-
-  export type CategoriaGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: CategoriaWhereInput
-    orderBy?: CategoriaOrderByWithAggregationInput | CategoriaOrderByWithAggregationInput[]
-    by: CategoriaScalarFieldEnum[] | CategoriaScalarFieldEnum
-    having?: CategoriaScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: CategoriaCountAggregateInputType | true
-    _min?: CategoriaMinAggregateInputType
-    _max?: CategoriaMaxAggregateInputType
-  }
-
-  export type CategoriaGroupByOutputType = {
-    id: string
-    nombre: string
-    _count: CategoriaCountAggregateOutputType | null
-    _min: CategoriaMinAggregateOutputType | null
-    _max: CategoriaMaxAggregateOutputType | null
-  }
-
-  type GetCategoriaGroupByPayload<T extends CategoriaGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<CategoriaGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof CategoriaGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], CategoriaGroupByOutputType[P]>
-            : GetScalarType<T[P], CategoriaGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type CategoriaSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    nombre?: boolean
-    productos?: boolean | Categoria$productosArgs<ExtArgs>
-    _count?: boolean | CategoriaCountOutputTypeDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["categoria"]>
-
-  export type CategoriaSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    nombre?: boolean
-  }, ExtArgs["result"]["categoria"]>
-
-  export type CategoriaSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    nombre?: boolean
-  }, ExtArgs["result"]["categoria"]>
-
-  export type CategoriaSelectScalar = {
-    id?: boolean
-    nombre?: boolean
-  }
-
-  export type CategoriaOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nombre", ExtArgs["result"]["categoria"]>
-  export type CategoriaInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    productos?: boolean | Categoria$productosArgs<ExtArgs>
-    _count?: boolean | CategoriaCountOutputTypeDefaultArgs<ExtArgs>
-  }
-  export type CategoriaIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
-  export type CategoriaIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
-
-  export type $CategoriaPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "Categoria"
-    objects: {
-      productos: Prisma.$ProductoPayload<ExtArgs>[]
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: string
-      nombre: string
-    }, ExtArgs["result"]["categoria"]>
-    composites: {}
-  }
-
-  type CategoriaGetPayload<S extends boolean | null | undefined | CategoriaDefaultArgs> = $Result.GetResult<Prisma.$CategoriaPayload, S>
-
-  type CategoriaCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<CategoriaFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: CategoriaCountAggregateInputType | true
-    }
-
-  export interface CategoriaDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Categoria'], meta: { name: 'Categoria' } }
-    /**
-     * Find zero or one Categoria that matches the filter.
-     * @param {CategoriaFindUniqueArgs} args - Arguments to find a Categoria
-     * @example
-     * // Get one Categoria
-     * const categoria = await prisma.categoria.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends CategoriaFindUniqueArgs>(args: SelectSubset<T, CategoriaFindUniqueArgs<ExtArgs>>): Prisma__CategoriaClient<$Result.GetResult<Prisma.$CategoriaPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one Categoria that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {CategoriaFindUniqueOrThrowArgs} args - Arguments to find a Categoria
-     * @example
-     * // Get one Categoria
-     * const categoria = await prisma.categoria.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends CategoriaFindUniqueOrThrowArgs>(args: SelectSubset<T, CategoriaFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CategoriaClient<$Result.GetResult<Prisma.$CategoriaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first Categoria that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {CategoriaFindFirstArgs} args - Arguments to find a Categoria
-     * @example
-     * // Get one Categoria
-     * const categoria = await prisma.categoria.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends CategoriaFindFirstArgs>(args?: SelectSubset<T, CategoriaFindFirstArgs<ExtArgs>>): Prisma__CategoriaClient<$Result.GetResult<Prisma.$CategoriaPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first Categoria that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {CategoriaFindFirstOrThrowArgs} args - Arguments to find a Categoria
-     * @example
-     * // Get one Categoria
-     * const categoria = await prisma.categoria.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends CategoriaFindFirstOrThrowArgs>(args?: SelectSubset<T, CategoriaFindFirstOrThrowArgs<ExtArgs>>): Prisma__CategoriaClient<$Result.GetResult<Prisma.$CategoriaPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more Categorias that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {CategoriaFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all Categorias
-     * const categorias = await prisma.categoria.findMany()
-     * 
-     * // Get first 10 Categorias
-     * const categorias = await prisma.categoria.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const categoriaWithIdOnly = await prisma.categoria.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends CategoriaFindManyArgs>(args?: SelectSubset<T, CategoriaFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CategoriaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a Categoria.
-     * @param {CategoriaCreateArgs} args - Arguments to create a Categoria.
-     * @example
-     * // Create one Categoria
-     * const Categoria = await prisma.categoria.create({
-     *   data: {
-     *     // ... data to create a Categoria
-     *   }
-     * })
-     * 
-     */
-    create<T extends CategoriaCreateArgs>(args: SelectSubset<T, CategoriaCreateArgs<ExtArgs>>): Prisma__CategoriaClient<$Result.GetResult<Prisma.$CategoriaPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many Categorias.
-     * @param {CategoriaCreateManyArgs} args - Arguments to create many Categorias.
-     * @example
-     * // Create many Categorias
-     * const categoria = await prisma.categoria.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends CategoriaCreateManyArgs>(args?: SelectSubset<T, CategoriaCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many Categorias and returns the data saved in the database.
-     * @param {CategoriaCreateManyAndReturnArgs} args - Arguments to create many Categorias.
-     * @example
-     * // Create many Categorias
-     * const categoria = await prisma.categoria.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many Categorias and only return the `id`
-     * const categoriaWithIdOnly = await prisma.categoria.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends CategoriaCreateManyAndReturnArgs>(args?: SelectSubset<T, CategoriaCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CategoriaPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Delete a Categoria.
-     * @param {CategoriaDeleteArgs} args - Arguments to delete one Categoria.
-     * @example
-     * // Delete one Categoria
-     * const Categoria = await prisma.categoria.delete({
-     *   where: {
-     *     // ... filter to delete one Categoria
-     *   }
-     * })
-     * 
-     */
-    delete<T extends CategoriaDeleteArgs>(args: SelectSubset<T, CategoriaDeleteArgs<ExtArgs>>): Prisma__CategoriaClient<$Result.GetResult<Prisma.$CategoriaPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one Categoria.
-     * @param {CategoriaUpdateArgs} args - Arguments to update one Categoria.
-     * @example
-     * // Update one Categoria
-     * const categoria = await prisma.categoria.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends CategoriaUpdateArgs>(args: SelectSubset<T, CategoriaUpdateArgs<ExtArgs>>): Prisma__CategoriaClient<$Result.GetResult<Prisma.$CategoriaPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more Categorias.
-     * @param {CategoriaDeleteManyArgs} args - Arguments to filter Categorias to delete.
-     * @example
-     * // Delete a few Categorias
-     * const { count } = await prisma.categoria.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends CategoriaDeleteManyArgs>(args?: SelectSubset<T, CategoriaDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Categorias.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {CategoriaUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many Categorias
-     * const categoria = await prisma.categoria.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends CategoriaUpdateManyArgs>(args: SelectSubset<T, CategoriaUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Categorias and returns the data updated in the database.
-     * @param {CategoriaUpdateManyAndReturnArgs} args - Arguments to update many Categorias.
-     * @example
-     * // Update many Categorias
-     * const categoria = await prisma.categoria.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more Categorias and only return the `id`
-     * const categoriaWithIdOnly = await prisma.categoria.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends CategoriaUpdateManyAndReturnArgs>(args: SelectSubset<T, CategoriaUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CategoriaPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Create or update one Categoria.
-     * @param {CategoriaUpsertArgs} args - Arguments to update or create a Categoria.
-     * @example
-     * // Update or create a Categoria
-     * const categoria = await prisma.categoria.upsert({
-     *   create: {
-     *     // ... data to create a Categoria
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the Categoria we want to update
-     *   }
-     * })
-     */
-    upsert<T extends CategoriaUpsertArgs>(args: SelectSubset<T, CategoriaUpsertArgs<ExtArgs>>): Prisma__CategoriaClient<$Result.GetResult<Prisma.$CategoriaPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of Categorias.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {CategoriaCountArgs} args - Arguments to filter Categorias to count.
-     * @example
-     * // Count the number of Categorias
-     * const count = await prisma.categoria.count({
-     *   where: {
-     *     // ... the filter for the Categorias we want to count
-     *   }
-     * })
-    **/
-    count<T extends CategoriaCountArgs>(
-      args?: Subset<T, CategoriaCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], CategoriaCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a Categoria.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {CategoriaAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends CategoriaAggregateArgs>(args: Subset<T, CategoriaAggregateArgs>): Prisma.PrismaPromise<GetCategoriaAggregateType<T>>
-
-    /**
-     * Group by Categoria.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {CategoriaGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends CategoriaGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: CategoriaGroupByArgs['orderBy'] }
-        : { orderBy?: CategoriaGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, CategoriaGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCategoriaGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the Categoria model
-   */
-  readonly fields: CategoriaFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for Categoria.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__CategoriaClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    productos<T extends Categoria$productosArgs<ExtArgs> = {}>(args?: Subset<T, Categoria$productosArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProductoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the Categoria model
-   */
-  interface CategoriaFieldRefs {
-    readonly id: FieldRef<"Categoria", 'String'>
-    readonly nombre: FieldRef<"Categoria", 'String'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * Categoria findUnique
-   */
-  export type CategoriaFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Categoria
-     */
-    select?: CategoriaSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Categoria
-     */
-    omit?: CategoriaOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CategoriaInclude<ExtArgs> | null
-    /**
-     * Filter, which Categoria to fetch.
-     */
-    where: CategoriaWhereUniqueInput
-  }
-
-  /**
-   * Categoria findUniqueOrThrow
-   */
-  export type CategoriaFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Categoria
-     */
-    select?: CategoriaSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Categoria
-     */
-    omit?: CategoriaOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CategoriaInclude<ExtArgs> | null
-    /**
-     * Filter, which Categoria to fetch.
-     */
-    where: CategoriaWhereUniqueInput
-  }
-
-  /**
-   * Categoria findFirst
-   */
-  export type CategoriaFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Categoria
-     */
-    select?: CategoriaSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Categoria
-     */
-    omit?: CategoriaOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CategoriaInclude<ExtArgs> | null
-    /**
-     * Filter, which Categoria to fetch.
-     */
-    where?: CategoriaWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Categorias to fetch.
-     */
-    orderBy?: CategoriaOrderByWithRelationInput | CategoriaOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Categorias.
-     */
-    cursor?: CategoriaWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Categorias from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Categorias.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Categorias.
-     */
-    distinct?: CategoriaScalarFieldEnum | CategoriaScalarFieldEnum[]
-  }
-
-  /**
-   * Categoria findFirstOrThrow
-   */
-  export type CategoriaFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Categoria
-     */
-    select?: CategoriaSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Categoria
-     */
-    omit?: CategoriaOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CategoriaInclude<ExtArgs> | null
-    /**
-     * Filter, which Categoria to fetch.
-     */
-    where?: CategoriaWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Categorias to fetch.
-     */
-    orderBy?: CategoriaOrderByWithRelationInput | CategoriaOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Categorias.
-     */
-    cursor?: CategoriaWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Categorias from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Categorias.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Categorias.
-     */
-    distinct?: CategoriaScalarFieldEnum | CategoriaScalarFieldEnum[]
-  }
-
-  /**
-   * Categoria findMany
-   */
-  export type CategoriaFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Categoria
-     */
-    select?: CategoriaSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Categoria
-     */
-    omit?: CategoriaOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CategoriaInclude<ExtArgs> | null
-    /**
-     * Filter, which Categorias to fetch.
-     */
-    where?: CategoriaWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Categorias to fetch.
-     */
-    orderBy?: CategoriaOrderByWithRelationInput | CategoriaOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing Categorias.
-     */
-    cursor?: CategoriaWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Categorias from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Categorias.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Categorias.
-     */
-    distinct?: CategoriaScalarFieldEnum | CategoriaScalarFieldEnum[]
-  }
-
-  /**
-   * Categoria create
-   */
-  export type CategoriaCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Categoria
-     */
-    select?: CategoriaSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Categoria
-     */
-    omit?: CategoriaOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CategoriaInclude<ExtArgs> | null
-    /**
-     * The data needed to create a Categoria.
-     */
-    data: XOR<CategoriaCreateInput, CategoriaUncheckedCreateInput>
-  }
-
-  /**
-   * Categoria createMany
-   */
-  export type CategoriaCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many Categorias.
-     */
-    data: CategoriaCreateManyInput | CategoriaCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * Categoria createManyAndReturn
-   */
-  export type CategoriaCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Categoria
-     */
-    select?: CategoriaSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the Categoria
-     */
-    omit?: CategoriaOmit<ExtArgs> | null
-    /**
-     * The data used to create many Categorias.
-     */
-    data: CategoriaCreateManyInput | CategoriaCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * Categoria update
-   */
-  export type CategoriaUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Categoria
-     */
-    select?: CategoriaSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Categoria
-     */
-    omit?: CategoriaOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CategoriaInclude<ExtArgs> | null
-    /**
-     * The data needed to update a Categoria.
-     */
-    data: XOR<CategoriaUpdateInput, CategoriaUncheckedUpdateInput>
-    /**
-     * Choose, which Categoria to update.
-     */
-    where: CategoriaWhereUniqueInput
-  }
-
-  /**
-   * Categoria updateMany
-   */
-  export type CategoriaUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update Categorias.
-     */
-    data: XOR<CategoriaUpdateManyMutationInput, CategoriaUncheckedUpdateManyInput>
-    /**
-     * Filter which Categorias to update
-     */
-    where?: CategoriaWhereInput
-    /**
-     * Limit how many Categorias to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * Categoria updateManyAndReturn
-   */
-  export type CategoriaUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Categoria
-     */
-    select?: CategoriaSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the Categoria
-     */
-    omit?: CategoriaOmit<ExtArgs> | null
-    /**
-     * The data used to update Categorias.
-     */
-    data: XOR<CategoriaUpdateManyMutationInput, CategoriaUncheckedUpdateManyInput>
-    /**
-     * Filter which Categorias to update
-     */
-    where?: CategoriaWhereInput
-    /**
-     * Limit how many Categorias to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * Categoria upsert
-   */
-  export type CategoriaUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Categoria
-     */
-    select?: CategoriaSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Categoria
-     */
-    omit?: CategoriaOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CategoriaInclude<ExtArgs> | null
-    /**
-     * The filter to search for the Categoria to update in case it exists.
-     */
-    where: CategoriaWhereUniqueInput
-    /**
-     * In case the Categoria found by the `where` argument doesn't exist, create a new Categoria with this data.
-     */
-    create: XOR<CategoriaCreateInput, CategoriaUncheckedCreateInput>
-    /**
-     * In case the Categoria was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<CategoriaUpdateInput, CategoriaUncheckedUpdateInput>
-  }
-
-  /**
-   * Categoria delete
-   */
-  export type CategoriaDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Categoria
-     */
-    select?: CategoriaSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Categoria
-     */
-    omit?: CategoriaOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CategoriaInclude<ExtArgs> | null
-    /**
-     * Filter which Categoria to delete.
-     */
-    where: CategoriaWhereUniqueInput
-  }
-
-  /**
-   * Categoria deleteMany
-   */
-  export type CategoriaDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which Categorias to delete
-     */
-    where?: CategoriaWhereInput
-    /**
-     * Limit how many Categorias to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * Categoria.productos
-   */
-  export type Categoria$productosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Producto
-     */
-    select?: ProductoSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Producto
-     */
-    omit?: ProductoOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ProductoInclude<ExtArgs> | null
-    where?: ProductoWhereInput
-    orderBy?: ProductoOrderByWithRelationInput | ProductoOrderByWithRelationInput[]
-    cursor?: ProductoWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: ProductoScalarFieldEnum | ProductoScalarFieldEnum[]
-  }
-
-  /**
-   * Categoria without action
-   */
-  export type CategoriaDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Categoria
-     */
-    select?: CategoriaSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Categoria
-     */
-    omit?: CategoriaOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CategoriaInclude<ExtArgs> | null
-  }
-
-
-  /**
    * Model Producto
    */
 
@@ -12436,7 +11292,7 @@ export namespace Prisma {
   export type ProductoMinAggregateOutputType = {
     id: string | null
     nombre: string | null
-    categoria_id: string | null
+    categoria: $Enums.CategoriaProducto | null
     precio_venta_nueva: number | null
     precio_recarga: number | null
     stock_minimo: number | null
@@ -12446,7 +11302,7 @@ export namespace Prisma {
   export type ProductoMaxAggregateOutputType = {
     id: string | null
     nombre: string | null
-    categoria_id: string | null
+    categoria: $Enums.CategoriaProducto | null
     precio_venta_nueva: number | null
     precio_recarga: number | null
     stock_minimo: number | null
@@ -12456,7 +11312,7 @@ export namespace Prisma {
   export type ProductoCountAggregateOutputType = {
     id: number
     nombre: number
-    categoria_id: number
+    categoria: number
     precio_venta_nueva: number
     precio_recarga: number
     stock_minimo: number
@@ -12480,7 +11336,7 @@ export namespace Prisma {
   export type ProductoMinAggregateInputType = {
     id?: true
     nombre?: true
-    categoria_id?: true
+    categoria?: true
     precio_venta_nueva?: true
     precio_recarga?: true
     stock_minimo?: true
@@ -12490,7 +11346,7 @@ export namespace Prisma {
   export type ProductoMaxAggregateInputType = {
     id?: true
     nombre?: true
-    categoria_id?: true
+    categoria?: true
     precio_venta_nueva?: true
     precio_recarga?: true
     stock_minimo?: true
@@ -12500,7 +11356,7 @@ export namespace Prisma {
   export type ProductoCountAggregateInputType = {
     id?: true
     nombre?: true
-    categoria_id?: true
+    categoria?: true
     precio_venta_nueva?: true
     precio_recarga?: true
     stock_minimo?: true
@@ -12597,7 +11453,7 @@ export namespace Prisma {
   export type ProductoGroupByOutputType = {
     id: string
     nombre: string
-    categoria_id: string
+    categoria: $Enums.CategoriaProducto
     precio_venta_nueva: number
     precio_recarga: number | null
     stock_minimo: number
@@ -12626,92 +11482,83 @@ export namespace Prisma {
   export type ProductoSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     nombre?: boolean
-    categoria_id?: boolean
+    categoria?: boolean
     precio_venta_nueva?: boolean
     precio_recarga?: boolean
     stock_minimo?: boolean
     activo?: boolean
-    categoria?: boolean | CategoriaDefaultArgs<ExtArgs>
     comisiones?: boolean | Producto$comisionesArgs<ExtArgs>
     cuadratura_retorno?: boolean | Producto$cuadratura_retornoArgs<ExtArgs>
     cuadratura_salida?: boolean | Producto$cuadratura_salidaArgs<ExtArgs>
     cuadratura_ventas?: boolean | Producto$cuadratura_ventasArgs<ExtArgs>
     items_guia?: boolean | Producto$items_guiaArgs<ExtArgs>
+    pedidoItems?: boolean | Producto$pedidoItemsArgs<ExtArgs>
     stock_camion?: boolean | Producto$stock_camionArgs<ExtArgs>
     stock_fabrica?: boolean | Producto$stock_fabricaArgs<ExtArgs>
-    pedidoItems?: boolean | Producto$pedidoItemsArgs<ExtArgs>
     _count?: boolean | ProductoCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["producto"]>
 
   export type ProductoSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     nombre?: boolean
-    categoria_id?: boolean
+    categoria?: boolean
     precio_venta_nueva?: boolean
     precio_recarga?: boolean
     stock_minimo?: boolean
     activo?: boolean
-    categoria?: boolean | CategoriaDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["producto"]>
 
   export type ProductoSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     nombre?: boolean
-    categoria_id?: boolean
+    categoria?: boolean
     precio_venta_nueva?: boolean
     precio_recarga?: boolean
     stock_minimo?: boolean
     activo?: boolean
-    categoria?: boolean | CategoriaDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["producto"]>
 
   export type ProductoSelectScalar = {
     id?: boolean
     nombre?: boolean
-    categoria_id?: boolean
+    categoria?: boolean
     precio_venta_nueva?: boolean
     precio_recarga?: boolean
     stock_minimo?: boolean
     activo?: boolean
   }
 
-  export type ProductoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nombre" | "categoria_id" | "precio_venta_nueva" | "precio_recarga" | "stock_minimo" | "activo", ExtArgs["result"]["producto"]>
+  export type ProductoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nombre" | "categoria" | "precio_venta_nueva" | "precio_recarga" | "stock_minimo" | "activo", ExtArgs["result"]["producto"]>
   export type ProductoInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    categoria?: boolean | CategoriaDefaultArgs<ExtArgs>
     comisiones?: boolean | Producto$comisionesArgs<ExtArgs>
     cuadratura_retorno?: boolean | Producto$cuadratura_retornoArgs<ExtArgs>
     cuadratura_salida?: boolean | Producto$cuadratura_salidaArgs<ExtArgs>
     cuadratura_ventas?: boolean | Producto$cuadratura_ventasArgs<ExtArgs>
     items_guia?: boolean | Producto$items_guiaArgs<ExtArgs>
+    pedidoItems?: boolean | Producto$pedidoItemsArgs<ExtArgs>
     stock_camion?: boolean | Producto$stock_camionArgs<ExtArgs>
     stock_fabrica?: boolean | Producto$stock_fabricaArgs<ExtArgs>
-    pedidoItems?: boolean | Producto$pedidoItemsArgs<ExtArgs>
     _count?: boolean | ProductoCountOutputTypeDefaultArgs<ExtArgs>
   }
-  export type ProductoIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    categoria?: boolean | CategoriaDefaultArgs<ExtArgs>
-  }
-  export type ProductoIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    categoria?: boolean | CategoriaDefaultArgs<ExtArgs>
-  }
+  export type ProductoIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type ProductoIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
 
   export type $ProductoPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Producto"
     objects: {
-      categoria: Prisma.$CategoriaPayload<ExtArgs>
       comisiones: Prisma.$ComisionPayload<ExtArgs>[]
       cuadratura_retorno: Prisma.$CuadraturaRetornoPayload<ExtArgs>[]
       cuadratura_salida: Prisma.$CuadraturaSalidaPayload<ExtArgs>[]
       cuadratura_ventas: Prisma.$CuadraturaVentaPayload<ExtArgs>[]
       items_guia: Prisma.$ItemGuiaPayload<ExtArgs>[]
+      pedidoItems: Prisma.$PedidoItemPayload<ExtArgs>[]
       stock_camion: Prisma.$StockCamionPayload<ExtArgs>[]
       stock_fabrica: Prisma.$StockFabricaPayload<ExtArgs> | null
-      pedidoItems: Prisma.$PedidoItemPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       nombre: string
-      categoria_id: string
+      categoria: $Enums.CategoriaProducto
       precio_venta_nueva: number
       precio_recarga: number | null
       stock_minimo: number
@@ -13110,15 +11957,14 @@ export namespace Prisma {
    */
   export interface Prisma__ProductoClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    categoria<T extends CategoriaDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CategoriaDefaultArgs<ExtArgs>>): Prisma__CategoriaClient<$Result.GetResult<Prisma.$CategoriaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     comisiones<T extends Producto$comisionesArgs<ExtArgs> = {}>(args?: Subset<T, Producto$comisionesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ComisionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     cuadratura_retorno<T extends Producto$cuadratura_retornoArgs<ExtArgs> = {}>(args?: Subset<T, Producto$cuadratura_retornoArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CuadraturaRetornoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     cuadratura_salida<T extends Producto$cuadratura_salidaArgs<ExtArgs> = {}>(args?: Subset<T, Producto$cuadratura_salidaArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CuadraturaSalidaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     cuadratura_ventas<T extends Producto$cuadratura_ventasArgs<ExtArgs> = {}>(args?: Subset<T, Producto$cuadratura_ventasArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CuadraturaVentaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     items_guia<T extends Producto$items_guiaArgs<ExtArgs> = {}>(args?: Subset<T, Producto$items_guiaArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ItemGuiaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    pedidoItems<T extends Producto$pedidoItemsArgs<ExtArgs> = {}>(args?: Subset<T, Producto$pedidoItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PedidoItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     stock_camion<T extends Producto$stock_camionArgs<ExtArgs> = {}>(args?: Subset<T, Producto$stock_camionArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockCamionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     stock_fabrica<T extends Producto$stock_fabricaArgs<ExtArgs> = {}>(args?: Subset<T, Producto$stock_fabricaArgs<ExtArgs>>): Prisma__StockFabricaClient<$Result.GetResult<Prisma.$StockFabricaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    pedidoItems<T extends Producto$pedidoItemsArgs<ExtArgs> = {}>(args?: Subset<T, Producto$pedidoItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PedidoItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -13150,7 +11996,7 @@ export namespace Prisma {
   interface ProductoFieldRefs {
     readonly id: FieldRef<"Producto", 'String'>
     readonly nombre: FieldRef<"Producto", 'String'>
-    readonly categoria_id: FieldRef<"Producto", 'String'>
+    readonly categoria: FieldRef<"Producto", 'CategoriaProducto'>
     readonly precio_venta_nueva: FieldRef<"Producto", 'Float'>
     readonly precio_recarga: FieldRef<"Producto", 'Float'>
     readonly stock_minimo: FieldRef<"Producto", 'Int'>
@@ -13409,10 +12255,6 @@ export namespace Prisma {
      */
     data: ProductoCreateManyInput | ProductoCreateManyInput[]
     skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ProductoIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -13483,10 +12325,6 @@ export namespace Prisma {
      * Limit how many Productos to update.
      */
     limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ProductoIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -13676,6 +12514,30 @@ export namespace Prisma {
   }
 
   /**
+   * Producto.pedidoItems
+   */
+  export type Producto$pedidoItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PedidoItem
+     */
+    select?: PedidoItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PedidoItem
+     */
+    omit?: PedidoItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PedidoItemInclude<ExtArgs> | null
+    where?: PedidoItemWhereInput
+    orderBy?: PedidoItemOrderByWithRelationInput | PedidoItemOrderByWithRelationInput[]
+    cursor?: PedidoItemWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PedidoItemScalarFieldEnum | PedidoItemScalarFieldEnum[]
+  }
+
+  /**
    * Producto.stock_camion
    */
   export type Producto$stock_camionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -13716,30 +12578,6 @@ export namespace Prisma {
      */
     include?: StockFabricaInclude<ExtArgs> | null
     where?: StockFabricaWhereInput
-  }
-
-  /**
-   * Producto.pedidoItems
-   */
-  export type Producto$pedidoItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the PedidoItem
-     */
-    select?: PedidoItemSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the PedidoItem
-     */
-    omit?: PedidoItemOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PedidoItemInclude<ExtArgs> | null
-    where?: PedidoItemWhereInput
-    orderBy?: PedidoItemOrderByWithRelationInput | PedidoItemOrderByWithRelationInput[]
-    cursor?: PedidoItemWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: PedidoItemScalarFieldEnum | PedidoItemScalarFieldEnum[]
   }
 
   /**
@@ -48011,18 +46849,10 @@ export namespace Prisma {
   export type AlertaVehiculoScalarFieldEnum = (typeof AlertaVehiculoScalarFieldEnum)[keyof typeof AlertaVehiculoScalarFieldEnum]
 
 
-  export const CategoriaScalarFieldEnum: {
-    id: 'id',
-    nombre: 'nombre'
-  };
-
-  export type CategoriaScalarFieldEnum = (typeof CategoriaScalarFieldEnum)[keyof typeof CategoriaScalarFieldEnum]
-
-
   export const ProductoScalarFieldEnum: {
     id: 'id',
     nombre: 'nombre',
-    categoria_id: 'categoria_id',
+    categoria: 'categoria',
     precio_venta_nueva: 'precio_venta_nueva',
     precio_recarga: 'precio_recarga',
     stock_minimo: 'stock_minimo',
@@ -48575,6 +47405,20 @@ export namespace Prisma {
    * Reference to a field of type 'TipoAlerta[]'
    */
   export type ListEnumTipoAlertaFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TipoAlerta[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'CategoriaProducto'
+   */
+  export type EnumCategoriaProductoFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CategoriaProducto'>
+    
+
+
+  /**
+   * Reference to a field of type 'CategoriaProducto[]'
+   */
+  export type ListEnumCategoriaProductoFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CategoriaProducto[]'>
     
 
 
@@ -49276,85 +48120,43 @@ export namespace Prisma {
     activa?: BoolWithAggregatesFilter<"AlertaVehiculo"> | boolean
   }
 
-  export type CategoriaWhereInput = {
-    AND?: CategoriaWhereInput | CategoriaWhereInput[]
-    OR?: CategoriaWhereInput[]
-    NOT?: CategoriaWhereInput | CategoriaWhereInput[]
-    id?: StringFilter<"Categoria"> | string
-    nombre?: StringFilter<"Categoria"> | string
-    productos?: ProductoListRelationFilter
-  }
-
-  export type CategoriaOrderByWithRelationInput = {
-    id?: SortOrder
-    nombre?: SortOrder
-    productos?: ProductoOrderByRelationAggregateInput
-  }
-
-  export type CategoriaWhereUniqueInput = Prisma.AtLeast<{
-    id?: string
-    AND?: CategoriaWhereInput | CategoriaWhereInput[]
-    OR?: CategoriaWhereInput[]
-    NOT?: CategoriaWhereInput | CategoriaWhereInput[]
-    nombre?: StringFilter<"Categoria"> | string
-    productos?: ProductoListRelationFilter
-  }, "id">
-
-  export type CategoriaOrderByWithAggregationInput = {
-    id?: SortOrder
-    nombre?: SortOrder
-    _count?: CategoriaCountOrderByAggregateInput
-    _max?: CategoriaMaxOrderByAggregateInput
-    _min?: CategoriaMinOrderByAggregateInput
-  }
-
-  export type CategoriaScalarWhereWithAggregatesInput = {
-    AND?: CategoriaScalarWhereWithAggregatesInput | CategoriaScalarWhereWithAggregatesInput[]
-    OR?: CategoriaScalarWhereWithAggregatesInput[]
-    NOT?: CategoriaScalarWhereWithAggregatesInput | CategoriaScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"Categoria"> | string
-    nombre?: StringWithAggregatesFilter<"Categoria"> | string
-  }
-
   export type ProductoWhereInput = {
     AND?: ProductoWhereInput | ProductoWhereInput[]
     OR?: ProductoWhereInput[]
     NOT?: ProductoWhereInput | ProductoWhereInput[]
     id?: StringFilter<"Producto"> | string
     nombre?: StringFilter<"Producto"> | string
-    categoria_id?: StringFilter<"Producto"> | string
+    categoria?: EnumCategoriaProductoFilter<"Producto"> | $Enums.CategoriaProducto
     precio_venta_nueva?: FloatFilter<"Producto"> | number
     precio_recarga?: FloatNullableFilter<"Producto"> | number | null
     stock_minimo?: IntFilter<"Producto"> | number
     activo?: BoolFilter<"Producto"> | boolean
-    categoria?: XOR<CategoriaScalarRelationFilter, CategoriaWhereInput>
     comisiones?: ComisionListRelationFilter
     cuadratura_retorno?: CuadraturaRetornoListRelationFilter
     cuadratura_salida?: CuadraturaSalidaListRelationFilter
     cuadratura_ventas?: CuadraturaVentaListRelationFilter
     items_guia?: ItemGuiaListRelationFilter
+    pedidoItems?: PedidoItemListRelationFilter
     stock_camion?: StockCamionListRelationFilter
     stock_fabrica?: XOR<StockFabricaNullableScalarRelationFilter, StockFabricaWhereInput> | null
-    pedidoItems?: PedidoItemListRelationFilter
   }
 
   export type ProductoOrderByWithRelationInput = {
     id?: SortOrder
     nombre?: SortOrder
-    categoria_id?: SortOrder
+    categoria?: SortOrder
     precio_venta_nueva?: SortOrder
     precio_recarga?: SortOrderInput | SortOrder
     stock_minimo?: SortOrder
     activo?: SortOrder
-    categoria?: CategoriaOrderByWithRelationInput
     comisiones?: ComisionOrderByRelationAggregateInput
     cuadratura_retorno?: CuadraturaRetornoOrderByRelationAggregateInput
     cuadratura_salida?: CuadraturaSalidaOrderByRelationAggregateInput
     cuadratura_ventas?: CuadraturaVentaOrderByRelationAggregateInput
     items_guia?: ItemGuiaOrderByRelationAggregateInput
+    pedidoItems?: PedidoItemOrderByRelationAggregateInput
     stock_camion?: StockCamionOrderByRelationAggregateInput
     stock_fabrica?: StockFabricaOrderByWithRelationInput
-    pedidoItems?: PedidoItemOrderByRelationAggregateInput
   }
 
   export type ProductoWhereUniqueInput = Prisma.AtLeast<{
@@ -49363,26 +48165,25 @@ export namespace Prisma {
     OR?: ProductoWhereInput[]
     NOT?: ProductoWhereInput | ProductoWhereInput[]
     nombre?: StringFilter<"Producto"> | string
-    categoria_id?: StringFilter<"Producto"> | string
+    categoria?: EnumCategoriaProductoFilter<"Producto"> | $Enums.CategoriaProducto
     precio_venta_nueva?: FloatFilter<"Producto"> | number
     precio_recarga?: FloatNullableFilter<"Producto"> | number | null
     stock_minimo?: IntFilter<"Producto"> | number
     activo?: BoolFilter<"Producto"> | boolean
-    categoria?: XOR<CategoriaScalarRelationFilter, CategoriaWhereInput>
     comisiones?: ComisionListRelationFilter
     cuadratura_retorno?: CuadraturaRetornoListRelationFilter
     cuadratura_salida?: CuadraturaSalidaListRelationFilter
     cuadratura_ventas?: CuadraturaVentaListRelationFilter
     items_guia?: ItemGuiaListRelationFilter
+    pedidoItems?: PedidoItemListRelationFilter
     stock_camion?: StockCamionListRelationFilter
     stock_fabrica?: XOR<StockFabricaNullableScalarRelationFilter, StockFabricaWhereInput> | null
-    pedidoItems?: PedidoItemListRelationFilter
   }, "id">
 
   export type ProductoOrderByWithAggregationInput = {
     id?: SortOrder
     nombre?: SortOrder
-    categoria_id?: SortOrder
+    categoria?: SortOrder
     precio_venta_nueva?: SortOrder
     precio_recarga?: SortOrderInput | SortOrder
     stock_minimo?: SortOrder
@@ -49400,7 +48201,7 @@ export namespace Prisma {
     NOT?: ProductoScalarWhereWithAggregatesInput | ProductoScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Producto"> | string
     nombre?: StringWithAggregatesFilter<"Producto"> | string
-    categoria_id?: StringWithAggregatesFilter<"Producto"> | string
+    categoria?: EnumCategoriaProductoWithAggregatesFilter<"Producto"> | $Enums.CategoriaProducto
     precio_venta_nueva?: FloatWithAggregatesFilter<"Producto"> | number
     precio_recarga?: FloatNullableWithAggregatesFilter<"Producto"> | number | null
     stock_minimo?: IntWithAggregatesFilter<"Producto"> | number
@@ -52003,67 +50804,28 @@ export namespace Prisma {
     activa?: BoolFieldUpdateOperationsInput | boolean
   }
 
-  export type CategoriaCreateInput = {
-    id?: string
-    nombre: string
-    productos?: ProductoCreateNestedManyWithoutCategoriaInput
-  }
-
-  export type CategoriaUncheckedCreateInput = {
-    id?: string
-    nombre: string
-    productos?: ProductoUncheckedCreateNestedManyWithoutCategoriaInput
-  }
-
-  export type CategoriaUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    nombre?: StringFieldUpdateOperationsInput | string
-    productos?: ProductoUpdateManyWithoutCategoriaNestedInput
-  }
-
-  export type CategoriaUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    nombre?: StringFieldUpdateOperationsInput | string
-    productos?: ProductoUncheckedUpdateManyWithoutCategoriaNestedInput
-  }
-
-  export type CategoriaCreateManyInput = {
-    id?: string
-    nombre: string
-  }
-
-  export type CategoriaUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    nombre?: StringFieldUpdateOperationsInput | string
-  }
-
-  export type CategoriaUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    nombre?: StringFieldUpdateOperationsInput | string
-  }
-
   export type ProductoCreateInput = {
     id?: string
     nombre: string
+    categoria: $Enums.CategoriaProducto
     precio_venta_nueva: number
     precio_recarga?: number | null
     stock_minimo?: number
     activo?: boolean
-    categoria: CategoriaCreateNestedOneWithoutProductosInput
     comisiones?: ComisionCreateNestedManyWithoutProductoInput
     cuadratura_retorno?: CuadraturaRetornoCreateNestedManyWithoutProductoInput
     cuadratura_salida?: CuadraturaSalidaCreateNestedManyWithoutProductoInput
     cuadratura_ventas?: CuadraturaVentaCreateNestedManyWithoutProductoInput
     items_guia?: ItemGuiaCreateNestedManyWithoutProductoInput
+    pedidoItems?: PedidoItemCreateNestedManyWithoutProductoInput
     stock_camion?: StockCamionCreateNestedManyWithoutProductoInput
     stock_fabrica?: StockFabricaCreateNestedOneWithoutProductoInput
-    pedidoItems?: PedidoItemCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoUncheckedCreateInput = {
     id?: string
     nombre: string
-    categoria_id: string
+    categoria: $Enums.CategoriaProducto
     precio_venta_nueva: number
     precio_recarga?: number | null
     stock_minimo?: number
@@ -52073,33 +50835,33 @@ export namespace Prisma {
     cuadratura_salida?: CuadraturaSalidaUncheckedCreateNestedManyWithoutProductoInput
     cuadratura_ventas?: CuadraturaVentaUncheckedCreateNestedManyWithoutProductoInput
     items_guia?: ItemGuiaUncheckedCreateNestedManyWithoutProductoInput
+    pedidoItems?: PedidoItemUncheckedCreateNestedManyWithoutProductoInput
     stock_camion?: StockCamionUncheckedCreateNestedManyWithoutProductoInput
     stock_fabrica?: StockFabricaUncheckedCreateNestedOneWithoutProductoInput
-    pedidoItems?: PedidoItemUncheckedCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     nombre?: StringFieldUpdateOperationsInput | string
+    categoria?: EnumCategoriaProductoFieldUpdateOperationsInput | $Enums.CategoriaProducto
     precio_venta_nueva?: FloatFieldUpdateOperationsInput | number
     precio_recarga?: NullableFloatFieldUpdateOperationsInput | number | null
     stock_minimo?: IntFieldUpdateOperationsInput | number
     activo?: BoolFieldUpdateOperationsInput | boolean
-    categoria?: CategoriaUpdateOneRequiredWithoutProductosNestedInput
     comisiones?: ComisionUpdateManyWithoutProductoNestedInput
     cuadratura_retorno?: CuadraturaRetornoUpdateManyWithoutProductoNestedInput
     cuadratura_salida?: CuadraturaSalidaUpdateManyWithoutProductoNestedInput
     cuadratura_ventas?: CuadraturaVentaUpdateManyWithoutProductoNestedInput
     items_guia?: ItemGuiaUpdateManyWithoutProductoNestedInput
+    pedidoItems?: PedidoItemUpdateManyWithoutProductoNestedInput
     stock_camion?: StockCamionUpdateManyWithoutProductoNestedInput
     stock_fabrica?: StockFabricaUpdateOneWithoutProductoNestedInput
-    pedidoItems?: PedidoItemUpdateManyWithoutProductoNestedInput
   }
 
   export type ProductoUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     nombre?: StringFieldUpdateOperationsInput | string
-    categoria_id?: StringFieldUpdateOperationsInput | string
+    categoria?: EnumCategoriaProductoFieldUpdateOperationsInput | $Enums.CategoriaProducto
     precio_venta_nueva?: FloatFieldUpdateOperationsInput | number
     precio_recarga?: NullableFloatFieldUpdateOperationsInput | number | null
     stock_minimo?: IntFieldUpdateOperationsInput | number
@@ -52109,15 +50871,15 @@ export namespace Prisma {
     cuadratura_salida?: CuadraturaSalidaUncheckedUpdateManyWithoutProductoNestedInput
     cuadratura_ventas?: CuadraturaVentaUncheckedUpdateManyWithoutProductoNestedInput
     items_guia?: ItemGuiaUncheckedUpdateManyWithoutProductoNestedInput
+    pedidoItems?: PedidoItemUncheckedUpdateManyWithoutProductoNestedInput
     stock_camion?: StockCamionUncheckedUpdateManyWithoutProductoNestedInput
     stock_fabrica?: StockFabricaUncheckedUpdateOneWithoutProductoNestedInput
-    pedidoItems?: PedidoItemUncheckedUpdateManyWithoutProductoNestedInput
   }
 
   export type ProductoCreateManyInput = {
     id?: string
     nombre: string
-    categoria_id: string
+    categoria: $Enums.CategoriaProducto
     precio_venta_nueva: number
     precio_recarga?: number | null
     stock_minimo?: number
@@ -52127,6 +50889,7 @@ export namespace Prisma {
   export type ProductoUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     nombre?: StringFieldUpdateOperationsInput | string
+    categoria?: EnumCategoriaProductoFieldUpdateOperationsInput | $Enums.CategoriaProducto
     precio_venta_nueva?: FloatFieldUpdateOperationsInput | number
     precio_recarga?: NullableFloatFieldUpdateOperationsInput | number | null
     stock_minimo?: IntFieldUpdateOperationsInput | number
@@ -52136,7 +50899,7 @@ export namespace Prisma {
   export type ProductoUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     nombre?: StringFieldUpdateOperationsInput | string
-    categoria_id?: StringFieldUpdateOperationsInput | string
+    categoria?: EnumCategoriaProductoFieldUpdateOperationsInput | $Enums.CategoriaProducto
     precio_venta_nueva?: FloatFieldUpdateOperationsInput | number
     precio_recarga?: NullableFloatFieldUpdateOperationsInput | number | null
     stock_minimo?: IntFieldUpdateOperationsInput | number
@@ -54955,29 +53718,11 @@ export namespace Prisma {
     _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
-  export type ProductoListRelationFilter = {
-    every?: ProductoWhereInput
-    some?: ProductoWhereInput
-    none?: ProductoWhereInput
-  }
-
-  export type ProductoOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type CategoriaCountOrderByAggregateInput = {
-    id?: SortOrder
-    nombre?: SortOrder
-  }
-
-  export type CategoriaMaxOrderByAggregateInput = {
-    id?: SortOrder
-    nombre?: SortOrder
-  }
-
-  export type CategoriaMinOrderByAggregateInput = {
-    id?: SortOrder
-    nombre?: SortOrder
+  export type EnumCategoriaProductoFilter<$PrismaModel = never> = {
+    equals?: $Enums.CategoriaProducto | EnumCategoriaProductoFieldRefInput<$PrismaModel>
+    in?: $Enums.CategoriaProducto[] | ListEnumCategoriaProductoFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CategoriaProducto[] | ListEnumCategoriaProductoFieldRefInput<$PrismaModel>
+    not?: NestedEnumCategoriaProductoFilter<$PrismaModel> | $Enums.CategoriaProducto
   }
 
   export type FloatNullableFilter<$PrismaModel = never> = {
@@ -54989,11 +53734,6 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
-  }
-
-  export type CategoriaScalarRelationFilter = {
-    is?: CategoriaWhereInput
-    isNot?: CategoriaWhereInput
   }
 
   export type ComisionListRelationFilter = {
@@ -55026,15 +53766,15 @@ export namespace Prisma {
     none?: ItemGuiaWhereInput
   }
 
-  export type StockFabricaNullableScalarRelationFilter = {
-    is?: StockFabricaWhereInput | null
-    isNot?: StockFabricaWhereInput | null
-  }
-
   export type PedidoItemListRelationFilter = {
     every?: PedidoItemWhereInput
     some?: PedidoItemWhereInput
     none?: PedidoItemWhereInput
+  }
+
+  export type StockFabricaNullableScalarRelationFilter = {
+    is?: StockFabricaWhereInput | null
+    isNot?: StockFabricaWhereInput | null
   }
 
   export type ComisionOrderByRelationAggregateInput = {
@@ -55064,7 +53804,7 @@ export namespace Prisma {
   export type ProductoCountOrderByAggregateInput = {
     id?: SortOrder
     nombre?: SortOrder
-    categoria_id?: SortOrder
+    categoria?: SortOrder
     precio_venta_nueva?: SortOrder
     precio_recarga?: SortOrder
     stock_minimo?: SortOrder
@@ -55080,7 +53820,7 @@ export namespace Prisma {
   export type ProductoMaxOrderByAggregateInput = {
     id?: SortOrder
     nombre?: SortOrder
-    categoria_id?: SortOrder
+    categoria?: SortOrder
     precio_venta_nueva?: SortOrder
     precio_recarga?: SortOrder
     stock_minimo?: SortOrder
@@ -55090,7 +53830,7 @@ export namespace Prisma {
   export type ProductoMinOrderByAggregateInput = {
     id?: SortOrder
     nombre?: SortOrder
-    categoria_id?: SortOrder
+    categoria?: SortOrder
     precio_venta_nueva?: SortOrder
     precio_recarga?: SortOrder
     stock_minimo?: SortOrder
@@ -55101,6 +53841,16 @@ export namespace Prisma {
     precio_venta_nueva?: SortOrder
     precio_recarga?: SortOrder
     stock_minimo?: SortOrder
+  }
+
+  export type EnumCategoriaProductoWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.CategoriaProducto | EnumCategoriaProductoFieldRefInput<$PrismaModel>
+    in?: $Enums.CategoriaProducto[] | ListEnumCategoriaProductoFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CategoriaProducto[] | ListEnumCategoriaProductoFieldRefInput<$PrismaModel>
+    not?: NestedEnumCategoriaProductoWithAggregatesFilter<$PrismaModel> | $Enums.CategoriaProducto
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumCategoriaProductoFilter<$PrismaModel>
+    _max?: NestedEnumCategoriaProductoFilter<$PrismaModel>
   }
 
   export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -57607,54 +56357,6 @@ export namespace Prisma {
     update?: XOR<XOR<VehiculoUpdateToOneWithWhereWithoutAlertasInput, VehiculoUpdateWithoutAlertasInput>, VehiculoUncheckedUpdateWithoutAlertasInput>
   }
 
-  export type ProductoCreateNestedManyWithoutCategoriaInput = {
-    create?: XOR<ProductoCreateWithoutCategoriaInput, ProductoUncheckedCreateWithoutCategoriaInput> | ProductoCreateWithoutCategoriaInput[] | ProductoUncheckedCreateWithoutCategoriaInput[]
-    connectOrCreate?: ProductoCreateOrConnectWithoutCategoriaInput | ProductoCreateOrConnectWithoutCategoriaInput[]
-    createMany?: ProductoCreateManyCategoriaInputEnvelope
-    connect?: ProductoWhereUniqueInput | ProductoWhereUniqueInput[]
-  }
-
-  export type ProductoUncheckedCreateNestedManyWithoutCategoriaInput = {
-    create?: XOR<ProductoCreateWithoutCategoriaInput, ProductoUncheckedCreateWithoutCategoriaInput> | ProductoCreateWithoutCategoriaInput[] | ProductoUncheckedCreateWithoutCategoriaInput[]
-    connectOrCreate?: ProductoCreateOrConnectWithoutCategoriaInput | ProductoCreateOrConnectWithoutCategoriaInput[]
-    createMany?: ProductoCreateManyCategoriaInputEnvelope
-    connect?: ProductoWhereUniqueInput | ProductoWhereUniqueInput[]
-  }
-
-  export type ProductoUpdateManyWithoutCategoriaNestedInput = {
-    create?: XOR<ProductoCreateWithoutCategoriaInput, ProductoUncheckedCreateWithoutCategoriaInput> | ProductoCreateWithoutCategoriaInput[] | ProductoUncheckedCreateWithoutCategoriaInput[]
-    connectOrCreate?: ProductoCreateOrConnectWithoutCategoriaInput | ProductoCreateOrConnectWithoutCategoriaInput[]
-    upsert?: ProductoUpsertWithWhereUniqueWithoutCategoriaInput | ProductoUpsertWithWhereUniqueWithoutCategoriaInput[]
-    createMany?: ProductoCreateManyCategoriaInputEnvelope
-    set?: ProductoWhereUniqueInput | ProductoWhereUniqueInput[]
-    disconnect?: ProductoWhereUniqueInput | ProductoWhereUniqueInput[]
-    delete?: ProductoWhereUniqueInput | ProductoWhereUniqueInput[]
-    connect?: ProductoWhereUniqueInput | ProductoWhereUniqueInput[]
-    update?: ProductoUpdateWithWhereUniqueWithoutCategoriaInput | ProductoUpdateWithWhereUniqueWithoutCategoriaInput[]
-    updateMany?: ProductoUpdateManyWithWhereWithoutCategoriaInput | ProductoUpdateManyWithWhereWithoutCategoriaInput[]
-    deleteMany?: ProductoScalarWhereInput | ProductoScalarWhereInput[]
-  }
-
-  export type ProductoUncheckedUpdateManyWithoutCategoriaNestedInput = {
-    create?: XOR<ProductoCreateWithoutCategoriaInput, ProductoUncheckedCreateWithoutCategoriaInput> | ProductoCreateWithoutCategoriaInput[] | ProductoUncheckedCreateWithoutCategoriaInput[]
-    connectOrCreate?: ProductoCreateOrConnectWithoutCategoriaInput | ProductoCreateOrConnectWithoutCategoriaInput[]
-    upsert?: ProductoUpsertWithWhereUniqueWithoutCategoriaInput | ProductoUpsertWithWhereUniqueWithoutCategoriaInput[]
-    createMany?: ProductoCreateManyCategoriaInputEnvelope
-    set?: ProductoWhereUniqueInput | ProductoWhereUniqueInput[]
-    disconnect?: ProductoWhereUniqueInput | ProductoWhereUniqueInput[]
-    delete?: ProductoWhereUniqueInput | ProductoWhereUniqueInput[]
-    connect?: ProductoWhereUniqueInput | ProductoWhereUniqueInput[]
-    update?: ProductoUpdateWithWhereUniqueWithoutCategoriaInput | ProductoUpdateWithWhereUniqueWithoutCategoriaInput[]
-    updateMany?: ProductoUpdateManyWithWhereWithoutCategoriaInput | ProductoUpdateManyWithWhereWithoutCategoriaInput[]
-    deleteMany?: ProductoScalarWhereInput | ProductoScalarWhereInput[]
-  }
-
-  export type CategoriaCreateNestedOneWithoutProductosInput = {
-    create?: XOR<CategoriaCreateWithoutProductosInput, CategoriaUncheckedCreateWithoutProductosInput>
-    connectOrCreate?: CategoriaCreateOrConnectWithoutProductosInput
-    connect?: CategoriaWhereUniqueInput
-  }
-
   export type ComisionCreateNestedManyWithoutProductoInput = {
     create?: XOR<ComisionCreateWithoutProductoInput, ComisionUncheckedCreateWithoutProductoInput> | ComisionCreateWithoutProductoInput[] | ComisionUncheckedCreateWithoutProductoInput[]
     connectOrCreate?: ComisionCreateOrConnectWithoutProductoInput | ComisionCreateOrConnectWithoutProductoInput[]
@@ -57690,6 +56392,13 @@ export namespace Prisma {
     connect?: ItemGuiaWhereUniqueInput | ItemGuiaWhereUniqueInput[]
   }
 
+  export type PedidoItemCreateNestedManyWithoutProductoInput = {
+    create?: XOR<PedidoItemCreateWithoutProductoInput, PedidoItemUncheckedCreateWithoutProductoInput> | PedidoItemCreateWithoutProductoInput[] | PedidoItemUncheckedCreateWithoutProductoInput[]
+    connectOrCreate?: PedidoItemCreateOrConnectWithoutProductoInput | PedidoItemCreateOrConnectWithoutProductoInput[]
+    createMany?: PedidoItemCreateManyProductoInputEnvelope
+    connect?: PedidoItemWhereUniqueInput | PedidoItemWhereUniqueInput[]
+  }
+
   export type StockCamionCreateNestedManyWithoutProductoInput = {
     create?: XOR<StockCamionCreateWithoutProductoInput, StockCamionUncheckedCreateWithoutProductoInput> | StockCamionCreateWithoutProductoInput[] | StockCamionUncheckedCreateWithoutProductoInput[]
     connectOrCreate?: StockCamionCreateOrConnectWithoutProductoInput | StockCamionCreateOrConnectWithoutProductoInput[]
@@ -57701,13 +56410,6 @@ export namespace Prisma {
     create?: XOR<StockFabricaCreateWithoutProductoInput, StockFabricaUncheckedCreateWithoutProductoInput>
     connectOrCreate?: StockFabricaCreateOrConnectWithoutProductoInput
     connect?: StockFabricaWhereUniqueInput
-  }
-
-  export type PedidoItemCreateNestedManyWithoutProductoInput = {
-    create?: XOR<PedidoItemCreateWithoutProductoInput, PedidoItemUncheckedCreateWithoutProductoInput> | PedidoItemCreateWithoutProductoInput[] | PedidoItemUncheckedCreateWithoutProductoInput[]
-    connectOrCreate?: PedidoItemCreateOrConnectWithoutProductoInput | PedidoItemCreateOrConnectWithoutProductoInput[]
-    createMany?: PedidoItemCreateManyProductoInputEnvelope
-    connect?: PedidoItemWhereUniqueInput | PedidoItemWhereUniqueInput[]
   }
 
   export type ComisionUncheckedCreateNestedManyWithoutProductoInput = {
@@ -57745,6 +56447,13 @@ export namespace Prisma {
     connect?: ItemGuiaWhereUniqueInput | ItemGuiaWhereUniqueInput[]
   }
 
+  export type PedidoItemUncheckedCreateNestedManyWithoutProductoInput = {
+    create?: XOR<PedidoItemCreateWithoutProductoInput, PedidoItemUncheckedCreateWithoutProductoInput> | PedidoItemCreateWithoutProductoInput[] | PedidoItemUncheckedCreateWithoutProductoInput[]
+    connectOrCreate?: PedidoItemCreateOrConnectWithoutProductoInput | PedidoItemCreateOrConnectWithoutProductoInput[]
+    createMany?: PedidoItemCreateManyProductoInputEnvelope
+    connect?: PedidoItemWhereUniqueInput | PedidoItemWhereUniqueInput[]
+  }
+
   export type StockCamionUncheckedCreateNestedManyWithoutProductoInput = {
     create?: XOR<StockCamionCreateWithoutProductoInput, StockCamionUncheckedCreateWithoutProductoInput> | StockCamionCreateWithoutProductoInput[] | StockCamionUncheckedCreateWithoutProductoInput[]
     connectOrCreate?: StockCamionCreateOrConnectWithoutProductoInput | StockCamionCreateOrConnectWithoutProductoInput[]
@@ -57758,11 +56467,8 @@ export namespace Prisma {
     connect?: StockFabricaWhereUniqueInput
   }
 
-  export type PedidoItemUncheckedCreateNestedManyWithoutProductoInput = {
-    create?: XOR<PedidoItemCreateWithoutProductoInput, PedidoItemUncheckedCreateWithoutProductoInput> | PedidoItemCreateWithoutProductoInput[] | PedidoItemUncheckedCreateWithoutProductoInput[]
-    connectOrCreate?: PedidoItemCreateOrConnectWithoutProductoInput | PedidoItemCreateOrConnectWithoutProductoInput[]
-    createMany?: PedidoItemCreateManyProductoInputEnvelope
-    connect?: PedidoItemWhereUniqueInput | PedidoItemWhereUniqueInput[]
+  export type EnumCategoriaProductoFieldUpdateOperationsInput = {
+    set?: $Enums.CategoriaProducto
   }
 
   export type NullableFloatFieldUpdateOperationsInput = {
@@ -57771,14 +56477,6 @@ export namespace Prisma {
     decrement?: number
     multiply?: number
     divide?: number
-  }
-
-  export type CategoriaUpdateOneRequiredWithoutProductosNestedInput = {
-    create?: XOR<CategoriaCreateWithoutProductosInput, CategoriaUncheckedCreateWithoutProductosInput>
-    connectOrCreate?: CategoriaCreateOrConnectWithoutProductosInput
-    upsert?: CategoriaUpsertWithoutProductosInput
-    connect?: CategoriaWhereUniqueInput
-    update?: XOR<XOR<CategoriaUpdateToOneWithWhereWithoutProductosInput, CategoriaUpdateWithoutProductosInput>, CategoriaUncheckedUpdateWithoutProductosInput>
   }
 
   export type ComisionUpdateManyWithoutProductoNestedInput = {
@@ -57851,6 +56549,20 @@ export namespace Prisma {
     deleteMany?: ItemGuiaScalarWhereInput | ItemGuiaScalarWhereInput[]
   }
 
+  export type PedidoItemUpdateManyWithoutProductoNestedInput = {
+    create?: XOR<PedidoItemCreateWithoutProductoInput, PedidoItemUncheckedCreateWithoutProductoInput> | PedidoItemCreateWithoutProductoInput[] | PedidoItemUncheckedCreateWithoutProductoInput[]
+    connectOrCreate?: PedidoItemCreateOrConnectWithoutProductoInput | PedidoItemCreateOrConnectWithoutProductoInput[]
+    upsert?: PedidoItemUpsertWithWhereUniqueWithoutProductoInput | PedidoItemUpsertWithWhereUniqueWithoutProductoInput[]
+    createMany?: PedidoItemCreateManyProductoInputEnvelope
+    set?: PedidoItemWhereUniqueInput | PedidoItemWhereUniqueInput[]
+    disconnect?: PedidoItemWhereUniqueInput | PedidoItemWhereUniqueInput[]
+    delete?: PedidoItemWhereUniqueInput | PedidoItemWhereUniqueInput[]
+    connect?: PedidoItemWhereUniqueInput | PedidoItemWhereUniqueInput[]
+    update?: PedidoItemUpdateWithWhereUniqueWithoutProductoInput | PedidoItemUpdateWithWhereUniqueWithoutProductoInput[]
+    updateMany?: PedidoItemUpdateManyWithWhereWithoutProductoInput | PedidoItemUpdateManyWithWhereWithoutProductoInput[]
+    deleteMany?: PedidoItemScalarWhereInput | PedidoItemScalarWhereInput[]
+  }
+
   export type StockCamionUpdateManyWithoutProductoNestedInput = {
     create?: XOR<StockCamionCreateWithoutProductoInput, StockCamionUncheckedCreateWithoutProductoInput> | StockCamionCreateWithoutProductoInput[] | StockCamionUncheckedCreateWithoutProductoInput[]
     connectOrCreate?: StockCamionCreateOrConnectWithoutProductoInput | StockCamionCreateOrConnectWithoutProductoInput[]
@@ -57873,20 +56585,6 @@ export namespace Prisma {
     delete?: StockFabricaWhereInput | boolean
     connect?: StockFabricaWhereUniqueInput
     update?: XOR<XOR<StockFabricaUpdateToOneWithWhereWithoutProductoInput, StockFabricaUpdateWithoutProductoInput>, StockFabricaUncheckedUpdateWithoutProductoInput>
-  }
-
-  export type PedidoItemUpdateManyWithoutProductoNestedInput = {
-    create?: XOR<PedidoItemCreateWithoutProductoInput, PedidoItemUncheckedCreateWithoutProductoInput> | PedidoItemCreateWithoutProductoInput[] | PedidoItemUncheckedCreateWithoutProductoInput[]
-    connectOrCreate?: PedidoItemCreateOrConnectWithoutProductoInput | PedidoItemCreateOrConnectWithoutProductoInput[]
-    upsert?: PedidoItemUpsertWithWhereUniqueWithoutProductoInput | PedidoItemUpsertWithWhereUniqueWithoutProductoInput[]
-    createMany?: PedidoItemCreateManyProductoInputEnvelope
-    set?: PedidoItemWhereUniqueInput | PedidoItemWhereUniqueInput[]
-    disconnect?: PedidoItemWhereUniqueInput | PedidoItemWhereUniqueInput[]
-    delete?: PedidoItemWhereUniqueInput | PedidoItemWhereUniqueInput[]
-    connect?: PedidoItemWhereUniqueInput | PedidoItemWhereUniqueInput[]
-    update?: PedidoItemUpdateWithWhereUniqueWithoutProductoInput | PedidoItemUpdateWithWhereUniqueWithoutProductoInput[]
-    updateMany?: PedidoItemUpdateManyWithWhereWithoutProductoInput | PedidoItemUpdateManyWithWhereWithoutProductoInput[]
-    deleteMany?: PedidoItemScalarWhereInput | PedidoItemScalarWhereInput[]
   }
 
   export type ComisionUncheckedUpdateManyWithoutProductoNestedInput = {
@@ -57959,6 +56657,20 @@ export namespace Prisma {
     deleteMany?: ItemGuiaScalarWhereInput | ItemGuiaScalarWhereInput[]
   }
 
+  export type PedidoItemUncheckedUpdateManyWithoutProductoNestedInput = {
+    create?: XOR<PedidoItemCreateWithoutProductoInput, PedidoItemUncheckedCreateWithoutProductoInput> | PedidoItemCreateWithoutProductoInput[] | PedidoItemUncheckedCreateWithoutProductoInput[]
+    connectOrCreate?: PedidoItemCreateOrConnectWithoutProductoInput | PedidoItemCreateOrConnectWithoutProductoInput[]
+    upsert?: PedidoItemUpsertWithWhereUniqueWithoutProductoInput | PedidoItemUpsertWithWhereUniqueWithoutProductoInput[]
+    createMany?: PedidoItemCreateManyProductoInputEnvelope
+    set?: PedidoItemWhereUniqueInput | PedidoItemWhereUniqueInput[]
+    disconnect?: PedidoItemWhereUniqueInput | PedidoItemWhereUniqueInput[]
+    delete?: PedidoItemWhereUniqueInput | PedidoItemWhereUniqueInput[]
+    connect?: PedidoItemWhereUniqueInput | PedidoItemWhereUniqueInput[]
+    update?: PedidoItemUpdateWithWhereUniqueWithoutProductoInput | PedidoItemUpdateWithWhereUniqueWithoutProductoInput[]
+    updateMany?: PedidoItemUpdateManyWithWhereWithoutProductoInput | PedidoItemUpdateManyWithWhereWithoutProductoInput[]
+    deleteMany?: PedidoItemScalarWhereInput | PedidoItemScalarWhereInput[]
+  }
+
   export type StockCamionUncheckedUpdateManyWithoutProductoNestedInput = {
     create?: XOR<StockCamionCreateWithoutProductoInput, StockCamionUncheckedCreateWithoutProductoInput> | StockCamionCreateWithoutProductoInput[] | StockCamionUncheckedCreateWithoutProductoInput[]
     connectOrCreate?: StockCamionCreateOrConnectWithoutProductoInput | StockCamionCreateOrConnectWithoutProductoInput[]
@@ -57981,20 +56693,6 @@ export namespace Prisma {
     delete?: StockFabricaWhereInput | boolean
     connect?: StockFabricaWhereUniqueInput
     update?: XOR<XOR<StockFabricaUpdateToOneWithWhereWithoutProductoInput, StockFabricaUpdateWithoutProductoInput>, StockFabricaUncheckedUpdateWithoutProductoInput>
-  }
-
-  export type PedidoItemUncheckedUpdateManyWithoutProductoNestedInput = {
-    create?: XOR<PedidoItemCreateWithoutProductoInput, PedidoItemUncheckedCreateWithoutProductoInput> | PedidoItemCreateWithoutProductoInput[] | PedidoItemUncheckedCreateWithoutProductoInput[]
-    connectOrCreate?: PedidoItemCreateOrConnectWithoutProductoInput | PedidoItemCreateOrConnectWithoutProductoInput[]
-    upsert?: PedidoItemUpsertWithWhereUniqueWithoutProductoInput | PedidoItemUpsertWithWhereUniqueWithoutProductoInput[]
-    createMany?: PedidoItemCreateManyProductoInputEnvelope
-    set?: PedidoItemWhereUniqueInput | PedidoItemWhereUniqueInput[]
-    disconnect?: PedidoItemWhereUniqueInput | PedidoItemWhereUniqueInput[]
-    delete?: PedidoItemWhereUniqueInput | PedidoItemWhereUniqueInput[]
-    connect?: PedidoItemWhereUniqueInput | PedidoItemWhereUniqueInput[]
-    update?: PedidoItemUpdateWithWhereUniqueWithoutProductoInput | PedidoItemUpdateWithWhereUniqueWithoutProductoInput[]
-    updateMany?: PedidoItemUpdateManyWithWhereWithoutProductoInput | PedidoItemUpdateManyWithWhereWithoutProductoInput[]
-    deleteMany?: PedidoItemScalarWhereInput | PedidoItemScalarWhereInput[]
   }
 
   export type ProductoCreateNestedOneWithoutComisionesInput = {
@@ -59857,6 +58555,23 @@ export namespace Prisma {
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
+  export type NestedEnumCategoriaProductoFilter<$PrismaModel = never> = {
+    equals?: $Enums.CategoriaProducto | EnumCategoriaProductoFieldRefInput<$PrismaModel>
+    in?: $Enums.CategoriaProducto[] | ListEnumCategoriaProductoFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CategoriaProducto[] | ListEnumCategoriaProductoFieldRefInput<$PrismaModel>
+    not?: NestedEnumCategoriaProductoFilter<$PrismaModel> | $Enums.CategoriaProducto
+  }
+
+  export type NestedEnumCategoriaProductoWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.CategoriaProducto | EnumCategoriaProductoFieldRefInput<$PrismaModel>
+    in?: $Enums.CategoriaProducto[] | ListEnumCategoriaProductoFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CategoriaProducto[] | ListEnumCategoriaProductoFieldRefInput<$PrismaModel>
+    not?: NestedEnumCategoriaProductoWithAggregatesFilter<$PrismaModel> | $Enums.CategoriaProducto
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumCategoriaProductoFilter<$PrismaModel>
+    _max?: NestedEnumCategoriaProductoFilter<$PrismaModel>
+  }
+
   export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | FloatFieldRefInput<$PrismaModel> | null
     in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
@@ -61678,94 +60393,6 @@ export namespace Prisma {
     usuarios?: UsuarioUncheckedUpdateManyWithoutVehiculoNestedInput
   }
 
-  export type ProductoCreateWithoutCategoriaInput = {
-    id?: string
-    nombre: string
-    precio_venta_nueva: number
-    precio_recarga?: number | null
-    stock_minimo?: number
-    activo?: boolean
-    comisiones?: ComisionCreateNestedManyWithoutProductoInput
-    cuadratura_retorno?: CuadraturaRetornoCreateNestedManyWithoutProductoInput
-    cuadratura_salida?: CuadraturaSalidaCreateNestedManyWithoutProductoInput
-    cuadratura_ventas?: CuadraturaVentaCreateNestedManyWithoutProductoInput
-    items_guia?: ItemGuiaCreateNestedManyWithoutProductoInput
-    stock_camion?: StockCamionCreateNestedManyWithoutProductoInput
-    stock_fabrica?: StockFabricaCreateNestedOneWithoutProductoInput
-    pedidoItems?: PedidoItemCreateNestedManyWithoutProductoInput
-  }
-
-  export type ProductoUncheckedCreateWithoutCategoriaInput = {
-    id?: string
-    nombre: string
-    precio_venta_nueva: number
-    precio_recarga?: number | null
-    stock_minimo?: number
-    activo?: boolean
-    comisiones?: ComisionUncheckedCreateNestedManyWithoutProductoInput
-    cuadratura_retorno?: CuadraturaRetornoUncheckedCreateNestedManyWithoutProductoInput
-    cuadratura_salida?: CuadraturaSalidaUncheckedCreateNestedManyWithoutProductoInput
-    cuadratura_ventas?: CuadraturaVentaUncheckedCreateNestedManyWithoutProductoInput
-    items_guia?: ItemGuiaUncheckedCreateNestedManyWithoutProductoInput
-    stock_camion?: StockCamionUncheckedCreateNestedManyWithoutProductoInput
-    stock_fabrica?: StockFabricaUncheckedCreateNestedOneWithoutProductoInput
-    pedidoItems?: PedidoItemUncheckedCreateNestedManyWithoutProductoInput
-  }
-
-  export type ProductoCreateOrConnectWithoutCategoriaInput = {
-    where: ProductoWhereUniqueInput
-    create: XOR<ProductoCreateWithoutCategoriaInput, ProductoUncheckedCreateWithoutCategoriaInput>
-  }
-
-  export type ProductoCreateManyCategoriaInputEnvelope = {
-    data: ProductoCreateManyCategoriaInput | ProductoCreateManyCategoriaInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type ProductoUpsertWithWhereUniqueWithoutCategoriaInput = {
-    where: ProductoWhereUniqueInput
-    update: XOR<ProductoUpdateWithoutCategoriaInput, ProductoUncheckedUpdateWithoutCategoriaInput>
-    create: XOR<ProductoCreateWithoutCategoriaInput, ProductoUncheckedCreateWithoutCategoriaInput>
-  }
-
-  export type ProductoUpdateWithWhereUniqueWithoutCategoriaInput = {
-    where: ProductoWhereUniqueInput
-    data: XOR<ProductoUpdateWithoutCategoriaInput, ProductoUncheckedUpdateWithoutCategoriaInput>
-  }
-
-  export type ProductoUpdateManyWithWhereWithoutCategoriaInput = {
-    where: ProductoScalarWhereInput
-    data: XOR<ProductoUpdateManyMutationInput, ProductoUncheckedUpdateManyWithoutCategoriaInput>
-  }
-
-  export type ProductoScalarWhereInput = {
-    AND?: ProductoScalarWhereInput | ProductoScalarWhereInput[]
-    OR?: ProductoScalarWhereInput[]
-    NOT?: ProductoScalarWhereInput | ProductoScalarWhereInput[]
-    id?: StringFilter<"Producto"> | string
-    nombre?: StringFilter<"Producto"> | string
-    categoria_id?: StringFilter<"Producto"> | string
-    precio_venta_nueva?: FloatFilter<"Producto"> | number
-    precio_recarga?: FloatNullableFilter<"Producto"> | number | null
-    stock_minimo?: IntFilter<"Producto"> | number
-    activo?: BoolFilter<"Producto"> | boolean
-  }
-
-  export type CategoriaCreateWithoutProductosInput = {
-    id?: string
-    nombre: string
-  }
-
-  export type CategoriaUncheckedCreateWithoutProductosInput = {
-    id?: string
-    nombre: string
-  }
-
-  export type CategoriaCreateOrConnectWithoutProductosInput = {
-    where: CategoriaWhereUniqueInput
-    create: XOR<CategoriaCreateWithoutProductosInput, CategoriaUncheckedCreateWithoutProductosInput>
-  }
-
   export type ComisionCreateWithoutProductoInput = {
     id?: string
     tipo_transaccion: $Enums.TipoTransaccion
@@ -61894,6 +60521,32 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type PedidoItemCreateWithoutProductoInput = {
+    id?: string
+    tipo_transaccion: $Enums.TipoTransaccion
+    cantidad: number
+    precio_historico?: number
+    pedido: PedidoCreateNestedOneWithoutItemsInput
+  }
+
+  export type PedidoItemUncheckedCreateWithoutProductoInput = {
+    id?: string
+    pedido_id: string
+    tipo_transaccion: $Enums.TipoTransaccion
+    cantidad: number
+    precio_historico?: number
+  }
+
+  export type PedidoItemCreateOrConnectWithoutProductoInput = {
+    where: PedidoItemWhereUniqueInput
+    create: XOR<PedidoItemCreateWithoutProductoInput, PedidoItemUncheckedCreateWithoutProductoInput>
+  }
+
+  export type PedidoItemCreateManyProductoInputEnvelope = {
+    data: PedidoItemCreateManyProductoInput | PedidoItemCreateManyProductoInput[]
+    skipDuplicates?: boolean
+  }
+
   export type StockCamionCreateWithoutProductoInput = {
     id?: string
     cantidad?: number
@@ -61933,53 +60586,6 @@ export namespace Prisma {
   export type StockFabricaCreateOrConnectWithoutProductoInput = {
     where: StockFabricaWhereUniqueInput
     create: XOR<StockFabricaCreateWithoutProductoInput, StockFabricaUncheckedCreateWithoutProductoInput>
-  }
-
-  export type PedidoItemCreateWithoutProductoInput = {
-    id?: string
-    tipo_transaccion: $Enums.TipoTransaccion
-    cantidad: number
-    precio_historico?: number
-    pedido: PedidoCreateNestedOneWithoutItemsInput
-  }
-
-  export type PedidoItemUncheckedCreateWithoutProductoInput = {
-    id?: string
-    pedido_id: string
-    tipo_transaccion: $Enums.TipoTransaccion
-    cantidad: number
-    precio_historico?: number
-  }
-
-  export type PedidoItemCreateOrConnectWithoutProductoInput = {
-    where: PedidoItemWhereUniqueInput
-    create: XOR<PedidoItemCreateWithoutProductoInput, PedidoItemUncheckedCreateWithoutProductoInput>
-  }
-
-  export type PedidoItemCreateManyProductoInputEnvelope = {
-    data: PedidoItemCreateManyProductoInput | PedidoItemCreateManyProductoInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type CategoriaUpsertWithoutProductosInput = {
-    update: XOR<CategoriaUpdateWithoutProductosInput, CategoriaUncheckedUpdateWithoutProductosInput>
-    create: XOR<CategoriaCreateWithoutProductosInput, CategoriaUncheckedCreateWithoutProductosInput>
-    where?: CategoriaWhereInput
-  }
-
-  export type CategoriaUpdateToOneWithWhereWithoutProductosInput = {
-    where?: CategoriaWhereInput
-    data: XOR<CategoriaUpdateWithoutProductosInput, CategoriaUncheckedUpdateWithoutProductosInput>
-  }
-
-  export type CategoriaUpdateWithoutProductosInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    nombre?: StringFieldUpdateOperationsInput | string
-  }
-
-  export type CategoriaUncheckedUpdateWithoutProductosInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    nombre?: StringFieldUpdateOperationsInput | string
   }
 
   export type ComisionUpsertWithWhereUniqueWithoutProductoInput = {
@@ -62121,6 +60727,34 @@ export namespace Prisma {
     subtotal?: FloatFilter<"ItemGuia"> | number
   }
 
+  export type PedidoItemUpsertWithWhereUniqueWithoutProductoInput = {
+    where: PedidoItemWhereUniqueInput
+    update: XOR<PedidoItemUpdateWithoutProductoInput, PedidoItemUncheckedUpdateWithoutProductoInput>
+    create: XOR<PedidoItemCreateWithoutProductoInput, PedidoItemUncheckedCreateWithoutProductoInput>
+  }
+
+  export type PedidoItemUpdateWithWhereUniqueWithoutProductoInput = {
+    where: PedidoItemWhereUniqueInput
+    data: XOR<PedidoItemUpdateWithoutProductoInput, PedidoItemUncheckedUpdateWithoutProductoInput>
+  }
+
+  export type PedidoItemUpdateManyWithWhereWithoutProductoInput = {
+    where: PedidoItemScalarWhereInput
+    data: XOR<PedidoItemUpdateManyMutationInput, PedidoItemUncheckedUpdateManyWithoutProductoInput>
+  }
+
+  export type PedidoItemScalarWhereInput = {
+    AND?: PedidoItemScalarWhereInput | PedidoItemScalarWhereInput[]
+    OR?: PedidoItemScalarWhereInput[]
+    NOT?: PedidoItemScalarWhereInput | PedidoItemScalarWhereInput[]
+    id?: StringFilter<"PedidoItem"> | string
+    pedido_id?: StringFilter<"PedidoItem"> | string
+    producto_id?: StringFilter<"PedidoItem"> | string
+    tipo_transaccion?: EnumTipoTransaccionFilter<"PedidoItem"> | $Enums.TipoTransaccion
+    cantidad?: IntFilter<"PedidoItem"> | number
+    precio_historico?: FloatFilter<"PedidoItem"> | number
+  }
+
   export type StockCamionUpsertWithWhereUniqueWithoutProductoInput = {
     where: StockCamionWhereUniqueInput
     update: XOR<StockCamionUpdateWithoutProductoInput, StockCamionUncheckedUpdateWithoutProductoInput>
@@ -62160,55 +60794,27 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type PedidoItemUpsertWithWhereUniqueWithoutProductoInput = {
-    where: PedidoItemWhereUniqueInput
-    update: XOR<PedidoItemUpdateWithoutProductoInput, PedidoItemUncheckedUpdateWithoutProductoInput>
-    create: XOR<PedidoItemCreateWithoutProductoInput, PedidoItemUncheckedCreateWithoutProductoInput>
-  }
-
-  export type PedidoItemUpdateWithWhereUniqueWithoutProductoInput = {
-    where: PedidoItemWhereUniqueInput
-    data: XOR<PedidoItemUpdateWithoutProductoInput, PedidoItemUncheckedUpdateWithoutProductoInput>
-  }
-
-  export type PedidoItemUpdateManyWithWhereWithoutProductoInput = {
-    where: PedidoItemScalarWhereInput
-    data: XOR<PedidoItemUpdateManyMutationInput, PedidoItemUncheckedUpdateManyWithoutProductoInput>
-  }
-
-  export type PedidoItemScalarWhereInput = {
-    AND?: PedidoItemScalarWhereInput | PedidoItemScalarWhereInput[]
-    OR?: PedidoItemScalarWhereInput[]
-    NOT?: PedidoItemScalarWhereInput | PedidoItemScalarWhereInput[]
-    id?: StringFilter<"PedidoItem"> | string
-    pedido_id?: StringFilter<"PedidoItem"> | string
-    producto_id?: StringFilter<"PedidoItem"> | string
-    tipo_transaccion?: EnumTipoTransaccionFilter<"PedidoItem"> | $Enums.TipoTransaccion
-    cantidad?: IntFilter<"PedidoItem"> | number
-    precio_historico?: FloatFilter<"PedidoItem"> | number
-  }
-
   export type ProductoCreateWithoutComisionesInput = {
     id?: string
     nombre: string
+    categoria: $Enums.CategoriaProducto
     precio_venta_nueva: number
     precio_recarga?: number | null
     stock_minimo?: number
     activo?: boolean
-    categoria: CategoriaCreateNestedOneWithoutProductosInput
     cuadratura_retorno?: CuadraturaRetornoCreateNestedManyWithoutProductoInput
     cuadratura_salida?: CuadraturaSalidaCreateNestedManyWithoutProductoInput
     cuadratura_ventas?: CuadraturaVentaCreateNestedManyWithoutProductoInput
     items_guia?: ItemGuiaCreateNestedManyWithoutProductoInput
+    pedidoItems?: PedidoItemCreateNestedManyWithoutProductoInput
     stock_camion?: StockCamionCreateNestedManyWithoutProductoInput
     stock_fabrica?: StockFabricaCreateNestedOneWithoutProductoInput
-    pedidoItems?: PedidoItemCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoUncheckedCreateWithoutComisionesInput = {
     id?: string
     nombre: string
-    categoria_id: string
+    categoria: $Enums.CategoriaProducto
     precio_venta_nueva: number
     precio_recarga?: number | null
     stock_minimo?: number
@@ -62217,9 +60823,9 @@ export namespace Prisma {
     cuadratura_salida?: CuadraturaSalidaUncheckedCreateNestedManyWithoutProductoInput
     cuadratura_ventas?: CuadraturaVentaUncheckedCreateNestedManyWithoutProductoInput
     items_guia?: ItemGuiaUncheckedCreateNestedManyWithoutProductoInput
+    pedidoItems?: PedidoItemUncheckedCreateNestedManyWithoutProductoInput
     stock_camion?: StockCamionUncheckedCreateNestedManyWithoutProductoInput
     stock_fabrica?: StockFabricaUncheckedCreateNestedOneWithoutProductoInput
-    pedidoItems?: PedidoItemUncheckedCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoCreateOrConnectWithoutComisionesInput = {
@@ -62241,24 +60847,24 @@ export namespace Prisma {
   export type ProductoUpdateWithoutComisionesInput = {
     id?: StringFieldUpdateOperationsInput | string
     nombre?: StringFieldUpdateOperationsInput | string
+    categoria?: EnumCategoriaProductoFieldUpdateOperationsInput | $Enums.CategoriaProducto
     precio_venta_nueva?: FloatFieldUpdateOperationsInput | number
     precio_recarga?: NullableFloatFieldUpdateOperationsInput | number | null
     stock_minimo?: IntFieldUpdateOperationsInput | number
     activo?: BoolFieldUpdateOperationsInput | boolean
-    categoria?: CategoriaUpdateOneRequiredWithoutProductosNestedInput
     cuadratura_retorno?: CuadraturaRetornoUpdateManyWithoutProductoNestedInput
     cuadratura_salida?: CuadraturaSalidaUpdateManyWithoutProductoNestedInput
     cuadratura_ventas?: CuadraturaVentaUpdateManyWithoutProductoNestedInput
     items_guia?: ItemGuiaUpdateManyWithoutProductoNestedInput
+    pedidoItems?: PedidoItemUpdateManyWithoutProductoNestedInput
     stock_camion?: StockCamionUpdateManyWithoutProductoNestedInput
     stock_fabrica?: StockFabricaUpdateOneWithoutProductoNestedInput
-    pedidoItems?: PedidoItemUpdateManyWithoutProductoNestedInput
   }
 
   export type ProductoUncheckedUpdateWithoutComisionesInput = {
     id?: StringFieldUpdateOperationsInput | string
     nombre?: StringFieldUpdateOperationsInput | string
-    categoria_id?: StringFieldUpdateOperationsInput | string
+    categoria?: EnumCategoriaProductoFieldUpdateOperationsInput | $Enums.CategoriaProducto
     precio_venta_nueva?: FloatFieldUpdateOperationsInput | number
     precio_recarga?: NullableFloatFieldUpdateOperationsInput | number | null
     stock_minimo?: IntFieldUpdateOperationsInput | number
@@ -62267,9 +60873,9 @@ export namespace Prisma {
     cuadratura_salida?: CuadraturaSalidaUncheckedUpdateManyWithoutProductoNestedInput
     cuadratura_ventas?: CuadraturaVentaUncheckedUpdateManyWithoutProductoNestedInput
     items_guia?: ItemGuiaUncheckedUpdateManyWithoutProductoNestedInput
+    pedidoItems?: PedidoItemUncheckedUpdateManyWithoutProductoNestedInput
     stock_camion?: StockCamionUncheckedUpdateManyWithoutProductoNestedInput
     stock_fabrica?: StockFabricaUncheckedUpdateOneWithoutProductoNestedInput
-    pedidoItems?: PedidoItemUncheckedUpdateManyWithoutProductoNestedInput
   }
 
   export type BotellonDanadoCreateWithoutClienteInput = {
@@ -64017,11 +62623,11 @@ export namespace Prisma {
   export type ProductoCreateWithoutPedidoItemsInput = {
     id?: string
     nombre: string
+    categoria: $Enums.CategoriaProducto
     precio_venta_nueva: number
     precio_recarga?: number | null
     stock_minimo?: number
     activo?: boolean
-    categoria: CategoriaCreateNestedOneWithoutProductosInput
     comisiones?: ComisionCreateNestedManyWithoutProductoInput
     cuadratura_retorno?: CuadraturaRetornoCreateNestedManyWithoutProductoInput
     cuadratura_salida?: CuadraturaSalidaCreateNestedManyWithoutProductoInput
@@ -64034,7 +62640,7 @@ export namespace Prisma {
   export type ProductoUncheckedCreateWithoutPedidoItemsInput = {
     id?: string
     nombre: string
-    categoria_id: string
+    categoria: $Enums.CategoriaProducto
     precio_venta_nueva: number
     precio_recarga?: number | null
     stock_minimo?: number
@@ -64104,11 +62710,11 @@ export namespace Prisma {
   export type ProductoUpdateWithoutPedidoItemsInput = {
     id?: StringFieldUpdateOperationsInput | string
     nombre?: StringFieldUpdateOperationsInput | string
+    categoria?: EnumCategoriaProductoFieldUpdateOperationsInput | $Enums.CategoriaProducto
     precio_venta_nueva?: FloatFieldUpdateOperationsInput | number
     precio_recarga?: NullableFloatFieldUpdateOperationsInput | number | null
     stock_minimo?: IntFieldUpdateOperationsInput | number
     activo?: BoolFieldUpdateOperationsInput | boolean
-    categoria?: CategoriaUpdateOneRequiredWithoutProductosNestedInput
     comisiones?: ComisionUpdateManyWithoutProductoNestedInput
     cuadratura_retorno?: CuadraturaRetornoUpdateManyWithoutProductoNestedInput
     cuadratura_salida?: CuadraturaSalidaUpdateManyWithoutProductoNestedInput
@@ -64121,7 +62727,7 @@ export namespace Prisma {
   export type ProductoUncheckedUpdateWithoutPedidoItemsInput = {
     id?: StringFieldUpdateOperationsInput | string
     nombre?: StringFieldUpdateOperationsInput | string
-    categoria_id?: StringFieldUpdateOperationsInput | string
+    categoria?: EnumCategoriaProductoFieldUpdateOperationsInput | $Enums.CategoriaProducto
     precio_venta_nueva?: FloatFieldUpdateOperationsInput | number
     precio_recarga?: NullableFloatFieldUpdateOperationsInput | number | null
     stock_minimo?: IntFieldUpdateOperationsInput | number
@@ -64509,24 +63115,24 @@ export namespace Prisma {
   export type ProductoCreateWithoutItems_guiaInput = {
     id?: string
     nombre: string
+    categoria: $Enums.CategoriaProducto
     precio_venta_nueva: number
     precio_recarga?: number | null
     stock_minimo?: number
     activo?: boolean
-    categoria: CategoriaCreateNestedOneWithoutProductosInput
     comisiones?: ComisionCreateNestedManyWithoutProductoInput
     cuadratura_retorno?: CuadraturaRetornoCreateNestedManyWithoutProductoInput
     cuadratura_salida?: CuadraturaSalidaCreateNestedManyWithoutProductoInput
     cuadratura_ventas?: CuadraturaVentaCreateNestedManyWithoutProductoInput
+    pedidoItems?: PedidoItemCreateNestedManyWithoutProductoInput
     stock_camion?: StockCamionCreateNestedManyWithoutProductoInput
     stock_fabrica?: StockFabricaCreateNestedOneWithoutProductoInput
-    pedidoItems?: PedidoItemCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoUncheckedCreateWithoutItems_guiaInput = {
     id?: string
     nombre: string
-    categoria_id: string
+    categoria: $Enums.CategoriaProducto
     precio_venta_nueva: number
     precio_recarga?: number | null
     stock_minimo?: number
@@ -64535,9 +63141,9 @@ export namespace Prisma {
     cuadratura_retorno?: CuadraturaRetornoUncheckedCreateNestedManyWithoutProductoInput
     cuadratura_salida?: CuadraturaSalidaUncheckedCreateNestedManyWithoutProductoInput
     cuadratura_ventas?: CuadraturaVentaUncheckedCreateNestedManyWithoutProductoInput
+    pedidoItems?: PedidoItemUncheckedCreateNestedManyWithoutProductoInput
     stock_camion?: StockCamionUncheckedCreateNestedManyWithoutProductoInput
     stock_fabrica?: StockFabricaUncheckedCreateNestedOneWithoutProductoInput
-    pedidoItems?: PedidoItemUncheckedCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoCreateOrConnectWithoutItems_guiaInput = {
@@ -64611,24 +63217,24 @@ export namespace Prisma {
   export type ProductoUpdateWithoutItems_guiaInput = {
     id?: StringFieldUpdateOperationsInput | string
     nombre?: StringFieldUpdateOperationsInput | string
+    categoria?: EnumCategoriaProductoFieldUpdateOperationsInput | $Enums.CategoriaProducto
     precio_venta_nueva?: FloatFieldUpdateOperationsInput | number
     precio_recarga?: NullableFloatFieldUpdateOperationsInput | number | null
     stock_minimo?: IntFieldUpdateOperationsInput | number
     activo?: BoolFieldUpdateOperationsInput | boolean
-    categoria?: CategoriaUpdateOneRequiredWithoutProductosNestedInput
     comisiones?: ComisionUpdateManyWithoutProductoNestedInput
     cuadratura_retorno?: CuadraturaRetornoUpdateManyWithoutProductoNestedInput
     cuadratura_salida?: CuadraturaSalidaUpdateManyWithoutProductoNestedInput
     cuadratura_ventas?: CuadraturaVentaUpdateManyWithoutProductoNestedInput
+    pedidoItems?: PedidoItemUpdateManyWithoutProductoNestedInput
     stock_camion?: StockCamionUpdateManyWithoutProductoNestedInput
     stock_fabrica?: StockFabricaUpdateOneWithoutProductoNestedInput
-    pedidoItems?: PedidoItemUpdateManyWithoutProductoNestedInput
   }
 
   export type ProductoUncheckedUpdateWithoutItems_guiaInput = {
     id?: StringFieldUpdateOperationsInput | string
     nombre?: StringFieldUpdateOperationsInput | string
-    categoria_id?: StringFieldUpdateOperationsInput | string
+    categoria?: EnumCategoriaProductoFieldUpdateOperationsInput | $Enums.CategoriaProducto
     precio_venta_nueva?: FloatFieldUpdateOperationsInput | number
     precio_recarga?: NullableFloatFieldUpdateOperationsInput | number | null
     stock_minimo?: IntFieldUpdateOperationsInput | number
@@ -64637,9 +63243,9 @@ export namespace Prisma {
     cuadratura_retorno?: CuadraturaRetornoUncheckedUpdateManyWithoutProductoNestedInput
     cuadratura_salida?: CuadraturaSalidaUncheckedUpdateManyWithoutProductoNestedInput
     cuadratura_ventas?: CuadraturaVentaUncheckedUpdateManyWithoutProductoNestedInput
+    pedidoItems?: PedidoItemUncheckedUpdateManyWithoutProductoNestedInput
     stock_camion?: StockCamionUncheckedUpdateManyWithoutProductoNestedInput
     stock_fabrica?: StockFabricaUncheckedUpdateOneWithoutProductoNestedInput
-    pedidoItems?: PedidoItemUncheckedUpdateManyWithoutProductoNestedInput
   }
 
   export type BotellonVacioCreateWithoutCuadraturaInput = {
@@ -64976,24 +63582,24 @@ export namespace Prisma {
   export type ProductoCreateWithoutCuadratura_salidaInput = {
     id?: string
     nombre: string
+    categoria: $Enums.CategoriaProducto
     precio_venta_nueva: number
     precio_recarga?: number | null
     stock_minimo?: number
     activo?: boolean
-    categoria: CategoriaCreateNestedOneWithoutProductosInput
     comisiones?: ComisionCreateNestedManyWithoutProductoInput
     cuadratura_retorno?: CuadraturaRetornoCreateNestedManyWithoutProductoInput
     cuadratura_ventas?: CuadraturaVentaCreateNestedManyWithoutProductoInput
     items_guia?: ItemGuiaCreateNestedManyWithoutProductoInput
+    pedidoItems?: PedidoItemCreateNestedManyWithoutProductoInput
     stock_camion?: StockCamionCreateNestedManyWithoutProductoInput
     stock_fabrica?: StockFabricaCreateNestedOneWithoutProductoInput
-    pedidoItems?: PedidoItemCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoUncheckedCreateWithoutCuadratura_salidaInput = {
     id?: string
     nombre: string
-    categoria_id: string
+    categoria: $Enums.CategoriaProducto
     precio_venta_nueva: number
     precio_recarga?: number | null
     stock_minimo?: number
@@ -65002,9 +63608,9 @@ export namespace Prisma {
     cuadratura_retorno?: CuadraturaRetornoUncheckedCreateNestedManyWithoutProductoInput
     cuadratura_ventas?: CuadraturaVentaUncheckedCreateNestedManyWithoutProductoInput
     items_guia?: ItemGuiaUncheckedCreateNestedManyWithoutProductoInput
+    pedidoItems?: PedidoItemUncheckedCreateNestedManyWithoutProductoInput
     stock_camion?: StockCamionUncheckedCreateNestedManyWithoutProductoInput
     stock_fabrica?: StockFabricaUncheckedCreateNestedOneWithoutProductoInput
-    pedidoItems?: PedidoItemUncheckedCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoCreateOrConnectWithoutCuadratura_salidaInput = {
@@ -65071,24 +63677,24 @@ export namespace Prisma {
   export type ProductoUpdateWithoutCuadratura_salidaInput = {
     id?: StringFieldUpdateOperationsInput | string
     nombre?: StringFieldUpdateOperationsInput | string
+    categoria?: EnumCategoriaProductoFieldUpdateOperationsInput | $Enums.CategoriaProducto
     precio_venta_nueva?: FloatFieldUpdateOperationsInput | number
     precio_recarga?: NullableFloatFieldUpdateOperationsInput | number | null
     stock_minimo?: IntFieldUpdateOperationsInput | number
     activo?: BoolFieldUpdateOperationsInput | boolean
-    categoria?: CategoriaUpdateOneRequiredWithoutProductosNestedInput
     comisiones?: ComisionUpdateManyWithoutProductoNestedInput
     cuadratura_retorno?: CuadraturaRetornoUpdateManyWithoutProductoNestedInput
     cuadratura_ventas?: CuadraturaVentaUpdateManyWithoutProductoNestedInput
     items_guia?: ItemGuiaUpdateManyWithoutProductoNestedInput
+    pedidoItems?: PedidoItemUpdateManyWithoutProductoNestedInput
     stock_camion?: StockCamionUpdateManyWithoutProductoNestedInput
     stock_fabrica?: StockFabricaUpdateOneWithoutProductoNestedInput
-    pedidoItems?: PedidoItemUpdateManyWithoutProductoNestedInput
   }
 
   export type ProductoUncheckedUpdateWithoutCuadratura_salidaInput = {
     id?: StringFieldUpdateOperationsInput | string
     nombre?: StringFieldUpdateOperationsInput | string
-    categoria_id?: StringFieldUpdateOperationsInput | string
+    categoria?: EnumCategoriaProductoFieldUpdateOperationsInput | $Enums.CategoriaProducto
     precio_venta_nueva?: FloatFieldUpdateOperationsInput | number
     precio_recarga?: NullableFloatFieldUpdateOperationsInput | number | null
     stock_minimo?: IntFieldUpdateOperationsInput | number
@@ -65097,9 +63703,9 @@ export namespace Prisma {
     cuadratura_retorno?: CuadraturaRetornoUncheckedUpdateManyWithoutProductoNestedInput
     cuadratura_ventas?: CuadraturaVentaUncheckedUpdateManyWithoutProductoNestedInput
     items_guia?: ItemGuiaUncheckedUpdateManyWithoutProductoNestedInput
+    pedidoItems?: PedidoItemUncheckedUpdateManyWithoutProductoNestedInput
     stock_camion?: StockCamionUncheckedUpdateManyWithoutProductoNestedInput
     stock_fabrica?: StockFabricaUncheckedUpdateOneWithoutProductoNestedInput
-    pedidoItems?: PedidoItemUncheckedUpdateManyWithoutProductoNestedInput
   }
 
   export type CuadraturaCreateWithoutVentasInput = {
@@ -65191,24 +63797,24 @@ export namespace Prisma {
   export type ProductoCreateWithoutCuadratura_ventasInput = {
     id?: string
     nombre: string
+    categoria: $Enums.CategoriaProducto
     precio_venta_nueva: number
     precio_recarga?: number | null
     stock_minimo?: number
     activo?: boolean
-    categoria: CategoriaCreateNestedOneWithoutProductosInput
     comisiones?: ComisionCreateNestedManyWithoutProductoInput
     cuadratura_retorno?: CuadraturaRetornoCreateNestedManyWithoutProductoInput
     cuadratura_salida?: CuadraturaSalidaCreateNestedManyWithoutProductoInput
     items_guia?: ItemGuiaCreateNestedManyWithoutProductoInput
+    pedidoItems?: PedidoItemCreateNestedManyWithoutProductoInput
     stock_camion?: StockCamionCreateNestedManyWithoutProductoInput
     stock_fabrica?: StockFabricaCreateNestedOneWithoutProductoInput
-    pedidoItems?: PedidoItemCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoUncheckedCreateWithoutCuadratura_ventasInput = {
     id?: string
     nombre: string
-    categoria_id: string
+    categoria: $Enums.CategoriaProducto
     precio_venta_nueva: number
     precio_recarga?: number | null
     stock_minimo?: number
@@ -65217,9 +63823,9 @@ export namespace Prisma {
     cuadratura_retorno?: CuadraturaRetornoUncheckedCreateNestedManyWithoutProductoInput
     cuadratura_salida?: CuadraturaSalidaUncheckedCreateNestedManyWithoutProductoInput
     items_guia?: ItemGuiaUncheckedCreateNestedManyWithoutProductoInput
+    pedidoItems?: PedidoItemUncheckedCreateNestedManyWithoutProductoInput
     stock_camion?: StockCamionUncheckedCreateNestedManyWithoutProductoInput
     stock_fabrica?: StockFabricaUncheckedCreateNestedOneWithoutProductoInput
-    pedidoItems?: PedidoItemUncheckedCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoCreateOrConnectWithoutCuadratura_ventasInput = {
@@ -65338,24 +63944,24 @@ export namespace Prisma {
   export type ProductoUpdateWithoutCuadratura_ventasInput = {
     id?: StringFieldUpdateOperationsInput | string
     nombre?: StringFieldUpdateOperationsInput | string
+    categoria?: EnumCategoriaProductoFieldUpdateOperationsInput | $Enums.CategoriaProducto
     precio_venta_nueva?: FloatFieldUpdateOperationsInput | number
     precio_recarga?: NullableFloatFieldUpdateOperationsInput | number | null
     stock_minimo?: IntFieldUpdateOperationsInput | number
     activo?: BoolFieldUpdateOperationsInput | boolean
-    categoria?: CategoriaUpdateOneRequiredWithoutProductosNestedInput
     comisiones?: ComisionUpdateManyWithoutProductoNestedInput
     cuadratura_retorno?: CuadraturaRetornoUpdateManyWithoutProductoNestedInput
     cuadratura_salida?: CuadraturaSalidaUpdateManyWithoutProductoNestedInput
     items_guia?: ItemGuiaUpdateManyWithoutProductoNestedInput
+    pedidoItems?: PedidoItemUpdateManyWithoutProductoNestedInput
     stock_camion?: StockCamionUpdateManyWithoutProductoNestedInput
     stock_fabrica?: StockFabricaUpdateOneWithoutProductoNestedInput
-    pedidoItems?: PedidoItemUpdateManyWithoutProductoNestedInput
   }
 
   export type ProductoUncheckedUpdateWithoutCuadratura_ventasInput = {
     id?: StringFieldUpdateOperationsInput | string
     nombre?: StringFieldUpdateOperationsInput | string
-    categoria_id?: StringFieldUpdateOperationsInput | string
+    categoria?: EnumCategoriaProductoFieldUpdateOperationsInput | $Enums.CategoriaProducto
     precio_venta_nueva?: FloatFieldUpdateOperationsInput | number
     precio_recarga?: NullableFloatFieldUpdateOperationsInput | number | null
     stock_minimo?: IntFieldUpdateOperationsInput | number
@@ -65364,9 +63970,9 @@ export namespace Prisma {
     cuadratura_retorno?: CuadraturaRetornoUncheckedUpdateManyWithoutProductoNestedInput
     cuadratura_salida?: CuadraturaSalidaUncheckedUpdateManyWithoutProductoNestedInput
     items_guia?: ItemGuiaUncheckedUpdateManyWithoutProductoNestedInput
+    pedidoItems?: PedidoItemUncheckedUpdateManyWithoutProductoNestedInput
     stock_camion?: StockCamionUncheckedUpdateManyWithoutProductoNestedInput
     stock_fabrica?: StockFabricaUncheckedUpdateOneWithoutProductoNestedInput
-    pedidoItems?: PedidoItemUncheckedUpdateManyWithoutProductoNestedInput
   }
 
   export type CuadraturaCreateWithoutRetornoInput = {
@@ -65411,24 +64017,24 @@ export namespace Prisma {
   export type ProductoCreateWithoutCuadratura_retornoInput = {
     id?: string
     nombre: string
+    categoria: $Enums.CategoriaProducto
     precio_venta_nueva: number
     precio_recarga?: number | null
     stock_minimo?: number
     activo?: boolean
-    categoria: CategoriaCreateNestedOneWithoutProductosInput
     comisiones?: ComisionCreateNestedManyWithoutProductoInput
     cuadratura_salida?: CuadraturaSalidaCreateNestedManyWithoutProductoInput
     cuadratura_ventas?: CuadraturaVentaCreateNestedManyWithoutProductoInput
     items_guia?: ItemGuiaCreateNestedManyWithoutProductoInput
+    pedidoItems?: PedidoItemCreateNestedManyWithoutProductoInput
     stock_camion?: StockCamionCreateNestedManyWithoutProductoInput
     stock_fabrica?: StockFabricaCreateNestedOneWithoutProductoInput
-    pedidoItems?: PedidoItemCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoUncheckedCreateWithoutCuadratura_retornoInput = {
     id?: string
     nombre: string
-    categoria_id: string
+    categoria: $Enums.CategoriaProducto
     precio_venta_nueva: number
     precio_recarga?: number | null
     stock_minimo?: number
@@ -65437,9 +64043,9 @@ export namespace Prisma {
     cuadratura_salida?: CuadraturaSalidaUncheckedCreateNestedManyWithoutProductoInput
     cuadratura_ventas?: CuadraturaVentaUncheckedCreateNestedManyWithoutProductoInput
     items_guia?: ItemGuiaUncheckedCreateNestedManyWithoutProductoInput
+    pedidoItems?: PedidoItemUncheckedCreateNestedManyWithoutProductoInput
     stock_camion?: StockCamionUncheckedCreateNestedManyWithoutProductoInput
     stock_fabrica?: StockFabricaUncheckedCreateNestedOneWithoutProductoInput
-    pedidoItems?: PedidoItemUncheckedCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoCreateOrConnectWithoutCuadratura_retornoInput = {
@@ -65506,24 +64112,24 @@ export namespace Prisma {
   export type ProductoUpdateWithoutCuadratura_retornoInput = {
     id?: StringFieldUpdateOperationsInput | string
     nombre?: StringFieldUpdateOperationsInput | string
+    categoria?: EnumCategoriaProductoFieldUpdateOperationsInput | $Enums.CategoriaProducto
     precio_venta_nueva?: FloatFieldUpdateOperationsInput | number
     precio_recarga?: NullableFloatFieldUpdateOperationsInput | number | null
     stock_minimo?: IntFieldUpdateOperationsInput | number
     activo?: BoolFieldUpdateOperationsInput | boolean
-    categoria?: CategoriaUpdateOneRequiredWithoutProductosNestedInput
     comisiones?: ComisionUpdateManyWithoutProductoNestedInput
     cuadratura_salida?: CuadraturaSalidaUpdateManyWithoutProductoNestedInput
     cuadratura_ventas?: CuadraturaVentaUpdateManyWithoutProductoNestedInput
     items_guia?: ItemGuiaUpdateManyWithoutProductoNestedInput
+    pedidoItems?: PedidoItemUpdateManyWithoutProductoNestedInput
     stock_camion?: StockCamionUpdateManyWithoutProductoNestedInput
     stock_fabrica?: StockFabricaUpdateOneWithoutProductoNestedInput
-    pedidoItems?: PedidoItemUpdateManyWithoutProductoNestedInput
   }
 
   export type ProductoUncheckedUpdateWithoutCuadratura_retornoInput = {
     id?: StringFieldUpdateOperationsInput | string
     nombre?: StringFieldUpdateOperationsInput | string
-    categoria_id?: StringFieldUpdateOperationsInput | string
+    categoria?: EnumCategoriaProductoFieldUpdateOperationsInput | $Enums.CategoriaProducto
     precio_venta_nueva?: FloatFieldUpdateOperationsInput | number
     precio_recarga?: NullableFloatFieldUpdateOperationsInput | number | null
     stock_minimo?: IntFieldUpdateOperationsInput | number
@@ -65532,9 +64138,9 @@ export namespace Prisma {
     cuadratura_salida?: CuadraturaSalidaUncheckedUpdateManyWithoutProductoNestedInput
     cuadratura_ventas?: CuadraturaVentaUncheckedUpdateManyWithoutProductoNestedInput
     items_guia?: ItemGuiaUncheckedUpdateManyWithoutProductoNestedInput
+    pedidoItems?: PedidoItemUncheckedUpdateManyWithoutProductoNestedInput
     stock_camion?: StockCamionUncheckedUpdateManyWithoutProductoNestedInput
     stock_fabrica?: StockFabricaUncheckedUpdateOneWithoutProductoNestedInput
-    pedidoItems?: PedidoItemUncheckedUpdateManyWithoutProductoNestedInput
   }
 
   export type CuadraturaCreateWithoutBotellones_vaciosInput = {
@@ -65976,24 +64582,24 @@ export namespace Prisma {
   export type ProductoCreateWithoutStock_fabricaInput = {
     id?: string
     nombre: string
+    categoria: $Enums.CategoriaProducto
     precio_venta_nueva: number
     precio_recarga?: number | null
     stock_minimo?: number
     activo?: boolean
-    categoria: CategoriaCreateNestedOneWithoutProductosInput
     comisiones?: ComisionCreateNestedManyWithoutProductoInput
     cuadratura_retorno?: CuadraturaRetornoCreateNestedManyWithoutProductoInput
     cuadratura_salida?: CuadraturaSalidaCreateNestedManyWithoutProductoInput
     cuadratura_ventas?: CuadraturaVentaCreateNestedManyWithoutProductoInput
     items_guia?: ItemGuiaCreateNestedManyWithoutProductoInput
-    stock_camion?: StockCamionCreateNestedManyWithoutProductoInput
     pedidoItems?: PedidoItemCreateNestedManyWithoutProductoInput
+    stock_camion?: StockCamionCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoUncheckedCreateWithoutStock_fabricaInput = {
     id?: string
     nombre: string
-    categoria_id: string
+    categoria: $Enums.CategoriaProducto
     precio_venta_nueva: number
     precio_recarga?: number | null
     stock_minimo?: number
@@ -66003,8 +64609,8 @@ export namespace Prisma {
     cuadratura_salida?: CuadraturaSalidaUncheckedCreateNestedManyWithoutProductoInput
     cuadratura_ventas?: CuadraturaVentaUncheckedCreateNestedManyWithoutProductoInput
     items_guia?: ItemGuiaUncheckedCreateNestedManyWithoutProductoInput
-    stock_camion?: StockCamionUncheckedCreateNestedManyWithoutProductoInput
     pedidoItems?: PedidoItemUncheckedCreateNestedManyWithoutProductoInput
+    stock_camion?: StockCamionUncheckedCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoCreateOrConnectWithoutStock_fabricaInput = {
@@ -66026,24 +64632,24 @@ export namespace Prisma {
   export type ProductoUpdateWithoutStock_fabricaInput = {
     id?: StringFieldUpdateOperationsInput | string
     nombre?: StringFieldUpdateOperationsInput | string
+    categoria?: EnumCategoriaProductoFieldUpdateOperationsInput | $Enums.CategoriaProducto
     precio_venta_nueva?: FloatFieldUpdateOperationsInput | number
     precio_recarga?: NullableFloatFieldUpdateOperationsInput | number | null
     stock_minimo?: IntFieldUpdateOperationsInput | number
     activo?: BoolFieldUpdateOperationsInput | boolean
-    categoria?: CategoriaUpdateOneRequiredWithoutProductosNestedInput
     comisiones?: ComisionUpdateManyWithoutProductoNestedInput
     cuadratura_retorno?: CuadraturaRetornoUpdateManyWithoutProductoNestedInput
     cuadratura_salida?: CuadraturaSalidaUpdateManyWithoutProductoNestedInput
     cuadratura_ventas?: CuadraturaVentaUpdateManyWithoutProductoNestedInput
     items_guia?: ItemGuiaUpdateManyWithoutProductoNestedInput
-    stock_camion?: StockCamionUpdateManyWithoutProductoNestedInput
     pedidoItems?: PedidoItemUpdateManyWithoutProductoNestedInput
+    stock_camion?: StockCamionUpdateManyWithoutProductoNestedInput
   }
 
   export type ProductoUncheckedUpdateWithoutStock_fabricaInput = {
     id?: StringFieldUpdateOperationsInput | string
     nombre?: StringFieldUpdateOperationsInput | string
-    categoria_id?: StringFieldUpdateOperationsInput | string
+    categoria?: EnumCategoriaProductoFieldUpdateOperationsInput | $Enums.CategoriaProducto
     precio_venta_nueva?: FloatFieldUpdateOperationsInput | number
     precio_recarga?: NullableFloatFieldUpdateOperationsInput | number | null
     stock_minimo?: IntFieldUpdateOperationsInput | number
@@ -66053,31 +64659,31 @@ export namespace Prisma {
     cuadratura_salida?: CuadraturaSalidaUncheckedUpdateManyWithoutProductoNestedInput
     cuadratura_ventas?: CuadraturaVentaUncheckedUpdateManyWithoutProductoNestedInput
     items_guia?: ItemGuiaUncheckedUpdateManyWithoutProductoNestedInput
-    stock_camion?: StockCamionUncheckedUpdateManyWithoutProductoNestedInput
     pedidoItems?: PedidoItemUncheckedUpdateManyWithoutProductoNestedInput
+    stock_camion?: StockCamionUncheckedUpdateManyWithoutProductoNestedInput
   }
 
   export type ProductoCreateWithoutStock_camionInput = {
     id?: string
     nombre: string
+    categoria: $Enums.CategoriaProducto
     precio_venta_nueva: number
     precio_recarga?: number | null
     stock_minimo?: number
     activo?: boolean
-    categoria: CategoriaCreateNestedOneWithoutProductosInput
     comisiones?: ComisionCreateNestedManyWithoutProductoInput
     cuadratura_retorno?: CuadraturaRetornoCreateNestedManyWithoutProductoInput
     cuadratura_salida?: CuadraturaSalidaCreateNestedManyWithoutProductoInput
     cuadratura_ventas?: CuadraturaVentaCreateNestedManyWithoutProductoInput
     items_guia?: ItemGuiaCreateNestedManyWithoutProductoInput
-    stock_fabrica?: StockFabricaCreateNestedOneWithoutProductoInput
     pedidoItems?: PedidoItemCreateNestedManyWithoutProductoInput
+    stock_fabrica?: StockFabricaCreateNestedOneWithoutProductoInput
   }
 
   export type ProductoUncheckedCreateWithoutStock_camionInput = {
     id?: string
     nombre: string
-    categoria_id: string
+    categoria: $Enums.CategoriaProducto
     precio_venta_nueva: number
     precio_recarga?: number | null
     stock_minimo?: number
@@ -66087,8 +64693,8 @@ export namespace Prisma {
     cuadratura_salida?: CuadraturaSalidaUncheckedCreateNestedManyWithoutProductoInput
     cuadratura_ventas?: CuadraturaVentaUncheckedCreateNestedManyWithoutProductoInput
     items_guia?: ItemGuiaUncheckedCreateNestedManyWithoutProductoInput
-    stock_fabrica?: StockFabricaUncheckedCreateNestedOneWithoutProductoInput
     pedidoItems?: PedidoItemUncheckedCreateNestedManyWithoutProductoInput
+    stock_fabrica?: StockFabricaUncheckedCreateNestedOneWithoutProductoInput
   }
 
   export type ProductoCreateOrConnectWithoutStock_camionInput = {
@@ -66167,24 +64773,24 @@ export namespace Prisma {
   export type ProductoUpdateWithoutStock_camionInput = {
     id?: StringFieldUpdateOperationsInput | string
     nombre?: StringFieldUpdateOperationsInput | string
+    categoria?: EnumCategoriaProductoFieldUpdateOperationsInput | $Enums.CategoriaProducto
     precio_venta_nueva?: FloatFieldUpdateOperationsInput | number
     precio_recarga?: NullableFloatFieldUpdateOperationsInput | number | null
     stock_minimo?: IntFieldUpdateOperationsInput | number
     activo?: BoolFieldUpdateOperationsInput | boolean
-    categoria?: CategoriaUpdateOneRequiredWithoutProductosNestedInput
     comisiones?: ComisionUpdateManyWithoutProductoNestedInput
     cuadratura_retorno?: CuadraturaRetornoUpdateManyWithoutProductoNestedInput
     cuadratura_salida?: CuadraturaSalidaUpdateManyWithoutProductoNestedInput
     cuadratura_ventas?: CuadraturaVentaUpdateManyWithoutProductoNestedInput
     items_guia?: ItemGuiaUpdateManyWithoutProductoNestedInput
-    stock_fabrica?: StockFabricaUpdateOneWithoutProductoNestedInput
     pedidoItems?: PedidoItemUpdateManyWithoutProductoNestedInput
+    stock_fabrica?: StockFabricaUpdateOneWithoutProductoNestedInput
   }
 
   export type ProductoUncheckedUpdateWithoutStock_camionInput = {
     id?: StringFieldUpdateOperationsInput | string
     nombre?: StringFieldUpdateOperationsInput | string
-    categoria_id?: StringFieldUpdateOperationsInput | string
+    categoria?: EnumCategoriaProductoFieldUpdateOperationsInput | $Enums.CategoriaProducto
     precio_venta_nueva?: FloatFieldUpdateOperationsInput | number
     precio_recarga?: NullableFloatFieldUpdateOperationsInput | number | null
     stock_minimo?: IntFieldUpdateOperationsInput | number
@@ -66194,8 +64800,8 @@ export namespace Prisma {
     cuadratura_salida?: CuadraturaSalidaUncheckedUpdateManyWithoutProductoNestedInput
     cuadratura_ventas?: CuadraturaVentaUncheckedUpdateManyWithoutProductoNestedInput
     items_guia?: ItemGuiaUncheckedUpdateManyWithoutProductoNestedInput
-    stock_fabrica?: StockFabricaUncheckedUpdateOneWithoutProductoNestedInput
     pedidoItems?: PedidoItemUncheckedUpdateManyWithoutProductoNestedInput
+    stock_fabrica?: StockFabricaUncheckedUpdateOneWithoutProductoNestedInput
   }
 
   export type UsuarioUpsertWithoutStock_camionInput = {
@@ -67954,58 +66560,6 @@ export namespace Prisma {
     costo_unitario?: FloatFieldUpdateOperationsInput | number
   }
 
-  export type ProductoCreateManyCategoriaInput = {
-    id?: string
-    nombre: string
-    precio_venta_nueva: number
-    precio_recarga?: number | null
-    stock_minimo?: number
-    activo?: boolean
-  }
-
-  export type ProductoUpdateWithoutCategoriaInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    nombre?: StringFieldUpdateOperationsInput | string
-    precio_venta_nueva?: FloatFieldUpdateOperationsInput | number
-    precio_recarga?: NullableFloatFieldUpdateOperationsInput | number | null
-    stock_minimo?: IntFieldUpdateOperationsInput | number
-    activo?: BoolFieldUpdateOperationsInput | boolean
-    comisiones?: ComisionUpdateManyWithoutProductoNestedInput
-    cuadratura_retorno?: CuadraturaRetornoUpdateManyWithoutProductoNestedInput
-    cuadratura_salida?: CuadraturaSalidaUpdateManyWithoutProductoNestedInput
-    cuadratura_ventas?: CuadraturaVentaUpdateManyWithoutProductoNestedInput
-    items_guia?: ItemGuiaUpdateManyWithoutProductoNestedInput
-    stock_camion?: StockCamionUpdateManyWithoutProductoNestedInput
-    stock_fabrica?: StockFabricaUpdateOneWithoutProductoNestedInput
-    pedidoItems?: PedidoItemUpdateManyWithoutProductoNestedInput
-  }
-
-  export type ProductoUncheckedUpdateWithoutCategoriaInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    nombre?: StringFieldUpdateOperationsInput | string
-    precio_venta_nueva?: FloatFieldUpdateOperationsInput | number
-    precio_recarga?: NullableFloatFieldUpdateOperationsInput | number | null
-    stock_minimo?: IntFieldUpdateOperationsInput | number
-    activo?: BoolFieldUpdateOperationsInput | boolean
-    comisiones?: ComisionUncheckedUpdateManyWithoutProductoNestedInput
-    cuadratura_retorno?: CuadraturaRetornoUncheckedUpdateManyWithoutProductoNestedInput
-    cuadratura_salida?: CuadraturaSalidaUncheckedUpdateManyWithoutProductoNestedInput
-    cuadratura_ventas?: CuadraturaVentaUncheckedUpdateManyWithoutProductoNestedInput
-    items_guia?: ItemGuiaUncheckedUpdateManyWithoutProductoNestedInput
-    stock_camion?: StockCamionUncheckedUpdateManyWithoutProductoNestedInput
-    stock_fabrica?: StockFabricaUncheckedUpdateOneWithoutProductoNestedInput
-    pedidoItems?: PedidoItemUncheckedUpdateManyWithoutProductoNestedInput
-  }
-
-  export type ProductoUncheckedUpdateManyWithoutCategoriaInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    nombre?: StringFieldUpdateOperationsInput | string
-    precio_venta_nueva?: FloatFieldUpdateOperationsInput | number
-    precio_recarga?: NullableFloatFieldUpdateOperationsInput | number | null
-    stock_minimo?: IntFieldUpdateOperationsInput | number
-    activo?: BoolFieldUpdateOperationsInput | boolean
-  }
-
   export type ComisionCreateManyProductoInput = {
     id?: string
     tipo_transaccion: $Enums.TipoTransaccion
@@ -68045,19 +66599,19 @@ export namespace Prisma {
     subtotal: number
   }
 
-  export type StockCamionCreateManyProductoInput = {
-    id?: string
-    usuario_id: string
-    cantidad?: number
-    updated_at?: Date | string
-  }
-
   export type PedidoItemCreateManyProductoInput = {
     id?: string
     pedido_id: string
     tipo_transaccion: $Enums.TipoTransaccion
     cantidad: number
     precio_historico?: number
+  }
+
+  export type StockCamionCreateManyProductoInput = {
+    id?: string
+    usuario_id: string
+    cantidad?: number
+    updated_at?: Date | string
   }
 
   export type ComisionUpdateWithoutProductoInput = {
@@ -68177,27 +66731,6 @@ export namespace Prisma {
     subtotal?: FloatFieldUpdateOperationsInput | number
   }
 
-  export type StockCamionUpdateWithoutProductoInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    cantidad?: IntFieldUpdateOperationsInput | number
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    usuario?: UsuarioUpdateOneRequiredWithoutStock_camionNestedInput
-  }
-
-  export type StockCamionUncheckedUpdateWithoutProductoInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    usuario_id?: StringFieldUpdateOperationsInput | string
-    cantidad?: IntFieldUpdateOperationsInput | number
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type StockCamionUncheckedUpdateManyWithoutProductoInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    usuario_id?: StringFieldUpdateOperationsInput | string
-    cantidad?: IntFieldUpdateOperationsInput | number
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
   export type PedidoItemUpdateWithoutProductoInput = {
     id?: StringFieldUpdateOperationsInput | string
     tipo_transaccion?: EnumTipoTransaccionFieldUpdateOperationsInput | $Enums.TipoTransaccion
@@ -68220,6 +66753,27 @@ export namespace Prisma {
     tipo_transaccion?: EnumTipoTransaccionFieldUpdateOperationsInput | $Enums.TipoTransaccion
     cantidad?: IntFieldUpdateOperationsInput | number
     precio_historico?: FloatFieldUpdateOperationsInput | number
+  }
+
+  export type StockCamionUpdateWithoutProductoInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    cantidad?: IntFieldUpdateOperationsInput | number
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    usuario?: UsuarioUpdateOneRequiredWithoutStock_camionNestedInput
+  }
+
+  export type StockCamionUncheckedUpdateWithoutProductoInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    usuario_id?: StringFieldUpdateOperationsInput | string
+    cantidad?: IntFieldUpdateOperationsInput | number
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StockCamionUncheckedUpdateManyWithoutProductoInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    usuario_id?: StringFieldUpdateOperationsInput | string
+    cantidad?: IntFieldUpdateOperationsInput | number
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type BotellonDanadoCreateManyClienteInput = {

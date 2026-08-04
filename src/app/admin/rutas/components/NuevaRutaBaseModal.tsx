@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { DiaSemana } from '@/src/lib/prisma/generated';
+import { DiaSemana } from '@/lib/prisma/generated';
 // Corrección de lógica: Subir un nivel para encontrar el archivo de base de datos
 import { getFormularioRutaBaseData, guardarRutaBaseAction } from '../actions';
 

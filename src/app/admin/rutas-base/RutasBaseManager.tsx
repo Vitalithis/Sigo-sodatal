@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { crearRutaBaseAction, buscarClientesBaseAction, agregarClienteARutaBaseAction, obtenerRutasBaseAction } from './actions';
-import { DiaSemana } from '@/src/lib/prisma/generated/edge';
+import { DiaSemana } from '@/lib/prisma/generated/edge';
 
 interface Props {
   rutasBaseIniciales: any[];

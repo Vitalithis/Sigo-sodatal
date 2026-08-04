@@ -141,7 +141,7 @@ export default function VehicleManager({ initialVehiculos }: VehicleManagerProps
         setIsModalOpen(false);
         setEditandoVehiculoId(null);
         router.refresh();
-      } else { setErrorForm(res.message); }
+      } else { setErrorForm(res.message ?? 'Error desconocido al guardar el vehículo.'); }
     });
   };
 

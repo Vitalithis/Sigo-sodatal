@@ -123,7 +123,7 @@ export default async function AdminDashboardPage() {
         </Link>
 
         {/* TARJETA FLOTA */}
-        <Link href="/admin/vehiculos" className="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-lg transition-all duration-200 hover:-translate-y-1 group overflow-hidden flex flex-col justify-between h-36">
+        <Link href="/admin/flota" className="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-lg transition-all duration-200 hover:-translate-y-1 group overflow-hidden flex flex-col justify-between h-36">
           <div className="p-5">
             <div className="flex justify-between items-start">
               <div>
@@ -144,7 +144,7 @@ export default async function AdminDashboardPage() {
         </Link>
 
         {/* TARJETA ALERTAS */}
-        <Link href="/admin/vehiculos" className="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-lg transition-all duration-200 hover:-translate-y-1 group overflow-hidden flex flex-col justify-between h-36">
+        <Link href="/admin/flota" className="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-lg transition-all duration-200 hover:-translate-y-1 group overflow-hidden flex flex-col justify-between h-36">
           <div className="p-5">
             <div className="flex justify-between items-start">
               <div>

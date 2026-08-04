@@ -1,4 +1,4 @@
-import { prisma } from '@/src/lib/prisma';
+import { prisma } from '@/lib/prisma';
 import ProduccionCO2Manager from './components/ProduccionCO2Manager';
 
 export const revalidate = 0;

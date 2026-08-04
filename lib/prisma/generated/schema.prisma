@@ -89,17 +89,10 @@ model AlertaVehiculo {
   vehiculo     Vehiculo   @relation(fields: [vehiculo_id], references: [id])
 }
 
-model Categoria {
-  id        String     @id @default(uuid())
-  nombre    String
-  productos Producto[]
-}
-
 model Producto {
   id                 String              @id @default(uuid())
   nombre             String
-  categoria_id       String // Campo de relación
-  categoria          Categoria           @relation(fields: [categoria_id], references: [id])
+  categoria          CategoriaProducto
   precio_venta_nueva Float
   precio_recarga     Float?
   stock_minimo       Int                 @default(0)
@@ -109,9 +102,9 @@ model Producto {
   cuadratura_salida  CuadraturaSalida[]
   cuadratura_ventas  CuadraturaVenta[]
   items_guia         ItemGuia[]
+  pedidoItems        PedidoItem[]
   stock_camion       StockCamion[]
   stock_fabrica      StockFabrica?
-  pedidoItems        PedidoItem[]
 }
 
 model Comision {
@@ -138,6 +131,7 @@ model Cliente {
   activo               Boolean                @default(true)
   botellones_prestados Int                    @default(0)
   preferencia_factura  PreferenciaFacturacion @default(BOLETA)
+  sector               String                 @default("GENERAL")
   botellones_danados   BotellonDanado[]
   clientes_ruta        ClienteRutaBase[]
   dispensadores        Dispensador[]
@@ -145,7 +139,6 @@ model Cliente {
   historial_financiero HistorialFinanciero[]
   paradas              ParadaDia[]
   pedidos              Pedido[]
-  sector               String                 @default("GENERAL")
 }
 
 model RutaBase {
@@ -608,4 +601,11 @@ enum TipoMovimientoFinanciero {
   ARRIENDO_DISPENSADOR
   PAGO_RECIBIDO
   AJUSTE_CREDITO
+}
+
+enum CategoriaProducto {
+  BOTELLON10
+  BOTELLON20
+  SODA
+  OTRO
 }

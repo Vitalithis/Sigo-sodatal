@@ -1,8 +1,7 @@
 import React from 'react';
 import RutasBaseManager from './RutasBaseManager';
 import { obtenerRutasBaseAction } from '@/app/admin/rutas-base/actions';
-import { obtenerChoferesAction, obtenerVehiculosAction } from '@/app/admin/choferes/actions';
-export const metadata = {
+import { obtenerChoferesAction, obtenerVehiculosAction } from '@/app/admin/flota/actions';export const metadata = {
   title: 'Plantillas de Rutas Fijas - SIGO Sodatal',
   description: 'Configuración de los circuitos fijos semanales por repartidor.',
 };

@@ -1,8 +1,8 @@
 'use server';
 
-import { prisma } from '@/src/lib/prisma';
+import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
-import { CategoriaProducto } from '@/src/lib/prisma/generated';
+import { CategoriaProducto } from '@/lib/prisma/generated';
 
 // ────────────────────────────────────────────────────────────────
 // Tipos
