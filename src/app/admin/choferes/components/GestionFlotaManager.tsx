@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { crearChoferAction, crearVehiculoAction, obtenerChoferesAction, obtenerVehiculosAction } from './actions';
+import { crearChoferAction, crearVehiculoAction, obtenerChoferesAction, obtenerVehiculosAction } from '../actions';
 
 interface Props {
   choferesIniciales: any[];

@@ -133,8 +133,6 @@ export async function obtenerStockAction() {
   }
 }
 
-// Guías emitidas ese día por ese repartidor, para poder vincularlas a una
-// venta de la cuadratura y así no duplicar el monto (regla de negocio).
 export async function obtenerGuiasRepartidorDiaAction(usuario_id: string, fecha: string) {
   try {
     if (!usuario_id || !fecha) return { success: true, guias: [] };
@@ -180,8 +178,6 @@ export async function registrarSalidaAction(data: SalidaInput) {
         throw new Error('La cuadratura de ese día ya está cerrada. Un ADMIN debe reabrirla antes de modificar la salida.');
       }
 
-      // Si ya existía una salida (edición antes del cierre), revertimos sus
-      // efectos de stock para volver a aplicarlos limpios con los nuevos valores.
       if (cuadratura) {
         for (const s of cuadratura.salida) {
           await tx.stockFabrica.upsert({
@@ -208,7 +204,6 @@ export async function registrarSalidaAction(data: SalidaInput) {
           data: { cuadratura_id: cuadratura.id, producto_id: it.producto_id, cantidad: it.cantidad },
         });
 
-        // Regla: stock fábrica baja, stock camión sube. El stock nunca bloquea, solo alerta.
         const stockFabricaActual = await tx.stockFabrica.findUnique({ where: { producto_id: it.producto_id } });
         const nuevaCantidadFabrica = (stockFabricaActual?.cantidad || 0) - it.cantidad;
 
@@ -262,8 +257,6 @@ export async function registrarCierreCuadraturaAction(data: CierreCuadraturaInpu
 
       const usuario = cuadratura.usuario;
 
-      // Si ya tenía un cierre previo (caso: fue reabierta), revertimos sus
-      // efectos de stock antes de aplicar los nuevos valores.
       for (const v of cuadratura.ventas) {
         await tx.stockCamion.upsert({
           where: { usuario_id_producto_id: { usuario_id: cuadratura.usuario_id, producto_id: v.producto_id } },
@@ -293,7 +286,6 @@ export async function registrarCierreCuadraturaAction(data: CierreCuadraturaInpu
         const producto = await tx.producto.findUnique({ where: { id: v.producto_id } });
         if (!producto) continue;
 
-        // Regla: solo REPARTIDOR con comisión activa genera comisión; OFICINA siempre $0.
         let comision = 0;
         if (usuario.rol === 'REPARTIDOR' && usuario.recibe_comision) {
           const comisionCfg = await tx.comision.findFirst({
@@ -316,8 +308,6 @@ export async function registrarCierreCuadraturaAction(data: CierreCuadraturaInpu
           },
         });
 
-        // Regla: si ya viene con guía de despacho, ese monto ya se cobró al
-        // emitir la guía, así que no se duplica en los totales de la cuadratura.
         if (!v.guia_id) {
           const precio = v.tipo_transaccion === 'RECARGA' ? producto.precio_recarga ?? 0 : producto.precio_venta_nueva;
           const monto = precio * v.cantidad;
@@ -327,7 +317,6 @@ export async function registrarCierreCuadraturaAction(data: CierreCuadraturaInpu
           else if (v.metodo_pago === 'GUIA_MENSUAL') totalGuiaMensual += monto;
         }
 
-        // Regla: stock camión baja al confirmarse venta/recarga (con o sin guía).
         await tx.stockCamion.upsert({
           where: { usuario_id_producto_id: { usuario_id: cuadratura.usuario_id, producto_id: v.producto_id } },
           create: { usuario_id: cuadratura.usuario_id, producto_id: v.producto_id, cantidad: -v.cantidad },
@@ -339,7 +328,6 @@ export async function registrarCierreCuadraturaAction(data: CierreCuadraturaInpu
         await tx.cuadraturaRetorno.create({
           data: { cuadratura_id: cuadratura.id, producto_id: r.producto_id, cantidad: r.cantidad },
         });
-        // Regla: stock fábrica sube y stock camión baja con retorno de productos llenos.
         await tx.stockFabrica.upsert({
           where: { producto_id: r.producto_id },
           create: { producto_id: r.producto_id, cantidad: r.cantidad },
@@ -374,7 +362,6 @@ export async function registrarCierreCuadraturaAction(data: CierreCuadraturaInpu
         },
       });
 
-      // Alertas visuales de stock camión negativo tras el cierre (no bloquea).
       const stocksCamionFinal = await tx.stockCamion.findMany({ where: { usuario_id: cuadratura.usuario_id } });
       for (const sc of stocksCamionFinal) {
         if (sc.cantidad < 0) {

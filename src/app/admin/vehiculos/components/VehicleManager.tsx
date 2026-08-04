@@ -11,7 +11,7 @@ import {
   eliminarAlertaAction,
   VehiculoInput,
   registrarCargaCombustibleAction
-} from './actions';
+} from '../actions';
 
 interface VehicleManagerProps {
   initialVehiculos: any[];

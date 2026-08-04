@@ -2,6 +2,7 @@ import React from 'react';
 import { prisma } from '@/src/lib/prisma';
 import NuevaGuiaModal from './components/NuevaGuiaModal';
 import GuiasManager from './components/GuiasManager';
+
 export const dynamic = 'force-dynamic';
 
 export const metadata = {

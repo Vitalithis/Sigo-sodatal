@@ -1,7 +1,6 @@
 import { prisma } from '@/src/lib/prisma';
-import VehicleManager from './VehicleManager';
+import VehicleManager from './components/VehicleManager';
 
-// Forzar que la página no use caché vieja y cargue datos frescos
 export const revalidate = 0;
 
 export default async function VehiculosPage() {

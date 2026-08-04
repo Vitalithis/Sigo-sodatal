@@ -1,5 +1,6 @@
 import React from 'react';
-import GestionFlotaManager from './GestionFlotaManager';
+// Solución viable: La ruta debe apuntar a la subcarpeta components
+import GestionFlotaManager from './components/GestionFlotaManager';
 import { obtenerChoferesAction, obtenerVehiculosAction } from './actions';
 
 export const metadata = {
