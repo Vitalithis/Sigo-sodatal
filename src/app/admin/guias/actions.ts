@@ -127,3 +127,32 @@ export async function exportarCierreMensualAction(mes: number, anio: number) {
     return { success: false, message: 'Error procesando cierre mensual' };
   }
 }
+// ────────────────────────────────────────────────────────────────
+// Anulación de Guía (Para AnularGuiaModal.tsx)
+// ────────────────────────────────────────────────────────────────
+export async function anularGuiaAction(id: string, motivo: string) {
+  try {
+    if (!motivo || motivo.trim().length < 3) {
+      return { success: false, message: 'Debes indicar un motivo de anulación válido.' };
+    }
+
+    const guia = await prisma.guiaDespacho.findUnique({ where: { id } });
+    if (!guia) return { success: false, message: 'La guía no existe.' };
+    if (guia.estado === 'ANULADA') {
+      return { success: false, message: 'Esta guía ya se encuentra anulada.' };
+    }
+
+    await prisma.guiaDespacho.update({
+      where: { id },
+      data: {
+        estado: 'ANULADA',
+        motivo_anulacion: motivo.trim(),
+      },
+    });
+
+    revalidatePath('/admin/guias');
+    return { success: true };
+  } catch (error) {
+    return { success: false, message: error instanceof Error ? error.message : 'Error al anular la guía' };
+  }
+}

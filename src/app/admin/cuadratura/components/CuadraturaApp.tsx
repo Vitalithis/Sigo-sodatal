@@ -6,7 +6,7 @@ import {
   registrarCierreCuadraturaAction,
   obtenerCuadraturaDetalleAction,
   reabrirCuadraturaAction,
-} from '../../actions';
+} from '../actions';
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 interface Repartidor {

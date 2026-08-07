@@ -3,6 +3,8 @@ import type { NextRequest } from 'next/server';
 import { createServerClient, type CookieOptions } from '@supabase/ssr';
 
 export async function middleware(request: NextRequest) {
+  const t0 = Date.now();
+
   let response = NextResponse.next({
     request: { headers: request.headers },
   });
@@ -32,9 +34,11 @@ export async function middleware(request: NextRequest) {
   const isNextRouting =
     request.headers.get('RSC') === '1' ||
     request.headers.get('Next-Router-Prefetch') === '1' ||
-    request.headers.get('Purpose') === 'prefetch';
+    request.headers.get('Purpose') === 'prefetch' ||
+    request.nextUrl.searchParams.has('_rsc');
 
   let user = null;
+  const tAuthStart = Date.now();
 
   if (isNextRouting) {
     const { data: { session } } = await supabase.auth.getSession();
@@ -43,6 +47,9 @@ export async function middleware(request: NextRequest) {
     const { data } = await supabase.auth.getUser();
     user = data.user || null;
   }
+
+  const tAuthEnd = Date.now();
+  console.log(`[MW] ${path} | isNextRouting=${isNextRouting} | auth=${tAuthEnd - tAuthStart}ms | total-hasta-auth=${tAuthEnd - t0}ms`);
 
   if (!user && path !== '/login') {
     return NextResponse.redirect(new URL('/login', request.url));
@@ -91,6 +98,8 @@ export async function middleware(request: NextRequest) {
     }
   }
 
+  console.log(`[MW] ${path} | total-completo=${Date.now() - t0}ms`);
+console.log(`[MW] ${path} | headers=${JSON.stringify(Object.fromEntries(request.headers))}`);
   return response;
 }
 

@@ -9,22 +9,41 @@ export const metadata = {
 };
 
 export default async function ProduccionPage() {
+  console.time('produccion-queries-total');
+
+  console.time('produccion-diaria');
+  const produccionPromise = prisma.produccionDiaria.findMany({
+    include: { usuario: { select: { nombre: true, apellido: true } } },
+    orderBy: { fecha: 'desc' },
+    take: 30,
+  }).then((r) => { console.timeEnd('produccion-diaria'); return r; });
+
+  console.time('tubos-co2');
+  const tubosPromise = prisma.tuboCO2.findMany({
+    orderBy: { fecha_llegada: 'desc' },
+    take: 50,
+  }).then((r) => { console.timeEnd('tubos-co2'); return r; });
+
+  console.time('configuracion');
+  const configPromise = prisma.configuracion.findMany({
+    where: { clave: { in: ['co2_rendimiento_45kg', 'co2_rendimiento_35kg', 'co2_alerta_porcentaje'] } },
+  }).then((r) => { console.timeEnd('configuracion'); return r; });
+
+  console.time('usuarios');
+  const usuariosPromise = prisma.usuario.findMany({
+    where: { rol: { in: ['ADMIN', 'OFICINA'] }, activo: true },
+    orderBy: { nombre: 'asc' },
+    select: { id: true, nombre: true, apellido: true },
+  }).then((r) => { console.timeEnd('usuarios'); return r; });
+
   const [produccion, tubos, config, usuarios] = await Promise.all([
-    prisma.produccionDiaria.findMany({
-      include: { usuario: { select: { nombre: true, apellido: true } } },
-      orderBy: { fecha: 'desc' },
-      take: 30,
-    }),
-    prisma.tuboCO2.findMany({ orderBy: { fecha_llegada: 'desc' }, take: 50 }),
-    prisma.configuracion.findMany({
-      where: { clave: { in: ['co2_rendimiento_45kg', 'co2_rendimiento_35kg', 'co2_alerta_porcentaje'] } },
-    }),
-    prisma.usuario.findMany({
-      where: { rol: { in: ['ADMIN', 'OFICINA'] }, activo: true },
-      orderBy: { nombre: 'asc' },
-      select: { id: true, nombre: true, apellido: true },
-    }),
+    produccionPromise,
+    tubosPromise,
+    configPromise,
+    usuariosPromise,
   ]);
+
+  console.timeEnd('produccion-queries-total');
 
   return (
     <div className="space-y-4">
