@@ -8,9 +8,9 @@ import {
   EstadoPedido, 
   Rol, 
   EstadoVehiculo, 
-  DiaSemana 
-} from '@prisma/client';
-
+  DiaSemana,
+  TipoIncidencia 
+} from '@/lib/prisma/generated';
 /**
  * Obtiene todas las rutas reales y los pedidos flotantes para una fecha específica
  */
@@ -143,7 +143,7 @@ export async function generarRutasDesdeBaseAction(fechaStr: string, diaSemana: D
 }
 
 /**
- * ✨ NUEVA ACCIÓN: Trae el catálogo completo de productos activos
+ * ✨ Trae el catálogo completo de productos activos
  */
 export async function obtenerProductosAction() {
   try {
@@ -158,7 +158,7 @@ export async function obtenerProductosAction() {
 }
 
 /**
- * ✨ NUEVA ACCIÓN: Busca clientes por coincidencia de nombre o RUT en el modal rápido
+ * ✨ Busca clientes por coincidencia de nombre o RUT en el modal rápido
  */
 export async function buscarClientePorCriterioAction(criterio: string) {
   try {
@@ -168,7 +168,7 @@ export async function buscarClientePorCriterioAction(criterio: string) {
       where: {
         OR: [
           { nombre: { contains: criterio, mode: 'insensitive' } },
-          { rut: { contains: criterio, mode: 'insensitive' } }
+          { rut_empresa: { contains: criterio, mode: 'insensitive' } } // 👈 Corrección: 'rut' no existe en Cliente, es 'rut_empresa' según tu schema
         ]
       },
       take: 7
@@ -189,7 +189,7 @@ export async function guardarPedidoRapidoAction(data: {
   sector: string;
   productoId: string;
   cantidad: number;
-  usuarioRegistroId: string; // 👈 necesitas pasar el id del usuario logueado
+  usuarioRegistroId: string;
 }) {
   try {
     let finalClienteId = data.clienteId;
@@ -201,7 +201,7 @@ export async function guardarPedidoRapidoAction(data: {
           telefono: data.telefono,
           direccion: data.direccion,
           sector: data.sector,
-          tipo: "DOMICILIO", // 👈 antes: tipo_cliente: "PARTICULAR"
+          tipo: "DOMICILIO",
         }
       });
       finalClienteId = nuevoCliente.id;
@@ -213,15 +213,15 @@ export async function guardarPedidoRapidoAction(data: {
       data: {
         cliente_id: finalClienteId,
         fecha_solicitada: fechaSolicitada,
-        estado: EstadoPedido.PENDIENTE_CONFIRMACION, // 👈 antes: PENDIENTE
-        canal_origen: "LLAMADO", // 👈 campo obligatorio que faltaba
-        usuario_registro_id: data.usuarioRegistroId, // 👈 campo obligatorio que faltaba
+        estado: EstadoPedido.PENDIENTE_CONFIRMACION, 
+        canal_origen: "LLAMADO", 
+        usuario_registro_id: data.usuarioRegistroId, 
         items: {
           create: {
             producto_id: data.productoId,
             cantidad: data.cantidad,
-            tipo_transaccion: "VENTA", // 👈 campo obligatorio que faltaba
-            precio_historico: 0 // 👈 antes: precio_unitario
+            tipo_transaccion: "VENTA", 
+            precio_historico: 0 
           }
         }
       }
@@ -234,6 +234,7 @@ export async function guardarPedidoRapidoAction(data: {
     return { success: false, message: error.message || "Error al registrar el pedido rápido." };
   }
 }
+
 export async function cambiarOrdenParadaAction(paradaId: string, nuevoOrden: number) {
   try {
     await prisma.paradaDia.update({
@@ -329,5 +330,105 @@ export async function actualizarEstadoParadaAction(paradaId: string, nuevoEstado
   } catch (error: any) {
     console.error('Error en actualizarEstadoParadaAction:', error);
     return { success: false, message: error.message || "Error al actualizar estado de la parada." };
+  }
+}
+
+
+// ============================================================================
+// 👇 BLOQUE 2 - NUEVAS ACTIONS REQUERIDAS SEGÚN EL PLAN
+// ============================================================================
+
+/**
+ * 2.1 — Registrar Incidencia
+ */
+export interface RegistrarIncidenciaInput {
+  cliente_id: string;
+  parada_id?: string;
+  cuadratura_id?: string;
+  usuario_id: string;
+  tipo: TipoIncidencia;
+  descripcion?: string;
+  pedido_item_id?: string;
+  cantidad_entregada?: number;
+}
+
+export async function registrarIncidenciaAction(data: RegistrarIncidenciaInput) {
+  try {
+    await prisma.$transaction(async (tx) => {
+      
+      // 1. Crear la Incidencia
+      await tx.incidencia.create({
+        data: {
+          cliente_id: data.cliente_id,
+          parada_id: data.parada_id,
+          cuadratura_id: data.cuadratura_id,
+          usuario_id: data.usuario_id,
+          tipo: data.tipo,
+          descripcion: data.descripcion,
+          resuelta: false, 
+        },
+      });
+
+      // 2. Regla de negocio: Si es préstamo, incrementar deuda del cliente
+      if (data.tipo === "PRESTAMO_BOTELLON") {
+        await tx.cliente.update({
+          where: { id: data.cliente_id },
+          data: {
+            botellones_prestados: {
+              increment: 1,
+            },
+          },
+        });
+      }
+
+      // 3. Regla de negocio: Si es entrega parcial, actualizar el ítem del pedido
+      if (data.tipo === "CANTIDAD_PARCIAL") {
+        if (!data.pedido_item_id || data.cantidad_entregada === undefined) {
+          throw new Error("Faltan datos (pedido_item_id o cantidad_entregada) para registrar la entrega parcial.");
+        }
+        
+        await tx.pedidoItem.update({
+          where: { id: data.pedido_item_id },
+          data: {
+            cantidad_entregada: data.cantidad_entregada,
+          },
+        });
+      }
+    });
+
+    revalidatePath('/admin/rutas'); // Asumo que querrás refrescar las rutas tras la incidencia
+    return { success: true };
+  } catch (error: any) {
+    console.error('[registrarIncidenciaAction] Error:', error);
+    return { success: false, message: error.message || "Error al registrar la incidencia" };
+  }
+}
+
+
+/**
+ * 2.3 — Actualizar Orden de Paradas Masivamente (Drag & Drop)
+ */
+export async function actualizarOrdenParadasAction(paradasReordenadas: { id: string; orden_nuevo: number }[]) {
+  try {
+    if (!paradasReordenadas || paradasReordenadas.length === 0) return { success: true };
+
+    // Usamos transacción para que se actualicen todas juntas
+    await prisma.$transaction(
+      paradasReordenadas.map((parada) =>
+        prisma.paradaDia.update({
+          where: { id: parada.id },
+          data: { 
+            orden: parada.orden_nuevo,
+            orden_ajustado: true // 👈 Registramos que el repartidor alteró el orden sugerido
+          }
+        })
+      )
+    );
+
+    revalidatePath('/admin/rutas');
+    return { success: true };
+  } catch (error: any) {
+    console.error('Error en actualizarOrdenParadasAction:', error);
+    return { success: false, message: error.message || "Error al reordenar las paradas." };
   }
 }

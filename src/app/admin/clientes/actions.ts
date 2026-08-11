@@ -1,7 +1,7 @@
 'use server';
 
 import { prisma } from '@/lib/prisma';
-import { TipoCliente, PreferenciaFacturacion } from '@prisma/client';
+import { TipoCliente, PreferenciaFacturacion } from '@/lib/prisma/generated';
 import { revalidatePath } from 'next/cache';
 
 export interface ClienteInput {
@@ -178,7 +178,7 @@ export async function editarDispensadorAction(dispensadorId: string, payload: an
         numero_serie: payload.numeroSerie || payload.numero_serie || null,
         estado: payload.estado, // EN_CLIENTE, EN_TALLER, REEMPLAZADO_TEMPORALMENTE
         precio_arriendo: parseInt(payload.precioArriendo || payload.precio_arriendo) || 0,
-        foto_url: payload.fotoUrl || payload.foto_url || undefined // <-- Guardamos la nueva foto si viene en el payload
+        foto_url: payload.fotoUrl || payload.foto_url || undefined // Guardamos la nueva foto si viene en el payload
       }
     });
 
@@ -208,5 +208,99 @@ export async function eliminarDispensadorAction(dispensadorId: string) {
   } catch (error: any) {
     console.error(error);
     return { success: false, message: 'No se pudo eliminar el dispensador.' };
+  }
+}
+
+// ----------------------------------------------------------------
+// BLOQUE 2.4 y 2.5: INCIDENCIAS E HISTORIAL
+// ----------------------------------------------------------------
+
+// 10. Obtener Historial Completo del Cliente (Mejorado para el plan 2.4)
+export async function obtenerHistorialClienteAction(clienteId: string) {
+  try {
+    const cliente = await prisma.cliente.findUnique({
+      where: { id: clienteId },
+      include: {
+        incidencias: {
+          orderBy: { created_at: 'desc' },
+          include: {
+            usuario: { select: { nombre: true, apellido: true } }
+          }
+        },
+        pedidos: {
+          orderBy: { fecha_solicitada: 'desc' },
+          take: 10,
+          include: {
+            items: { include: { producto: true } }
+          }
+        },
+        historial_financiero: {
+          orderBy: { fecha: 'desc' },
+          take: 10
+        }
+      }
+    });
+
+    if (!cliente) return { success: false, message: 'Cliente no encontrado.' };
+
+    return { success: true, cliente };
+  } catch (error: any) {
+    console.error("Error al obtener historial:", error);
+    return { success: false, message: error.message || 'Error interno al cargar el historial.' };
+  }
+}
+
+// 11. Resolver Incidencia (Nuevo para el plan 2.5)
+export async function resolverIncidenciaAction(
+  incidenciaId: string, 
+  payload?: { cantidad_faltante_entregada?: number; pedido_item_id?: string }
+) {
+  try {
+    await prisma.$transaction(async (tx) => {
+      const incidencia = await tx.incidencia.findUnique({
+        where: { id: incidenciaId },
+        include: { cliente: true }
+      });
+
+      if (!incidencia) throw new Error("Incidencia no encontrada.");
+      if (incidencia.resuelta) throw new Error("Esta incidencia ya fue resuelta anteriormente.");
+
+      // Marcar la incidencia como resuelta
+      await tx.incidencia.update({
+        where: { id: incidenciaId },
+        data: { resuelta: true }
+      });
+
+      // Lógica de negocio 1: Si recuperamos un botellón prestado, rebajamos la deuda del cliente
+      if (incidencia.tipo === "PRESTAMO_BOTELLON") {
+        const nuevosPrestados = Math.max(0, incidencia.cliente.botellones_prestados - 1);
+        await tx.cliente.update({
+          where: { id: incidencia.cliente_id },
+          data: { botellones_prestados: nuevosPrestados }
+        });
+      }
+
+      // Lógica de negocio 2: Si era entrega parcial y traen el resto, actualizamos el item del pedido
+      if (
+        incidencia.tipo === "CANTIDAD_PARCIAL" && 
+        payload?.pedido_item_id && 
+        payload?.cantidad_faltante_entregada
+      ) {
+        await tx.pedidoItem.update({
+          where: { id: payload.pedido_item_id },
+          data: {
+            cantidad_entregada: {
+              increment: payload.cantidad_faltante_entregada
+            }
+          }
+        });
+      }
+    });
+
+    revalidatePath('/admin/clientes');
+    return { success: true };
+  } catch (error: any) {
+    console.error("Error al resolver incidencia:", error);
+    return { success: false, message: error.message || "Error al procesar la resolución de la incidencia." };
   }
 }

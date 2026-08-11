@@ -2,7 +2,7 @@
 
 import React, { useState, useTransition, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { TipoCliente, PreferenciaFacturacion, Cliente } from '@prisma/client';
+import { TipoCliente, PreferenciaFacturacion, Cliente } from '@/lib/prisma/generated';
 import { 
   crearClienteAction, 
   editarClienteAction, 

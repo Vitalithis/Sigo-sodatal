@@ -2,7 +2,7 @@
 
 import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
-import { DiaSemana } from '@prisma/client'; 
+import { DiaSemana } from '@/lib/prisma/generated'; 
 
 /**
  * Obtiene todas las rutas base configuradas en el sistema con sus choferes, 

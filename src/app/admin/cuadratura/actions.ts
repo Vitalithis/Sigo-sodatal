@@ -5,9 +5,9 @@ import { createClient } from '@/src/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
 import { TipoTransaccion, TipoCliente, MetodoPago } from '@/lib/prisma/generated';
 
-// ────────────────────────────────────────────────────────────────
+// ----------------------------------------------------------------
 // Tipos
-// ────────────────────────────────────────────────────────────────
+// ----------------------------------------------------------------
 export interface ItemSalidaInput {
   producto_id: string;
   cantidad: number;
@@ -15,7 +15,7 @@ export interface ItemSalidaInput {
 
 export interface SalidaInput {
   usuario_id: string;
-  fecha: string; // YYYY-MM-DD
+  fecha: string; 
   items: ItemSalidaInput[];
 }
 
@@ -38,16 +38,24 @@ export interface BotellonesVaciosInput {
   cantidad_danados: number;
 }
 
+export interface GastoInput {
+  tipo: string;
+  monto: number;
+  descripcion?: string;
+}
+
 export interface CierreCuadraturaInput {
   cuadratura_id: string;
   ventas: ItemVentaInput[];
   retorno: ItemRetornoInput[];
   botellones_vacios: BotellonesVaciosInput;
+  gastos: GastoInput[];
+  monto_bencina?: number;
 }
 
-// ────────────────────────────────────────────────────────────────
+// ----------------------------------------------------------------
 // Consultas
-// ────────────────────────────────────────────────────────────────
+// ----------------------------------------------------------------
 export async function obtenerCuadraturasAction(desde?: string, hasta?: string, usuario_id?: string) {
   try {
     const where: any = {};
@@ -62,7 +70,7 @@ export async function obtenerCuadraturasAction(desde?: string, hasta?: string, u
       where,
       include: {
         usuario: { select: { nombre: true, apellido: true, rol: true } },
-        _count: { select: { ventas: true, retorno: true } },
+        _count: { select: { ventas: true, retorno: true, gastos: true } },
       },
       orderBy: { fecha: 'desc' },
       take: 60,
@@ -84,6 +92,7 @@ export async function obtenerCuadraturaDetalleAction(id: string) {
         ventas: { include: { producto: true, guia: { select: { numero_correlativo: true } } } },
         retorno: { include: { producto: true } },
         botellones_vacios: true,
+        gastos: true,
       },
     });
     if (!cuadratura) return { success: false, message: 'La cuadratura no existe.' };
@@ -118,18 +127,22 @@ export async function obtenerProductosCuadraturaAction() {
   }
 }
 
-export async function obtenerStockAction() {
+export async function obtenerCuadraturaDelDiaAction(usuario_id: string, fecha: string) {
   try {
-    const [stockFabrica, stockCamion] = await Promise.all([
-      prisma.stockFabrica.findMany({ include: { producto: true }, orderBy: { producto: { nombre: 'asc' } } }),
-      prisma.stockCamion.findMany({
-        include: { producto: true, usuario: { select: { nombre: true, apellido: true } } },
-        orderBy: [{ usuario: { nombre: 'asc' } }, { producto: { nombre: 'asc' } }],
-      }),
-    ]);
-    return { success: true, stockFabrica, stockCamion };
+    const fechaNormalizada = new Date(`${fecha}T00:00:00`);
+    const cuadratura = await prisma.cuadratura.findFirst({
+      where: { usuario_id, fecha: fechaNormalizada },
+      include: {
+        salida: { include: { producto: true } },
+        ventas: { include: { producto: true, guia: { select: { numero_correlativo: true } } } },
+        retorno: { include: { producto: true } },
+        botellones_vacios: true,
+        gastos: true,
+      },
+    });
+    return { success: true, cuadratura };
   } catch (error: any) {
-    return { success: false, stockFabrica: [], stockCamion: [], message: error.message };
+    return { success: false, cuadratura: null, message: error.message };
   }
 }
 
@@ -144,7 +157,10 @@ export async function obtenerGuiasRepartidorDiaAction(usuario_id: string, fecha:
         estado: { not: 'ANULADA' },
         fecha_emision: { gte: inicio, lte: fin },
       },
-      include: { cliente: { select: { nombre: true } } },
+      include: {
+        cliente: { select: { nombre: true } },
+        items: { include: { producto: true } },
+      },
       orderBy: { numero_correlativo: 'asc' },
     });
     return { success: true, guias };
@@ -153,9 +169,9 @@ export async function obtenerGuiasRepartidorDiaAction(usuario_id: string, fecha:
   }
 }
 
-// ────────────────────────────────────────────────────────────────
+// ----------------------------------------------------------------
 // SALIDA (apertura de cuadratura)
-// ────────────────────────────────────────────────────────────────
+// ----------------------------------------------------------------
 export async function registrarSalidaAction(data: SalidaInput) {
   try {
     if (!data.usuario_id) return { success: false, message: 'Debes seleccionar un repartidor.' };
@@ -236,9 +252,9 @@ export async function registrarSalidaAction(data: SalidaInput) {
   }
 }
 
-// ────────────────────────────────────────────────────────────────
-// CIERRE (regreso: ventas, retorno, botellones vacíos)
-// ────────────────────────────────────────────────────────────────
+// ----------------------------------------------------------------
+// CIERRE (regreso: ventas, retorno, botellones, gastos)
+// ----------------------------------------------------------------
 export async function registrarCierreCuadraturaAction(data: CierreCuadraturaInput) {
   try {
     if (!data.cuadratura_id) return { success: false, message: 'Cuadratura no válida.' };
@@ -257,6 +273,68 @@ export async function registrarCierreCuadraturaAction(data: CierreCuadraturaInpu
 
       const usuario = cuadratura.usuario;
 
+      // --------------------------------------------------------------
+      // LOGICA BLOQUE 2.2: INCIDENCIAS Y VALIDACIONES
+      // --------------------------------------------------------------
+      
+      const inicioDia = new Date(cuadratura.fecha);
+      inicioDia.setUTCHours(0, 0, 0, 0);
+      const finDia = new Date(cuadratura.fecha);
+      finDia.setUTCHours(23, 59, 59, 999);
+
+      // Asociar incidencias huérfanas del día a esta cuadratura
+      await tx.incidencia.updateMany({
+        where: {
+          usuario_id: cuadratura.usuario_id,
+          cuadratura_id: null,
+          created_at: { gte: inicioDia, lte: finDia },
+        },
+        data: { cuadratura_id: cuadratura.id },
+      });
+
+      // Extraer paradas para validar entregas y aislar pedidos WEB pagados
+      const paradasDelDia = await tx.paradaDia.findMany({
+        where: {
+          ruta_dia: { usuario_id: cuadratura.usuario_id, fecha: cuadratura.fecha },
+        },
+        include: {
+          pedido: { include: { items: true } },
+        },
+      });
+
+      let deduccionWebEfectivo = 0;
+      let deduccionWebTarjeta = 0;
+      let deduccionWebTransferencia = 0;
+
+      for (const parada of paradasDelDia) {
+        if (parada.pedido) {
+          // Validar que no se entregue más de lo pedido
+          for (const item of parada.pedido.items) {
+            if (item.cantidad_entregada !== null && item.cantidad_entregada > item.cantidad) {
+              throw new Error(`Validación fallida: La cantidad entregada (${item.cantidad_entregada}) supera lo solicitado (${item.cantidad}).`);
+            }
+          }
+
+          // Calcular monto de ventas WEB pagadas para descontarlas del total final
+          if (parada.pedido.canal_origen === 'WEB' && parada.pedido.pagado) {
+            for (const item of parada.pedido.items) {
+              const prod = await tx.producto.findUnique({ where: { id: item.producto_id } });
+              if (prod) {
+                const precio = item.tipo_transaccion === 'RECARGA' ? (prod.precio_recarga ?? 0) : prod.precio_venta_nueva;
+                const cantidadFinal = item.cantidad_entregada !== null ? item.cantidad_entregada : item.cantidad;
+                const monto = precio * cantidadFinal;
+
+                if (parada.pedido.metodo_pago_web === 'EFECTIVO') deduccionWebEfectivo += monto;
+                else if (parada.pedido.metodo_pago_web === 'TARJETA') deduccionWebTarjeta += monto;
+                else if (parada.pedido.metodo_pago_web === 'TRANSFERENCIA') deduccionWebTransferencia += monto;
+              }
+            }
+          }
+        }
+      }
+      // --------------------------------------------------------------
+
+      // Revertir ventas y retorno anteriores
       for (const v of cuadratura.ventas) {
         await tx.stockCamion.upsert({
           where: { usuario_id_producto_id: { usuario_id: cuadratura.usuario_id, producto_id: v.producto_id } },
@@ -276,9 +354,11 @@ export async function registrarCierreCuadraturaAction(data: CierreCuadraturaInpu
           update: { cantidad: { increment: r.cantidad } },
         });
       }
+
       await tx.cuadraturaVenta.deleteMany({ where: { cuadratura_id: cuadratura.id } });
       await tx.cuadraturaRetorno.deleteMany({ where: { cuadratura_id: cuadratura.id } });
       await tx.botellonVacio.deleteMany({ where: { cuadratura_id: cuadratura.id } });
+      await tx.cuadraturaGasto.deleteMany({ where: { cuadratura_id: cuadratura.id } });
 
       let totalEfectivo = 0, totalTarjeta = 0, totalTransferencia = 0, totalGuiaMensual = 0, totalComision = 0;
 
@@ -324,6 +404,11 @@ export async function registrarCierreCuadraturaAction(data: CierreCuadraturaInpu
         });
       }
 
+      // Aplicar deducciones de los pedidos WEB que ya estaban pagados
+      totalEfectivo = Math.max(0, totalEfectivo - deduccionWebEfectivo);
+      totalTarjeta = Math.max(0, totalTarjeta - deduccionWebTarjeta);
+      totalTransferencia = Math.max(0, totalTransferencia - deduccionWebTransferencia);
+
       for (const r of data.retorno.filter((it) => it.cantidad > 0)) {
         await tx.cuadraturaRetorno.create({
           data: { cuadratura_id: cuadratura.id, producto_id: r.producto_id, cantidad: r.cantidad },
@@ -340,12 +425,24 @@ export async function registrarCierreCuadraturaAction(data: CierreCuadraturaInpu
         });
       }
 
-      if (data.botellones_vacios && data.botellones_vacios.cantidad_total > 0) {
+      if (data.botellones_vacios?.cantidad_total > 0) {
         await tx.botellonVacio.create({
           data: {
             cuadratura_id: cuadratura.id,
             cantidad_total: data.botellones_vacios.cantidad_total,
             cantidad_danados: data.botellones_vacios.cantidad_danados || 0,
+          },
+        });
+      }
+
+      // Gastos abiertos
+      for (const g of (data.gastos || []).filter((g) => g.monto > 0)) {
+        await tx.cuadraturaGasto.create({
+          data: {
+            cuadratura_id: cuadratura.id,
+            tipo: g.tipo.trim() || 'OTRO',
+            monto: g.monto,
+            descripcion: g.descripcion?.trim() || null,
           },
         });
       }
@@ -359,6 +456,7 @@ export async function registrarCierreCuadraturaAction(data: CierreCuadraturaInpu
           total_transferencia: totalTransferencia,
           total_guia_mensual: totalGuiaMensual,
           total_comision: totalComision,
+          monto_bencina: data.monto_bencina ?? null,
         },
       });
 
@@ -366,7 +464,7 @@ export async function registrarCierreCuadraturaAction(data: CierreCuadraturaInpu
       for (const sc of stocksCamionFinal) {
         if (sc.cantidad < 0) {
           const producto = await tx.producto.findUnique({ where: { id: sc.producto_id } });
-          alertas.push(`Stock en camión de ${producto?.nombre || 'un producto'} quedó negativo (${sc.cantidad}). Revisa las cantidades ingresadas.`);
+          alertas.push(`Stock en camión de ${producto?.nombre || 'un producto'} quedó negativo (${sc.cantidad}). Revisa las cantidades.`);
         }
       }
     });
@@ -374,13 +472,13 @@ export async function registrarCierreCuadraturaAction(data: CierreCuadraturaInpu
     revalidatePath('/admin/cuadratura');
     return { success: true, alertas };
   } catch (error: any) {
-    return { success: false, message: error.message || 'No se pudo registrar el cierre de la cuadratura.' };
+    return { success: false, message: error.message || 'No se pudo registrar el cierre.' };
   }
 }
 
-// ────────────────────────────────────────────────────────────────
+// ----------------------------------------------------------------
 // REAPERTURA (solo ADMIN)
-// ────────────────────────────────────────────────────────────────
+// ----------------------------------------------------------------
 export async function reabrirCuadraturaAction(cuadraturaId: string, motivo: string) {
   try {
     if (!motivo || motivo.trim().length < 3) {

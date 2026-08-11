@@ -2,7 +2,7 @@
 
 import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
-import { MetodoPago, ModalidadPago, TipoTransaccion } from '@prisma/client';
+import { MetodoPago, ModalidadPago, TipoTransaccion } from '@/lib/prisma/generated';
 
 // ────────────────────────────────────────────────────────────────
 // Tipos e Interfaces

@@ -199,6 +199,7 @@ model ParadaDia {
   pedido              Pedido?      @relation(fields: [pedido_id], references: [id])
   ruta_dia            RutaDia      @relation(fields: [ruta_dia_id], references: [id])
   incidencias         Incidencia[]
+  orden_ajustado      Boolean      @default(false)
 }
 
 model Pedido {
@@ -287,6 +288,7 @@ model Cuadratura {
   salida              CuadraturaSalida[]
   ventas              CuadraturaVenta[]
   gastos              CuadraturaGasto[]
+  incidencias         Incidencia[]
 
   @@unique([usuario_id, fecha])
 }
@@ -500,23 +502,27 @@ model CargaCombustible {
 }
 
 model Incidencia {
-  id          String         @id @default(uuid())
-  cliente_id  String
-  parada_id   String?
-  tipo        TipoIncidencia
-  descripcion String?
-  resuelta    Boolean        @default(false)
-  created_at  DateTime       @default(now())
-  usuario_id  String
-  cliente     Cliente        @relation(fields: [cliente_id], references: [id])
-  parada      ParadaDia?     @relation(fields: [parada_id], references: [id])
-  usuario     Usuario        @relation(fields: [usuario_id], references: [id])
+  id            String         @id @default(uuid())
+  cliente_id    String
+  parada_id     String?
+  tipo          TipoIncidencia
+  descripcion   String?
+  resuelta      Boolean        @default(false)
+  created_at    DateTime       @default(now())
+  usuario_id    String
+  cliente       Cliente        @relation(fields: [cliente_id], references: [id])
+  parada        ParadaDia?     @relation(fields: [parada_id], references: [id])
+  usuario       Usuario        @relation(fields: [usuario_id], references: [id])
+  cuadratura_id String?
+  cuadratura    Cuadratura?    @relation(fields: [cuadratura_id], references: [id])
 }
 
 enum TipoIncidencia {
   NO_ESTABA
   DEJADO_CONSERJERIA
   PRESTAMO_BOTELLON
+  CANTIDAD_PARCIAL // entregó menos de lo pedido
+  REAGENDADO // cliente pidió otro día
   OTRO
 }
 

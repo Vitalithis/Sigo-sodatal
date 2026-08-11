@@ -212,6 +212,8 @@ export namespace $Enums {
   NO_ESTABA: 'NO_ESTABA',
   DEJADO_CONSERJERIA: 'DEJADO_CONSERJERIA',
   PRESTAMO_BOTELLON: 'PRESTAMO_BOTELLON',
+  CANTIDAD_PARCIAL: 'CANTIDAD_PARCIAL',
+  REAGENDADO: 'REAGENDADO',
   OTRO: 'OTRO'
 };
 
@@ -5142,6 +5144,7 @@ export namespace Prisma {
     salida: number
     ventas: number
     gastos: number
+    incidencias: number
   }
 
   export type CuadraturaCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5150,6 +5153,7 @@ export namespace Prisma {
     salida?: boolean | CuadraturaCountOutputTypeCountSalidaArgs
     ventas?: boolean | CuadraturaCountOutputTypeCountVentasArgs
     gastos?: boolean | CuadraturaCountOutputTypeCountGastosArgs
+    incidencias?: boolean | CuadraturaCountOutputTypeCountIncidenciasArgs
   }
 
   // Custom InputTypes
@@ -5196,6 +5200,13 @@ export namespace Prisma {
    */
   export type CuadraturaCountOutputTypeCountGastosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: CuadraturaGastoWhereInput
+  }
+
+  /**
+   * CuadraturaCountOutputType without action
+   */
+  export type CuadraturaCountOutputTypeCountIncidenciasArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: IncidenciaWhereInput
   }
 
 
@@ -19876,6 +19887,7 @@ export namespace Prisma {
     orden: number | null
     estado: $Enums.EstadoParada | null
     motivo_postergacion: string | null
+    orden_ajustado: boolean | null
   }
 
   export type ParadaDiaMaxAggregateOutputType = {
@@ -19886,6 +19898,7 @@ export namespace Prisma {
     orden: number | null
     estado: $Enums.EstadoParada | null
     motivo_postergacion: string | null
+    orden_ajustado: boolean | null
   }
 
   export type ParadaDiaCountAggregateOutputType = {
@@ -19896,6 +19909,7 @@ export namespace Prisma {
     orden: number
     estado: number
     motivo_postergacion: number
+    orden_ajustado: number
     _all: number
   }
 
@@ -19916,6 +19930,7 @@ export namespace Prisma {
     orden?: true
     estado?: true
     motivo_postergacion?: true
+    orden_ajustado?: true
   }
 
   export type ParadaDiaMaxAggregateInputType = {
@@ -19926,6 +19941,7 @@ export namespace Prisma {
     orden?: true
     estado?: true
     motivo_postergacion?: true
+    orden_ajustado?: true
   }
 
   export type ParadaDiaCountAggregateInputType = {
@@ -19936,6 +19952,7 @@ export namespace Prisma {
     orden?: true
     estado?: true
     motivo_postergacion?: true
+    orden_ajustado?: true
     _all?: true
   }
 
@@ -20033,6 +20050,7 @@ export namespace Prisma {
     orden: number
     estado: $Enums.EstadoParada
     motivo_postergacion: string | null
+    orden_ajustado: boolean
     _count: ParadaDiaCountAggregateOutputType | null
     _avg: ParadaDiaAvgAggregateOutputType | null
     _sum: ParadaDiaSumAggregateOutputType | null
@@ -20062,6 +20080,7 @@ export namespace Prisma {
     orden?: boolean
     estado?: boolean
     motivo_postergacion?: boolean
+    orden_ajustado?: boolean
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
     pedido?: boolean | ParadaDia$pedidoArgs<ExtArgs>
     ruta_dia?: boolean | RutaDiaDefaultArgs<ExtArgs>
@@ -20077,6 +20096,7 @@ export namespace Prisma {
     orden?: boolean
     estado?: boolean
     motivo_postergacion?: boolean
+    orden_ajustado?: boolean
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
     pedido?: boolean | ParadaDia$pedidoArgs<ExtArgs>
     ruta_dia?: boolean | RutaDiaDefaultArgs<ExtArgs>
@@ -20090,6 +20110,7 @@ export namespace Prisma {
     orden?: boolean
     estado?: boolean
     motivo_postergacion?: boolean
+    orden_ajustado?: boolean
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
     pedido?: boolean | ParadaDia$pedidoArgs<ExtArgs>
     ruta_dia?: boolean | RutaDiaDefaultArgs<ExtArgs>
@@ -20103,9 +20124,10 @@ export namespace Prisma {
     orden?: boolean
     estado?: boolean
     motivo_postergacion?: boolean
+    orden_ajustado?: boolean
   }
 
-  export type ParadaDiaOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "ruta_dia_id" | "cliente_id" | "pedido_id" | "orden" | "estado" | "motivo_postergacion", ExtArgs["result"]["paradaDia"]>
+  export type ParadaDiaOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "ruta_dia_id" | "cliente_id" | "pedido_id" | "orden" | "estado" | "motivo_postergacion" | "orden_ajustado", ExtArgs["result"]["paradaDia"]>
   export type ParadaDiaInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
     pedido?: boolean | ParadaDia$pedidoArgs<ExtArgs>
@@ -20140,6 +20162,7 @@ export namespace Prisma {
       orden: number
       estado: $Enums.EstadoParada
       motivo_postergacion: string | null
+      orden_ajustado: boolean
     }, ExtArgs["result"]["paradaDia"]>
     composites: {}
   }
@@ -20574,6 +20597,7 @@ export namespace Prisma {
     readonly orden: FieldRef<"ParadaDia", 'Int'>
     readonly estado: FieldRef<"ParadaDia", 'EstadoParada'>
     readonly motivo_postergacion: FieldRef<"ParadaDia", 'String'>
+    readonly orden_ajustado: FieldRef<"ParadaDia", 'Boolean'>
   }
     
 
@@ -26170,6 +26194,7 @@ export namespace Prisma {
     salida?: boolean | Cuadratura$salidaArgs<ExtArgs>
     ventas?: boolean | Cuadratura$ventasArgs<ExtArgs>
     gastos?: boolean | Cuadratura$gastosArgs<ExtArgs>
+    incidencias?: boolean | Cuadratura$incidenciasArgs<ExtArgs>
     _count?: boolean | CuadraturaCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["cuadratura"]>
 
@@ -26228,6 +26253,7 @@ export namespace Prisma {
     salida?: boolean | Cuadratura$salidaArgs<ExtArgs>
     ventas?: boolean | Cuadratura$ventasArgs<ExtArgs>
     gastos?: boolean | Cuadratura$gastosArgs<ExtArgs>
+    incidencias?: boolean | Cuadratura$incidenciasArgs<ExtArgs>
     _count?: boolean | CuadraturaCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type CuadraturaIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -26246,6 +26272,7 @@ export namespace Prisma {
       salida: Prisma.$CuadraturaSalidaPayload<ExtArgs>[]
       ventas: Prisma.$CuadraturaVentaPayload<ExtArgs>[]
       gastos: Prisma.$CuadraturaGastoPayload<ExtArgs>[]
+      incidencias: Prisma.$IncidenciaPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -26660,6 +26687,7 @@ export namespace Prisma {
     salida<T extends Cuadratura$salidaArgs<ExtArgs> = {}>(args?: Subset<T, Cuadratura$salidaArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CuadraturaSalidaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     ventas<T extends Cuadratura$ventasArgs<ExtArgs> = {}>(args?: Subset<T, Cuadratura$ventasArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CuadraturaVentaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     gastos<T extends Cuadratura$gastosArgs<ExtArgs> = {}>(args?: Subset<T, Cuadratura$gastosArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CuadraturaGastoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    incidencias<T extends Cuadratura$incidenciasArgs<ExtArgs> = {}>(args?: Subset<T, Cuadratura$incidenciasArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IncidenciaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -27219,6 +27247,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: CuadraturaGastoScalarFieldEnum | CuadraturaGastoScalarFieldEnum[]
+  }
+
+  /**
+   * Cuadratura.incidencias
+   */
+  export type Cuadratura$incidenciasArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Incidencia
+     */
+    select?: IncidenciaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Incidencia
+     */
+    omit?: IncidenciaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IncidenciaInclude<ExtArgs> | null
+    where?: IncidenciaWhereInput
+    orderBy?: IncidenciaOrderByWithRelationInput | IncidenciaOrderByWithRelationInput[]
+    cursor?: IncidenciaWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: IncidenciaScalarFieldEnum | IncidenciaScalarFieldEnum[]
   }
 
   /**
@@ -48356,6 +48408,7 @@ export namespace Prisma {
     resuelta: boolean | null
     created_at: Date | null
     usuario_id: string | null
+    cuadratura_id: string | null
   }
 
   export type IncidenciaMaxAggregateOutputType = {
@@ -48367,6 +48420,7 @@ export namespace Prisma {
     resuelta: boolean | null
     created_at: Date | null
     usuario_id: string | null
+    cuadratura_id: string | null
   }
 
   export type IncidenciaCountAggregateOutputType = {
@@ -48378,6 +48432,7 @@ export namespace Prisma {
     resuelta: number
     created_at: number
     usuario_id: number
+    cuadratura_id: number
     _all: number
   }
 
@@ -48391,6 +48446,7 @@ export namespace Prisma {
     resuelta?: true
     created_at?: true
     usuario_id?: true
+    cuadratura_id?: true
   }
 
   export type IncidenciaMaxAggregateInputType = {
@@ -48402,6 +48458,7 @@ export namespace Prisma {
     resuelta?: true
     created_at?: true
     usuario_id?: true
+    cuadratura_id?: true
   }
 
   export type IncidenciaCountAggregateInputType = {
@@ -48413,6 +48470,7 @@ export namespace Prisma {
     resuelta?: true
     created_at?: true
     usuario_id?: true
+    cuadratura_id?: true
     _all?: true
   }
 
@@ -48497,6 +48555,7 @@ export namespace Prisma {
     resuelta: boolean
     created_at: Date
     usuario_id: string
+    cuadratura_id: string | null
     _count: IncidenciaCountAggregateOutputType | null
     _min: IncidenciaMinAggregateOutputType | null
     _max: IncidenciaMaxAggregateOutputType | null
@@ -48525,9 +48584,11 @@ export namespace Prisma {
     resuelta?: boolean
     created_at?: boolean
     usuario_id?: boolean
+    cuadratura_id?: boolean
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
     parada?: boolean | Incidencia$paradaArgs<ExtArgs>
     usuario?: boolean | UsuarioDefaultArgs<ExtArgs>
+    cuadratura?: boolean | Incidencia$cuadraturaArgs<ExtArgs>
   }, ExtArgs["result"]["incidencia"]>
 
   export type IncidenciaSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -48539,9 +48600,11 @@ export namespace Prisma {
     resuelta?: boolean
     created_at?: boolean
     usuario_id?: boolean
+    cuadratura_id?: boolean
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
     parada?: boolean | Incidencia$paradaArgs<ExtArgs>
     usuario?: boolean | UsuarioDefaultArgs<ExtArgs>
+    cuadratura?: boolean | Incidencia$cuadraturaArgs<ExtArgs>
   }, ExtArgs["result"]["incidencia"]>
 
   export type IncidenciaSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -48553,9 +48616,11 @@ export namespace Prisma {
     resuelta?: boolean
     created_at?: boolean
     usuario_id?: boolean
+    cuadratura_id?: boolean
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
     parada?: boolean | Incidencia$paradaArgs<ExtArgs>
     usuario?: boolean | UsuarioDefaultArgs<ExtArgs>
+    cuadratura?: boolean | Incidencia$cuadraturaArgs<ExtArgs>
   }, ExtArgs["result"]["incidencia"]>
 
   export type IncidenciaSelectScalar = {
@@ -48567,23 +48632,27 @@ export namespace Prisma {
     resuelta?: boolean
     created_at?: boolean
     usuario_id?: boolean
+    cuadratura_id?: boolean
   }
 
-  export type IncidenciaOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "cliente_id" | "parada_id" | "tipo" | "descripcion" | "resuelta" | "created_at" | "usuario_id", ExtArgs["result"]["incidencia"]>
+  export type IncidenciaOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "cliente_id" | "parada_id" | "tipo" | "descripcion" | "resuelta" | "created_at" | "usuario_id" | "cuadratura_id", ExtArgs["result"]["incidencia"]>
   export type IncidenciaInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
     parada?: boolean | Incidencia$paradaArgs<ExtArgs>
     usuario?: boolean | UsuarioDefaultArgs<ExtArgs>
+    cuadratura?: boolean | Incidencia$cuadraturaArgs<ExtArgs>
   }
   export type IncidenciaIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
     parada?: boolean | Incidencia$paradaArgs<ExtArgs>
     usuario?: boolean | UsuarioDefaultArgs<ExtArgs>
+    cuadratura?: boolean | Incidencia$cuadraturaArgs<ExtArgs>
   }
   export type IncidenciaIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
     parada?: boolean | Incidencia$paradaArgs<ExtArgs>
     usuario?: boolean | UsuarioDefaultArgs<ExtArgs>
+    cuadratura?: boolean | Incidencia$cuadraturaArgs<ExtArgs>
   }
 
   export type $IncidenciaPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -48592,6 +48661,7 @@ export namespace Prisma {
       cliente: Prisma.$ClientePayload<ExtArgs>
       parada: Prisma.$ParadaDiaPayload<ExtArgs> | null
       usuario: Prisma.$UsuarioPayload<ExtArgs>
+      cuadratura: Prisma.$CuadraturaPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -48602,6 +48672,7 @@ export namespace Prisma {
       resuelta: boolean
       created_at: Date
       usuario_id: string
+      cuadratura_id: string | null
     }, ExtArgs["result"]["incidencia"]>
     composites: {}
   }
@@ -48999,6 +49070,7 @@ export namespace Prisma {
     cliente<T extends ClienteDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ClienteDefaultArgs<ExtArgs>>): Prisma__ClienteClient<$Result.GetResult<Prisma.$ClientePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     parada<T extends Incidencia$paradaArgs<ExtArgs> = {}>(args?: Subset<T, Incidencia$paradaArgs<ExtArgs>>): Prisma__ParadaDiaClient<$Result.GetResult<Prisma.$ParadaDiaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     usuario<T extends UsuarioDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UsuarioDefaultArgs<ExtArgs>>): Prisma__UsuarioClient<$Result.GetResult<Prisma.$UsuarioPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    cuadratura<T extends Incidencia$cuadraturaArgs<ExtArgs> = {}>(args?: Subset<T, Incidencia$cuadraturaArgs<ExtArgs>>): Prisma__CuadraturaClient<$Result.GetResult<Prisma.$CuadraturaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -49036,6 +49108,7 @@ export namespace Prisma {
     readonly resuelta: FieldRef<"Incidencia", 'Boolean'>
     readonly created_at: FieldRef<"Incidencia", 'DateTime'>
     readonly usuario_id: FieldRef<"Incidencia", 'String'>
+    readonly cuadratura_id: FieldRef<"Incidencia", 'String'>
   }
     
 
@@ -49456,6 +49529,25 @@ export namespace Prisma {
   }
 
   /**
+   * Incidencia.cuadratura
+   */
+  export type Incidencia$cuadraturaArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Cuadratura
+     */
+    select?: CuadraturaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Cuadratura
+     */
+    omit?: CuadraturaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CuadraturaInclude<ExtArgs> | null
+    where?: CuadraturaWhereInput
+  }
+
+  /**
    * Incidencia without action
    */
   export type IncidenciaDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -49658,7 +49750,8 @@ export namespace Prisma {
     pedido_id: 'pedido_id',
     orden: 'orden',
     estado: 'estado',
-    motivo_postergacion: 'motivo_postergacion'
+    motivo_postergacion: 'motivo_postergacion',
+    orden_ajustado: 'orden_ajustado'
   };
 
   export type ParadaDiaScalarFieldEnum = (typeof ParadaDiaScalarFieldEnum)[keyof typeof ParadaDiaScalarFieldEnum]
@@ -49993,7 +50086,8 @@ export namespace Prisma {
     descripcion: 'descripcion',
     resuelta: 'resuelta',
     created_at: 'created_at',
-    usuario_id: 'usuario_id'
+    usuario_id: 'usuario_id',
+    cuadratura_id: 'cuadratura_id'
   };
 
   export type IncidenciaScalarFieldEnum = (typeof IncidenciaScalarFieldEnum)[keyof typeof IncidenciaScalarFieldEnum]
@@ -51409,6 +51503,7 @@ export namespace Prisma {
     orden?: IntFilter<"ParadaDia"> | number
     estado?: EnumEstadoParadaFilter<"ParadaDia"> | $Enums.EstadoParada
     motivo_postergacion?: StringNullableFilter<"ParadaDia"> | string | null
+    orden_ajustado?: BoolFilter<"ParadaDia"> | boolean
     cliente?: XOR<ClienteScalarRelationFilter, ClienteWhereInput>
     pedido?: XOR<PedidoNullableScalarRelationFilter, PedidoWhereInput> | null
     ruta_dia?: XOR<RutaDiaScalarRelationFilter, RutaDiaWhereInput>
@@ -51423,6 +51518,7 @@ export namespace Prisma {
     orden?: SortOrder
     estado?: SortOrder
     motivo_postergacion?: SortOrderInput | SortOrder
+    orden_ajustado?: SortOrder
     cliente?: ClienteOrderByWithRelationInput
     pedido?: PedidoOrderByWithRelationInput
     ruta_dia?: RutaDiaOrderByWithRelationInput
@@ -51440,6 +51536,7 @@ export namespace Prisma {
     orden?: IntFilter<"ParadaDia"> | number
     estado?: EnumEstadoParadaFilter<"ParadaDia"> | $Enums.EstadoParada
     motivo_postergacion?: StringNullableFilter<"ParadaDia"> | string | null
+    orden_ajustado?: BoolFilter<"ParadaDia"> | boolean
     cliente?: XOR<ClienteScalarRelationFilter, ClienteWhereInput>
     pedido?: XOR<PedidoNullableScalarRelationFilter, PedidoWhereInput> | null
     ruta_dia?: XOR<RutaDiaScalarRelationFilter, RutaDiaWhereInput>
@@ -51454,6 +51551,7 @@ export namespace Prisma {
     orden?: SortOrder
     estado?: SortOrder
     motivo_postergacion?: SortOrderInput | SortOrder
+    orden_ajustado?: SortOrder
     _count?: ParadaDiaCountOrderByAggregateInput
     _avg?: ParadaDiaAvgOrderByAggregateInput
     _max?: ParadaDiaMaxOrderByAggregateInput
@@ -51472,6 +51570,7 @@ export namespace Prisma {
     orden?: IntWithAggregatesFilter<"ParadaDia"> | number
     estado?: EnumEstadoParadaWithAggregatesFilter<"ParadaDia"> | $Enums.EstadoParada
     motivo_postergacion?: StringNullableWithAggregatesFilter<"ParadaDia"> | string | null
+    orden_ajustado?: BoolWithAggregatesFilter<"ParadaDia"> | boolean
   }
 
   export type PedidoWhereInput = {
@@ -51859,6 +51958,7 @@ export namespace Prisma {
     salida?: CuadraturaSalidaListRelationFilter
     ventas?: CuadraturaVentaListRelationFilter
     gastos?: CuadraturaGastoListRelationFilter
+    incidencias?: IncidenciaListRelationFilter
   }
 
   export type CuadraturaOrderByWithRelationInput = {
@@ -51880,6 +51980,7 @@ export namespace Prisma {
     salida?: CuadraturaSalidaOrderByRelationAggregateInput
     ventas?: CuadraturaVentaOrderByRelationAggregateInput
     gastos?: CuadraturaGastoOrderByRelationAggregateInput
+    incidencias?: IncidenciaOrderByRelationAggregateInput
   }
 
   export type CuadraturaWhereUniqueInput = Prisma.AtLeast<{
@@ -51905,6 +52006,7 @@ export namespace Prisma {
     salida?: CuadraturaSalidaListRelationFilter
     ventas?: CuadraturaVentaListRelationFilter
     gastos?: CuadraturaGastoListRelationFilter
+    incidencias?: IncidenciaListRelationFilter
   }, "id" | "usuario_id_fecha">
 
   export type CuadraturaOrderByWithAggregationInput = {
@@ -53192,9 +53294,11 @@ export namespace Prisma {
     resuelta?: BoolFilter<"Incidencia"> | boolean
     created_at?: DateTimeFilter<"Incidencia"> | Date | string
     usuario_id?: StringFilter<"Incidencia"> | string
+    cuadratura_id?: StringNullableFilter<"Incidencia"> | string | null
     cliente?: XOR<ClienteScalarRelationFilter, ClienteWhereInput>
     parada?: XOR<ParadaDiaNullableScalarRelationFilter, ParadaDiaWhereInput> | null
     usuario?: XOR<UsuarioScalarRelationFilter, UsuarioWhereInput>
+    cuadratura?: XOR<CuadraturaNullableScalarRelationFilter, CuadraturaWhereInput> | null
   }
 
   export type IncidenciaOrderByWithRelationInput = {
@@ -53206,9 +53310,11 @@ export namespace Prisma {
     resuelta?: SortOrder
     created_at?: SortOrder
     usuario_id?: SortOrder
+    cuadratura_id?: SortOrderInput | SortOrder
     cliente?: ClienteOrderByWithRelationInput
     parada?: ParadaDiaOrderByWithRelationInput
     usuario?: UsuarioOrderByWithRelationInput
+    cuadratura?: CuadraturaOrderByWithRelationInput
   }
 
   export type IncidenciaWhereUniqueInput = Prisma.AtLeast<{
@@ -53223,9 +53329,11 @@ export namespace Prisma {
     resuelta?: BoolFilter<"Incidencia"> | boolean
     created_at?: DateTimeFilter<"Incidencia"> | Date | string
     usuario_id?: StringFilter<"Incidencia"> | string
+    cuadratura_id?: StringNullableFilter<"Incidencia"> | string | null
     cliente?: XOR<ClienteScalarRelationFilter, ClienteWhereInput>
     parada?: XOR<ParadaDiaNullableScalarRelationFilter, ParadaDiaWhereInput> | null
     usuario?: XOR<UsuarioScalarRelationFilter, UsuarioWhereInput>
+    cuadratura?: XOR<CuadraturaNullableScalarRelationFilter, CuadraturaWhereInput> | null
   }, "id">
 
   export type IncidenciaOrderByWithAggregationInput = {
@@ -53237,6 +53345,7 @@ export namespace Prisma {
     resuelta?: SortOrder
     created_at?: SortOrder
     usuario_id?: SortOrder
+    cuadratura_id?: SortOrderInput | SortOrder
     _count?: IncidenciaCountOrderByAggregateInput
     _max?: IncidenciaMaxOrderByAggregateInput
     _min?: IncidenciaMinOrderByAggregateInput
@@ -53254,6 +53363,7 @@ export namespace Prisma {
     resuelta?: BoolWithAggregatesFilter<"Incidencia"> | boolean
     created_at?: DateTimeWithAggregatesFilter<"Incidencia"> | Date | string
     usuario_id?: StringWithAggregatesFilter<"Incidencia"> | string
+    cuadratura_id?: StringNullableWithAggregatesFilter<"Incidencia"> | string | null
   }
 
   export type UsuarioCreateInput = {
@@ -54288,6 +54398,7 @@ export namespace Prisma {
     orden: number
     estado?: $Enums.EstadoParada
     motivo_postergacion?: string | null
+    orden_ajustado?: boolean
     cliente: ClienteCreateNestedOneWithoutParadasInput
     pedido?: PedidoCreateNestedOneWithoutParadasInput
     ruta_dia: RutaDiaCreateNestedOneWithoutParadasInput
@@ -54302,6 +54413,7 @@ export namespace Prisma {
     orden: number
     estado?: $Enums.EstadoParada
     motivo_postergacion?: string | null
+    orden_ajustado?: boolean
     incidencias?: IncidenciaUncheckedCreateNestedManyWithoutParadaInput
   }
 
@@ -54310,6 +54422,7 @@ export namespace Prisma {
     orden?: IntFieldUpdateOperationsInput | number
     estado?: EnumEstadoParadaFieldUpdateOperationsInput | $Enums.EstadoParada
     motivo_postergacion?: NullableStringFieldUpdateOperationsInput | string | null
+    orden_ajustado?: BoolFieldUpdateOperationsInput | boolean
     cliente?: ClienteUpdateOneRequiredWithoutParadasNestedInput
     pedido?: PedidoUpdateOneWithoutParadasNestedInput
     ruta_dia?: RutaDiaUpdateOneRequiredWithoutParadasNestedInput
@@ -54324,6 +54437,7 @@ export namespace Prisma {
     orden?: IntFieldUpdateOperationsInput | number
     estado?: EnumEstadoParadaFieldUpdateOperationsInput | $Enums.EstadoParada
     motivo_postergacion?: NullableStringFieldUpdateOperationsInput | string | null
+    orden_ajustado?: BoolFieldUpdateOperationsInput | boolean
     incidencias?: IncidenciaUncheckedUpdateManyWithoutParadaNestedInput
   }
 
@@ -54335,6 +54449,7 @@ export namespace Prisma {
     orden: number
     estado?: $Enums.EstadoParada
     motivo_postergacion?: string | null
+    orden_ajustado?: boolean
   }
 
   export type ParadaDiaUpdateManyMutationInput = {
@@ -54342,6 +54457,7 @@ export namespace Prisma {
     orden?: IntFieldUpdateOperationsInput | number
     estado?: EnumEstadoParadaFieldUpdateOperationsInput | $Enums.EstadoParada
     motivo_postergacion?: NullableStringFieldUpdateOperationsInput | string | null
+    orden_ajustado?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type ParadaDiaUncheckedUpdateManyInput = {
@@ -54352,6 +54468,7 @@ export namespace Prisma {
     orden?: IntFieldUpdateOperationsInput | number
     estado?: EnumEstadoParadaFieldUpdateOperationsInput | $Enums.EstadoParada
     motivo_postergacion?: NullableStringFieldUpdateOperationsInput | string | null
+    orden_ajustado?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type PedidoCreateInput = {
@@ -54760,6 +54877,7 @@ export namespace Prisma {
     salida?: CuadraturaSalidaCreateNestedManyWithoutCuadraturaInput
     ventas?: CuadraturaVentaCreateNestedManyWithoutCuadraturaInput
     gastos?: CuadraturaGastoCreateNestedManyWithoutCuadraturaInput
+    incidencias?: IncidenciaCreateNestedManyWithoutCuadraturaInput
   }
 
   export type CuadraturaUncheckedCreateInput = {
@@ -54780,6 +54898,7 @@ export namespace Prisma {
     salida?: CuadraturaSalidaUncheckedCreateNestedManyWithoutCuadraturaInput
     ventas?: CuadraturaVentaUncheckedCreateNestedManyWithoutCuadraturaInput
     gastos?: CuadraturaGastoUncheckedCreateNestedManyWithoutCuadraturaInput
+    incidencias?: IncidenciaUncheckedCreateNestedManyWithoutCuadraturaInput
   }
 
   export type CuadraturaUpdateInput = {
@@ -54800,6 +54919,7 @@ export namespace Prisma {
     salida?: CuadraturaSalidaUpdateManyWithoutCuadraturaNestedInput
     ventas?: CuadraturaVentaUpdateManyWithoutCuadraturaNestedInput
     gastos?: CuadraturaGastoUpdateManyWithoutCuadraturaNestedInput
+    incidencias?: IncidenciaUpdateManyWithoutCuadraturaNestedInput
   }
 
   export type CuadraturaUncheckedUpdateInput = {
@@ -54820,6 +54940,7 @@ export namespace Prisma {
     salida?: CuadraturaSalidaUncheckedUpdateManyWithoutCuadraturaNestedInput
     ventas?: CuadraturaVentaUncheckedUpdateManyWithoutCuadraturaNestedInput
     gastos?: CuadraturaGastoUncheckedUpdateManyWithoutCuadraturaNestedInput
+    incidencias?: IncidenciaUncheckedUpdateManyWithoutCuadraturaNestedInput
   }
 
   export type CuadraturaCreateManyInput = {
@@ -56124,6 +56245,7 @@ export namespace Prisma {
     cliente: ClienteCreateNestedOneWithoutIncidenciasInput
     parada?: ParadaDiaCreateNestedOneWithoutIncidenciasInput
     usuario: UsuarioCreateNestedOneWithoutIncidenciasInput
+    cuadratura?: CuadraturaCreateNestedOneWithoutIncidenciasInput
   }
 
   export type IncidenciaUncheckedCreateInput = {
@@ -56135,6 +56257,7 @@ export namespace Prisma {
     resuelta?: boolean
     created_at?: Date | string
     usuario_id: string
+    cuadratura_id?: string | null
   }
 
   export type IncidenciaUpdateInput = {
@@ -56146,6 +56269,7 @@ export namespace Prisma {
     cliente?: ClienteUpdateOneRequiredWithoutIncidenciasNestedInput
     parada?: ParadaDiaUpdateOneWithoutIncidenciasNestedInput
     usuario?: UsuarioUpdateOneRequiredWithoutIncidenciasNestedInput
+    cuadratura?: CuadraturaUpdateOneWithoutIncidenciasNestedInput
   }
 
   export type IncidenciaUncheckedUpdateInput = {
@@ -56157,6 +56281,7 @@ export namespace Prisma {
     resuelta?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     usuario_id?: StringFieldUpdateOperationsInput | string
+    cuadratura_id?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type IncidenciaCreateManyInput = {
@@ -56168,6 +56293,7 @@ export namespace Prisma {
     resuelta?: boolean
     created_at?: Date | string
     usuario_id: string
+    cuadratura_id?: string | null
   }
 
   export type IncidenciaUpdateManyMutationInput = {
@@ -56187,6 +56313,7 @@ export namespace Prisma {
     resuelta?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     usuario_id?: StringFieldUpdateOperationsInput | string
+    cuadratura_id?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type StringFilter<$PrismaModel = never> = {
@@ -57439,6 +57566,7 @@ export namespace Prisma {
     orden?: SortOrder
     estado?: SortOrder
     motivo_postergacion?: SortOrder
+    orden_ajustado?: SortOrder
   }
 
   export type ParadaDiaAvgOrderByAggregateInput = {
@@ -57453,6 +57581,7 @@ export namespace Prisma {
     orden?: SortOrder
     estado?: SortOrder
     motivo_postergacion?: SortOrder
+    orden_ajustado?: SortOrder
   }
 
   export type ParadaDiaMinOrderByAggregateInput = {
@@ -57463,6 +57592,7 @@ export namespace Prisma {
     orden?: SortOrder
     estado?: SortOrder
     motivo_postergacion?: SortOrder
+    orden_ajustado?: SortOrder
   }
 
   export type ParadaDiaSumOrderByAggregateInput = {
@@ -58719,6 +58849,11 @@ export namespace Prisma {
     isNot?: ParadaDiaWhereInput | null
   }
 
+  export type CuadraturaNullableScalarRelationFilter = {
+    is?: CuadraturaWhereInput | null
+    isNot?: CuadraturaWhereInput | null
+  }
+
   export type IncidenciaCountOrderByAggregateInput = {
     id?: SortOrder
     cliente_id?: SortOrder
@@ -58728,6 +58863,7 @@ export namespace Prisma {
     resuelta?: SortOrder
     created_at?: SortOrder
     usuario_id?: SortOrder
+    cuadratura_id?: SortOrder
   }
 
   export type IncidenciaMaxOrderByAggregateInput = {
@@ -58739,6 +58875,7 @@ export namespace Prisma {
     resuelta?: SortOrder
     created_at?: SortOrder
     usuario_id?: SortOrder
+    cuadratura_id?: SortOrder
   }
 
   export type IncidenciaMinOrderByAggregateInput = {
@@ -58750,6 +58887,7 @@ export namespace Prisma {
     resuelta?: SortOrder
     created_at?: SortOrder
     usuario_id?: SortOrder
+    cuadratura_id?: SortOrder
   }
 
   export type EnumTipoIncidenciaWithAggregatesFilter<$PrismaModel = never> = {
@@ -61113,6 +61251,13 @@ export namespace Prisma {
     connect?: CuadraturaGastoWhereUniqueInput | CuadraturaGastoWhereUniqueInput[]
   }
 
+  export type IncidenciaCreateNestedManyWithoutCuadraturaInput = {
+    create?: XOR<IncidenciaCreateWithoutCuadraturaInput, IncidenciaUncheckedCreateWithoutCuadraturaInput> | IncidenciaCreateWithoutCuadraturaInput[] | IncidenciaUncheckedCreateWithoutCuadraturaInput[]
+    connectOrCreate?: IncidenciaCreateOrConnectWithoutCuadraturaInput | IncidenciaCreateOrConnectWithoutCuadraturaInput[]
+    createMany?: IncidenciaCreateManyCuadraturaInputEnvelope
+    connect?: IncidenciaWhereUniqueInput | IncidenciaWhereUniqueInput[]
+  }
+
   export type BotellonVacioUncheckedCreateNestedManyWithoutCuadraturaInput = {
     create?: XOR<BotellonVacioCreateWithoutCuadraturaInput, BotellonVacioUncheckedCreateWithoutCuadraturaInput> | BotellonVacioCreateWithoutCuadraturaInput[] | BotellonVacioUncheckedCreateWithoutCuadraturaInput[]
     connectOrCreate?: BotellonVacioCreateOrConnectWithoutCuadraturaInput | BotellonVacioCreateOrConnectWithoutCuadraturaInput[]
@@ -61146,6 +61291,13 @@ export namespace Prisma {
     connectOrCreate?: CuadraturaGastoCreateOrConnectWithoutCuadraturaInput | CuadraturaGastoCreateOrConnectWithoutCuadraturaInput[]
     createMany?: CuadraturaGastoCreateManyCuadraturaInputEnvelope
     connect?: CuadraturaGastoWhereUniqueInput | CuadraturaGastoWhereUniqueInput[]
+  }
+
+  export type IncidenciaUncheckedCreateNestedManyWithoutCuadraturaInput = {
+    create?: XOR<IncidenciaCreateWithoutCuadraturaInput, IncidenciaUncheckedCreateWithoutCuadraturaInput> | IncidenciaCreateWithoutCuadraturaInput[] | IncidenciaUncheckedCreateWithoutCuadraturaInput[]
+    connectOrCreate?: IncidenciaCreateOrConnectWithoutCuadraturaInput | IncidenciaCreateOrConnectWithoutCuadraturaInput[]
+    createMany?: IncidenciaCreateManyCuadraturaInputEnvelope
+    connect?: IncidenciaWhereUniqueInput | IncidenciaWhereUniqueInput[]
   }
 
   export type EnumEstadoCuadraturaFieldUpdateOperationsInput = {
@@ -61230,6 +61382,20 @@ export namespace Prisma {
     deleteMany?: CuadraturaGastoScalarWhereInput | CuadraturaGastoScalarWhereInput[]
   }
 
+  export type IncidenciaUpdateManyWithoutCuadraturaNestedInput = {
+    create?: XOR<IncidenciaCreateWithoutCuadraturaInput, IncidenciaUncheckedCreateWithoutCuadraturaInput> | IncidenciaCreateWithoutCuadraturaInput[] | IncidenciaUncheckedCreateWithoutCuadraturaInput[]
+    connectOrCreate?: IncidenciaCreateOrConnectWithoutCuadraturaInput | IncidenciaCreateOrConnectWithoutCuadraturaInput[]
+    upsert?: IncidenciaUpsertWithWhereUniqueWithoutCuadraturaInput | IncidenciaUpsertWithWhereUniqueWithoutCuadraturaInput[]
+    createMany?: IncidenciaCreateManyCuadraturaInputEnvelope
+    set?: IncidenciaWhereUniqueInput | IncidenciaWhereUniqueInput[]
+    disconnect?: IncidenciaWhereUniqueInput | IncidenciaWhereUniqueInput[]
+    delete?: IncidenciaWhereUniqueInput | IncidenciaWhereUniqueInput[]
+    connect?: IncidenciaWhereUniqueInput | IncidenciaWhereUniqueInput[]
+    update?: IncidenciaUpdateWithWhereUniqueWithoutCuadraturaInput | IncidenciaUpdateWithWhereUniqueWithoutCuadraturaInput[]
+    updateMany?: IncidenciaUpdateManyWithWhereWithoutCuadraturaInput | IncidenciaUpdateManyWithWhereWithoutCuadraturaInput[]
+    deleteMany?: IncidenciaScalarWhereInput | IncidenciaScalarWhereInput[]
+  }
+
   export type BotellonVacioUncheckedUpdateManyWithoutCuadraturaNestedInput = {
     create?: XOR<BotellonVacioCreateWithoutCuadraturaInput, BotellonVacioUncheckedCreateWithoutCuadraturaInput> | BotellonVacioCreateWithoutCuadraturaInput[] | BotellonVacioUncheckedCreateWithoutCuadraturaInput[]
     connectOrCreate?: BotellonVacioCreateOrConnectWithoutCuadraturaInput | BotellonVacioCreateOrConnectWithoutCuadraturaInput[]
@@ -61298,6 +61464,20 @@ export namespace Prisma {
     update?: CuadraturaGastoUpdateWithWhereUniqueWithoutCuadraturaInput | CuadraturaGastoUpdateWithWhereUniqueWithoutCuadraturaInput[]
     updateMany?: CuadraturaGastoUpdateManyWithWhereWithoutCuadraturaInput | CuadraturaGastoUpdateManyWithWhereWithoutCuadraturaInput[]
     deleteMany?: CuadraturaGastoScalarWhereInput | CuadraturaGastoScalarWhereInput[]
+  }
+
+  export type IncidenciaUncheckedUpdateManyWithoutCuadraturaNestedInput = {
+    create?: XOR<IncidenciaCreateWithoutCuadraturaInput, IncidenciaUncheckedCreateWithoutCuadraturaInput> | IncidenciaCreateWithoutCuadraturaInput[] | IncidenciaUncheckedCreateWithoutCuadraturaInput[]
+    connectOrCreate?: IncidenciaCreateOrConnectWithoutCuadraturaInput | IncidenciaCreateOrConnectWithoutCuadraturaInput[]
+    upsert?: IncidenciaUpsertWithWhereUniqueWithoutCuadraturaInput | IncidenciaUpsertWithWhereUniqueWithoutCuadraturaInput[]
+    createMany?: IncidenciaCreateManyCuadraturaInputEnvelope
+    set?: IncidenciaWhereUniqueInput | IncidenciaWhereUniqueInput[]
+    disconnect?: IncidenciaWhereUniqueInput | IncidenciaWhereUniqueInput[]
+    delete?: IncidenciaWhereUniqueInput | IncidenciaWhereUniqueInput[]
+    connect?: IncidenciaWhereUniqueInput | IncidenciaWhereUniqueInput[]
+    update?: IncidenciaUpdateWithWhereUniqueWithoutCuadraturaInput | IncidenciaUpdateWithWhereUniqueWithoutCuadraturaInput[]
+    updateMany?: IncidenciaUpdateManyWithWhereWithoutCuadraturaInput | IncidenciaUpdateManyWithWhereWithoutCuadraturaInput[]
+    deleteMany?: IncidenciaScalarWhereInput | IncidenciaScalarWhereInput[]
   }
 
   export type CuadraturaCreateNestedOneWithoutSalidaInput = {
@@ -61788,6 +61968,12 @@ export namespace Prisma {
     connect?: UsuarioWhereUniqueInput
   }
 
+  export type CuadraturaCreateNestedOneWithoutIncidenciasInput = {
+    create?: XOR<CuadraturaCreateWithoutIncidenciasInput, CuadraturaUncheckedCreateWithoutIncidenciasInput>
+    connectOrCreate?: CuadraturaCreateOrConnectWithoutIncidenciasInput
+    connect?: CuadraturaWhereUniqueInput
+  }
+
   export type EnumTipoIncidenciaFieldUpdateOperationsInput = {
     set?: $Enums.TipoIncidencia
   }
@@ -61816,6 +62002,16 @@ export namespace Prisma {
     upsert?: UsuarioUpsertWithoutIncidenciasInput
     connect?: UsuarioWhereUniqueInput
     update?: XOR<XOR<UsuarioUpdateToOneWithWhereWithoutIncidenciasInput, UsuarioUpdateWithoutIncidenciasInput>, UsuarioUncheckedUpdateWithoutIncidenciasInput>
+  }
+
+  export type CuadraturaUpdateOneWithoutIncidenciasNestedInput = {
+    create?: XOR<CuadraturaCreateWithoutIncidenciasInput, CuadraturaUncheckedCreateWithoutIncidenciasInput>
+    connectOrCreate?: CuadraturaCreateOrConnectWithoutIncidenciasInput
+    upsert?: CuadraturaUpsertWithoutIncidenciasInput
+    disconnect?: CuadraturaWhereInput | boolean
+    delete?: CuadraturaWhereInput | boolean
+    connect?: CuadraturaWhereUniqueInput
+    update?: XOR<XOR<CuadraturaUpdateToOneWithWhereWithoutIncidenciasInput, CuadraturaUpdateWithoutIncidenciasInput>, CuadraturaUncheckedUpdateWithoutIncidenciasInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -62561,6 +62757,7 @@ export namespace Prisma {
     salida?: CuadraturaSalidaCreateNestedManyWithoutCuadraturaInput
     ventas?: CuadraturaVentaCreateNestedManyWithoutCuadraturaInput
     gastos?: CuadraturaGastoCreateNestedManyWithoutCuadraturaInput
+    incidencias?: IncidenciaCreateNestedManyWithoutCuadraturaInput
   }
 
   export type CuadraturaUncheckedCreateWithoutUsuarioInput = {
@@ -62580,6 +62777,7 @@ export namespace Prisma {
     salida?: CuadraturaSalidaUncheckedCreateNestedManyWithoutCuadraturaInput
     ventas?: CuadraturaVentaUncheckedCreateNestedManyWithoutCuadraturaInput
     gastos?: CuadraturaGastoUncheckedCreateNestedManyWithoutCuadraturaInput
+    incidencias?: IncidenciaUncheckedCreateNestedManyWithoutCuadraturaInput
   }
 
   export type CuadraturaCreateOrConnectWithoutUsuarioInput = {
@@ -62867,6 +63065,7 @@ export namespace Prisma {
     created_at?: Date | string
     cliente: ClienteCreateNestedOneWithoutIncidenciasInput
     parada?: ParadaDiaCreateNestedOneWithoutIncidenciasInput
+    cuadratura?: CuadraturaCreateNestedOneWithoutIncidenciasInput
   }
 
   export type IncidenciaUncheckedCreateWithoutUsuarioInput = {
@@ -62877,6 +63076,7 @@ export namespace Prisma {
     descripcion?: string | null
     resuelta?: boolean
     created_at?: Date | string
+    cuadratura_id?: string | null
   }
 
   export type IncidenciaCreateOrConnectWithoutUsuarioInput = {
@@ -63268,6 +63468,7 @@ export namespace Prisma {
     resuelta?: BoolFilter<"Incidencia"> | boolean
     created_at?: DateTimeFilter<"Incidencia"> | Date | string
     usuario_id?: StringFilter<"Incidencia"> | string
+    cuadratura_id?: StringNullableFilter<"Incidencia"> | string | null
   }
 
   export type AlertaVehiculoCreateWithoutVehiculoInput = {
@@ -64686,6 +64887,7 @@ export namespace Prisma {
     orden: number
     estado?: $Enums.EstadoParada
     motivo_postergacion?: string | null
+    orden_ajustado?: boolean
     pedido?: PedidoCreateNestedOneWithoutParadasInput
     ruta_dia: RutaDiaCreateNestedOneWithoutParadasInput
     incidencias?: IncidenciaCreateNestedManyWithoutParadaInput
@@ -64698,6 +64900,7 @@ export namespace Prisma {
     orden: number
     estado?: $Enums.EstadoParada
     motivo_postergacion?: string | null
+    orden_ajustado?: boolean
     incidencias?: IncidenciaUncheckedCreateNestedManyWithoutParadaInput
   }
 
@@ -64761,6 +64964,7 @@ export namespace Prisma {
     created_at?: Date | string
     parada?: ParadaDiaCreateNestedOneWithoutIncidenciasInput
     usuario: UsuarioCreateNestedOneWithoutIncidenciasInput
+    cuadratura?: CuadraturaCreateNestedOneWithoutIncidenciasInput
   }
 
   export type IncidenciaUncheckedCreateWithoutClienteInput = {
@@ -64771,6 +64975,7 @@ export namespace Prisma {
     resuelta?: boolean
     created_at?: Date | string
     usuario_id: string
+    cuadratura_id?: string | null
   }
 
   export type IncidenciaCreateOrConnectWithoutClienteInput = {
@@ -64928,6 +65133,7 @@ export namespace Prisma {
     orden?: IntFilter<"ParadaDia"> | number
     estado?: EnumEstadoParadaFilter<"ParadaDia"> | $Enums.EstadoParada
     motivo_postergacion?: StringNullableFilter<"ParadaDia"> | string | null
+    orden_ajustado?: BoolFilter<"ParadaDia"> | boolean
   }
 
   export type PedidoUpsertWithWhereUniqueWithoutClienteInput = {
@@ -65559,6 +65765,7 @@ export namespace Prisma {
     orden: number
     estado?: $Enums.EstadoParada
     motivo_postergacion?: string | null
+    orden_ajustado?: boolean
     cliente: ClienteCreateNestedOneWithoutParadasInput
     pedido?: PedidoCreateNestedOneWithoutParadasInput
     incidencias?: IncidenciaCreateNestedManyWithoutParadaInput
@@ -65571,6 +65778,7 @@ export namespace Prisma {
     orden: number
     estado?: $Enums.EstadoParada
     motivo_postergacion?: string | null
+    orden_ajustado?: boolean
     incidencias?: IncidenciaUncheckedCreateNestedManyWithoutParadaInput
   }
 
@@ -65991,6 +66199,7 @@ export namespace Prisma {
     created_at?: Date | string
     cliente: ClienteCreateNestedOneWithoutIncidenciasInput
     usuario: UsuarioCreateNestedOneWithoutIncidenciasInput
+    cuadratura?: CuadraturaCreateNestedOneWithoutIncidenciasInput
   }
 
   export type IncidenciaUncheckedCreateWithoutParadaInput = {
@@ -66001,6 +66210,7 @@ export namespace Prisma {
     resuelta?: boolean
     created_at?: Date | string
     usuario_id: string
+    cuadratura_id?: string | null
   }
 
   export type IncidenciaCreateOrConnectWithoutParadaInput = {
@@ -66167,6 +66377,7 @@ export namespace Prisma {
     orden: number
     estado?: $Enums.EstadoParada
     motivo_postergacion?: string | null
+    orden_ajustado?: boolean
     cliente: ClienteCreateNestedOneWithoutParadasInput
     ruta_dia: RutaDiaCreateNestedOneWithoutParadasInput
     incidencias?: IncidenciaCreateNestedManyWithoutParadaInput
@@ -66179,6 +66390,7 @@ export namespace Prisma {
     orden: number
     estado?: $Enums.EstadoParada
     motivo_postergacion?: string | null
+    orden_ajustado?: boolean
     incidencias?: IncidenciaUncheckedCreateNestedManyWithoutParadaInput
   }
 
@@ -67407,6 +67619,38 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type IncidenciaCreateWithoutCuadraturaInput = {
+    id?: string
+    tipo: $Enums.TipoIncidencia
+    descripcion?: string | null
+    resuelta?: boolean
+    created_at?: Date | string
+    cliente: ClienteCreateNestedOneWithoutIncidenciasInput
+    parada?: ParadaDiaCreateNestedOneWithoutIncidenciasInput
+    usuario: UsuarioCreateNestedOneWithoutIncidenciasInput
+  }
+
+  export type IncidenciaUncheckedCreateWithoutCuadraturaInput = {
+    id?: string
+    cliente_id: string
+    parada_id?: string | null
+    tipo: $Enums.TipoIncidencia
+    descripcion?: string | null
+    resuelta?: boolean
+    created_at?: Date | string
+    usuario_id: string
+  }
+
+  export type IncidenciaCreateOrConnectWithoutCuadraturaInput = {
+    where: IncidenciaWhereUniqueInput
+    create: XOR<IncidenciaCreateWithoutCuadraturaInput, IncidenciaUncheckedCreateWithoutCuadraturaInput>
+  }
+
+  export type IncidenciaCreateManyCuadraturaInputEnvelope = {
+    data: IncidenciaCreateManyCuadraturaInput | IncidenciaCreateManyCuadraturaInput[]
+    skipDuplicates?: boolean
+  }
+
   export type BotellonVacioUpsertWithWhereUniqueWithoutCuadraturaInput = {
     where: BotellonVacioWhereUniqueInput
     update: XOR<BotellonVacioUpdateWithoutCuadraturaInput, BotellonVacioUncheckedUpdateWithoutCuadraturaInput>
@@ -67573,6 +67817,22 @@ export namespace Prisma {
     descripcion?: StringNullableFilter<"CuadraturaGasto"> | string | null
   }
 
+  export type IncidenciaUpsertWithWhereUniqueWithoutCuadraturaInput = {
+    where: IncidenciaWhereUniqueInput
+    update: XOR<IncidenciaUpdateWithoutCuadraturaInput, IncidenciaUncheckedUpdateWithoutCuadraturaInput>
+    create: XOR<IncidenciaCreateWithoutCuadraturaInput, IncidenciaUncheckedCreateWithoutCuadraturaInput>
+  }
+
+  export type IncidenciaUpdateWithWhereUniqueWithoutCuadraturaInput = {
+    where: IncidenciaWhereUniqueInput
+    data: XOR<IncidenciaUpdateWithoutCuadraturaInput, IncidenciaUncheckedUpdateWithoutCuadraturaInput>
+  }
+
+  export type IncidenciaUpdateManyWithWhereWithoutCuadraturaInput = {
+    where: IncidenciaScalarWhereInput
+    data: XOR<IncidenciaUpdateManyMutationInput, IncidenciaUncheckedUpdateManyWithoutCuadraturaInput>
+  }
+
   export type CuadraturaCreateWithoutSalidaInput = {
     id?: string
     fecha: Date | string
@@ -67590,6 +67850,7 @@ export namespace Prisma {
     retorno?: CuadraturaRetornoCreateNestedManyWithoutCuadraturaInput
     ventas?: CuadraturaVentaCreateNestedManyWithoutCuadraturaInput
     gastos?: CuadraturaGastoCreateNestedManyWithoutCuadraturaInput
+    incidencias?: IncidenciaCreateNestedManyWithoutCuadraturaInput
   }
 
   export type CuadraturaUncheckedCreateWithoutSalidaInput = {
@@ -67609,6 +67870,7 @@ export namespace Prisma {
     retorno?: CuadraturaRetornoUncheckedCreateNestedManyWithoutCuadraturaInput
     ventas?: CuadraturaVentaUncheckedCreateNestedManyWithoutCuadraturaInput
     gastos?: CuadraturaGastoUncheckedCreateNestedManyWithoutCuadraturaInput
+    incidencias?: IncidenciaUncheckedCreateNestedManyWithoutCuadraturaInput
   }
 
   export type CuadraturaCreateOrConnectWithoutSalidaInput = {
@@ -67683,6 +67945,7 @@ export namespace Prisma {
     retorno?: CuadraturaRetornoUpdateManyWithoutCuadraturaNestedInput
     ventas?: CuadraturaVentaUpdateManyWithoutCuadraturaNestedInput
     gastos?: CuadraturaGastoUpdateManyWithoutCuadraturaNestedInput
+    incidencias?: IncidenciaUpdateManyWithoutCuadraturaNestedInput
   }
 
   export type CuadraturaUncheckedUpdateWithoutSalidaInput = {
@@ -67702,6 +67965,7 @@ export namespace Prisma {
     retorno?: CuadraturaRetornoUncheckedUpdateManyWithoutCuadraturaNestedInput
     ventas?: CuadraturaVentaUncheckedUpdateManyWithoutCuadraturaNestedInput
     gastos?: CuadraturaGastoUncheckedUpdateManyWithoutCuadraturaNestedInput
+    incidencias?: IncidenciaUncheckedUpdateManyWithoutCuadraturaNestedInput
   }
 
   export type ProductoUpsertWithoutCuadratura_salidaInput = {
@@ -67766,6 +68030,7 @@ export namespace Prisma {
     retorno?: CuadraturaRetornoCreateNestedManyWithoutCuadraturaInput
     salida?: CuadraturaSalidaCreateNestedManyWithoutCuadraturaInput
     gastos?: CuadraturaGastoCreateNestedManyWithoutCuadraturaInput
+    incidencias?: IncidenciaCreateNestedManyWithoutCuadraturaInput
   }
 
   export type CuadraturaUncheckedCreateWithoutVentasInput = {
@@ -67785,6 +68050,7 @@ export namespace Prisma {
     retorno?: CuadraturaRetornoUncheckedCreateNestedManyWithoutCuadraturaInput
     salida?: CuadraturaSalidaUncheckedCreateNestedManyWithoutCuadraturaInput
     gastos?: CuadraturaGastoUncheckedCreateNestedManyWithoutCuadraturaInput
+    incidencias?: IncidenciaUncheckedCreateNestedManyWithoutCuadraturaInput
   }
 
   export type CuadraturaCreateOrConnectWithoutVentasInput = {
@@ -67906,6 +68172,7 @@ export namespace Prisma {
     retorno?: CuadraturaRetornoUpdateManyWithoutCuadraturaNestedInput
     salida?: CuadraturaSalidaUpdateManyWithoutCuadraturaNestedInput
     gastos?: CuadraturaGastoUpdateManyWithoutCuadraturaNestedInput
+    incidencias?: IncidenciaUpdateManyWithoutCuadraturaNestedInput
   }
 
   export type CuadraturaUncheckedUpdateWithoutVentasInput = {
@@ -67925,6 +68192,7 @@ export namespace Prisma {
     retorno?: CuadraturaRetornoUncheckedUpdateManyWithoutCuadraturaNestedInput
     salida?: CuadraturaSalidaUncheckedUpdateManyWithoutCuadraturaNestedInput
     gastos?: CuadraturaGastoUncheckedUpdateManyWithoutCuadraturaNestedInput
+    incidencias?: IncidenciaUncheckedUpdateManyWithoutCuadraturaNestedInput
   }
 
   export type GuiaDespachoUpsertWithoutCuadratura_ventasInput = {
@@ -68041,6 +68309,7 @@ export namespace Prisma {
     salida?: CuadraturaSalidaCreateNestedManyWithoutCuadraturaInput
     ventas?: CuadraturaVentaCreateNestedManyWithoutCuadraturaInput
     gastos?: CuadraturaGastoCreateNestedManyWithoutCuadraturaInput
+    incidencias?: IncidenciaCreateNestedManyWithoutCuadraturaInput
   }
 
   export type CuadraturaUncheckedCreateWithoutRetornoInput = {
@@ -68060,6 +68329,7 @@ export namespace Prisma {
     salida?: CuadraturaSalidaUncheckedCreateNestedManyWithoutCuadraturaInput
     ventas?: CuadraturaVentaUncheckedCreateNestedManyWithoutCuadraturaInput
     gastos?: CuadraturaGastoUncheckedCreateNestedManyWithoutCuadraturaInput
+    incidencias?: IncidenciaUncheckedCreateNestedManyWithoutCuadraturaInput
   }
 
   export type CuadraturaCreateOrConnectWithoutRetornoInput = {
@@ -68134,6 +68404,7 @@ export namespace Prisma {
     salida?: CuadraturaSalidaUpdateManyWithoutCuadraturaNestedInput
     ventas?: CuadraturaVentaUpdateManyWithoutCuadraturaNestedInput
     gastos?: CuadraturaGastoUpdateManyWithoutCuadraturaNestedInput
+    incidencias?: IncidenciaUpdateManyWithoutCuadraturaNestedInput
   }
 
   export type CuadraturaUncheckedUpdateWithoutRetornoInput = {
@@ -68153,6 +68424,7 @@ export namespace Prisma {
     salida?: CuadraturaSalidaUncheckedUpdateManyWithoutCuadraturaNestedInput
     ventas?: CuadraturaVentaUncheckedUpdateManyWithoutCuadraturaNestedInput
     gastos?: CuadraturaGastoUncheckedUpdateManyWithoutCuadraturaNestedInput
+    incidencias?: IncidenciaUncheckedUpdateManyWithoutCuadraturaNestedInput
   }
 
   export type ProductoUpsertWithoutCuadratura_retornoInput = {
@@ -68217,6 +68489,7 @@ export namespace Prisma {
     retorno?: CuadraturaRetornoCreateNestedManyWithoutCuadraturaInput
     salida?: CuadraturaSalidaCreateNestedManyWithoutCuadraturaInput
     ventas?: CuadraturaVentaCreateNestedManyWithoutCuadraturaInput
+    incidencias?: IncidenciaCreateNestedManyWithoutCuadraturaInput
   }
 
   export type CuadraturaUncheckedCreateWithoutGastosInput = {
@@ -68236,6 +68509,7 @@ export namespace Prisma {
     retorno?: CuadraturaRetornoUncheckedCreateNestedManyWithoutCuadraturaInput
     salida?: CuadraturaSalidaUncheckedCreateNestedManyWithoutCuadraturaInput
     ventas?: CuadraturaVentaUncheckedCreateNestedManyWithoutCuadraturaInput
+    incidencias?: IncidenciaUncheckedCreateNestedManyWithoutCuadraturaInput
   }
 
   export type CuadraturaCreateOrConnectWithoutGastosInput = {
@@ -68271,6 +68545,7 @@ export namespace Prisma {
     retorno?: CuadraturaRetornoUpdateManyWithoutCuadraturaNestedInput
     salida?: CuadraturaSalidaUpdateManyWithoutCuadraturaNestedInput
     ventas?: CuadraturaVentaUpdateManyWithoutCuadraturaNestedInput
+    incidencias?: IncidenciaUpdateManyWithoutCuadraturaNestedInput
   }
 
   export type CuadraturaUncheckedUpdateWithoutGastosInput = {
@@ -68290,6 +68565,7 @@ export namespace Prisma {
     retorno?: CuadraturaRetornoUncheckedUpdateManyWithoutCuadraturaNestedInput
     salida?: CuadraturaSalidaUncheckedUpdateManyWithoutCuadraturaNestedInput
     ventas?: CuadraturaVentaUncheckedUpdateManyWithoutCuadraturaNestedInput
+    incidencias?: IncidenciaUncheckedUpdateManyWithoutCuadraturaNestedInput
   }
 
   export type CuadraturaCreateWithoutBotellones_vaciosInput = {
@@ -68309,6 +68585,7 @@ export namespace Prisma {
     salida?: CuadraturaSalidaCreateNestedManyWithoutCuadraturaInput
     ventas?: CuadraturaVentaCreateNestedManyWithoutCuadraturaInput
     gastos?: CuadraturaGastoCreateNestedManyWithoutCuadraturaInput
+    incidencias?: IncidenciaCreateNestedManyWithoutCuadraturaInput
   }
 
   export type CuadraturaUncheckedCreateWithoutBotellones_vaciosInput = {
@@ -68328,6 +68605,7 @@ export namespace Prisma {
     salida?: CuadraturaSalidaUncheckedCreateNestedManyWithoutCuadraturaInput
     ventas?: CuadraturaVentaUncheckedCreateNestedManyWithoutCuadraturaInput
     gastos?: CuadraturaGastoUncheckedCreateNestedManyWithoutCuadraturaInput
+    incidencias?: IncidenciaUncheckedCreateNestedManyWithoutCuadraturaInput
   }
 
   export type CuadraturaCreateOrConnectWithoutBotellones_vaciosInput = {
@@ -68363,6 +68641,7 @@ export namespace Prisma {
     salida?: CuadraturaSalidaUpdateManyWithoutCuadraturaNestedInput
     ventas?: CuadraturaVentaUpdateManyWithoutCuadraturaNestedInput
     gastos?: CuadraturaGastoUpdateManyWithoutCuadraturaNestedInput
+    incidencias?: IncidenciaUpdateManyWithoutCuadraturaNestedInput
   }
 
   export type CuadraturaUncheckedUpdateWithoutBotellones_vaciosInput = {
@@ -68382,6 +68661,7 @@ export namespace Prisma {
     salida?: CuadraturaSalidaUncheckedUpdateManyWithoutCuadraturaNestedInput
     ventas?: CuadraturaVentaUncheckedUpdateManyWithoutCuadraturaNestedInput
     gastos?: CuadraturaGastoUncheckedUpdateManyWithoutCuadraturaNestedInput
+    incidencias?: IncidenciaUncheckedUpdateManyWithoutCuadraturaNestedInput
   }
 
   export type ClienteCreateWithoutBotellones_danadosInput = {
@@ -70038,6 +70318,7 @@ export namespace Prisma {
     orden: number
     estado?: $Enums.EstadoParada
     motivo_postergacion?: string | null
+    orden_ajustado?: boolean
     cliente: ClienteCreateNestedOneWithoutParadasInput
     pedido?: PedidoCreateNestedOneWithoutParadasInput
     ruta_dia: RutaDiaCreateNestedOneWithoutParadasInput
@@ -70051,6 +70332,7 @@ export namespace Prisma {
     orden: number
     estado?: $Enums.EstadoParada
     motivo_postergacion?: string | null
+    orden_ajustado?: boolean
   }
 
   export type ParadaDiaCreateOrConnectWithoutIncidenciasInput = {
@@ -70115,6 +70397,51 @@ export namespace Prisma {
   export type UsuarioCreateOrConnectWithoutIncidenciasInput = {
     where: UsuarioWhereUniqueInput
     create: XOR<UsuarioCreateWithoutIncidenciasInput, UsuarioUncheckedCreateWithoutIncidenciasInput>
+  }
+
+  export type CuadraturaCreateWithoutIncidenciasInput = {
+    id?: string
+    fecha: Date | string
+    estado?: $Enums.EstadoCuadratura
+    total_comision?: number
+    total_efectivo?: number
+    total_guia_mensual?: number
+    total_tarjeta?: number
+    total_transferencia?: number
+    motivo_reapertura?: string | null
+    fecha_reapertura?: Date | string | null
+    monto_bencina?: number | null
+    botellones_vacios?: BotellonVacioCreateNestedManyWithoutCuadraturaInput
+    usuario: UsuarioCreateNestedOneWithoutCuadraturasInput
+    retorno?: CuadraturaRetornoCreateNestedManyWithoutCuadraturaInput
+    salida?: CuadraturaSalidaCreateNestedManyWithoutCuadraturaInput
+    ventas?: CuadraturaVentaCreateNestedManyWithoutCuadraturaInput
+    gastos?: CuadraturaGastoCreateNestedManyWithoutCuadraturaInput
+  }
+
+  export type CuadraturaUncheckedCreateWithoutIncidenciasInput = {
+    id?: string
+    usuario_id: string
+    fecha: Date | string
+    estado?: $Enums.EstadoCuadratura
+    total_comision?: number
+    total_efectivo?: number
+    total_guia_mensual?: number
+    total_tarjeta?: number
+    total_transferencia?: number
+    motivo_reapertura?: string | null
+    fecha_reapertura?: Date | string | null
+    monto_bencina?: number | null
+    botellones_vacios?: BotellonVacioUncheckedCreateNestedManyWithoutCuadraturaInput
+    retorno?: CuadraturaRetornoUncheckedCreateNestedManyWithoutCuadraturaInput
+    salida?: CuadraturaSalidaUncheckedCreateNestedManyWithoutCuadraturaInput
+    ventas?: CuadraturaVentaUncheckedCreateNestedManyWithoutCuadraturaInput
+    gastos?: CuadraturaGastoUncheckedCreateNestedManyWithoutCuadraturaInput
+  }
+
+  export type CuadraturaCreateOrConnectWithoutIncidenciasInput = {
+    where: CuadraturaWhereUniqueInput
+    create: XOR<CuadraturaCreateWithoutIncidenciasInput, CuadraturaUncheckedCreateWithoutIncidenciasInput>
   }
 
   export type ClienteUpsertWithoutIncidenciasInput = {
@@ -70194,6 +70521,7 @@ export namespace Prisma {
     orden?: IntFieldUpdateOperationsInput | number
     estado?: EnumEstadoParadaFieldUpdateOperationsInput | $Enums.EstadoParada
     motivo_postergacion?: NullableStringFieldUpdateOperationsInput | string | null
+    orden_ajustado?: BoolFieldUpdateOperationsInput | boolean
     cliente?: ClienteUpdateOneRequiredWithoutParadasNestedInput
     pedido?: PedidoUpdateOneWithoutParadasNestedInput
     ruta_dia?: RutaDiaUpdateOneRequiredWithoutParadasNestedInput
@@ -70207,6 +70535,7 @@ export namespace Prisma {
     orden?: IntFieldUpdateOperationsInput | number
     estado?: EnumEstadoParadaFieldUpdateOperationsInput | $Enums.EstadoParada
     motivo_postergacion?: NullableStringFieldUpdateOperationsInput | string | null
+    orden_ajustado?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type UsuarioUpsertWithoutIncidenciasInput = {
@@ -70272,6 +70601,57 @@ export namespace Prisma {
     rutas_base?: RutaBaseUncheckedUpdateManyWithoutUsuarioNestedInput
     rutas_dia?: RutaDiaUncheckedUpdateManyWithoutUsuarioNestedInput
     stock_camion?: StockCamionUncheckedUpdateManyWithoutUsuarioNestedInput
+  }
+
+  export type CuadraturaUpsertWithoutIncidenciasInput = {
+    update: XOR<CuadraturaUpdateWithoutIncidenciasInput, CuadraturaUncheckedUpdateWithoutIncidenciasInput>
+    create: XOR<CuadraturaCreateWithoutIncidenciasInput, CuadraturaUncheckedCreateWithoutIncidenciasInput>
+    where?: CuadraturaWhereInput
+  }
+
+  export type CuadraturaUpdateToOneWithWhereWithoutIncidenciasInput = {
+    where?: CuadraturaWhereInput
+    data: XOR<CuadraturaUpdateWithoutIncidenciasInput, CuadraturaUncheckedUpdateWithoutIncidenciasInput>
+  }
+
+  export type CuadraturaUpdateWithoutIncidenciasInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fecha?: DateTimeFieldUpdateOperationsInput | Date | string
+    estado?: EnumEstadoCuadraturaFieldUpdateOperationsInput | $Enums.EstadoCuadratura
+    total_comision?: FloatFieldUpdateOperationsInput | number
+    total_efectivo?: FloatFieldUpdateOperationsInput | number
+    total_guia_mensual?: FloatFieldUpdateOperationsInput | number
+    total_tarjeta?: FloatFieldUpdateOperationsInput | number
+    total_transferencia?: FloatFieldUpdateOperationsInput | number
+    motivo_reapertura?: NullableStringFieldUpdateOperationsInput | string | null
+    fecha_reapertura?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    monto_bencina?: NullableIntFieldUpdateOperationsInput | number | null
+    botellones_vacios?: BotellonVacioUpdateManyWithoutCuadraturaNestedInput
+    usuario?: UsuarioUpdateOneRequiredWithoutCuadraturasNestedInput
+    retorno?: CuadraturaRetornoUpdateManyWithoutCuadraturaNestedInput
+    salida?: CuadraturaSalidaUpdateManyWithoutCuadraturaNestedInput
+    ventas?: CuadraturaVentaUpdateManyWithoutCuadraturaNestedInput
+    gastos?: CuadraturaGastoUpdateManyWithoutCuadraturaNestedInput
+  }
+
+  export type CuadraturaUncheckedUpdateWithoutIncidenciasInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    usuario_id?: StringFieldUpdateOperationsInput | string
+    fecha?: DateTimeFieldUpdateOperationsInput | Date | string
+    estado?: EnumEstadoCuadraturaFieldUpdateOperationsInput | $Enums.EstadoCuadratura
+    total_comision?: FloatFieldUpdateOperationsInput | number
+    total_efectivo?: FloatFieldUpdateOperationsInput | number
+    total_guia_mensual?: FloatFieldUpdateOperationsInput | number
+    total_tarjeta?: FloatFieldUpdateOperationsInput | number
+    total_transferencia?: FloatFieldUpdateOperationsInput | number
+    motivo_reapertura?: NullableStringFieldUpdateOperationsInput | string | null
+    fecha_reapertura?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    monto_bencina?: NullableIntFieldUpdateOperationsInput | number | null
+    botellones_vacios?: BotellonVacioUncheckedUpdateManyWithoutCuadraturaNestedInput
+    retorno?: CuadraturaRetornoUncheckedUpdateManyWithoutCuadraturaNestedInput
+    salida?: CuadraturaSalidaUncheckedUpdateManyWithoutCuadraturaNestedInput
+    ventas?: CuadraturaVentaUncheckedUpdateManyWithoutCuadraturaNestedInput
+    gastos?: CuadraturaGastoUncheckedUpdateManyWithoutCuadraturaNestedInput
   }
 
   export type BotellonDanadoCreateManyUsuarioInput = {
@@ -70390,6 +70770,7 @@ export namespace Prisma {
     descripcion?: string | null
     resuelta?: boolean
     created_at?: Date | string
+    cuadratura_id?: string | null
   }
 
   export type BotellonDanadoUpdateWithoutUsuarioInput = {
@@ -70472,6 +70853,7 @@ export namespace Prisma {
     salida?: CuadraturaSalidaUpdateManyWithoutCuadraturaNestedInput
     ventas?: CuadraturaVentaUpdateManyWithoutCuadraturaNestedInput
     gastos?: CuadraturaGastoUpdateManyWithoutCuadraturaNestedInput
+    incidencias?: IncidenciaUpdateManyWithoutCuadraturaNestedInput
   }
 
   export type CuadraturaUncheckedUpdateWithoutUsuarioInput = {
@@ -70491,6 +70873,7 @@ export namespace Prisma {
     salida?: CuadraturaSalidaUncheckedUpdateManyWithoutCuadraturaNestedInput
     ventas?: CuadraturaVentaUncheckedUpdateManyWithoutCuadraturaNestedInput
     gastos?: CuadraturaGastoUncheckedUpdateManyWithoutCuadraturaNestedInput
+    incidencias?: IncidenciaUncheckedUpdateManyWithoutCuadraturaNestedInput
   }
 
   export type CuadraturaUncheckedUpdateManyWithoutUsuarioInput = {
@@ -70747,6 +71130,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     cliente?: ClienteUpdateOneRequiredWithoutIncidenciasNestedInput
     parada?: ParadaDiaUpdateOneWithoutIncidenciasNestedInput
+    cuadratura?: CuadraturaUpdateOneWithoutIncidenciasNestedInput
   }
 
   export type IncidenciaUncheckedUpdateWithoutUsuarioInput = {
@@ -70757,6 +71141,7 @@ export namespace Prisma {
     descripcion?: NullableStringFieldUpdateOperationsInput | string | null
     resuelta?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    cuadratura_id?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type IncidenciaUncheckedUpdateManyWithoutUsuarioInput = {
@@ -70767,6 +71152,7 @@ export namespace Prisma {
     descripcion?: NullableStringFieldUpdateOperationsInput | string | null
     resuelta?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    cuadratura_id?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type AlertaVehiculoCreateManyVehiculoInput = {
@@ -71374,6 +71760,7 @@ export namespace Prisma {
     orden: number
     estado?: $Enums.EstadoParada
     motivo_postergacion?: string | null
+    orden_ajustado?: boolean
   }
 
   export type PedidoCreateManyClienteInput = {
@@ -71397,6 +71784,7 @@ export namespace Prisma {
     resuelta?: boolean
     created_at?: Date | string
     usuario_id: string
+    cuadratura_id?: string | null
   }
 
   export type BotellonDanadoUpdateWithoutClienteInput = {
@@ -71571,6 +71959,7 @@ export namespace Prisma {
     orden?: IntFieldUpdateOperationsInput | number
     estado?: EnumEstadoParadaFieldUpdateOperationsInput | $Enums.EstadoParada
     motivo_postergacion?: NullableStringFieldUpdateOperationsInput | string | null
+    orden_ajustado?: BoolFieldUpdateOperationsInput | boolean
     pedido?: PedidoUpdateOneWithoutParadasNestedInput
     ruta_dia?: RutaDiaUpdateOneRequiredWithoutParadasNestedInput
     incidencias?: IncidenciaUpdateManyWithoutParadaNestedInput
@@ -71583,6 +71972,7 @@ export namespace Prisma {
     orden?: IntFieldUpdateOperationsInput | number
     estado?: EnumEstadoParadaFieldUpdateOperationsInput | $Enums.EstadoParada
     motivo_postergacion?: NullableStringFieldUpdateOperationsInput | string | null
+    orden_ajustado?: BoolFieldUpdateOperationsInput | boolean
     incidencias?: IncidenciaUncheckedUpdateManyWithoutParadaNestedInput
   }
 
@@ -71593,6 +71983,7 @@ export namespace Prisma {
     orden?: IntFieldUpdateOperationsInput | number
     estado?: EnumEstadoParadaFieldUpdateOperationsInput | $Enums.EstadoParada
     motivo_postergacion?: NullableStringFieldUpdateOperationsInput | string | null
+    orden_ajustado?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type PedidoUpdateWithoutClienteInput = {
@@ -71648,6 +72039,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     parada?: ParadaDiaUpdateOneWithoutIncidenciasNestedInput
     usuario?: UsuarioUpdateOneRequiredWithoutIncidenciasNestedInput
+    cuadratura?: CuadraturaUpdateOneWithoutIncidenciasNestedInput
   }
 
   export type IncidenciaUncheckedUpdateWithoutClienteInput = {
@@ -71658,6 +72050,7 @@ export namespace Prisma {
     resuelta?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     usuario_id?: StringFieldUpdateOperationsInput | string
+    cuadratura_id?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type IncidenciaUncheckedUpdateManyWithoutClienteInput = {
@@ -71668,6 +72061,7 @@ export namespace Prisma {
     resuelta?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     usuario_id?: StringFieldUpdateOperationsInput | string
+    cuadratura_id?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ClienteRutaBaseCreateManyRuta_baseInput = {
@@ -71755,6 +72149,7 @@ export namespace Prisma {
     orden: number
     estado?: $Enums.EstadoParada
     motivo_postergacion?: string | null
+    orden_ajustado?: boolean
   }
 
   export type ParadaDiaUpdateWithoutRuta_diaInput = {
@@ -71762,6 +72157,7 @@ export namespace Prisma {
     orden?: IntFieldUpdateOperationsInput | number
     estado?: EnumEstadoParadaFieldUpdateOperationsInput | $Enums.EstadoParada
     motivo_postergacion?: NullableStringFieldUpdateOperationsInput | string | null
+    orden_ajustado?: BoolFieldUpdateOperationsInput | boolean
     cliente?: ClienteUpdateOneRequiredWithoutParadasNestedInput
     pedido?: PedidoUpdateOneWithoutParadasNestedInput
     incidencias?: IncidenciaUpdateManyWithoutParadaNestedInput
@@ -71774,6 +72170,7 @@ export namespace Prisma {
     orden?: IntFieldUpdateOperationsInput | number
     estado?: EnumEstadoParadaFieldUpdateOperationsInput | $Enums.EstadoParada
     motivo_postergacion?: NullableStringFieldUpdateOperationsInput | string | null
+    orden_ajustado?: BoolFieldUpdateOperationsInput | boolean
     incidencias?: IncidenciaUncheckedUpdateManyWithoutParadaNestedInput
   }
 
@@ -71784,6 +72181,7 @@ export namespace Prisma {
     orden?: IntFieldUpdateOperationsInput | number
     estado?: EnumEstadoParadaFieldUpdateOperationsInput | $Enums.EstadoParada
     motivo_postergacion?: NullableStringFieldUpdateOperationsInput | string | null
+    orden_ajustado?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type IncidenciaCreateManyParadaInput = {
@@ -71794,6 +72192,7 @@ export namespace Prisma {
     resuelta?: boolean
     created_at?: Date | string
     usuario_id: string
+    cuadratura_id?: string | null
   }
 
   export type IncidenciaUpdateWithoutParadaInput = {
@@ -71804,6 +72203,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     cliente?: ClienteUpdateOneRequiredWithoutIncidenciasNestedInput
     usuario?: UsuarioUpdateOneRequiredWithoutIncidenciasNestedInput
+    cuadratura?: CuadraturaUpdateOneWithoutIncidenciasNestedInput
   }
 
   export type IncidenciaUncheckedUpdateWithoutParadaInput = {
@@ -71814,6 +72214,7 @@ export namespace Prisma {
     resuelta?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     usuario_id?: StringFieldUpdateOperationsInput | string
+    cuadratura_id?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type IncidenciaUncheckedUpdateManyWithoutParadaInput = {
@@ -71824,6 +72225,7 @@ export namespace Prisma {
     resuelta?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     usuario_id?: StringFieldUpdateOperationsInput | string
+    cuadratura_id?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ParadaDiaCreateManyPedidoInput = {
@@ -71833,6 +72235,7 @@ export namespace Prisma {
     orden: number
     estado?: $Enums.EstadoParada
     motivo_postergacion?: string | null
+    orden_ajustado?: boolean
   }
 
   export type PedidoItemCreateManyPedidoInput = {
@@ -71849,6 +72252,7 @@ export namespace Prisma {
     orden?: IntFieldUpdateOperationsInput | number
     estado?: EnumEstadoParadaFieldUpdateOperationsInput | $Enums.EstadoParada
     motivo_postergacion?: NullableStringFieldUpdateOperationsInput | string | null
+    orden_ajustado?: BoolFieldUpdateOperationsInput | boolean
     cliente?: ClienteUpdateOneRequiredWithoutParadasNestedInput
     ruta_dia?: RutaDiaUpdateOneRequiredWithoutParadasNestedInput
     incidencias?: IncidenciaUpdateManyWithoutParadaNestedInput
@@ -71861,6 +72265,7 @@ export namespace Prisma {
     orden?: IntFieldUpdateOperationsInput | number
     estado?: EnumEstadoParadaFieldUpdateOperationsInput | $Enums.EstadoParada
     motivo_postergacion?: NullableStringFieldUpdateOperationsInput | string | null
+    orden_ajustado?: BoolFieldUpdateOperationsInput | boolean
     incidencias?: IncidenciaUncheckedUpdateManyWithoutParadaNestedInput
   }
 
@@ -71871,6 +72276,7 @@ export namespace Prisma {
     orden?: IntFieldUpdateOperationsInput | number
     estado?: EnumEstadoParadaFieldUpdateOperationsInput | $Enums.EstadoParada
     motivo_postergacion?: NullableStringFieldUpdateOperationsInput | string | null
+    orden_ajustado?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type PedidoItemUpdateWithoutPedidoInput = {
@@ -72016,6 +72422,17 @@ export namespace Prisma {
     descripcion?: string | null
   }
 
+  export type IncidenciaCreateManyCuadraturaInput = {
+    id?: string
+    cliente_id: string
+    parada_id?: string | null
+    tipo: $Enums.TipoIncidencia
+    descripcion?: string | null
+    resuelta?: boolean
+    created_at?: Date | string
+    usuario_id: string
+  }
+
   export type BotellonVacioUpdateWithoutCuadraturaInput = {
     id?: StringFieldUpdateOperationsInput | string
     cantidad_total?: IntFieldUpdateOperationsInput | number
@@ -72122,6 +72539,39 @@ export namespace Prisma {
     tipo?: StringFieldUpdateOperationsInput | string
     monto?: IntFieldUpdateOperationsInput | number
     descripcion?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type IncidenciaUpdateWithoutCuadraturaInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    tipo?: EnumTipoIncidenciaFieldUpdateOperationsInput | $Enums.TipoIncidencia
+    descripcion?: NullableStringFieldUpdateOperationsInput | string | null
+    resuelta?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    cliente?: ClienteUpdateOneRequiredWithoutIncidenciasNestedInput
+    parada?: ParadaDiaUpdateOneWithoutIncidenciasNestedInput
+    usuario?: UsuarioUpdateOneRequiredWithoutIncidenciasNestedInput
+  }
+
+  export type IncidenciaUncheckedUpdateWithoutCuadraturaInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    cliente_id?: StringFieldUpdateOperationsInput | string
+    parada_id?: NullableStringFieldUpdateOperationsInput | string | null
+    tipo?: EnumTipoIncidenciaFieldUpdateOperationsInput | $Enums.TipoIncidencia
+    descripcion?: NullableStringFieldUpdateOperationsInput | string | null
+    resuelta?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    usuario_id?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type IncidenciaUncheckedUpdateManyWithoutCuadraturaInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    cliente_id?: StringFieldUpdateOperationsInput | string
+    parada_id?: NullableStringFieldUpdateOperationsInput | string | null
+    tipo?: EnumTipoIncidenciaFieldUpdateOperationsInput | $Enums.TipoIncidencia
+    descripcion?: NullableStringFieldUpdateOperationsInput | string | null
+    resuelta?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    usuario_id?: StringFieldUpdateOperationsInput | string
   }
 
   export type MantencionDispensadorCreateManyDispensadorInput = {

@@ -11,9 +11,9 @@ export interface ProductoInput {
   nombre: string;
   categoria: CategoriaProducto;
   precio_venta_nueva: number;
-  precio_recarga: number | null;
+  precio_recarga?: number; // <-- Sin el "| null", solo opcional
   stock_minimo: number;
-  activo: boolean;
+  activo?: boolean;
 }
 
 // ────────────────────────────────────────────────────────────────

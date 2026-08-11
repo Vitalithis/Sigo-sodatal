@@ -4,9 +4,9 @@ import React, { useState, useTransition, useMemo, useEffect } from 'react';
 import { 
   Plus, Edit, Trash2, Search, X, Check, Loader2, AlertTriangle, 
   Package, ToggleLeft, ToggleRight, AlertCircle, RefreshCw, Info,
-  ArrowUpDown, Filter, Eye, EyeOff
+  ArrowUpDown, Filter
 } from 'lucide-react';
-import { CategoriaProducto } from '@prisma/client';
+import { CategoriaProducto } from '@/lib/prisma/generated';
 import { 
   crearProductoAction, 
   editarProductoAction, 
@@ -91,7 +91,6 @@ export default function ProductManager({ initialProductos }: ProductManagerProps
 
   // Filtrar y ordenar productos de forma reactiva
   const filteredAndSortedProductos = useMemo(() => {
-    // 1. Filtrar
     let list = initialProductos.filter((prod) => {
       const matchesSearch = prod.nombre.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesCategory = categoryFilter === 'TODOS' || prod.categoria === categoryFilter;
@@ -103,26 +102,13 @@ export default function ProductManager({ initialProductos }: ProductManagerProps
       return matchesSearch && matchesCategory && matchesStatus;
     });
 
-    // 2. Ordenar
     list.sort((a, b) => {
-      if (sortBy === 'nombre-asc') {
-        return a.nombre.localeCompare(b.nombre);
-      }
-      if (sortBy === 'nombre-desc') {
-        return b.nombre.localeCompare(a.nombre);
-      }
-      if (sortBy === 'precio-asc') {
-        return a.precio_venta_nueva - b.precio_venta_nueva;
-      }
-      if (sortBy === 'precio-desc') {
-        return b.precio_venta_nueva - a.precio_venta_nueva;
-      }
-      if (sortBy === 'stock-asc') {
-        return a.stock_minimo - b.stock_minimo;
-      }
-      if (sortBy === 'stock-desc') {
-        return b.stock_minimo - a.stock_minimo;
-      }
+      if (sortBy === 'nombre-asc') return a.nombre.localeCompare(b.nombre);
+      if (sortBy === 'nombre-desc') return b.nombre.localeCompare(a.nombre);
+      if (sortBy === 'precio-asc') return a.precio_venta_nueva - b.precio_venta_nueva;
+      if (sortBy === 'precio-desc') return b.precio_venta_nueva - a.precio_venta_nueva;
+      if (sortBy === 'stock-asc') return a.stock_minimo - b.stock_minimo;
+      if (sortBy === 'stock-desc') return b.stock_minimo - a.stock_minimo;
       return 0;
     });
 
@@ -141,7 +127,7 @@ export default function ProductManager({ initialProductos }: ProductManagerProps
       nombre,
       categoria: categoria as CategoriaProducto,
       precio_venta_nueva: Number(precioVentaNueva),
-      precio_recarga: precioRecarga !== '' ? Number(precioRecarga) : null,
+      precio_recarga: precioRecarga !== '' ? Number(precioRecarga) : undefined, // <-- Cambiado de null a undefined
       stock_minimo: Number(stockMinimo),
       activo
     };
@@ -220,12 +206,11 @@ export default function ProductManager({ initialProductos }: ProductManagerProps
   return (
     <div className="min-h-screen bg-white">
       
-      {/* 1. NAVBAR PRINCIPAL (Azul Sodatal #283289) */}
+      {/* 1. NAVBAR PRINCIPAL */}
       <nav className="bg-[#283289] text-white shadow-md select-none sticky top-0 z-40">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             
-            {/* Logo e Identificador */}
             <div className="flex items-center gap-3">
               <div className="bg-white p-1.5 rounded-lg flex items-center justify-center">
                 <span className="font-extrabold text-[#283289] text-xl tracking-wider">S</span>
@@ -236,7 +221,6 @@ export default function ProductManager({ initialProductos }: ProductManagerProps
               </div>
             </div>
 
-            {/* Acciones Rápidas */}
             <div className="flex items-center gap-4">
               <button
                 onClick={() => {
@@ -254,7 +238,7 @@ export default function ProductManager({ initialProductos }: ProductManagerProps
         </div>
       </nav>
 
-      {/* 2. NAVBAR DE CATEGORÍAS (Filtro Superior) */}
+      {/* 2. NAVBAR DE CATEGORÍAS */}
       <div className="bg-white border-b border-slate-200 sticky top-16 z-30 shadow-sm">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center space-x-6 overflow-x-auto h-14 scrollbar-none">
@@ -278,10 +262,9 @@ export default function ProductManager({ initialProductos }: ProductManagerProps
         </div>
       </div>
 
-      {/* 3. CONTENIDO PRINCIPAL (Fondo Blanco) */}
+      {/* 3. CONTENIDO PRINCIPAL */}
       <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
 
-        {/* Notificación Flotante (Toast) */}
         {notification && (
           <div className={`fixed top-5 right-5 z-50 flex items-center gap-3 px-4 py-3 rounded-xl shadow-2xl border animate-in slide-in-from-top-4 duration-300 ${
             notification.type === 'success' 
@@ -300,7 +283,6 @@ export default function ProductManager({ initialProductos }: ProductManagerProps
           </div>
         )}
 
-        {/* Sección de Filtros de Búsqueda y Ordenamiento */}
         <div className="bg-slate-50/50 rounded-2xl border border-slate-100 p-5 space-y-4">
           <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
             <Filter className="h-3.5 w-3.5" />
@@ -309,7 +291,6 @@ export default function ProductManager({ initialProductos }: ProductManagerProps
 
           <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
             
-            {/* Buscador de Nombre */}
             <div className="md:col-span-5 relative">
               <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
                 <Search className="h-5 w-5 text-slate-400" />
@@ -331,7 +312,6 @@ export default function ProductManager({ initialProductos }: ProductManagerProps
               )}
             </div>
 
-            {/* Filtro de Estado (Activo/Inactivo) */}
             <div className="md:col-span-3">
               <select
                 value={statusFilter}
@@ -344,7 +324,6 @@ export default function ProductManager({ initialProductos }: ProductManagerProps
               </select>
             </div>
 
-            {/* Ordenamiento */}
             <div className="md:col-span-4 relative">
               <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                 <ArrowUpDown className="h-4 w-4" />
@@ -366,7 +345,6 @@ export default function ProductManager({ initialProductos }: ProductManagerProps
           </div>
         </div>
 
-        {/* Listado de Productos */}
         <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
           <div className="px-6 py-5 border-b border-slate-100 flex items-center justify-between">
             <h2 className="text-base font-bold text-slate-800 flex items-center gap-2">
@@ -393,7 +371,7 @@ export default function ProductManager({ initialProductos }: ProductManagerProps
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse text-sm">
                 <thead>
-                  <tr className="bg-slate-50/50 text-slate-500 font-bold border-b border-slate-150 uppercase text-xs tracking-wider">
+                  <tr className="bg-slate-50/50 text-slate-500 font-bold border-b border-slate-200 uppercase text-xs tracking-wider">
                     <th className="px-6 py-4">Nombre del Producto</th>
                     <th className="px-6 py-4">Categoría</th>
                     <th className="px-6 py-4">Precio Venta</th>
@@ -415,7 +393,7 @@ export default function ProductManager({ initialProductos }: ProductManagerProps
                       <td className="px-6 py-4 font-semibold text-[#283289]">${prod.precio_venta_nueva.toLocaleString('es-CL')}</td>
                       <td className="px-6 py-4">
                         {prod.precio_recarga !== null ? (
-                          <span className="font-semibold text-slate-650">${prod.precio_recarga.toLocaleString('es-CL')}</span>
+                          <span className="font-semibold text-slate-600">${prod.precio_recarga.toLocaleString('es-CL')}</span>
                         ) : (
                           <span className="text-slate-400 italic text-xs font-normal">No aplica</span>
                         )}
@@ -441,7 +419,7 @@ export default function ProductManager({ initialProductos }: ProductManagerProps
                             title="Editar producto"
                             className="p-1.5 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-lg transition-colors"
                           >
-                            <Edit className="h-4.5 w-4.5" />
+                            <Edit className="h-4 w-4" />
                           </button>
                           <button
                             onClick={() => {
@@ -451,7 +429,7 @@ export default function ProductManager({ initialProductos }: ProductManagerProps
                             title="Eliminar producto"
                             className="p-1.5 text-rose-600 hover:text-rose-800 hover:bg-rose-50 rounded-lg transition-colors"
                           >
-                            <Trash2 className="h-4.5 w-4.5" />
+                            <Trash2 className="h-4 w-4" />
                           </button>
                         </div>
                       </td>
@@ -468,7 +446,6 @@ export default function ProductManager({ initialProductos }: ProductManagerProps
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
             <div className="bg-white rounded-2xl shadow-2xl border border-slate-100 w-full max-w-lg overflow-hidden transform scale-100 transition-all animate-in zoom-in-95 duration-200">
               
-              {/* Encabezado */}
               <div className="px-6 py-5 bg-[#283289] text-white flex items-center justify-between">
                 <div>
                   <h3 className="text-lg font-bold">
@@ -486,9 +463,7 @@ export default function ProductManager({ initialProductos }: ProductManagerProps
                 </button>
               </div>
 
-              {/* Formulario */}
               <form onSubmit={handleSubmit} className="p-6 space-y-4">
-                {/* Nombre */}
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Nombre del Producto *</label>
                   <input
@@ -501,7 +476,6 @@ export default function ProductManager({ initialProductos }: ProductManagerProps
                   />
                 </div>
 
-                {/* Categoría */}
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Categoría *</label>
                   <select
@@ -518,7 +492,6 @@ export default function ProductManager({ initialProductos }: ProductManagerProps
                   </select>
                 </div>
 
-                {/* Precios */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Precio Venta Nueva *</label>
@@ -551,7 +524,6 @@ export default function ProductManager({ initialProductos }: ProductManagerProps
                   </div>
                 </div>
 
-                {/* Stock Mínimo */}
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Stock Mínimo Alerta</label>
                   <input
@@ -564,9 +536,8 @@ export default function ProductManager({ initialProductos }: ProductManagerProps
                   />
                 </div>
 
-                {/* Activo / Inactivo */}
                 <div className="flex items-center justify-between p-3.5 bg-slate-50 rounded-xl border border-slate-100">
-                  <div className="space-y-0.5 animate-pulse">
+                  <div className="space-y-0.5">
                     <label className="block text-sm font-bold text-slate-800">Producto Activo</label>
                     <p className="text-xs text-slate-500">Determina si este producto está disponible para la venta</p>
                   </div>
@@ -583,12 +554,11 @@ export default function ProductManager({ initialProductos }: ProductManagerProps
                   </button>
                 </div>
 
-                {/* Botones de acción */}
                 <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-100">
                   <button
                     type="button"
                     onClick={() => setIsFormOpen(false)}
-                    className="px-4 py-2.5 border border-slate-200 rounded-xl text-slate-650 font-bold hover:bg-slate-50 transition-colors text-sm"
+                    className="px-4 py-2.5 border border-slate-200 rounded-xl text-slate-600 font-bold hover:bg-slate-50 transition-colors text-sm"
                   >
                     Cancelar
                   </button>
@@ -630,14 +600,14 @@ export default function ProductManager({ initialProductos }: ProductManagerProps
                       setIsDeleteOpen(false);
                       setDeletingProducto(null);
                     }}
-                    className="px-4 py-2.5 border border-slate-200 rounded-xl text-slate-650 font-bold hover:bg-slate-50 transition-colors text-sm"
+                    className="px-4 py-2.5 border border-slate-200 rounded-xl text-slate-600 font-bold hover:bg-slate-50 transition-colors text-sm"
                   >
                     Cancelar
                   </button>
                   <button
                     onClick={handleDeleteConfirm}
                     disabled={isPending}
-                    className="flex items-center justify-center gap-2 px-5 py-2.5 bg-rose-600 hover:bg-rose-700 active:bg-rose-800 text-white rounded-xl font-bold shadow-md shadow-rose-500/10 transition-colors text-sm disabled:bg-rose-450 min-w-[100px]"
+                    className="flex items-center justify-center gap-2 px-5 py-2.5 bg-rose-600 hover:bg-rose-700 active:bg-rose-800 text-white rounded-xl font-bold shadow-md shadow-rose-500/10 transition-colors text-sm disabled:bg-rose-400 min-w-[100px]"
                   >
                     {isPending ? (
                       <Loader2 className="h-4 w-4 animate-spin" />
@@ -651,7 +621,7 @@ export default function ProductManager({ initialProductos }: ProductManagerProps
           </div>
         )}
 
-        {/* MODAL: Advertencia de clave foránea / Sugerencia de Desactivación */}
+        {/* MODAL: Advertencia de clave foránea */}
         {isConstraintOpen && blockedProducto && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
             <div className="bg-white rounded-2xl shadow-2xl border border-slate-100 w-full max-w-md overflow-hidden transform scale-100 transition-all animate-in zoom-in-95 duration-200">
@@ -662,15 +632,15 @@ export default function ProductManager({ initialProductos }: ProductManagerProps
                 <div className="space-y-1.5 text-center">
                   <h3 className="text-lg font-bold text-slate-900">No se puede eliminar el producto</h3>
                   <p className="text-sm text-slate-500">
-                    El producto <span className="font-semibold text-slate-800">"{blockedProducto.nombre}"</span> no se puede eliminar de la base de datos porque está vinculado a registros de transacciones existentes (ventas, comisiones, guías, etc.).
+                    El producto <span className="font-semibold text-slate-800">"{blockedProducto.nombre}"</span> no se puede eliminar porque está vinculado a transacciones existentes.
                   </p>
                   <div className="bg-slate-50 rounded-xl border border-slate-100 p-3 mt-2 text-left">
-                    <p className="text-xs font-semibold text-slate-650 flex items-center gap-1.5">
+                    <p className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
                       <Info className="h-3.5 w-3.5 text-blue-500" />
                       Recomendación de Sodatal
                     </p>
                     <p className="text-xs text-slate-500 mt-1">
-                      Desactiva el producto para que no aparezca en los listados de venta de tus repartidores, manteniendo la consistencia histórica de las guías y cuadraturas.
+                      Desactiva el producto para que no aparezca en las ventas de los repartidores, manteniendo la consistencia histórica.
                     </p>
                   </div>
                 </div>
@@ -680,14 +650,14 @@ export default function ProductManager({ initialProductos }: ProductManagerProps
                       setIsConstraintOpen(false);
                       setBlockedProducto(null);
                     }}
-                    className="px-4 py-2.5 border border-slate-200 rounded-xl text-slate-650 font-bold hover:bg-slate-50 transition-colors text-sm"
+                    className="px-4 py-2.5 border border-slate-200 rounded-xl text-slate-600 font-bold hover:bg-slate-50 transition-colors text-sm"
                   >
                     Mantener Activo
                   </button>
                   <button
                     onClick={handleDeactivateInstead}
                     disabled={isPending}
-                    className="flex items-center justify-center gap-2 px-5 py-2.5 bg-amber-600 hover:bg-amber-700 active:bg-amber-800 text-white rounded-xl font-bold shadow-md shadow-amber-500/10 transition-colors text-sm disabled:bg-amber-450 min-w-[140px]"
+                    className="flex items-center justify-center gap-2 px-5 py-2.5 bg-amber-600 hover:bg-amber-700 active:bg-amber-800 text-white rounded-xl font-bold shadow-md shadow-amber-500/10 transition-colors text-sm disabled:bg-amber-400 min-w-[140px]"
                   >
                     {isPending ? (
                       <Loader2 className="h-4 w-4 animate-spin" />
