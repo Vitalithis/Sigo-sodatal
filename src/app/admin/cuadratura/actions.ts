@@ -70,6 +70,7 @@ export async function obtenerCuadraturasAction(desde?: string, hasta?: string, u
       where,
       include: {
         usuario: { select: { nombre: true, apellido: true, rol: true } },
+        salida: { include: { producto: true } }, // <-- AGREGADO: Para poder ver el detalle
         _count: { select: { ventas: true, retorno: true, gastos: true } },
       },
       orderBy: { fecha: 'desc' },
@@ -170,7 +171,7 @@ export async function obtenerGuiasRepartidorDiaAction(usuario_id: string, fecha:
 }
 
 // ----------------------------------------------------------------
-// SALIDA (apertura de cuadratura)
+// SALIDA 
 // ----------------------------------------------------------------
 export async function registrarSalidaAction(data: SalidaInput) {
   try {
@@ -178,11 +179,10 @@ export async function registrarSalidaAction(data: SalidaInput) {
     if (!data.fecha) return { success: false, message: 'Debes indicar la fecha.' };
     const items = (data.items || []).filter((it) => it.cantidad > 0);
     if (items.length === 0) {
-      return { success: false, message: 'Debes indicar al menos un producto con cantidad mayor a 0.' };
+      return { success: false, message: 'Debes indicar al menos un producto.' };
     }
 
     const fechaNormalizada = new Date(`${data.fecha}T00:00:00`);
-    const alertas: string[] = [];
 
     const cuadraturaId = await prisma.$transaction(async (tx) => {
       let cuadratura = await tx.cuadratura.findFirst({
@@ -191,24 +191,10 @@ export async function registrarSalidaAction(data: SalidaInput) {
       });
 
       if (cuadratura && cuadratura.estado === 'CERRADA') {
-        throw new Error('La cuadratura de ese día ya está cerrada. Un ADMIN debe reabrirla antes de modificar la salida.');
+        throw new Error('La cuadratura de ese día ya está cerrada. Un ADMIN debe reabrirla antes de agregar más carga.');
       }
 
-      if (cuadratura) {
-        for (const s of cuadratura.salida) {
-          await tx.stockFabrica.upsert({
-            where: { producto_id: s.producto_id },
-            create: { producto_id: s.producto_id, cantidad: s.cantidad },
-            update: { cantidad: { increment: s.cantidad } },
-          });
-          await tx.stockCamion.upsert({
-            where: { usuario_id_producto_id: { usuario_id: data.usuario_id, producto_id: s.producto_id } },
-            create: { usuario_id: data.usuario_id, producto_id: s.producto_id, cantidad: 0 },
-            update: { cantidad: { decrement: s.cantidad } },
-          });
-        }
-        await tx.cuadraturaSalida.deleteMany({ where: { cuadratura_id: cuadratura.id } });
-      } else {
+      if (!cuadratura) {
         cuadratura = await tx.cuadratura.create({
           data: { usuario_id: data.usuario_id, fecha: fechaNormalizada, estado: 'ABIERTA' },
           include: { salida: true },
@@ -216,9 +202,20 @@ export async function registrarSalidaAction(data: SalidaInput) {
       }
 
       for (const it of items) {
-        await tx.cuadraturaSalida.create({
-          data: { cuadratura_id: cuadratura.id, producto_id: it.producto_id, cantidad: it.cantidad },
+        const registroSalidaExistente = await tx.cuadraturaSalida.findFirst({
+          where: { cuadratura_id: cuadratura.id, producto_id: it.producto_id }
         });
+
+        if (registroSalidaExistente) {
+          await tx.cuadraturaSalida.update({
+            where: { id: registroSalidaExistente.id },
+            data: { cantidad: { increment: it.cantidad } }
+          });
+        } else {
+          await tx.cuadraturaSalida.create({
+            data: { cuadratura_id: cuadratura.id, producto_id: it.producto_id, cantidad: it.cantidad },
+          });
+        }
 
         const stockFabricaActual = await tx.stockFabrica.findUnique({ where: { producto_id: it.producto_id } });
         const nuevaCantidadFabrica = (stockFabricaActual?.cantidad || 0) - it.cantidad;
@@ -228,25 +225,19 @@ export async function registrarSalidaAction(data: SalidaInput) {
           create: { producto_id: it.producto_id, cantidad: nuevaCantidadFabrica },
           update: { cantidad: { decrement: it.cantidad } },
         });
+        
         await tx.stockCamion.upsert({
           where: { usuario_id_producto_id: { usuario_id: data.usuario_id, producto_id: it.producto_id } },
           create: { usuario_id: data.usuario_id, producto_id: it.producto_id, cantidad: it.cantidad },
           update: { cantidad: { increment: it.cantidad } },
         });
-
-        const producto = await tx.producto.findUnique({ where: { id: it.producto_id } });
-        if (nuevaCantidadFabrica < 0) {
-          alertas.push(`Stock de fábrica de ${producto?.nombre || 'un producto'} quedó negativo (${nuevaCantidadFabrica}).`);
-        } else if (producto && nuevaCantidadFabrica < producto.stock_minimo) {
-          alertas.push(`Stock de fábrica de ${producto.nombre} quedó bajo el mínimo (${nuevaCantidadFabrica}/${producto.stock_minimo}).`);
-        }
       }
 
       return cuadratura.id;
     });
 
     revalidatePath('/admin/cuadratura');
-    return { success: true, cuadratura_id: cuadraturaId, alertas };
+    return { success: true, cuadratura_id: cuadraturaId, alertas: [] }; // Alertas eliminadas
   } catch (error: any) {
     return { success: false, message: error.message || 'No se pudo registrar la salida.' };
   }

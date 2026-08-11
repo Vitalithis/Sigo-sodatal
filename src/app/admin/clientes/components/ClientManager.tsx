@@ -13,7 +13,8 @@ import {
   registrarMovimientoFinancieroAction,
   ClienteInput,
   editarDispensadorAction,
-  eliminarDispensadorAction
+  eliminarDispensadorAction,
+  resolverIncidenciaAction // 👈 IMPORTANTE: Acción creada en Bloque 2.5
 } from '../actions';
 
 interface ClientManagerProps {
@@ -62,6 +63,7 @@ export default function ClientManager({ initialClientes }: ClientManagerProps) {
             movimientosFinancieros: (incoming.movimientosFinancieros?.length || 0) >= (localCopy.movimientosFinancieros?.length || 0)
               ? incoming.movimientosFinancieros
               : localCopy.movimientosFinancieros,
+            incidencias: incoming.incidencias || localCopy.incidencias || []
           };
         }
         return incoming;
@@ -75,7 +77,8 @@ export default function ClientManager({ initialClientes }: ClientManagerProps) {
   const [errorForm, setErrorForm] = useState<string | null>(null);
 
   const [clienteSeleccionado, setClienteSeleccionado] = useState<any | null>(null);
-  const [activeTab, setActiveTab] = useState<'equipos' | 'taller' | 'finanzas'>('equipos');
+  // 👈 ACTUALIZADO: Añadido 'incidencias' a las pestañas disponibles
+  const [activeTab, setActiveTab] = useState<'equipos' | 'taller' | 'finanzas' | 'incidencias'>('equipos');
   
   const fileInputRef = useRef<HTMLInputElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -213,6 +216,25 @@ export default function ClientManager({ initialClientes }: ClientManagerProps) {
           showSuccessPopup("Removido", "El cliente fue eliminado de la base de datos.");
         } else {
           showErrorPopup("Error", res.message || "No se pudo completar el borrado.");
+        }
+      }
+    );
+  };
+
+  // ========================================================
+  // 🚀 NUEVA FUNCIÓN: RESOLVER INCIDENCIA DESDE ADMIN (4.1)
+  // ========================================================
+  const handleResolverIncidencia = async (incidenciaId: string) => {
+    showConfirmPopup(
+      "¿Resolver Incidencia?",
+      "Esta acción marcará la incidencia como resuelta y ajustará el saldo de envases prestados si corresponde.",
+      async () => {
+        const res = await resolverIncidenciaAction(incidenciaId);
+        if (res.success) {
+          router.refresh();
+          showSuccessPopup("Incidencia Resuelta", "El estado del problema fue actualizado con éxito.");
+        } else {
+          showErrorPopup("Error", res.message || "No se pudo resolver la incidencia.");
         }
       }
     );
@@ -435,9 +457,6 @@ export default function ClientManager({ initialClientes }: ClientManagerProps) {
     }
   };
 
-  // ========================================================
-  // 🚀 NUEVA FUNCIÓN: DAR DE ALTA / SALIDA DE TALLER
-  // ========================================================
   const handleSalidaTaller = async (dispensador: any) => {
     if (!clienteSeleccionado?.id) return;
     const clienteIdSeguro = clienteSeleccionado.id;
@@ -446,7 +465,6 @@ export default function ClientManager({ initialClientes }: ClientManagerProps) {
       "¿Dar de Alta Equipo?", 
       `Confirmar que el equipo S/N: ${dispensador.numero_serie || dispensador.numeroSerie} ha finalizado su mantenimiento y vuelve a estar operativo en el cliente.`,
       async () => {
-        // Actualización optimista inmediata
         setClientes(prevClientes => {
           const nuevosClientes = prevClientes.map(c => {
             if (c.id === clienteIdSeguro) {
@@ -475,7 +493,6 @@ export default function ClientManager({ initialClientes }: ClientManagerProps) {
           return nuevosClientes;
         });
 
-        // Llamada a la acción del servidor pasando el estado normalizado de vuelta
         const res = await editarDispensadorAction(dispensador.id, {
           marca: dispensador.marca || dispensador.tipo || 'FRIO_CALOR_COMPRESOR',
           modelo: dispensador.modelo || '',
@@ -742,21 +759,39 @@ export default function ClientManager({ initialClientes }: ClientManagerProps) {
       {clienteSeleccionado && (
         <div className="fixed inset-0 bg-slate-900/50 z-40 flex justify-end backdrop-blur-xs">
           <div className="bg-white w-full max-w-2xl h-screen shadow-2xl flex flex-col border-l">
+            
+            {/* Cabecera con Contador Prominente de Botellones Prestados */}
             <div className="bg-blue-600 p-5 text-white flex justify-between items-center">
               <div>
                 <span className="text-[10px] font-bold text-blue-100 tracking-wider uppercase">Ficha Técnica</span>
                 <h2 className="text-xl font-bold truncate text-white">{clienteSeleccionado.nombre || ''}</h2>
               </div>
-              <button onClick={() => { setClienteSeleccionado(null); stopCamera(); }} className="text-white text-3xl font-bold">&times;</button>
+              <div className="flex items-center gap-3">
+                <div className="bg-blue-700/80 border border-blue-400 px-3 py-1.5 rounded-xl text-center shadow-inner">
+                  <span className="text-[10px] uppercase tracking-wider text-blue-200 block font-bold">Envases Prestados</span>
+                  <span className="text-base font-extrabold text-white">{clienteSeleccionado.botellones_prestados || 0}</span>
+                </div>
+                <button onClick={() => { setClienteSeleccionado(null); stopCamera(); }} className="text-white text-3xl font-bold">&times;</button>
+              </div>
             </div>
 
-            <div className="flex border-b text-sm font-semibold bg-slate-50">
-              <button onClick={() => setActiveTab('equipos')} className={`flex-1 py-3.5 text-center ${activeTab === 'equipos' ? 'border-b-2 border-blue-600 text-blue-600 font-bold bg-white' : 'text-slate-600'}`}>💧 Dispensadores</button>
-              <button onClick={() => setActiveTab('taller')} className={`flex-1 py-3.5 text-center ${activeTab === 'taller' ? 'border-b-2 border-blue-600 text-blue-600 font-bold bg-white' : 'text-slate-600'}`}>🔧 Taller</button>
-              <button onClick={() => setActiveTab('finanzas')} className={`flex-1 py-3.5 text-center ${activeTab === 'finanzas' ? 'border-b-2 border-blue-600 text-blue-600 font-bold bg-white' : 'text-slate-600'}`}>💵 Finanzas</button>
+            {/* Pestañas de Navegación de la Ficha (Actualizadas con Incidencias) */}
+            <div className="flex border-b text-sm font-semibold bg-slate-50 overflow-x-auto">
+              <button onClick={() => setActiveTab('equipos')} className={`flex-1 py-3.5 px-3 text-center whitespace-nowrap ${activeTab === 'equipos' ? 'border-b-2 border-blue-600 text-blue-600 font-bold bg-white' : 'text-slate-600'}`}>💧 Dispensadores</button>
+              <button onClick={() => setActiveTab('taller')} className={`flex-1 py-3.5 px-3 text-center whitespace-nowrap ${activeTab === 'taller' ? 'border-b-2 border-blue-600 text-blue-600 font-bold bg-white' : 'text-slate-600'}`}>🔧 Taller</button>
+              <button onClick={() => setActiveTab('finanzas')} className={`flex-1 py-3.5 px-3 text-center whitespace-nowrap ${activeTab === 'finanzas' ? 'border-b-2 border-blue-600 text-blue-600 font-bold bg-white' : 'text-slate-600'}`}>💵 Finanzas</button>
+              <button onClick={() => setActiveTab('incidencias')} className={`flex-1 py-3.5 px-3 text-center whitespace-nowrap relative ${activeTab === 'incidencias' ? 'border-b-2 border-blue-600 text-blue-600 font-bold bg-white' : 'text-slate-600'}`}>
+                ⚠️ Incidencias
+                {clienteSeleccionado.incidencias?.filter((i: any) => !i.resuelta).length > 0 && (
+                  <span className="absolute top-2 right-2 bg-rose-600 text-white text-[10px] font-bold px-1.5 py-0.2 rounded-full">
+                    {clienteSeleccionado.incidencias.filter((i: any) => !i.resuelta).length}
+                  </span>
+                )}
+              </button>
             </div>
 
             <div className="flex-1 overflow-y-auto p-6 space-y-6">
+              
               {/* ================= CONTENIDO PESTAÑA: EQUIPOS ================= */}
               {activeTab === 'equipos' && (
                 <div className="space-y-6">
@@ -831,10 +866,9 @@ export default function ClientManager({ initialClientes }: ClientManagerProps) {
                 </div>
               )}
 
-              {/* ================= CONTENIDO PESTAÑA: TALLER (ACTUALIZADO) ================= */}
+              {/* ================= CONTENIDO PESTAÑA: TALLER ================= */}
               {activeTab === 'taller' && (
                 <div className="space-y-6">
-                  {/* Formulario de Entrada */}
                   <form onSubmit={handleGuardarMantencion} className="bg-white p-5 border rounded-xl space-y-4 shadow-xs">
                     <h3 className="font-bold text-xs uppercase text-slate-900 border-b pb-2">Ingresar Falla / Enviar a Taller</h3>
                     
@@ -872,7 +906,6 @@ export default function ClientManager({ initialClientes }: ClientManagerProps) {
                     </button>
                   </form>
 
-                  {/* 🛠️ SECCIÓN NUEVA: EQUIPOS ACTUALMENTE EN TALLER (SALIDA DISPONIBLE) */}
                   <h3 className="font-bold text-xs uppercase text-amber-600 tracking-wider">🛠️ Equipos en Servicio Técnico</h3>
                   <div className="space-y-3">
                     {clienteSeleccionado.dispensadores?.filter((d: any) => d.estado && d.estado.startsWith('TALLER')).length > 0 ? (
@@ -897,7 +930,6 @@ export default function ClientManager({ initialClientes }: ClientManagerProps) {
                     )}
                   </div>
 
-                  {/* Historial Técnico */}
                   <h3 className="font-bold text-xs uppercase text-slate-500 tracking-wider">Historial de Órdenes Técnicas</h3>
                   <div className="space-y-3">
                     {clienteSeleccionado.mantenciones && clienteSeleccionado.mantenciones.length > 0 ? (
@@ -918,7 +950,6 @@ export default function ClientManager({ initialClientes }: ClientManagerProps) {
               )}
 
               {/* ================= CONTENIDO PESTAÑA: FINANZAS ================= */}
-              {/* ================= CONTENIDO PESTAÑA: FINANZAS (HISTORIAL DE COMPRAS) ================= */}
               {activeTab === 'finanzas' && (
                 <div className="space-y-6">
                   <form onSubmit={handleGuardarFinanzas} className="bg-white p-5 border rounded-xl space-y-4 shadow-xs">
@@ -961,7 +992,6 @@ export default function ClientManager({ initialClientes }: ClientManagerProps) {
                       </div>
                     </div>
 
-                    {/* Campo Dinámico Inteligente según el Tipo de Cliente */}
                     <div className="flex flex-col gap-1">
                       {clienteSeleccionado.tipo === 'EMPRESA' ? (
                         <>
@@ -1009,7 +1039,6 @@ export default function ClientManager({ initialClientes }: ClientManagerProps) {
                     </button>
                   </form>
 
-                  {/* Tabla / Listado de Historial del Cliente */}
                   <h3 className="font-bold text-xs uppercase text-slate-500 tracking-wider">Historial Cronológico de Compras</h3>
                   <div className="space-y-3">
                     {clienteSeleccionado.movimientosFinancieros && clienteSeleccionado.movimientosFinancieros.length > 0 ? (
@@ -1043,6 +1072,66 @@ export default function ClientManager({ initialClientes }: ClientManagerProps) {
                   </div>
                 </div>
               )}
+
+              {/* ================= NUEVA PESTAÑA: INCIDENCIAS (BLOQUE 4.1) ================= */}
+              {activeTab === 'incidencias' && (
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center border-b pb-2">
+                    <h3 className="font-bold text-xs uppercase text-slate-700 tracking-wider">Historial de Incidencias y Terreno</h3>
+                  </div>
+
+                  <div className="space-y-3">
+                    {clienteSeleccionado.incidencias && clienteSeleccionado.incidencias.length > 0 ? (
+                      clienteSeleccionado.incidencias.map((inc: any) => (
+                        <div key={inc.id} className={`p-4 border rounded-xl flex flex-col gap-3 shadow-xs ${inc.resuelta ? 'bg-slate-50 border-slate-200 opacity-80' : 'bg-amber-50/60 border-amber-200'}`}>
+                          
+                          <div className="flex justify-between items-start">
+                            <div className="space-y-1">
+                              <div className="flex items-center gap-2">
+                                <span className={`text-[10px] font-bold px-2 py-0.5 rounded uppercase ${
+                                  inc.resuelta ? 'bg-slate-200 text-slate-700' : 'bg-amber-200 text-amber-900'
+                                }`}>
+                                  {inc.tipo.replace('_', ' ')}
+                                </span>
+                                <span className="text-xs text-slate-400">{new Date(inc.created_at || inc.createdAt).toLocaleDateString()}</span>
+                              </div>
+                              <p className="text-sm font-semibold text-slate-900 mt-1">
+                                {inc.descripcion || 'Sin observaciones detalladas.'}
+                              </p>
+                            </div>
+
+                            <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${
+                              inc.resuelta ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'
+                            }`}>
+                              {inc.resuelta ? 'Resuelta' : 'Pendiente'}
+                            </span>
+                          </div>
+
+                          <div className="flex justify-between items-center pt-2 border-t border-slate-200/60 text-xs text-slate-500">
+                            <span>Registrado por: <strong>{inc.usuario?.nombre || 'Repartidor'}</strong></span>
+                            
+                            {!inc.resuelta && (
+                              <button
+                                type="button"
+                                onClick={() => handleResolverIncidencia(inc.id)}
+                                className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3 py-1.5 rounded-lg transition-colors shadow-xs"
+                              >
+                                ✔️ Resolver Incidencia
+                              </button>
+                            )}
+                          </div>
+
+                        </div>
+                      ))
+                    ) : (
+                      <p className="text-xs text-slate-400 text-center py-8 border border-dashed rounded-xl">
+                        Este cliente no registra incidencias ni reportes en terreno.
+                      </p>
+                    )}
+                  </div>
+                </div>
+              )}
+
             </div>
           </div>
         </div>
