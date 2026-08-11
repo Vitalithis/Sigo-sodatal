@@ -34,6 +34,7 @@ model Usuario {
   rutas_dia          RutaDia[]
   stock_camion       StockCamion[]
   vehiculo           Vehiculo?          @relation(fields: [vehiculo_id], references: [id])
+  incidencias          Incidencia[]
 }
 
 model Vehiculo {
@@ -139,6 +140,7 @@ model Cliente {
   historial_financiero HistorialFinanciero[]
   paradas              ParadaDia[]
   pedidos              Pedido[]
+  incidencias          Incidencia[]
 }
 
 model RutaBase {
@@ -196,6 +198,7 @@ model ParadaDia {
   cliente             Cliente      @relation(fields: [cliente_id], references: [id])
   pedido              Pedido?      @relation(fields: [pedido_id], references: [id])
   ruta_dia            RutaDia      @relation(fields: [ruta_dia_id], references: [id])
+  incidencias          Incidencia[]
 }
 
 model Pedido {
@@ -208,20 +211,24 @@ model Pedido {
   estado              EstadoPedido @default(PENDIENTE_CONFIRMACION)
   usuario_registro_id String
   created_at          DateTime     @default(now())
+  pagado              Boolean      @default(false)   
+  metodo_pago_web     MetodoPago?                    
   paradas             ParadaDia[]
   cliente             Cliente      @relation(fields: [cliente_id], references: [id])
   items               PedidoItem[]
+  guia                GuiaDespacho?                  
 }
 
 model PedidoItem {
-  id               String          @id @default(uuid())
-  pedido_id        String
-  producto_id      String
-  tipo_transaccion TipoTransaccion
-  cantidad         Int
-  precio_historico Float           @default(0)
-  pedido           Pedido          @relation(fields: [pedido_id], references: [id], onDelete: Cascade)
-  producto         Producto        @relation(fields: [producto_id], references: [id])
+  id                  String          @id @default(uuid())
+  pedido_id           String
+  producto_id         String
+  tipo_transaccion    TipoTransaccion
+  cantidad            Int             
+  cantidad_entregada  Int?            
+  precio_historico    Float           @default(0)
+  pedido              Pedido          @relation(fields: [pedido_id], references: [id], onDelete: Cascade)
+  producto            Producto        @relation(fields: [producto_id], references: [id])
 }
 
 model GuiaDespacho {
@@ -229,6 +236,7 @@ model GuiaDespacho {
   numero_correlativo           Int               @unique @default(autoincrement())
   fecha_emision                DateTime          @default(now())
   cliente_id                   String
+  pedido_id                    String?           @unique   
   direccion_entrega            String
   usuario_repartidor_id        String
   estado                       EstadoGuia
@@ -239,12 +247,12 @@ model GuiaDespacho {
   total                        Float
   motivo_anulacion             String?
   botellones_prestados_entrega Int               @default(0)
-  metodo_pago                  MetodoPago        @default(EFECTIVO)
   incluida_en_cierre           Boolean           @default(false)
   fecha_cierre                 DateTime?
   cuadratura_ventas            CuadraturaVenta[]
   cliente                      Cliente           @relation(fields: [cliente_id], references: [id])
-  usuario_repartidor           Usuario           @relation(fields: [usuario_repartidor_id], references: [id])
+  usuario_repartidor            Usuario           @relation(fields: [usuario_repartidor_id], references: [id])
+  pedido                       Pedido?           @relation(fields: [pedido_id], references: [id])
   items                        ItemGuia[]
 }
 
@@ -272,11 +280,15 @@ model Cuadratura {
   total_transferencia Float               @default(0)
   motivo_reapertura   String?
   fecha_reapertura    DateTime?
+  monto_bencina       Int?
   botellones_vacios   BotellonVacio[]
   usuario             Usuario             @relation(fields: [usuario_id], references: [id])
   retorno             CuadraturaRetorno[]
   salida              CuadraturaSalida[]
   ventas              CuadraturaVenta[]
+  gastos              CuadraturaGasto[]
+
+  @@unique([usuario_id, fecha])
 }
 
 model CuadraturaSalida {
@@ -310,6 +322,15 @@ model CuadraturaRetorno {
   cantidad      Int
   cuadratura    Cuadratura @relation(fields: [cuadratura_id], references: [id], onDelete: Cascade)
   producto      Producto   @relation(fields: [producto_id], references: [id])
+}
+
+model CuadraturaGasto {
+  id            String     @id @default(uuid())
+  cuadratura_id String
+  tipo          String     // libre: "ESTACIONAMIENTO", "PEAJE", etc.
+  monto         Int
+  descripcion   String?
+  cuadratura    Cuadratura @relation(fields: [cuadratura_id], references: [id], onDelete: Cascade)
 }
 
 model BotellonVacio {
@@ -478,6 +499,27 @@ model CargaCombustible {
   vehiculo           Vehiculo @relation(fields: [vehiculo_id], references: [id], onDelete: Cascade)
 }
 
+model Incidencia {
+  id           String          @id @default(uuid())
+  cliente_id   String
+  parada_id    String?
+  tipo         TipoIncidencia
+  descripcion  String?
+  resuelta     Boolean         @default(false)
+  created_at   DateTime        @default(now())
+  usuario_id   String
+  cliente      Cliente         @relation(fields: [cliente_id], references: [id])
+  parada       ParadaDia?      @relation(fields: [parada_id], references: [id])
+  usuario      Usuario         @relation(fields: [usuario_id], references: [id])
+}
+
+enum TipoIncidencia {
+  NO_ESTABA
+  DEJADO_CONSERJERIA
+  PRESTAMO_BOTELLON
+  OTRO
+}
+
 enum Rol {
   ADMIN
   OFICINA
@@ -592,6 +634,7 @@ enum PreferenciaFacturacion {
 enum EstadoGuia {
   ENTREGADA_EFECTIVO
   ENTREGADA_TARJETA
+  ENTREGADA_TRANSFERENCIA   // nuevo
   ENTREGADA_CREDITO
   ANULADA
 }
