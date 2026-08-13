@@ -17,6 +17,13 @@ export interface SalidaInput {
   usuario_id: string;
   fecha: string; 
   items: ItemSalidaInput[];
+  km_inicial?: number;
+  combustible?: {
+    tipo_combustible: string;
+    monto: number;
+    numero_factura: string;
+    ruta_factura: string;
+  } | null;
 }
 
 export interface ItemVentaInput {
@@ -51,6 +58,7 @@ export interface CierreCuadraturaInput {
   botellones_vacios: BotellonesVaciosInput;
   gastos: GastoInput[];
   monto_bencina?: number;
+  km_final: number; // OBLIGATORIO AL CIERRE
 }
 
 // ----------------------------------------------------------------
@@ -70,7 +78,7 @@ export async function obtenerCuadraturasAction(desde?: string, hasta?: string, u
       where,
       include: {
         usuario: { select: { nombre: true, apellido: true, rol: true } },
-        salida: { include: { producto: true } }, // <-- AGREGADO: Para poder ver el detalle
+        salida: { include: { producto: true } }, // <-- Para poder ver el detalle
         _count: { select: { ventas: true, retorno: true, gastos: true } },
       },
       orderBy: { fecha: 'desc' },
@@ -171,7 +179,7 @@ export async function obtenerGuiasRepartidorDiaAction(usuario_id: string, fecha:
 }
 
 // ----------------------------------------------------------------
-// SALIDA 
+// SALIDA (Apertura o Acumulación en el día)
 // ----------------------------------------------------------------
 export async function registrarSalidaAction(data: SalidaInput) {
   try {
@@ -194,13 +202,23 @@ export async function registrarSalidaAction(data: SalidaInput) {
         throw new Error('La cuadratura de ese día ya está cerrada. Un ADMIN debe reabrirla antes de agregar más carga.');
       }
 
+      // Si es la primera salida del día, requerimos KM Inicial
       if (!cuadratura) {
+        if (data.km_inicial === undefined || isNaN(data.km_inicial)) {
+          throw new Error('El kilometraje inicial es obligatorio al iniciar el día.');
+        }
         cuadratura = await tx.cuadratura.create({
-          data: { usuario_id: data.usuario_id, fecha: fechaNormalizada, estado: 'ABIERTA' },
+          data: { 
+            usuario_id: data.usuario_id, 
+            fecha: fechaNormalizada, 
+            estado: 'ABIERTA',
+            km_inicial: data.km_inicial
+          },
           include: { salida: true },
         });
       }
 
+      // Acumulamos los productos
       for (const it of items) {
         const registroSalidaExistente = await tx.cuadraturaSalida.findFirst({
           where: { cuadratura_id: cuadratura.id, producto_id: it.producto_id }
@@ -233,6 +251,18 @@ export async function registrarSalidaAction(data: SalidaInput) {
         });
       }
 
+      // Registramos Combustible si viene en el payload
+      if (data.combustible && data.combustible.monto > 0) {
+        await tx.cuadraturaGasto.create({
+          data: {
+            cuadratura_id: cuadratura.id,
+            tipo: 'COMBUSTIBLE',
+            monto: data.combustible.monto,
+            descripcion: `[${data.combustible.tipo_combustible}] Factura: ${data.combustible.numero_factura || 'S/N'} | Enlace: ${data.combustible.ruta_factura || 'S/N'}`,
+          }
+        });
+      }
+
       return cuadratura.id;
     });
 
@@ -244,11 +274,12 @@ export async function registrarSalidaAction(data: SalidaInput) {
 }
 
 // ----------------------------------------------------------------
-// CIERRE (regreso: ventas, retorno, botellones, gastos)
+// CIERRE (regreso: ventas, retorno, botellones, gastos, KM FINAL)
 // ----------------------------------------------------------------
 export async function registrarCierreCuadraturaAction(data: CierreCuadraturaInput) {
   try {
     if (!data.cuadratura_id) return { success: false, message: 'Cuadratura no válida.' };
+    if (!data.km_final || isNaN(data.km_final)) return { success: false, message: 'El kilometraje final es obligatorio.' };
 
     const alertas: string[] = [];
 
@@ -349,7 +380,8 @@ export async function registrarCierreCuadraturaAction(data: CierreCuadraturaInpu
       await tx.cuadraturaVenta.deleteMany({ where: { cuadratura_id: cuadratura.id } });
       await tx.cuadraturaRetorno.deleteMany({ where: { cuadratura_id: cuadratura.id } });
       await tx.botellonVacio.deleteMany({ where: { cuadratura_id: cuadratura.id } });
-      await tx.cuadraturaGasto.deleteMany({ where: { cuadratura_id: cuadratura.id } });
+      
+      // NOTA: NO eliminamos los gastos porque ahora ahí vive el combustible registrado en la salida
 
       let totalEfectivo = 0, totalTarjeta = 0, totalTransferencia = 0, totalGuiaMensual = 0, totalComision = 0;
 
@@ -426,18 +458,7 @@ export async function registrarCierreCuadraturaAction(data: CierreCuadraturaInpu
         });
       }
 
-      // Gastos abiertos
-      for (const g of (data.gastos || []).filter((g) => g.monto > 0)) {
-        await tx.cuadraturaGasto.create({
-          data: {
-            cuadratura_id: cuadratura.id,
-            tipo: g.tipo.trim() || 'OTRO',
-            monto: g.monto,
-            descripcion: g.descripcion?.trim() || null,
-          },
-        });
-      }
-
+      // ACTUALIZACION DE ESTADO, TOTALES Y KILOMETRAJE
       await tx.cuadratura.update({
         where: { id: cuadratura.id },
         data: {
@@ -448,6 +469,7 @@ export async function registrarCierreCuadraturaAction(data: CierreCuadraturaInpu
           total_guia_mensual: totalGuiaMensual,
           total_comision: totalComision,
           monto_bencina: data.monto_bencina ?? null,
+          km_final: data.km_final // <-- GUARDAMOS EL KM FINAL
         },
       });
 

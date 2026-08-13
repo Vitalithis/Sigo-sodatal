@@ -291,6 +291,8 @@ model Cuadratura {
 
   @@unique([usuario_id, fecha])
   incidencias    Incidencia[]
+  km_inicial Int?
+  km_final   Int?
 }
 
 model CuadraturaSalida {
