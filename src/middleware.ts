@@ -49,7 +49,7 @@ export async function middleware(request: NextRequest) {
   }
 
   const tAuthEnd = Date.now();
-  console.log(`[MW] ${path} | isNextRouting=${isNextRouting} | auth=${tAuthEnd - tAuthStart}ms | total-hasta-auth=${tAuthEnd - t0}ms`);
+  //console.log(`[MW] ${path} | isNextRouting=${isNextRouting} | auth=${tAuthEnd - tAuthStart}ms | total-hasta-auth=${tAuthEnd - t0}ms`);
 
   if (!user && path !== '/login') {
     return NextResponse.redirect(new URL('/login', request.url));
@@ -98,8 +98,8 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  console.log(`[MW] ${path} | total-completo=${Date.now() - t0}ms`);
-console.log(`[MW] ${path} | headers=${JSON.stringify(Object.fromEntries(request.headers))}`);
+ // console.log(`[MW] ${path} | total-completo=${Date.now() - t0}ms`);
+//console.log(`[MW] ${path} | headers=${JSON.stringify(Object.fromEntries(request.headers))}`);
   return response;
 }
 

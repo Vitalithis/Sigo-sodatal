@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useActionState } from 'react';
+import { useState } from 'react';
+import { useFormState } from 'react-dom';
 import { login, signup, type LoginState } from './actions';
 
 const initialState: LoginState = { success: false, error: '' };
@@ -8,7 +9,7 @@ const initialState: LoginState = { success: false, error: '' };
 export default function AuthForms() {
   const [modo, setModo] = useState<'login' | 'registro'>('login');
   const accion = modo === 'login' ? login : signup;
-  const [state, formAction, isPending] = useActionState(accion, initialState);
+  const [state, formAction] = useFormState(accion, initialState);
 
   return (
     <div>
@@ -44,14 +45,9 @@ export default function AuthForms() {
 
         <button
           type="submit"
-          disabled={isPending}
-          className="flex w-full justify-center rounded-md bg-blue-600 px-3 py-2.5 text-sm font-semibold text-white hover:bg-blue-500 disabled:opacity-60"
+          className="flex w-full justify-center rounded-md bg-blue-600 px-3 py-2.5 text-sm font-semibold text-white hover:bg-blue-500"
         >
-          {isPending
-            ? 'Procesando...'
-            : modo === 'login'
-            ? 'Iniciar Sesión'
-            : 'Crear Cuenta'}
+          {modo === 'login' ? 'Iniciar Sesión' : 'Crear Cuenta'}
         </button>
       </form>
 
