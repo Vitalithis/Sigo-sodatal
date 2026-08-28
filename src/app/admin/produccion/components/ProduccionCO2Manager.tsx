@@ -11,6 +11,7 @@ import {
   ProduccionDiariaInput,
   TuboCO2Input,
 } from '../actions';
+import { Factory, FlaskConical, Plus, ClipboardList, Cylinder, Settings, AlertTriangle, CheckCircle, Info } from 'lucide-react';
 
 interface UsuarioLite {
   id: string;
@@ -158,13 +159,11 @@ export default function ProduccionCO2Manager({ produccionInicial, tubosIniciales
       setBanner({ tipo: 'error', texto: 'Indica un peso válido para el tubo.' });
       return;
     }
-
     const payload: TuboCO2Input = {
       fecha_llegada: formTubo.fecha_llegada,
       peso_kg: pesoNum,
       rendimiento_estimado: formTubo.rendimiento_estimado ? parseInt(formTubo.rendimiento_estimado, 10) : undefined,
     };
-
     setCargando(true);
     setBanner(null);
     const res = await crearTuboCO2Action(payload);
@@ -212,130 +211,144 @@ export default function ProduccionCO2Manager({ produccionInicial, tubosIniciales
     setCargando(false);
   };
 
+  const inputClass = "w-full border border-gray-200 rounded-xl px-3 py-2 text-xs text-gray-800 bg-white focus:outline-none focus:ring-2 focus:ring-[#283289]/20 focus:border-[#283289] transition-colors";
+  const labelClass = "block text-xs font-bold text-gray-600 mb-1";
+
   return (
-    <div className="font-sans text-gray-900">
+    <div className="space-y-6">
+
       {/* Pestañas */}
-      <div className="flex gap-1 border-b border-gray-200 mb-4">
+      <div className="flex gap-2 border-b border-gray-200">
         <button
           onClick={() => setTab('produccion')}
-          className={`px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-t-md ${
-            tab === 'produccion' ? 'bg-white border border-b-0 border-gray-200 text-blue-600' : 'text-gray-500 hover:text-gray-700'
+          className={`flex items-center gap-2 px-4 py-2.5 text-xs font-bold rounded-t-lg border-b-2 transition-colors ${
+            tab === 'produccion'
+              ? 'border-[#283289] text-[#283289] bg-blue-50/50'
+              : 'border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50'
           }`}
         >
-          🏭 Producción diaria
+          <Factory className="h-3.5 w-3.5" />
+          Producción diaria
         </button>
         <button
           onClick={() => setTab('co2')}
-          className={`px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-t-md ${
-            tab === 'co2' ? 'bg-white border border-b-0 border-gray-200 text-blue-600' : 'text-gray-500 hover:text-gray-700'
+          className={`flex items-center gap-2 px-4 py-2.5 text-xs font-bold rounded-t-lg border-b-2 transition-colors ${
+            tab === 'co2'
+              ? 'border-[#283289] text-[#283289] bg-blue-50/50'
+              : 'border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50'
           }`}
         >
-          🧪 CO₂ y tubos
+          <FlaskConical className="h-3.5 w-3.5" />
+          CO₂ y tubos
         </button>
       </div>
 
       {/* Banner de estado */}
       {banner && (
-        <div
-          className={`mb-4 px-4 py-2.5 rounded-md text-xs font-semibold border ${
-            banner.tipo === 'ok'
-              ? 'bg-green-50 text-green-700 border-green-200'
-              : banner.tipo === 'alerta'
-              ? 'bg-amber-50 text-amber-800 border-amber-200'
-              : 'bg-red-50 text-red-700 border-red-200'
-          }`}
-        >
-          {banner.tipo === 'ok' ? '✅ ' : banner.tipo === 'alerta' ? '⚠️ ' : '⛔ '}
+        <div className={`flex items-start gap-3 px-4 py-3 rounded-xl text-xs font-semibold border shadow-sm ${
+          banner.tipo === 'ok'
+            ? 'bg-green-50 text-green-700 border-green-200'
+            : banner.tipo === 'alerta'
+            ? 'bg-amber-50 text-amber-800 border-amber-200'
+            : 'bg-red-50 text-red-700 border-red-200'
+        }`}>
+          {banner.tipo === 'ok'
+            ? <CheckCircle className="h-4 w-4 shrink-0 mt-0.5" />
+            : banner.tipo === 'alerta'
+            ? <AlertTriangle className="h-4 w-4 shrink-0 mt-0.5" />
+            : <Info className="h-4 w-4 shrink-0 mt-0.5" />}
           {banner.texto}
         </div>
       )}
 
       {tab === 'produccion' ? (
         <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
+
           {/* Formulario nueva producción */}
-          <div className="xl:col-span-1 bg-white p-4 rounded-lg border border-gray-200 shadow-sm h-fit">
-            <h2 className="text-xs font-black text-gray-700 uppercase tracking-wider mb-3 pb-1.5 border-b border-gray-100">
-              ➕ Registrar producción del día
-            </h2>
-            <form onSubmit={manejarCrearProduccion} className="space-y-3 text-xs">
+          <div className="xl:col-span-1 bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden h-fit">
+            <div className="px-5 py-4 border-b border-gray-100 flex items-center gap-2">
+              <Plus className="h-4 w-4 text-[#283289]" />
+              <h2 className="text-sm font-bold text-gray-800">Registrar producción</h2>
+            </div>
+            <form onSubmit={manejarCrearProduccion} className="p-5 space-y-4 text-xs">
               <div>
-                <label className="block text-gray-500 font-semibold mb-1">Fecha</label>
+                <label className={labelClass}>Fecha</label>
                 <input
                   type="date"
                   required
                   value={formProduccion.fecha}
                   onChange={(e) => setFormProduccion((p) => ({ ...p, fecha: e.target.value }))}
-                  className="w-full border border-gray-300 rounded px-2 py-1.5"
+                  className={inputClass}
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-gray-500 font-semibold mb-1">Botellones 10L</label>
+                  <label className={labelClass}>Botellones 10L</label>
                   <input
                     type="number"
                     min={0}
                     value={formProduccion.botellon10_cantidad}
                     onChange={(e) => setFormProduccion((p) => ({ ...p, botellon10_cantidad: Number(e.target.value) }))}
-                    className="w-full border border-gray-300 rounded px-2 py-1.5"
+                    className={inputClass}
                   />
                 </div>
                 <div>
-                  <label className="block text-gray-500 font-semibold mb-1">Botellones 20L</label>
+                  <label className={labelClass}>Botellones 20L</label>
                   <input
                     type="number"
                     min={0}
                     value={formProduccion.botellon20_cantidad}
                     onChange={(e) => setFormProduccion((p) => ({ ...p, botellon20_cantidad: Number(e.target.value) }))}
-                    className="w-full border border-gray-300 rounded px-2 py-1.5"
+                    className={inputClass}
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-gray-500 font-semibold mb-1">Sodas producidas</label>
+                <label className={labelClass}>Sodas producidas</label>
                 <input
                   type="number"
                   min={0}
                   value={formProduccion.sodas_cantidad}
                   onChange={(e) => setFormProduccion((p) => ({ ...p, sodas_cantidad: Number(e.target.value) }))}
-                  className="w-full border border-gray-300 rounded px-2 py-1.5"
+                  className={inputClass}
                 />
                 <p className="text-[10px] text-gray-400 mt-1">Descuenta CO₂ del tubo activo automáticamente.</p>
               </div>
 
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-gray-500 font-semibold mb-1">pH</label>
+                  <label className={labelClass}>pH</label>
                   <input
                     type="number"
                     step="0.01"
                     required
                     value={formProduccion.ph || ''}
                     onChange={(e) => setFormProduccion((p) => ({ ...p, ph: Number(e.target.value) }))}
-                    className="w-full border border-gray-300 rounded px-2 py-1.5"
+                    className={inputClass}
                   />
                 </div>
                 <div>
-                  <label className="block text-gray-500 font-semibold mb-1">PPM</label>
+                  <label className={labelClass}>PPM</label>
                   <input
                     type="number"
                     step="0.01"
                     required
                     value={formProduccion.ppm || ''}
                     onChange={(e) => setFormProduccion((p) => ({ ...p, ppm: Number(e.target.value) }))}
-                    className="w-full border border-gray-300 rounded px-2 py-1.5"
+                    className={inputClass}
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-gray-500 font-semibold mb-1">Registrado por</label>
+                <label className={labelClass}>Registrado por</label>
                 <select
                   required
                   value={formProduccion.usuario_id}
                   onChange={(e) => setFormProduccion((p) => ({ ...p, usuario_id: e.target.value }))}
-                  className="w-full border border-gray-300 rounded px-2 py-1.5"
+                  className={inputClass}
                 >
                   <option value="">Selecciona...</option>
                   {usuarios.map((u) => (
@@ -347,19 +360,19 @@ export default function ProduccionCO2Manager({ produccionInicial, tubosIniciales
               </div>
 
               <div>
-                <label className="block text-gray-500 font-semibold mb-1">Observaciones</label>
+                <label className={labelClass}>Observaciones</label>
                 <textarea
                   value={formProduccion.observaciones}
                   onChange={(e) => setFormProduccion((p) => ({ ...p, observaciones: e.target.value }))}
                   rows={2}
-                  className="w-full border border-gray-300 rounded px-2 py-1.5"
+                  className={inputClass}
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={cargando}
-                className="w-full bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-bold py-2 rounded transition-colors"
+                className="w-full bg-[#283289] hover:bg-[#1e2670] disabled:opacity-50 text-white font-bold py-2.5 rounded-xl transition-colors text-xs"
               >
                 {cargando ? 'Guardando...' : 'Registrar producción'}
               </button>
@@ -367,42 +380,43 @@ export default function ProduccionCO2Manager({ produccionInicial, tubosIniciales
           </div>
 
           {/* Histórico de producción */}
-          <div className="xl:col-span-3 bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
-            <h2 className="text-xs font-black text-gray-700 uppercase tracking-wider mb-3 pb-1.5 border-b border-gray-100">
-              📋 Histórico de producción
-            </h2>
+          <div className="xl:col-span-3 bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+            <div className="px-5 py-4 border-b border-gray-100 flex items-center gap-2">
+              <ClipboardList className="h-4 w-4 text-[#283289]" />
+              <h2 className="text-sm font-bold text-gray-800">Histórico de producción</h2>
+            </div>
             <div className="overflow-x-auto">
               <table className="w-full text-xs">
                 <thead>
-                  <tr className="text-left text-gray-400 uppercase text-[10px] tracking-wider border-b border-gray-100">
-                    <th className="py-2 pr-2">Fecha</th>
-                    <th className="py-2 pr-2">Bot. 10L</th>
-                    <th className="py-2 pr-2">Bot. 20L</th>
-                    <th className="py-2 pr-2">Sodas</th>
-                    <th className="py-2 pr-2">pH</th>
-                    <th className="py-2 pr-2">PPM</th>
-                    <th className="py-2 pr-2">Registrado por</th>
-                    <th className="py-2 pr-2">Obs.</th>
+                  <tr className="text-left text-gray-400 uppercase text-[10px] tracking-wider bg-gray-50/70">
+                    <th className="px-5 py-3 font-bold">Fecha</th>
+                    <th className="px-3 py-3 font-bold">Bot. 10L</th>
+                    <th className="px-3 py-3 font-bold">Bot. 20L</th>
+                    <th className="px-3 py-3 font-bold">Sodas</th>
+                    <th className="px-3 py-3 font-bold">pH</th>
+                    <th className="px-3 py-3 font-bold">PPM</th>
+                    <th className="px-3 py-3 font-bold">Registrado por</th>
+                    <th className="px-3 py-3 font-bold">Obs.</th>
                   </tr>
                 </thead>
                 <tbody>
                   {produccion.length === 0 && (
                     <tr>
-                      <td colSpan={8} className="py-6 text-center text-gray-400">
+                      <td colSpan={8} className="py-10 text-center text-gray-400 text-xs">
                         Sin registros de producción todavía.
                       </td>
                     </tr>
                   )}
                   {produccion.map((p) => (
-                    <tr key={p.id} className="border-b border-gray-50 hover:bg-gray-50">
-                      <td className="py-2 pr-2 font-semibold">{formatearFecha(p.fecha)}</td>
-                      <td className="py-2 pr-2">{p.botellon10_cantidad}</td>
-                      <td className="py-2 pr-2">{p.botellon20_cantidad}</td>
-                      <td className="py-2 pr-2">{p.sodas_cantidad}</td>
-                      <td className="py-2 pr-2">{p.ph}</td>
-                      <td className="py-2 pr-2">{p.ppm}</td>
-                      <td className="py-2 pr-2">{nombreUsuario(p.usuario)}</td>
-                      <td className="py-2 pr-2 text-gray-500 max-w-[180px] truncate">{p.observaciones || '—'}</td>
+                    <tr key={p.id} className="border-t border-gray-50 hover:bg-slate-50 transition-colors">
+                      <td className="px-5 py-3 font-semibold text-gray-800">{formatearFecha(p.fecha)}</td>
+                      <td className="px-3 py-3 text-gray-600">{p.botellon10_cantidad}</td>
+                      <td className="px-3 py-3 text-gray-600">{p.botellon20_cantidad}</td>
+                      <td className="px-3 py-3 text-gray-600">{p.sodas_cantidad}</td>
+                      <td className="px-3 py-3 text-gray-600">{p.ph}</td>
+                      <td className="px-3 py-3 text-gray-600">{p.ppm}</td>
+                      <td className="px-3 py-3 text-gray-600">{nombreUsuario(p.usuario)}</td>
+                      <td className="px-3 py-3 text-gray-500 max-w-[180px] truncate">{p.observaciones || '—'}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -410,93 +424,103 @@ export default function ProduccionCO2Manager({ produccionInicial, tubosIniciales
             </div>
           </div>
         </div>
+
       ) : (
         <div className="space-y-6">
-          {/* Fila superior: tubo activo, nuevo tubo y configuración lado a lado */}
+
+          {/* Fila superior: tubo activo, nuevo tubo y configuración */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-            <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
-              <h2 className="text-xs font-black text-gray-700 uppercase tracking-wider mb-3 pb-1.5 border-b border-gray-100">
-                🧯 Tubo activo
-              </h2>
 
-              {!tuboActivo || !estadoTubo ? (
-                <p className="text-xs text-gray-400 py-4 text-center">No hay un tubo de CO₂ activo. Registra uno nuevo.</p>
-              ) : (
-                <div className="space-y-3 text-xs">
-                  <div className="flex justify-between">
-                    <span className="text-gray-500">Llegada</span>
-                    <span className="font-semibold">{formatearFecha(tuboActivo.fecha_llegada)}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-500">Peso total</span>
-                    <span className="font-semibold">{tuboActivo.peso_kg} kg</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-500">Consumido</span>
-                    <span className="font-semibold">{tuboActivo.kg_consumidos.toFixed(1)} kg</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-500">Sodas producidas</span>
-                    <span className="font-semibold">{tuboActivo.sodas_producidas_total}</span>
-                  </div>
-
-                  <div className="pt-2">
-                    <div className="flex justify-between text-[10px] text-gray-400 mb-1">
-                      <span>Restante</span>
-                      <span>{estadoTubo.porcentaje.toFixed(1)}%</span>
+            {/* Tubo activo */}
+            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+              <div className="px-5 py-4 border-b border-gray-100 flex items-center gap-2">
+                <FlaskConical className="h-4 w-4 text-[#283289]" />
+                <h2 className="text-sm font-bold text-gray-800">Tubo activo</h2>
+              </div>
+              <div className="p-5">
+                {!tuboActivo || !estadoTubo ? (
+                  <p className="text-xs text-gray-400 py-4 text-center">No hay un tubo de CO₂ activo. Registra uno nuevo.</p>
+                ) : (
+                  <div className="space-y-3 text-xs">
+                    <div className="flex justify-between py-1.5 border-b border-gray-50">
+                      <span className="text-gray-500 font-medium">Llegada</span>
+                      <span className="font-bold text-gray-800">{formatearFecha(tuboActivo.fecha_llegada)}</span>
                     </div>
-                    <div className="w-full h-3 rounded-full bg-gray-100 overflow-hidden">
-                      <div
-                        className={`h-full rounded-full transition-all ${
-                          estadoTubo.color === 'red'
-                            ? 'bg-red-500'
-                            : estadoTubo.color === 'yellow'
-                            ? 'bg-amber-400'
-                            : 'bg-green-500'
-                        }`}
-                        style={{ width: `${estadoTubo.porcentaje}%` }}
-                      />
+                    <div className="flex justify-between py-1.5 border-b border-gray-50">
+                      <span className="text-gray-500 font-medium">Peso total</span>
+                      <span className="font-bold text-gray-800">{tuboActivo.peso_kg} kg</span>
                     </div>
-                    {estadoTubo.color === 'red' && (
-                      <p className="text-[10px] text-red-600 font-semibold mt-1">
-                        ⚠️ Bajo el {umbralAlerta}% de capacidad. Ten un tubo de respaldo listo.
-                      </p>
-                    )}
-                  </div>
+                    <div className="flex justify-between py-1.5 border-b border-gray-50">
+                      <span className="text-gray-500 font-medium">Consumido</span>
+                      <span className="font-bold text-gray-800">{tuboActivo.kg_consumidos.toFixed(1)} kg</span>
+                    </div>
+                    <div className="flex justify-between py-1.5 border-b border-gray-50">
+                      <span className="text-gray-500 font-medium">Sodas producidas</span>
+                      <span className="font-bold text-gray-800">{tuboActivo.sodas_producidas_total}</span>
+                    </div>
 
-                  <button
-                    onClick={() => manejarCerrarTubo(tuboActivo.id)}
-                    disabled={cargando}
-                    className="w-full mt-2 border border-gray-300 hover:bg-gray-50 disabled:opacity-50 text-gray-600 font-semibold py-1.5 rounded transition-colors"
-                  >
-                    Cerrar tubo manualmente
-                  </button>
-                </div>
-              )}
+                    <div className="pt-2">
+                      <div className="flex justify-between text-[10px] text-gray-400 mb-1.5">
+                        <span className="font-semibold">Restante</span>
+                        <span className="font-bold">{estadoTubo.porcentaje.toFixed(1)}%</span>
+                      </div>
+                      <div className="w-full h-3 rounded-full bg-gray-100 overflow-hidden">
+                        <div
+                          className={`h-full rounded-full transition-all duration-500 ${
+                            estadoTubo.color === 'red'
+                              ? 'bg-red-500'
+                              : estadoTubo.color === 'yellow'
+                              ? 'bg-amber-400'
+                              : 'bg-green-500'
+                          }`}
+                          style={{ width: `${estadoTubo.porcentaje}%` }}
+                        />
+                      </div>
+                      {estadoTubo.color === 'red' && (
+                        <div className="flex items-start gap-2 mt-2 bg-red-50 border border-red-200 rounded-xl p-2.5">
+                          <AlertTriangle className="h-3.5 w-3.5 text-red-500 shrink-0 mt-0.5" />
+                          <p className="text-[10px] text-red-600 font-semibold">
+                            Bajo el {umbralAlerta}% de capacidad. Ten un tubo de respaldo listo.
+                          </p>
+                        </div>
+                      )}
+                    </div>
+
+                    <button
+                      onClick={() => manejarCerrarTubo(tuboActivo.id)}
+                      disabled={cargando}
+                      className="w-full mt-2 border border-gray-200 hover:bg-gray-50 disabled:opacity-50 text-gray-600 font-semibold py-2 rounded-xl transition-colors text-xs"
+                    >
+                      Cerrar tubo manualmente
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* Nuevo tubo */}
-            <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
-              <h2 className="text-xs font-black text-gray-700 uppercase tracking-wider mb-3 pb-1.5 border-b border-gray-100">
-                ➕ Registrar tubo nuevo
-              </h2>
-              <form onSubmit={manejarCrearTubo} className="space-y-3 text-xs">
+            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+              <div className="px-5 py-4 border-b border-gray-100 flex items-center gap-2">
+                <Plus className="h-4 w-4 text-[#283289]" />
+                <h2 className="text-sm font-bold text-gray-800">Registrar tubo nuevo</h2>
+              </div>
+              <form onSubmit={manejarCrearTubo} className="p-5 space-y-4 text-xs">
                 <div>
-                  <label className="block text-gray-500 font-semibold mb-1">Fecha de llegada</label>
+                  <label className={labelClass}>Fecha de llegada</label>
                   <input
                     type="date"
                     required
                     value={formTubo.fecha_llegada}
                     onChange={(e) => setFormTubo((p) => ({ ...p, fecha_llegada: e.target.value }))}
-                    className="w-full border border-gray-300 rounded px-2 py-1.5"
+                    className={inputClass}
                   />
                 </div>
                 <div>
-                  <label className="block text-gray-500 font-semibold mb-1">Peso (kg)</label>
+                  <label className={labelClass}>Peso (kg)</label>
                   <select
                     value={formTubo.peso_kg}
                     onChange={(e) => setFormTubo((p) => ({ ...p, peso_kg: e.target.value }))}
-                    className="w-full border border-gray-300 rounded px-2 py-1.5"
+                    className={inputClass}
                   >
                     <option value="45">45 kg</option>
                     <option value="35">35 kg</option>
@@ -505,18 +529,19 @@ export default function ProduccionCO2Manager({ produccionInicial, tubosIniciales
                 </div>
                 {formTubo.peso_kg === 'otro' && (
                   <div>
-                    <label className="block text-gray-500 font-semibold mb-1">Peso exacto (kg)</label>
+                    <label className={labelClass}>Peso exacto (kg)</label>
                     <input
                       type="number"
                       min={1}
                       onChange={(e) => setFormTubo((p) => ({ ...p, peso_kg: e.target.value }))}
-                      className="w-full border border-gray-300 rounded px-2 py-1.5"
+                      className={inputClass}
                     />
                   </div>
                 )}
                 <div>
-                  <label className="block text-gray-500 font-semibold mb-1">
-                    Rendimiento estimado (sodas) <span className="text-gray-300">— opcional</span>
+                  <label className={labelClass}>
+                    Rendimiento estimado (sodas){' '}
+                    <span className="text-gray-300 font-normal">— opcional</span>
                   </label>
                   <input
                     type="number"
@@ -524,13 +549,13 @@ export default function ProduccionCO2Manager({ produccionInicial, tubosIniciales
                     placeholder="Se autocompleta con 45/35 kg"
                     value={formTubo.rendimiento_estimado}
                     onChange={(e) => setFormTubo((p) => ({ ...p, rendimiento_estimado: e.target.value }))}
-                    className="w-full border border-gray-300 rounded px-2 py-1.5"
+                    className={inputClass}
                   />
                 </div>
                 <button
                   type="submit"
                   disabled={cargando}
-                  className="w-full bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-bold py-2 rounded transition-colors"
+                  className="w-full bg-[#283289] hover:bg-[#1e2670] disabled:opacity-50 text-white font-bold py-2.5 rounded-xl transition-colors"
                 >
                   {cargando ? 'Guardando...' : 'Registrar y activar tubo'}
                 </button>
@@ -541,42 +566,43 @@ export default function ProduccionCO2Manager({ produccionInicial, tubosIniciales
             </div>
 
             {/* Configuración */}
-            <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
-              <h2 className="text-xs font-black text-gray-700 uppercase tracking-wider mb-3 pb-1.5 border-b border-gray-100">
-                ⚙️ Configuración CO₂
-              </h2>
-              <form onSubmit={manejarGuardarConfig} className="space-y-3 text-xs">
+            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+              <div className="px-5 py-4 border-b border-gray-100 flex items-center gap-2">
+                <Settings className="h-4 w-4 text-[#283289]" />
+                <h2 className="text-sm font-bold text-gray-800">Configuración CO₂</h2>
+              </div>
+              <form onSubmit={manejarGuardarConfig} className="p-5 space-y-4 text-xs">
                 <div>
-                  <label className="block text-gray-500 font-semibold mb-1">Rendimiento tubo 45kg (sodas)</label>
+                  <label className={labelClass}>Rendimiento tubo 45kg (sodas)</label>
                   <input
                     type="number"
                     value={formConfig.co2_rendimiento_45kg}
                     onChange={(e) => setFormConfig((p) => ({ ...p, co2_rendimiento_45kg: e.target.value }))}
-                    className="w-full border border-gray-300 rounded px-2 py-1.5"
+                    className={inputClass}
                   />
                 </div>
                 <div>
-                  <label className="block text-gray-500 font-semibold mb-1">Rendimiento tubo 35kg (sodas)</label>
+                  <label className={labelClass}>Rendimiento tubo 35kg (sodas)</label>
                   <input
                     type="number"
                     value={formConfig.co2_rendimiento_35kg}
                     onChange={(e) => setFormConfig((p) => ({ ...p, co2_rendimiento_35kg: e.target.value }))}
-                    className="w-full border border-gray-300 rounded px-2 py-1.5"
+                    className={inputClass}
                   />
                 </div>
                 <div>
-                  <label className="block text-gray-500 font-semibold mb-1">Umbral de alerta (%)</label>
+                  <label className={labelClass}>Umbral de alerta (%)</label>
                   <input
                     type="number"
                     value={formConfig.co2_alerta_porcentaje}
                     onChange={(e) => setFormConfig((p) => ({ ...p, co2_alerta_porcentaje: e.target.value }))}
-                    className="w-full border border-gray-300 rounded px-2 py-1.5"
+                    className={inputClass}
                   />
                 </div>
                 <button
                   type="submit"
                   disabled={cargando}
-                  className="w-full border border-gray-300 hover:bg-gray-50 disabled:opacity-50 text-gray-700 font-semibold py-1.5 rounded transition-colors"
+                  className="w-full border border-gray-200 hover:bg-gray-50 disabled:opacity-50 text-gray-700 font-semibold py-2 rounded-xl transition-colors"
                 >
                   Guardar configuración
                 </button>
@@ -584,47 +610,48 @@ export default function ProduccionCO2Manager({ produccionInicial, tubosIniciales
             </div>
           </div>
 
-          {/* Historial de tubos: ancho completo debajo de las tarjetas de control */}
-          <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
-            <h2 className="text-xs font-black text-gray-700 uppercase tracking-wider mb-3 pb-1.5 border-b border-gray-100">
-              📜 Historial de tubos de CO₂
-            </h2>
+          {/* Historial de tubos */}
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+            <div className="px-5 py-4 border-b border-gray-100 flex items-center gap-2">
+              <ClipboardList className="h-4 w-4 text-[#283289]" />
+              <h2 className="text-sm font-bold text-gray-800">Historial de tubos de CO₂</h2>
+            </div>
             <div className="overflow-x-auto">
               <table className="w-full text-xs">
                 <thead>
-                  <tr className="text-left text-gray-400 uppercase text-[10px] tracking-wider border-b border-gray-100">
-                    <th className="py-2 pr-2">Llegada</th>
-                    <th className="py-2 pr-2">Peso</th>
-                    <th className="py-2 pr-2">Rendimiento</th>
-                    <th className="py-2 pr-2">Sodas producidas</th>
-                    <th className="py-2 pr-2">Kg consumidos</th>
-                    <th className="py-2 pr-2">Cierre</th>
-                    <th className="py-2 pr-2">Estado</th>
+                  <tr className="text-left text-gray-400 uppercase text-[10px] tracking-wider bg-gray-50/70">
+                    <th className="px-5 py-3 font-bold">Llegada</th>
+                    <th className="px-3 py-3 font-bold">Peso</th>
+                    <th className="px-3 py-3 font-bold">Rendimiento</th>
+                    <th className="px-3 py-3 font-bold">Sodas producidas</th>
+                    <th className="px-3 py-3 font-bold">Kg consumidos</th>
+                    <th className="px-3 py-3 font-bold">Cierre</th>
+                    <th className="px-3 py-3 font-bold">Estado</th>
                   </tr>
                 </thead>
                 <tbody>
                   {tubos.length === 0 && (
                     <tr>
-                      <td colSpan={7} className="py-6 text-center text-gray-400">
+                      <td colSpan={7} className="py-10 text-center text-gray-400 text-xs">
                         Sin tubos registrados todavía.
                       </td>
                     </tr>
                   )}
                   {tubos.map((t) => (
-                    <tr key={t.id} className="border-b border-gray-50 hover:bg-gray-50">
-                      <td className="py-2 pr-2 font-semibold">{formatearFecha(t.fecha_llegada)}</td>
-                      <td className="py-2 pr-2">{t.peso_kg} kg</td>
-                      <td className="py-2 pr-2">{t.rendimiento_estimado}</td>
-                      <td className="py-2 pr-2">{t.sodas_producidas_total}</td>
-                      <td className="py-2 pr-2">{t.kg_consumidos.toFixed(1)} kg</td>
-                      <td className="py-2 pr-2">{t.fecha_cierre ? formatearFecha(t.fecha_cierre) : '—'}</td>
-                      <td className="py-2 pr-2">
+                    <tr key={t.id} className="border-t border-gray-50 hover:bg-slate-50 transition-colors">
+                      <td className="px-5 py-3 font-semibold text-gray-800">{formatearFecha(t.fecha_llegada)}</td>
+                      <td className="px-3 py-3 text-gray-600">{t.peso_kg} kg</td>
+                      <td className="px-3 py-3 text-gray-600">{t.rendimiento_estimado}</td>
+                      <td className="px-3 py-3 text-gray-600">{t.sodas_producidas_total}</td>
+                      <td className="px-3 py-3 text-gray-600">{t.kg_consumidos.toFixed(1)} kg</td>
+                      <td className="px-3 py-3 text-gray-600">{t.fecha_cierre ? formatearFecha(t.fecha_cierre) : '—'}</td>
+                      <td className="px-3 py-3">
                         {t.activo ? (
-                          <span className="bg-green-100 text-green-700 px-2 py-0.5 rounded-full text-[10px] font-bold">
+                          <span className="bg-green-100 text-green-700 px-2.5 py-1 rounded-full text-[10px] font-black">
                             ACTIVO
                           </span>
                         ) : (
-                          <span className="bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full text-[10px] font-bold">
+                          <span className="bg-gray-100 text-gray-500 px-2.5 py-1 rounded-full text-[10px] font-black">
                             CERRADO
                           </span>
                         )}
@@ -635,6 +662,7 @@ export default function ProduccionCO2Manager({ produccionInicial, tubosIniciales
               </table>
             </div>
           </div>
+
         </div>
       )}
     </div>

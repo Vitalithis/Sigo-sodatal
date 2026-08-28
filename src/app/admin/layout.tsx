@@ -14,14 +14,14 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   const nombre = data.user.user_metadata?.nombre ?? 'Usuario';
 
   return (
-    <div className="flex h-screen bg-[#f4f6f9] font-sans overflow-hidden w-full">
-      <Sidebar rol={rol} />
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <AdminHeader nombre={nombre} rol={rol} />
-        <main className="flex-1 overflow-y-auto p-6">
-          {children}
-        </main>
-      </div>
+  <div className="flex h-screen bg-[#f4f6f9] font-sans w-full">
+    <Sidebar rol={rol} />
+    <div className="flex-1 flex flex-col min-h-0">
+      <AdminHeader nombre={nombre} rol={rol} />
+      <main className="flex-1 overflow-y-auto p-6">
+        {children}
+      </main>
     </div>
-  );
+  </div>
+);
 }
