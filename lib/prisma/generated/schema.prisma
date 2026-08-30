@@ -35,6 +35,7 @@ model Usuario {
   stock_camion       StockCamion[]
   vehiculo           Vehiculo?          @relation(fields: [vehiculo_id], references: [id])
   incidencias        Incidencia[]
+  movimientos_stock  MovimientoStock[]
 }
 
 model Vehiculo {
@@ -106,6 +107,20 @@ model Producto {
   pedidoItems        PedidoItem[]
   stock_camion       StockCamion[]
   stock_fabrica      StockFabrica?
+  movimientos_stock  MovimientoStock[]
+}
+
+model MovimientoStock {
+  id            String   @id @default(uuid())
+  producto_id   String
+  usuario_id    String
+  cantidad      Int // positivo = entrada, negativo = salida
+  motivo        String
+  stock_antes   Int
+  stock_despues Int
+  created_at    DateTime @default(now())
+  producto      Producto @relation(fields: [producto_id], references: [id])
+  usuario       Usuario  @relation(fields: [usuario_id], references: [id])
 }
 
 model Comision {
@@ -289,6 +304,8 @@ model Cuadratura {
   ventas              CuadraturaVenta[]
   gastos              CuadraturaGasto[]
   incidencias         Incidencia[]
+  km_inicial          Int?
+  km_final            Int?
 
   @@unique([usuario_id, fecha])
 }

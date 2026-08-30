@@ -14,8 +14,6 @@ export default async function AdminRutasBasePage() {
   return (
     <div className="space-y-4">
       <div>
-        <h1 className="text-2xl font-bold text-[#212529]">Estructura de Rutas Base Semanales</h1>
-        <p className="text-xs text-gray-500 mt-0.5">Define qué clientes visita cada camión de forma fija según el día de la semana</p>
       </div>
 
       <RutasBaseManager 

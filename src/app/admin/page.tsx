@@ -206,11 +206,11 @@ export default async function AdminDashboardPage() {
               {metricas.co2.porcentaje < 20 ? (
                 <div className="text-sm font-bold text-white bg-red-500 p-4 rounded-xl flex items-start gap-2 shadow-sm">
                   <AlertTriangle className="h-5 w-5 shrink-0 mt-0.5" />
-                  <p>¡ALERTA CRÍTICA: Nivel de CO₂ Elevado Detectado en el Área de Producción. Por favor, verificar y ventilar inmediatamente!</p>
+                  <p>¡Nivel de CO₂ Bajo!</p>
                 </div>
               ) : (
                 <div className="text-sm font-semibold text-slate-600 bg-slate-50 p-3 rounded-xl border border-slate-200">
-                  El suministro actual es estable para continuar con la inyección en la línea de embotellado.
+                  El suministro actual es estable.
                 </div>
               )}
             </div>

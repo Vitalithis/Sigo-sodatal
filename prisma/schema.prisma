@@ -35,6 +35,7 @@ model Usuario {
   stock_camion       StockCamion[]
   vehiculo           Vehiculo?          @relation(fields: [vehiculo_id], references: [id])
   incidencias          Incidencia[]
+  movimientos_stock MovimientoStock[]
 }
 
 model Vehiculo {
@@ -106,6 +107,19 @@ model Producto {
   pedidoItems        PedidoItem[]
   stock_camion       StockCamion[]
   stock_fabrica      StockFabrica?
+  movimientos_stock MovimientoStock[]
+}
+model MovimientoStock {
+  id          String       @id @default(uuid())
+  producto_id String
+  usuario_id  String
+  cantidad    Int          // positivo = entrada, negativo = salida
+  motivo      String
+  stock_antes Int
+  stock_despues Int
+  created_at  DateTime     @default(now())
+  producto    Producto     @relation(fields: [producto_id], references: [id])
+  usuario     Usuario      @relation(fields: [usuario_id], references: [id])
 }
 
 model Comision {
@@ -141,6 +155,8 @@ model Cliente {
   paradas              ParadaDia[]
   pedidos              Pedido[]
   incidencias          Incidencia[]
+  frecuencia     Frecuencia    @default(SEMANAL)
+  semana_alterna SemanaAlterna?
 }
 
 model RutaBase {
@@ -166,12 +182,14 @@ model ComunaRuta {
 }
 
 model ClienteRutaBase {
-  id           String   @id @default(uuid())
-  ruta_base_id String
-  cliente_id   String
-  orden        Int
-  cliente      Cliente  @relation(fields: [cliente_id], references: [id])
-  ruta_base    RutaBase @relation(fields: [ruta_base_id], references: [id])
+  id             String         @id @default(uuid())
+  ruta_base_id   String
+  cliente_id     String
+  orden          Int
+  frecuencia     Frecuencia     @default(SEMANAL)
+  semana_alterna SemanaAlterna?
+  cliente        Cliente        @relation(fields: [cliente_id], references: [id])
+  ruta_base      RutaBase       @relation(fields: [ruta_base_id], references: [id])
 }
 
 model RutaDia {

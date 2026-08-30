@@ -44,6 +44,11 @@ export type AlertaVehiculo = $Result.DefaultSelection<Prisma.$AlertaVehiculoPayl
  */
 export type Producto = $Result.DefaultSelection<Prisma.$ProductoPayload>
 /**
+ * Model MovimientoStock
+ * 
+ */
+export type MovimientoStock = $Result.DefaultSelection<Prisma.$MovimientoStockPayload>
+/**
  * Model Comision
  * 
  */
@@ -692,6 +697,16 @@ export class PrismaClient<
     * ```
     */
   get producto(): Prisma.ProductoDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.movimientoStock`: Exposes CRUD operations for the **MovimientoStock** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more MovimientoStocks
+    * const movimientoStocks = await prisma.movimientoStock.findMany()
+    * ```
+    */
+  get movimientoStock(): Prisma.MovimientoStockDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.comision`: Exposes CRUD operations for the **Comision** model.
@@ -1452,6 +1467,7 @@ export namespace Prisma {
     RepuestoMantencion: 'RepuestoMantencion',
     AlertaVehiculo: 'AlertaVehiculo',
     Producto: 'Producto',
+    MovimientoStock: 'MovimientoStock',
     Comision: 'Comision',
     Cliente: 'Cliente',
     RutaBase: 'RutaBase',
@@ -1499,7 +1515,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "usuario" | "vehiculo" | "mantencion" | "repuestoMantencion" | "alertaVehiculo" | "producto" | "comision" | "cliente" | "rutaBase" | "comunaRuta" | "clienteRutaBase" | "rutaDia" | "paradaDia" | "pedido" | "pedidoItem" | "guiaDespacho" | "itemGuia" | "cuadratura" | "cuadraturaSalida" | "cuadraturaVenta" | "cuadraturaRetorno" | "cuadraturaGasto" | "botellonVacio" | "botellonDanado" | "produccionDiaria" | "tuboCO2" | "stockFabrica" | "stockCamion" | "configuracion" | "logAcceso" | "dispensador" | "mantencionDispensador" | "repuestoDispensador" | "maquinaReemplazo" | "notificacion" | "historialFinanciero" | "cargaCombustible" | "incidencia"
+      modelProps: "usuario" | "vehiculo" | "mantencion" | "repuestoMantencion" | "alertaVehiculo" | "producto" | "movimientoStock" | "comision" | "cliente" | "rutaBase" | "comunaRuta" | "clienteRutaBase" | "rutaDia" | "paradaDia" | "pedido" | "pedidoItem" | "guiaDespacho" | "itemGuia" | "cuadratura" | "cuadraturaSalida" | "cuadraturaVenta" | "cuadraturaRetorno" | "cuadraturaGasto" | "botellonVacio" | "botellonDanado" | "produccionDiaria" | "tuboCO2" | "stockFabrica" | "stockCamion" | "configuracion" | "logAcceso" | "dispensador" | "mantencionDispensador" | "repuestoDispensador" | "maquinaReemplazo" | "notificacion" | "historialFinanciero" | "cargaCombustible" | "incidencia"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1944,6 +1960,80 @@ export namespace Prisma {
           count: {
             args: Prisma.ProductoCountArgs<ExtArgs>
             result: $Utils.Optional<ProductoCountAggregateOutputType> | number
+          }
+        }
+      }
+      MovimientoStock: {
+        payload: Prisma.$MovimientoStockPayload<ExtArgs>
+        fields: Prisma.MovimientoStockFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.MovimientoStockFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MovimientoStockPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.MovimientoStockFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MovimientoStockPayload>
+          }
+          findFirst: {
+            args: Prisma.MovimientoStockFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MovimientoStockPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.MovimientoStockFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MovimientoStockPayload>
+          }
+          findMany: {
+            args: Prisma.MovimientoStockFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MovimientoStockPayload>[]
+          }
+          create: {
+            args: Prisma.MovimientoStockCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MovimientoStockPayload>
+          }
+          createMany: {
+            args: Prisma.MovimientoStockCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.MovimientoStockCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MovimientoStockPayload>[]
+          }
+          delete: {
+            args: Prisma.MovimientoStockDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MovimientoStockPayload>
+          }
+          update: {
+            args: Prisma.MovimientoStockUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MovimientoStockPayload>
+          }
+          deleteMany: {
+            args: Prisma.MovimientoStockDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.MovimientoStockUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.MovimientoStockUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MovimientoStockPayload>[]
+          }
+          upsert: {
+            args: Prisma.MovimientoStockUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MovimientoStockPayload>
+          }
+          aggregate: {
+            args: Prisma.MovimientoStockAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateMovimientoStock>
+          }
+          groupBy: {
+            args: Prisma.MovimientoStockGroupByArgs<ExtArgs>
+            result: $Utils.Optional<MovimientoStockGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.MovimientoStockCountArgs<ExtArgs>
+            result: $Utils.Optional<MovimientoStockCountAggregateOutputType> | number
           }
         }
       }
@@ -4429,6 +4519,7 @@ export namespace Prisma {
     repuestoMantencion?: RepuestoMantencionOmit
     alertaVehiculo?: AlertaVehiculoOmit
     producto?: ProductoOmit
+    movimientoStock?: MovimientoStockOmit
     comision?: ComisionOmit
     cliente?: ClienteOmit
     rutaBase?: RutaBaseOmit
@@ -4552,6 +4643,7 @@ export namespace Prisma {
     rutas_dia: number
     stock_camion: number
     incidencias: number
+    movimientos_stock: number
   }
 
   export type UsuarioCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4566,6 +4658,7 @@ export namespace Prisma {
     rutas_dia?: boolean | UsuarioCountOutputTypeCountRutas_diaArgs
     stock_camion?: boolean | UsuarioCountOutputTypeCountStock_camionArgs
     incidencias?: boolean | UsuarioCountOutputTypeCountIncidenciasArgs
+    movimientos_stock?: boolean | UsuarioCountOutputTypeCountMovimientos_stockArgs
   }
 
   // Custom InputTypes
@@ -4654,6 +4747,13 @@ export namespace Prisma {
    */
   export type UsuarioCountOutputTypeCountIncidenciasArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: IncidenciaWhereInput
+  }
+
+  /**
+   * UsuarioCountOutputType without action
+   */
+  export type UsuarioCountOutputTypeCountMovimientos_stockArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MovimientoStockWhereInput
   }
 
 
@@ -4776,6 +4876,7 @@ export namespace Prisma {
     items_guia: number
     pedidoItems: number
     stock_camion: number
+    movimientos_stock: number
   }
 
   export type ProductoCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4786,6 +4887,7 @@ export namespace Prisma {
     items_guia?: boolean | ProductoCountOutputTypeCountItems_guiaArgs
     pedidoItems?: boolean | ProductoCountOutputTypeCountPedidoItemsArgs
     stock_camion?: boolean | ProductoCountOutputTypeCountStock_camionArgs
+    movimientos_stock?: boolean | ProductoCountOutputTypeCountMovimientos_stockArgs
   }
 
   // Custom InputTypes
@@ -4846,6 +4948,13 @@ export namespace Prisma {
    */
   export type ProductoCountOutputTypeCountStock_camionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: StockCamionWhereInput
+  }
+
+  /**
+   * ProductoCountOutputType without action
+   */
+  export type ProductoCountOutputTypeCountMovimientos_stockArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MovimientoStockWhereInput
   }
 
 
@@ -5555,6 +5664,7 @@ export namespace Prisma {
     stock_camion?: boolean | Usuario$stock_camionArgs<ExtArgs>
     vehiculo?: boolean | Usuario$vehiculoArgs<ExtArgs>
     incidencias?: boolean | Usuario$incidenciasArgs<ExtArgs>
+    movimientos_stock?: boolean | Usuario$movimientos_stockArgs<ExtArgs>
     _count?: boolean | UsuarioCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["usuario"]>
 
@@ -5625,6 +5735,7 @@ export namespace Prisma {
     stock_camion?: boolean | Usuario$stock_camionArgs<ExtArgs>
     vehiculo?: boolean | Usuario$vehiculoArgs<ExtArgs>
     incidencias?: boolean | Usuario$incidenciasArgs<ExtArgs>
+    movimientos_stock?: boolean | Usuario$movimientos_stockArgs<ExtArgs>
     _count?: boolean | UsuarioCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UsuarioIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5649,6 +5760,7 @@ export namespace Prisma {
       stock_camion: Prisma.$StockCamionPayload<ExtArgs>[]
       vehiculo: Prisma.$VehiculoPayload<ExtArgs> | null
       incidencias: Prisma.$IncidenciaPayload<ExtArgs>[]
+      movimientos_stock: Prisma.$MovimientoStockPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -6071,6 +6183,7 @@ export namespace Prisma {
     stock_camion<T extends Usuario$stock_camionArgs<ExtArgs> = {}>(args?: Subset<T, Usuario$stock_camionArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockCamionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     vehiculo<T extends Usuario$vehiculoArgs<ExtArgs> = {}>(args?: Subset<T, Usuario$vehiculoArgs<ExtArgs>>): Prisma__VehiculoClient<$Result.GetResult<Prisma.$VehiculoPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     incidencias<T extends Usuario$incidenciasArgs<ExtArgs> = {}>(args?: Subset<T, Usuario$incidenciasArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IncidenciaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    movimientos_stock<T extends Usuario$movimientos_stockArgs<ExtArgs> = {}>(args?: Subset<T, Usuario$movimientos_stockArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MovimientoStockPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6795,6 +6908,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: IncidenciaScalarFieldEnum | IncidenciaScalarFieldEnum[]
+  }
+
+  /**
+   * Usuario.movimientos_stock
+   */
+  export type Usuario$movimientos_stockArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MovimientoStock
+     */
+    select?: MovimientoStockSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MovimientoStock
+     */
+    omit?: MovimientoStockOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MovimientoStockInclude<ExtArgs> | null
+    where?: MovimientoStockWhereInput
+    orderBy?: MovimientoStockOrderByWithRelationInput | MovimientoStockOrderByWithRelationInput[]
+    cursor?: MovimientoStockWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MovimientoStockScalarFieldEnum | MovimientoStockScalarFieldEnum[]
   }
 
   /**
@@ -11789,6 +11926,7 @@ export namespace Prisma {
     pedidoItems?: boolean | Producto$pedidoItemsArgs<ExtArgs>
     stock_camion?: boolean | Producto$stock_camionArgs<ExtArgs>
     stock_fabrica?: boolean | Producto$stock_fabricaArgs<ExtArgs>
+    movimientos_stock?: boolean | Producto$movimientos_stockArgs<ExtArgs>
     _count?: boolean | ProductoCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["producto"]>
 
@@ -11832,6 +11970,7 @@ export namespace Prisma {
     pedidoItems?: boolean | Producto$pedidoItemsArgs<ExtArgs>
     stock_camion?: boolean | Producto$stock_camionArgs<ExtArgs>
     stock_fabrica?: boolean | Producto$stock_fabricaArgs<ExtArgs>
+    movimientos_stock?: boolean | Producto$movimientos_stockArgs<ExtArgs>
     _count?: boolean | ProductoCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ProductoIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -11848,6 +11987,7 @@ export namespace Prisma {
       pedidoItems: Prisma.$PedidoItemPayload<ExtArgs>[]
       stock_camion: Prisma.$StockCamionPayload<ExtArgs>[]
       stock_fabrica: Prisma.$StockFabricaPayload<ExtArgs> | null
+      movimientos_stock: Prisma.$MovimientoStockPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -12259,6 +12399,7 @@ export namespace Prisma {
     pedidoItems<T extends Producto$pedidoItemsArgs<ExtArgs> = {}>(args?: Subset<T, Producto$pedidoItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PedidoItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     stock_camion<T extends Producto$stock_camionArgs<ExtArgs> = {}>(args?: Subset<T, Producto$stock_camionArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockCamionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     stock_fabrica<T extends Producto$stock_fabricaArgs<ExtArgs> = {}>(args?: Subset<T, Producto$stock_fabricaArgs<ExtArgs>>): Prisma__StockFabricaClient<$Result.GetResult<Prisma.$StockFabricaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    movimientos_stock<T extends Producto$movimientos_stockArgs<ExtArgs> = {}>(args?: Subset<T, Producto$movimientos_stockArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MovimientoStockPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -12875,6 +13016,30 @@ export namespace Prisma {
   }
 
   /**
+   * Producto.movimientos_stock
+   */
+  export type Producto$movimientos_stockArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MovimientoStock
+     */
+    select?: MovimientoStockSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MovimientoStock
+     */
+    omit?: MovimientoStockOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MovimientoStockInclude<ExtArgs> | null
+    where?: MovimientoStockWhereInput
+    orderBy?: MovimientoStockOrderByWithRelationInput | MovimientoStockOrderByWithRelationInput[]
+    cursor?: MovimientoStockWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MovimientoStockScalarFieldEnum | MovimientoStockScalarFieldEnum[]
+  }
+
+  /**
    * Producto without action
    */
   export type ProductoDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -12890,6 +13055,1158 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: ProductoInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model MovimientoStock
+   */
+
+  export type AggregateMovimientoStock = {
+    _count: MovimientoStockCountAggregateOutputType | null
+    _avg: MovimientoStockAvgAggregateOutputType | null
+    _sum: MovimientoStockSumAggregateOutputType | null
+    _min: MovimientoStockMinAggregateOutputType | null
+    _max: MovimientoStockMaxAggregateOutputType | null
+  }
+
+  export type MovimientoStockAvgAggregateOutputType = {
+    cantidad: number | null
+    stock_antes: number | null
+    stock_despues: number | null
+  }
+
+  export type MovimientoStockSumAggregateOutputType = {
+    cantidad: number | null
+    stock_antes: number | null
+    stock_despues: number | null
+  }
+
+  export type MovimientoStockMinAggregateOutputType = {
+    id: string | null
+    producto_id: string | null
+    usuario_id: string | null
+    cantidad: number | null
+    motivo: string | null
+    stock_antes: number | null
+    stock_despues: number | null
+    created_at: Date | null
+  }
+
+  export type MovimientoStockMaxAggregateOutputType = {
+    id: string | null
+    producto_id: string | null
+    usuario_id: string | null
+    cantidad: number | null
+    motivo: string | null
+    stock_antes: number | null
+    stock_despues: number | null
+    created_at: Date | null
+  }
+
+  export type MovimientoStockCountAggregateOutputType = {
+    id: number
+    producto_id: number
+    usuario_id: number
+    cantidad: number
+    motivo: number
+    stock_antes: number
+    stock_despues: number
+    created_at: number
+    _all: number
+  }
+
+
+  export type MovimientoStockAvgAggregateInputType = {
+    cantidad?: true
+    stock_antes?: true
+    stock_despues?: true
+  }
+
+  export type MovimientoStockSumAggregateInputType = {
+    cantidad?: true
+    stock_antes?: true
+    stock_despues?: true
+  }
+
+  export type MovimientoStockMinAggregateInputType = {
+    id?: true
+    producto_id?: true
+    usuario_id?: true
+    cantidad?: true
+    motivo?: true
+    stock_antes?: true
+    stock_despues?: true
+    created_at?: true
+  }
+
+  export type MovimientoStockMaxAggregateInputType = {
+    id?: true
+    producto_id?: true
+    usuario_id?: true
+    cantidad?: true
+    motivo?: true
+    stock_antes?: true
+    stock_despues?: true
+    created_at?: true
+  }
+
+  export type MovimientoStockCountAggregateInputType = {
+    id?: true
+    producto_id?: true
+    usuario_id?: true
+    cantidad?: true
+    motivo?: true
+    stock_antes?: true
+    stock_despues?: true
+    created_at?: true
+    _all?: true
+  }
+
+  export type MovimientoStockAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which MovimientoStock to aggregate.
+     */
+    where?: MovimientoStockWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MovimientoStocks to fetch.
+     */
+    orderBy?: MovimientoStockOrderByWithRelationInput | MovimientoStockOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: MovimientoStockWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MovimientoStocks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MovimientoStocks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned MovimientoStocks
+    **/
+    _count?: true | MovimientoStockCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: MovimientoStockAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: MovimientoStockSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: MovimientoStockMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: MovimientoStockMaxAggregateInputType
+  }
+
+  export type GetMovimientoStockAggregateType<T extends MovimientoStockAggregateArgs> = {
+        [P in keyof T & keyof AggregateMovimientoStock]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateMovimientoStock[P]>
+      : GetScalarType<T[P], AggregateMovimientoStock[P]>
+  }
+
+
+
+
+  export type MovimientoStockGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MovimientoStockWhereInput
+    orderBy?: MovimientoStockOrderByWithAggregationInput | MovimientoStockOrderByWithAggregationInput[]
+    by: MovimientoStockScalarFieldEnum[] | MovimientoStockScalarFieldEnum
+    having?: MovimientoStockScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: MovimientoStockCountAggregateInputType | true
+    _avg?: MovimientoStockAvgAggregateInputType
+    _sum?: MovimientoStockSumAggregateInputType
+    _min?: MovimientoStockMinAggregateInputType
+    _max?: MovimientoStockMaxAggregateInputType
+  }
+
+  export type MovimientoStockGroupByOutputType = {
+    id: string
+    producto_id: string
+    usuario_id: string
+    cantidad: number
+    motivo: string
+    stock_antes: number
+    stock_despues: number
+    created_at: Date
+    _count: MovimientoStockCountAggregateOutputType | null
+    _avg: MovimientoStockAvgAggregateOutputType | null
+    _sum: MovimientoStockSumAggregateOutputType | null
+    _min: MovimientoStockMinAggregateOutputType | null
+    _max: MovimientoStockMaxAggregateOutputType | null
+  }
+
+  type GetMovimientoStockGroupByPayload<T extends MovimientoStockGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<MovimientoStockGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof MovimientoStockGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], MovimientoStockGroupByOutputType[P]>
+            : GetScalarType<T[P], MovimientoStockGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type MovimientoStockSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    producto_id?: boolean
+    usuario_id?: boolean
+    cantidad?: boolean
+    motivo?: boolean
+    stock_antes?: boolean
+    stock_despues?: boolean
+    created_at?: boolean
+    producto?: boolean | ProductoDefaultArgs<ExtArgs>
+    usuario?: boolean | UsuarioDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["movimientoStock"]>
+
+  export type MovimientoStockSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    producto_id?: boolean
+    usuario_id?: boolean
+    cantidad?: boolean
+    motivo?: boolean
+    stock_antes?: boolean
+    stock_despues?: boolean
+    created_at?: boolean
+    producto?: boolean | ProductoDefaultArgs<ExtArgs>
+    usuario?: boolean | UsuarioDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["movimientoStock"]>
+
+  export type MovimientoStockSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    producto_id?: boolean
+    usuario_id?: boolean
+    cantidad?: boolean
+    motivo?: boolean
+    stock_antes?: boolean
+    stock_despues?: boolean
+    created_at?: boolean
+    producto?: boolean | ProductoDefaultArgs<ExtArgs>
+    usuario?: boolean | UsuarioDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["movimientoStock"]>
+
+  export type MovimientoStockSelectScalar = {
+    id?: boolean
+    producto_id?: boolean
+    usuario_id?: boolean
+    cantidad?: boolean
+    motivo?: boolean
+    stock_antes?: boolean
+    stock_despues?: boolean
+    created_at?: boolean
+  }
+
+  export type MovimientoStockOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "producto_id" | "usuario_id" | "cantidad" | "motivo" | "stock_antes" | "stock_despues" | "created_at", ExtArgs["result"]["movimientoStock"]>
+  export type MovimientoStockInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    producto?: boolean | ProductoDefaultArgs<ExtArgs>
+    usuario?: boolean | UsuarioDefaultArgs<ExtArgs>
+  }
+  export type MovimientoStockIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    producto?: boolean | ProductoDefaultArgs<ExtArgs>
+    usuario?: boolean | UsuarioDefaultArgs<ExtArgs>
+  }
+  export type MovimientoStockIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    producto?: boolean | ProductoDefaultArgs<ExtArgs>
+    usuario?: boolean | UsuarioDefaultArgs<ExtArgs>
+  }
+
+  export type $MovimientoStockPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "MovimientoStock"
+    objects: {
+      producto: Prisma.$ProductoPayload<ExtArgs>
+      usuario: Prisma.$UsuarioPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      producto_id: string
+      usuario_id: string
+      cantidad: number
+      motivo: string
+      stock_antes: number
+      stock_despues: number
+      created_at: Date
+    }, ExtArgs["result"]["movimientoStock"]>
+    composites: {}
+  }
+
+  type MovimientoStockGetPayload<S extends boolean | null | undefined | MovimientoStockDefaultArgs> = $Result.GetResult<Prisma.$MovimientoStockPayload, S>
+
+  type MovimientoStockCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<MovimientoStockFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: MovimientoStockCountAggregateInputType | true
+    }
+
+  export interface MovimientoStockDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['MovimientoStock'], meta: { name: 'MovimientoStock' } }
+    /**
+     * Find zero or one MovimientoStock that matches the filter.
+     * @param {MovimientoStockFindUniqueArgs} args - Arguments to find a MovimientoStock
+     * @example
+     * // Get one MovimientoStock
+     * const movimientoStock = await prisma.movimientoStock.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends MovimientoStockFindUniqueArgs>(args: SelectSubset<T, MovimientoStockFindUniqueArgs<ExtArgs>>): Prisma__MovimientoStockClient<$Result.GetResult<Prisma.$MovimientoStockPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one MovimientoStock that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {MovimientoStockFindUniqueOrThrowArgs} args - Arguments to find a MovimientoStock
+     * @example
+     * // Get one MovimientoStock
+     * const movimientoStock = await prisma.movimientoStock.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends MovimientoStockFindUniqueOrThrowArgs>(args: SelectSubset<T, MovimientoStockFindUniqueOrThrowArgs<ExtArgs>>): Prisma__MovimientoStockClient<$Result.GetResult<Prisma.$MovimientoStockPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first MovimientoStock that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MovimientoStockFindFirstArgs} args - Arguments to find a MovimientoStock
+     * @example
+     * // Get one MovimientoStock
+     * const movimientoStock = await prisma.movimientoStock.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends MovimientoStockFindFirstArgs>(args?: SelectSubset<T, MovimientoStockFindFirstArgs<ExtArgs>>): Prisma__MovimientoStockClient<$Result.GetResult<Prisma.$MovimientoStockPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first MovimientoStock that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MovimientoStockFindFirstOrThrowArgs} args - Arguments to find a MovimientoStock
+     * @example
+     * // Get one MovimientoStock
+     * const movimientoStock = await prisma.movimientoStock.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends MovimientoStockFindFirstOrThrowArgs>(args?: SelectSubset<T, MovimientoStockFindFirstOrThrowArgs<ExtArgs>>): Prisma__MovimientoStockClient<$Result.GetResult<Prisma.$MovimientoStockPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more MovimientoStocks that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MovimientoStockFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all MovimientoStocks
+     * const movimientoStocks = await prisma.movimientoStock.findMany()
+     * 
+     * // Get first 10 MovimientoStocks
+     * const movimientoStocks = await prisma.movimientoStock.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const movimientoStockWithIdOnly = await prisma.movimientoStock.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends MovimientoStockFindManyArgs>(args?: SelectSubset<T, MovimientoStockFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MovimientoStockPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a MovimientoStock.
+     * @param {MovimientoStockCreateArgs} args - Arguments to create a MovimientoStock.
+     * @example
+     * // Create one MovimientoStock
+     * const MovimientoStock = await prisma.movimientoStock.create({
+     *   data: {
+     *     // ... data to create a MovimientoStock
+     *   }
+     * })
+     * 
+     */
+    create<T extends MovimientoStockCreateArgs>(args: SelectSubset<T, MovimientoStockCreateArgs<ExtArgs>>): Prisma__MovimientoStockClient<$Result.GetResult<Prisma.$MovimientoStockPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many MovimientoStocks.
+     * @param {MovimientoStockCreateManyArgs} args - Arguments to create many MovimientoStocks.
+     * @example
+     * // Create many MovimientoStocks
+     * const movimientoStock = await prisma.movimientoStock.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends MovimientoStockCreateManyArgs>(args?: SelectSubset<T, MovimientoStockCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many MovimientoStocks and returns the data saved in the database.
+     * @param {MovimientoStockCreateManyAndReturnArgs} args - Arguments to create many MovimientoStocks.
+     * @example
+     * // Create many MovimientoStocks
+     * const movimientoStock = await prisma.movimientoStock.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many MovimientoStocks and only return the `id`
+     * const movimientoStockWithIdOnly = await prisma.movimientoStock.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends MovimientoStockCreateManyAndReturnArgs>(args?: SelectSubset<T, MovimientoStockCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MovimientoStockPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a MovimientoStock.
+     * @param {MovimientoStockDeleteArgs} args - Arguments to delete one MovimientoStock.
+     * @example
+     * // Delete one MovimientoStock
+     * const MovimientoStock = await prisma.movimientoStock.delete({
+     *   where: {
+     *     // ... filter to delete one MovimientoStock
+     *   }
+     * })
+     * 
+     */
+    delete<T extends MovimientoStockDeleteArgs>(args: SelectSubset<T, MovimientoStockDeleteArgs<ExtArgs>>): Prisma__MovimientoStockClient<$Result.GetResult<Prisma.$MovimientoStockPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one MovimientoStock.
+     * @param {MovimientoStockUpdateArgs} args - Arguments to update one MovimientoStock.
+     * @example
+     * // Update one MovimientoStock
+     * const movimientoStock = await prisma.movimientoStock.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends MovimientoStockUpdateArgs>(args: SelectSubset<T, MovimientoStockUpdateArgs<ExtArgs>>): Prisma__MovimientoStockClient<$Result.GetResult<Prisma.$MovimientoStockPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more MovimientoStocks.
+     * @param {MovimientoStockDeleteManyArgs} args - Arguments to filter MovimientoStocks to delete.
+     * @example
+     * // Delete a few MovimientoStocks
+     * const { count } = await prisma.movimientoStock.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends MovimientoStockDeleteManyArgs>(args?: SelectSubset<T, MovimientoStockDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more MovimientoStocks.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MovimientoStockUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many MovimientoStocks
+     * const movimientoStock = await prisma.movimientoStock.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends MovimientoStockUpdateManyArgs>(args: SelectSubset<T, MovimientoStockUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more MovimientoStocks and returns the data updated in the database.
+     * @param {MovimientoStockUpdateManyAndReturnArgs} args - Arguments to update many MovimientoStocks.
+     * @example
+     * // Update many MovimientoStocks
+     * const movimientoStock = await prisma.movimientoStock.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more MovimientoStocks and only return the `id`
+     * const movimientoStockWithIdOnly = await prisma.movimientoStock.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends MovimientoStockUpdateManyAndReturnArgs>(args: SelectSubset<T, MovimientoStockUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MovimientoStockPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one MovimientoStock.
+     * @param {MovimientoStockUpsertArgs} args - Arguments to update or create a MovimientoStock.
+     * @example
+     * // Update or create a MovimientoStock
+     * const movimientoStock = await prisma.movimientoStock.upsert({
+     *   create: {
+     *     // ... data to create a MovimientoStock
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the MovimientoStock we want to update
+     *   }
+     * })
+     */
+    upsert<T extends MovimientoStockUpsertArgs>(args: SelectSubset<T, MovimientoStockUpsertArgs<ExtArgs>>): Prisma__MovimientoStockClient<$Result.GetResult<Prisma.$MovimientoStockPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of MovimientoStocks.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MovimientoStockCountArgs} args - Arguments to filter MovimientoStocks to count.
+     * @example
+     * // Count the number of MovimientoStocks
+     * const count = await prisma.movimientoStock.count({
+     *   where: {
+     *     // ... the filter for the MovimientoStocks we want to count
+     *   }
+     * })
+    **/
+    count<T extends MovimientoStockCountArgs>(
+      args?: Subset<T, MovimientoStockCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], MovimientoStockCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a MovimientoStock.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MovimientoStockAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends MovimientoStockAggregateArgs>(args: Subset<T, MovimientoStockAggregateArgs>): Prisma.PrismaPromise<GetMovimientoStockAggregateType<T>>
+
+    /**
+     * Group by MovimientoStock.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MovimientoStockGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends MovimientoStockGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: MovimientoStockGroupByArgs['orderBy'] }
+        : { orderBy?: MovimientoStockGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, MovimientoStockGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetMovimientoStockGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the MovimientoStock model
+   */
+  readonly fields: MovimientoStockFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for MovimientoStock.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__MovimientoStockClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    producto<T extends ProductoDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProductoDefaultArgs<ExtArgs>>): Prisma__ProductoClient<$Result.GetResult<Prisma.$ProductoPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    usuario<T extends UsuarioDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UsuarioDefaultArgs<ExtArgs>>): Prisma__UsuarioClient<$Result.GetResult<Prisma.$UsuarioPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the MovimientoStock model
+   */
+  interface MovimientoStockFieldRefs {
+    readonly id: FieldRef<"MovimientoStock", 'String'>
+    readonly producto_id: FieldRef<"MovimientoStock", 'String'>
+    readonly usuario_id: FieldRef<"MovimientoStock", 'String'>
+    readonly cantidad: FieldRef<"MovimientoStock", 'Int'>
+    readonly motivo: FieldRef<"MovimientoStock", 'String'>
+    readonly stock_antes: FieldRef<"MovimientoStock", 'Int'>
+    readonly stock_despues: FieldRef<"MovimientoStock", 'Int'>
+    readonly created_at: FieldRef<"MovimientoStock", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * MovimientoStock findUnique
+   */
+  export type MovimientoStockFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MovimientoStock
+     */
+    select?: MovimientoStockSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MovimientoStock
+     */
+    omit?: MovimientoStockOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MovimientoStockInclude<ExtArgs> | null
+    /**
+     * Filter, which MovimientoStock to fetch.
+     */
+    where: MovimientoStockWhereUniqueInput
+  }
+
+  /**
+   * MovimientoStock findUniqueOrThrow
+   */
+  export type MovimientoStockFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MovimientoStock
+     */
+    select?: MovimientoStockSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MovimientoStock
+     */
+    omit?: MovimientoStockOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MovimientoStockInclude<ExtArgs> | null
+    /**
+     * Filter, which MovimientoStock to fetch.
+     */
+    where: MovimientoStockWhereUniqueInput
+  }
+
+  /**
+   * MovimientoStock findFirst
+   */
+  export type MovimientoStockFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MovimientoStock
+     */
+    select?: MovimientoStockSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MovimientoStock
+     */
+    omit?: MovimientoStockOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MovimientoStockInclude<ExtArgs> | null
+    /**
+     * Filter, which MovimientoStock to fetch.
+     */
+    where?: MovimientoStockWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MovimientoStocks to fetch.
+     */
+    orderBy?: MovimientoStockOrderByWithRelationInput | MovimientoStockOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for MovimientoStocks.
+     */
+    cursor?: MovimientoStockWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MovimientoStocks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MovimientoStocks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MovimientoStocks.
+     */
+    distinct?: MovimientoStockScalarFieldEnum | MovimientoStockScalarFieldEnum[]
+  }
+
+  /**
+   * MovimientoStock findFirstOrThrow
+   */
+  export type MovimientoStockFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MovimientoStock
+     */
+    select?: MovimientoStockSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MovimientoStock
+     */
+    omit?: MovimientoStockOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MovimientoStockInclude<ExtArgs> | null
+    /**
+     * Filter, which MovimientoStock to fetch.
+     */
+    where?: MovimientoStockWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MovimientoStocks to fetch.
+     */
+    orderBy?: MovimientoStockOrderByWithRelationInput | MovimientoStockOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for MovimientoStocks.
+     */
+    cursor?: MovimientoStockWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MovimientoStocks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MovimientoStocks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MovimientoStocks.
+     */
+    distinct?: MovimientoStockScalarFieldEnum | MovimientoStockScalarFieldEnum[]
+  }
+
+  /**
+   * MovimientoStock findMany
+   */
+  export type MovimientoStockFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MovimientoStock
+     */
+    select?: MovimientoStockSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MovimientoStock
+     */
+    omit?: MovimientoStockOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MovimientoStockInclude<ExtArgs> | null
+    /**
+     * Filter, which MovimientoStocks to fetch.
+     */
+    where?: MovimientoStockWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MovimientoStocks to fetch.
+     */
+    orderBy?: MovimientoStockOrderByWithRelationInput | MovimientoStockOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing MovimientoStocks.
+     */
+    cursor?: MovimientoStockWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MovimientoStocks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MovimientoStocks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MovimientoStocks.
+     */
+    distinct?: MovimientoStockScalarFieldEnum | MovimientoStockScalarFieldEnum[]
+  }
+
+  /**
+   * MovimientoStock create
+   */
+  export type MovimientoStockCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MovimientoStock
+     */
+    select?: MovimientoStockSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MovimientoStock
+     */
+    omit?: MovimientoStockOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MovimientoStockInclude<ExtArgs> | null
+    /**
+     * The data needed to create a MovimientoStock.
+     */
+    data: XOR<MovimientoStockCreateInput, MovimientoStockUncheckedCreateInput>
+  }
+
+  /**
+   * MovimientoStock createMany
+   */
+  export type MovimientoStockCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many MovimientoStocks.
+     */
+    data: MovimientoStockCreateManyInput | MovimientoStockCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * MovimientoStock createManyAndReturn
+   */
+  export type MovimientoStockCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MovimientoStock
+     */
+    select?: MovimientoStockSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the MovimientoStock
+     */
+    omit?: MovimientoStockOmit<ExtArgs> | null
+    /**
+     * The data used to create many MovimientoStocks.
+     */
+    data: MovimientoStockCreateManyInput | MovimientoStockCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MovimientoStockIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * MovimientoStock update
+   */
+  export type MovimientoStockUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MovimientoStock
+     */
+    select?: MovimientoStockSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MovimientoStock
+     */
+    omit?: MovimientoStockOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MovimientoStockInclude<ExtArgs> | null
+    /**
+     * The data needed to update a MovimientoStock.
+     */
+    data: XOR<MovimientoStockUpdateInput, MovimientoStockUncheckedUpdateInput>
+    /**
+     * Choose, which MovimientoStock to update.
+     */
+    where: MovimientoStockWhereUniqueInput
+  }
+
+  /**
+   * MovimientoStock updateMany
+   */
+  export type MovimientoStockUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update MovimientoStocks.
+     */
+    data: XOR<MovimientoStockUpdateManyMutationInput, MovimientoStockUncheckedUpdateManyInput>
+    /**
+     * Filter which MovimientoStocks to update
+     */
+    where?: MovimientoStockWhereInput
+    /**
+     * Limit how many MovimientoStocks to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * MovimientoStock updateManyAndReturn
+   */
+  export type MovimientoStockUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MovimientoStock
+     */
+    select?: MovimientoStockSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the MovimientoStock
+     */
+    omit?: MovimientoStockOmit<ExtArgs> | null
+    /**
+     * The data used to update MovimientoStocks.
+     */
+    data: XOR<MovimientoStockUpdateManyMutationInput, MovimientoStockUncheckedUpdateManyInput>
+    /**
+     * Filter which MovimientoStocks to update
+     */
+    where?: MovimientoStockWhereInput
+    /**
+     * Limit how many MovimientoStocks to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MovimientoStockIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * MovimientoStock upsert
+   */
+  export type MovimientoStockUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MovimientoStock
+     */
+    select?: MovimientoStockSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MovimientoStock
+     */
+    omit?: MovimientoStockOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MovimientoStockInclude<ExtArgs> | null
+    /**
+     * The filter to search for the MovimientoStock to update in case it exists.
+     */
+    where: MovimientoStockWhereUniqueInput
+    /**
+     * In case the MovimientoStock found by the `where` argument doesn't exist, create a new MovimientoStock with this data.
+     */
+    create: XOR<MovimientoStockCreateInput, MovimientoStockUncheckedCreateInput>
+    /**
+     * In case the MovimientoStock was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<MovimientoStockUpdateInput, MovimientoStockUncheckedUpdateInput>
+  }
+
+  /**
+   * MovimientoStock delete
+   */
+  export type MovimientoStockDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MovimientoStock
+     */
+    select?: MovimientoStockSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MovimientoStock
+     */
+    omit?: MovimientoStockOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MovimientoStockInclude<ExtArgs> | null
+    /**
+     * Filter which MovimientoStock to delete.
+     */
+    where: MovimientoStockWhereUniqueInput
+  }
+
+  /**
+   * MovimientoStock deleteMany
+   */
+  export type MovimientoStockDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which MovimientoStocks to delete
+     */
+    where?: MovimientoStockWhereInput
+    /**
+     * Limit how many MovimientoStocks to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * MovimientoStock without action
+   */
+  export type MovimientoStockDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MovimientoStock
+     */
+    select?: MovimientoStockSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MovimientoStock
+     */
+    omit?: MovimientoStockOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MovimientoStockInclude<ExtArgs> | null
   }
 
 
@@ -25933,6 +27250,8 @@ export namespace Prisma {
     total_tarjeta: number | null
     total_transferencia: number | null
     monto_bencina: number | null
+    km_inicial: number | null
+    km_final: number | null
   }
 
   export type CuadraturaSumAggregateOutputType = {
@@ -25942,6 +27261,8 @@ export namespace Prisma {
     total_tarjeta: number | null
     total_transferencia: number | null
     monto_bencina: number | null
+    km_inicial: number | null
+    km_final: number | null
   }
 
   export type CuadraturaMinAggregateOutputType = {
@@ -25957,6 +27278,8 @@ export namespace Prisma {
     motivo_reapertura: string | null
     fecha_reapertura: Date | null
     monto_bencina: number | null
+    km_inicial: number | null
+    km_final: number | null
   }
 
   export type CuadraturaMaxAggregateOutputType = {
@@ -25972,6 +27295,8 @@ export namespace Prisma {
     motivo_reapertura: string | null
     fecha_reapertura: Date | null
     monto_bencina: number | null
+    km_inicial: number | null
+    km_final: number | null
   }
 
   export type CuadraturaCountAggregateOutputType = {
@@ -25987,6 +27312,8 @@ export namespace Prisma {
     motivo_reapertura: number
     fecha_reapertura: number
     monto_bencina: number
+    km_inicial: number
+    km_final: number
     _all: number
   }
 
@@ -25998,6 +27325,8 @@ export namespace Prisma {
     total_tarjeta?: true
     total_transferencia?: true
     monto_bencina?: true
+    km_inicial?: true
+    km_final?: true
   }
 
   export type CuadraturaSumAggregateInputType = {
@@ -26007,6 +27336,8 @@ export namespace Prisma {
     total_tarjeta?: true
     total_transferencia?: true
     monto_bencina?: true
+    km_inicial?: true
+    km_final?: true
   }
 
   export type CuadraturaMinAggregateInputType = {
@@ -26022,6 +27353,8 @@ export namespace Prisma {
     motivo_reapertura?: true
     fecha_reapertura?: true
     monto_bencina?: true
+    km_inicial?: true
+    km_final?: true
   }
 
   export type CuadraturaMaxAggregateInputType = {
@@ -26037,6 +27370,8 @@ export namespace Prisma {
     motivo_reapertura?: true
     fecha_reapertura?: true
     monto_bencina?: true
+    km_inicial?: true
+    km_final?: true
   }
 
   export type CuadraturaCountAggregateInputType = {
@@ -26052,6 +27387,8 @@ export namespace Prisma {
     motivo_reapertura?: true
     fecha_reapertura?: true
     monto_bencina?: true
+    km_inicial?: true
+    km_final?: true
     _all?: true
   }
 
@@ -26154,6 +27491,8 @@ export namespace Prisma {
     motivo_reapertura: string | null
     fecha_reapertura: Date | null
     monto_bencina: number | null
+    km_inicial: number | null
+    km_final: number | null
     _count: CuadraturaCountAggregateOutputType | null
     _avg: CuadraturaAvgAggregateOutputType | null
     _sum: CuadraturaSumAggregateOutputType | null
@@ -26188,6 +27527,8 @@ export namespace Prisma {
     motivo_reapertura?: boolean
     fecha_reapertura?: boolean
     monto_bencina?: boolean
+    km_inicial?: boolean
+    km_final?: boolean
     botellones_vacios?: boolean | Cuadratura$botellones_vaciosArgs<ExtArgs>
     usuario?: boolean | UsuarioDefaultArgs<ExtArgs>
     retorno?: boolean | Cuadratura$retornoArgs<ExtArgs>
@@ -26211,6 +27552,8 @@ export namespace Prisma {
     motivo_reapertura?: boolean
     fecha_reapertura?: boolean
     monto_bencina?: boolean
+    km_inicial?: boolean
+    km_final?: boolean
     usuario?: boolean | UsuarioDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["cuadratura"]>
 
@@ -26227,6 +27570,8 @@ export namespace Prisma {
     motivo_reapertura?: boolean
     fecha_reapertura?: boolean
     monto_bencina?: boolean
+    km_inicial?: boolean
+    km_final?: boolean
     usuario?: boolean | UsuarioDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["cuadratura"]>
 
@@ -26243,9 +27588,11 @@ export namespace Prisma {
     motivo_reapertura?: boolean
     fecha_reapertura?: boolean
     monto_bencina?: boolean
+    km_inicial?: boolean
+    km_final?: boolean
   }
 
-  export type CuadraturaOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "usuario_id" | "fecha" | "estado" | "total_comision" | "total_efectivo" | "total_guia_mensual" | "total_tarjeta" | "total_transferencia" | "motivo_reapertura" | "fecha_reapertura" | "monto_bencina", ExtArgs["result"]["cuadratura"]>
+  export type CuadraturaOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "usuario_id" | "fecha" | "estado" | "total_comision" | "total_efectivo" | "total_guia_mensual" | "total_tarjeta" | "total_transferencia" | "motivo_reapertura" | "fecha_reapertura" | "monto_bencina" | "km_inicial" | "km_final", ExtArgs["result"]["cuadratura"]>
   export type CuadraturaInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     botellones_vacios?: boolean | Cuadratura$botellones_vaciosArgs<ExtArgs>
     usuario?: boolean | UsuarioDefaultArgs<ExtArgs>
@@ -26287,6 +27634,8 @@ export namespace Prisma {
       motivo_reapertura: string | null
       fecha_reapertura: Date | null
       monto_bencina: number | null
+      km_inicial: number | null
+      km_final: number | null
     }, ExtArgs["result"]["cuadratura"]>
     composites: {}
   }
@@ -26729,6 +28078,8 @@ export namespace Prisma {
     readonly motivo_reapertura: FieldRef<"Cuadratura", 'String'>
     readonly fecha_reapertura: FieldRef<"Cuadratura", 'DateTime'>
     readonly monto_bencina: FieldRef<"Cuadratura", 'Int'>
+    readonly km_inicial: FieldRef<"Cuadratura", 'Int'>
+    readonly km_final: FieldRef<"Cuadratura", 'Int'>
   }
     
 
@@ -49667,6 +51018,20 @@ export namespace Prisma {
   export type ProductoScalarFieldEnum = (typeof ProductoScalarFieldEnum)[keyof typeof ProductoScalarFieldEnum]
 
 
+  export const MovimientoStockScalarFieldEnum: {
+    id: 'id',
+    producto_id: 'producto_id',
+    usuario_id: 'usuario_id',
+    cantidad: 'cantidad',
+    motivo: 'motivo',
+    stock_antes: 'stock_antes',
+    stock_despues: 'stock_despues',
+    created_at: 'created_at'
+  };
+
+  export type MovimientoStockScalarFieldEnum = (typeof MovimientoStockScalarFieldEnum)[keyof typeof MovimientoStockScalarFieldEnum]
+
+
   export const ComisionScalarFieldEnum: {
     id: 'id',
     producto_id: 'producto_id',
@@ -49835,7 +51200,9 @@ export namespace Prisma {
     total_transferencia: 'total_transferencia',
     motivo_reapertura: 'motivo_reapertura',
     fecha_reapertura: 'fecha_reapertura',
-    monto_bencina: 'monto_bencina'
+    monto_bencina: 'monto_bencina',
+    km_inicial: 'km_inicial',
+    km_final: 'km_final'
   };
 
   export type CuadraturaScalarFieldEnum = (typeof CuadraturaScalarFieldEnum)[keyof typeof CuadraturaScalarFieldEnum]
@@ -50571,6 +51938,7 @@ export namespace Prisma {
     stock_camion?: StockCamionListRelationFilter
     vehiculo?: XOR<VehiculoNullableScalarRelationFilter, VehiculoWhereInput> | null
     incidencias?: IncidenciaListRelationFilter
+    movimientos_stock?: MovimientoStockListRelationFilter
   }
 
   export type UsuarioOrderByWithRelationInput = {
@@ -50600,6 +51968,7 @@ export namespace Prisma {
     stock_camion?: StockCamionOrderByRelationAggregateInput
     vehiculo?: VehiculoOrderByWithRelationInput
     incidencias?: IncidenciaOrderByRelationAggregateInput
+    movimientos_stock?: MovimientoStockOrderByRelationAggregateInput
   }
 
   export type UsuarioWhereUniqueInput = Prisma.AtLeast<{
@@ -50632,6 +52001,7 @@ export namespace Prisma {
     stock_camion?: StockCamionListRelationFilter
     vehiculo?: XOR<VehiculoNullableScalarRelationFilter, VehiculoWhereInput> | null
     incidencias?: IncidenciaListRelationFilter
+    movimientos_stock?: MovimientoStockListRelationFilter
   }, "id" | "rut" | "email">
 
   export type UsuarioOrderByWithAggregationInput = {
@@ -50992,6 +52362,7 @@ export namespace Prisma {
     pedidoItems?: PedidoItemListRelationFilter
     stock_camion?: StockCamionListRelationFilter
     stock_fabrica?: XOR<StockFabricaNullableScalarRelationFilter, StockFabricaWhereInput> | null
+    movimientos_stock?: MovimientoStockListRelationFilter
   }
 
   export type ProductoOrderByWithRelationInput = {
@@ -51010,6 +52381,7 @@ export namespace Prisma {
     pedidoItems?: PedidoItemOrderByRelationAggregateInput
     stock_camion?: StockCamionOrderByRelationAggregateInput
     stock_fabrica?: StockFabricaOrderByWithRelationInput
+    movimientos_stock?: MovimientoStockOrderByRelationAggregateInput
   }
 
   export type ProductoWhereUniqueInput = Prisma.AtLeast<{
@@ -51031,6 +52403,7 @@ export namespace Prisma {
     pedidoItems?: PedidoItemListRelationFilter
     stock_camion?: StockCamionListRelationFilter
     stock_fabrica?: XOR<StockFabricaNullableScalarRelationFilter, StockFabricaWhereInput> | null
+    movimientos_stock?: MovimientoStockListRelationFilter
   }, "id">
 
   export type ProductoOrderByWithAggregationInput = {
@@ -51059,6 +52432,81 @@ export namespace Prisma {
     precio_recarga?: FloatNullableWithAggregatesFilter<"Producto"> | number | null
     stock_minimo?: IntWithAggregatesFilter<"Producto"> | number
     activo?: BoolWithAggregatesFilter<"Producto"> | boolean
+  }
+
+  export type MovimientoStockWhereInput = {
+    AND?: MovimientoStockWhereInput | MovimientoStockWhereInput[]
+    OR?: MovimientoStockWhereInput[]
+    NOT?: MovimientoStockWhereInput | MovimientoStockWhereInput[]
+    id?: StringFilter<"MovimientoStock"> | string
+    producto_id?: StringFilter<"MovimientoStock"> | string
+    usuario_id?: StringFilter<"MovimientoStock"> | string
+    cantidad?: IntFilter<"MovimientoStock"> | number
+    motivo?: StringFilter<"MovimientoStock"> | string
+    stock_antes?: IntFilter<"MovimientoStock"> | number
+    stock_despues?: IntFilter<"MovimientoStock"> | number
+    created_at?: DateTimeFilter<"MovimientoStock"> | Date | string
+    producto?: XOR<ProductoScalarRelationFilter, ProductoWhereInput>
+    usuario?: XOR<UsuarioScalarRelationFilter, UsuarioWhereInput>
+  }
+
+  export type MovimientoStockOrderByWithRelationInput = {
+    id?: SortOrder
+    producto_id?: SortOrder
+    usuario_id?: SortOrder
+    cantidad?: SortOrder
+    motivo?: SortOrder
+    stock_antes?: SortOrder
+    stock_despues?: SortOrder
+    created_at?: SortOrder
+    producto?: ProductoOrderByWithRelationInput
+    usuario?: UsuarioOrderByWithRelationInput
+  }
+
+  export type MovimientoStockWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: MovimientoStockWhereInput | MovimientoStockWhereInput[]
+    OR?: MovimientoStockWhereInput[]
+    NOT?: MovimientoStockWhereInput | MovimientoStockWhereInput[]
+    producto_id?: StringFilter<"MovimientoStock"> | string
+    usuario_id?: StringFilter<"MovimientoStock"> | string
+    cantidad?: IntFilter<"MovimientoStock"> | number
+    motivo?: StringFilter<"MovimientoStock"> | string
+    stock_antes?: IntFilter<"MovimientoStock"> | number
+    stock_despues?: IntFilter<"MovimientoStock"> | number
+    created_at?: DateTimeFilter<"MovimientoStock"> | Date | string
+    producto?: XOR<ProductoScalarRelationFilter, ProductoWhereInput>
+    usuario?: XOR<UsuarioScalarRelationFilter, UsuarioWhereInput>
+  }, "id">
+
+  export type MovimientoStockOrderByWithAggregationInput = {
+    id?: SortOrder
+    producto_id?: SortOrder
+    usuario_id?: SortOrder
+    cantidad?: SortOrder
+    motivo?: SortOrder
+    stock_antes?: SortOrder
+    stock_despues?: SortOrder
+    created_at?: SortOrder
+    _count?: MovimientoStockCountOrderByAggregateInput
+    _avg?: MovimientoStockAvgOrderByAggregateInput
+    _max?: MovimientoStockMaxOrderByAggregateInput
+    _min?: MovimientoStockMinOrderByAggregateInput
+    _sum?: MovimientoStockSumOrderByAggregateInput
+  }
+
+  export type MovimientoStockScalarWhereWithAggregatesInput = {
+    AND?: MovimientoStockScalarWhereWithAggregatesInput | MovimientoStockScalarWhereWithAggregatesInput[]
+    OR?: MovimientoStockScalarWhereWithAggregatesInput[]
+    NOT?: MovimientoStockScalarWhereWithAggregatesInput | MovimientoStockScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"MovimientoStock"> | string
+    producto_id?: StringWithAggregatesFilter<"MovimientoStock"> | string
+    usuario_id?: StringWithAggregatesFilter<"MovimientoStock"> | string
+    cantidad?: IntWithAggregatesFilter<"MovimientoStock"> | number
+    motivo?: StringWithAggregatesFilter<"MovimientoStock"> | string
+    stock_antes?: IntWithAggregatesFilter<"MovimientoStock"> | number
+    stock_despues?: IntWithAggregatesFilter<"MovimientoStock"> | number
+    created_at?: DateTimeWithAggregatesFilter<"MovimientoStock"> | Date | string
   }
 
   export type ComisionWhereInput = {
@@ -51952,6 +53400,8 @@ export namespace Prisma {
     motivo_reapertura?: StringNullableFilter<"Cuadratura"> | string | null
     fecha_reapertura?: DateTimeNullableFilter<"Cuadratura"> | Date | string | null
     monto_bencina?: IntNullableFilter<"Cuadratura"> | number | null
+    km_inicial?: IntNullableFilter<"Cuadratura"> | number | null
+    km_final?: IntNullableFilter<"Cuadratura"> | number | null
     botellones_vacios?: BotellonVacioListRelationFilter
     usuario?: XOR<UsuarioScalarRelationFilter, UsuarioWhereInput>
     retorno?: CuadraturaRetornoListRelationFilter
@@ -51974,6 +53424,8 @@ export namespace Prisma {
     motivo_reapertura?: SortOrderInput | SortOrder
     fecha_reapertura?: SortOrderInput | SortOrder
     monto_bencina?: SortOrderInput | SortOrder
+    km_inicial?: SortOrderInput | SortOrder
+    km_final?: SortOrderInput | SortOrder
     botellones_vacios?: BotellonVacioOrderByRelationAggregateInput
     usuario?: UsuarioOrderByWithRelationInput
     retorno?: CuadraturaRetornoOrderByRelationAggregateInput
@@ -52000,6 +53452,8 @@ export namespace Prisma {
     motivo_reapertura?: StringNullableFilter<"Cuadratura"> | string | null
     fecha_reapertura?: DateTimeNullableFilter<"Cuadratura"> | Date | string | null
     monto_bencina?: IntNullableFilter<"Cuadratura"> | number | null
+    km_inicial?: IntNullableFilter<"Cuadratura"> | number | null
+    km_final?: IntNullableFilter<"Cuadratura"> | number | null
     botellones_vacios?: BotellonVacioListRelationFilter
     usuario?: XOR<UsuarioScalarRelationFilter, UsuarioWhereInput>
     retorno?: CuadraturaRetornoListRelationFilter
@@ -52022,6 +53476,8 @@ export namespace Prisma {
     motivo_reapertura?: SortOrderInput | SortOrder
     fecha_reapertura?: SortOrderInput | SortOrder
     monto_bencina?: SortOrderInput | SortOrder
+    km_inicial?: SortOrderInput | SortOrder
+    km_final?: SortOrderInput | SortOrder
     _count?: CuadraturaCountOrderByAggregateInput
     _avg?: CuadraturaAvgOrderByAggregateInput
     _max?: CuadraturaMaxOrderByAggregateInput
@@ -52045,6 +53501,8 @@ export namespace Prisma {
     motivo_reapertura?: StringNullableWithAggregatesFilter<"Cuadratura"> | string | null
     fecha_reapertura?: DateTimeNullableWithAggregatesFilter<"Cuadratura"> | Date | string | null
     monto_bencina?: IntNullableWithAggregatesFilter<"Cuadratura"> | number | null
+    km_inicial?: IntNullableWithAggregatesFilter<"Cuadratura"> | number | null
+    km_final?: IntNullableWithAggregatesFilter<"Cuadratura"> | number | null
   }
 
   export type CuadraturaSalidaWhereInput = {
@@ -53392,6 +54850,7 @@ export namespace Prisma {
     stock_camion?: StockCamionCreateNestedManyWithoutUsuarioInput
     vehiculo?: VehiculoCreateNestedOneWithoutUsuariosInput
     incidencias?: IncidenciaCreateNestedManyWithoutUsuarioInput
+    movimientos_stock?: MovimientoStockCreateNestedManyWithoutUsuarioInput
   }
 
   export type UsuarioUncheckedCreateInput = {
@@ -53420,6 +54879,7 @@ export namespace Prisma {
     rutas_dia?: RutaDiaUncheckedCreateNestedManyWithoutUsuarioInput
     stock_camion?: StockCamionUncheckedCreateNestedManyWithoutUsuarioInput
     incidencias?: IncidenciaUncheckedCreateNestedManyWithoutUsuarioInput
+    movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutUsuarioInput
   }
 
   export type UsuarioUpdateInput = {
@@ -53448,6 +54908,7 @@ export namespace Prisma {
     stock_camion?: StockCamionUpdateManyWithoutUsuarioNestedInput
     vehiculo?: VehiculoUpdateOneWithoutUsuariosNestedInput
     incidencias?: IncidenciaUpdateManyWithoutUsuarioNestedInput
+    movimientos_stock?: MovimientoStockUpdateManyWithoutUsuarioNestedInput
   }
 
   export type UsuarioUncheckedUpdateInput = {
@@ -53476,6 +54937,7 @@ export namespace Prisma {
     rutas_dia?: RutaDiaUncheckedUpdateManyWithoutUsuarioNestedInput
     stock_camion?: StockCamionUncheckedUpdateManyWithoutUsuarioNestedInput
     incidencias?: IncidenciaUncheckedUpdateManyWithoutUsuarioNestedInput
+    movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutUsuarioNestedInput
   }
 
   export type UsuarioCreateManyInput = {
@@ -53862,6 +55324,7 @@ export namespace Prisma {
     pedidoItems?: PedidoItemCreateNestedManyWithoutProductoInput
     stock_camion?: StockCamionCreateNestedManyWithoutProductoInput
     stock_fabrica?: StockFabricaCreateNestedOneWithoutProductoInput
+    movimientos_stock?: MovimientoStockCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoUncheckedCreateInput = {
@@ -53880,6 +55343,7 @@ export namespace Prisma {
     pedidoItems?: PedidoItemUncheckedCreateNestedManyWithoutProductoInput
     stock_camion?: StockCamionUncheckedCreateNestedManyWithoutProductoInput
     stock_fabrica?: StockFabricaUncheckedCreateNestedOneWithoutProductoInput
+    movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoUpdateInput = {
@@ -53898,6 +55362,7 @@ export namespace Prisma {
     pedidoItems?: PedidoItemUpdateManyWithoutProductoNestedInput
     stock_camion?: StockCamionUpdateManyWithoutProductoNestedInput
     stock_fabrica?: StockFabricaUpdateOneWithoutProductoNestedInput
+    movimientos_stock?: MovimientoStockUpdateManyWithoutProductoNestedInput
   }
 
   export type ProductoUncheckedUpdateInput = {
@@ -53916,6 +55381,7 @@ export namespace Prisma {
     pedidoItems?: PedidoItemUncheckedUpdateManyWithoutProductoNestedInput
     stock_camion?: StockCamionUncheckedUpdateManyWithoutProductoNestedInput
     stock_fabrica?: StockFabricaUncheckedUpdateOneWithoutProductoNestedInput
+    movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutProductoNestedInput
   }
 
   export type ProductoCreateManyInput = {
@@ -53946,6 +55412,81 @@ export namespace Prisma {
     precio_recarga?: NullableFloatFieldUpdateOperationsInput | number | null
     stock_minimo?: IntFieldUpdateOperationsInput | number
     activo?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type MovimientoStockCreateInput = {
+    id?: string
+    cantidad: number
+    motivo: string
+    stock_antes: number
+    stock_despues: number
+    created_at?: Date | string
+    producto: ProductoCreateNestedOneWithoutMovimientos_stockInput
+    usuario: UsuarioCreateNestedOneWithoutMovimientos_stockInput
+  }
+
+  export type MovimientoStockUncheckedCreateInput = {
+    id?: string
+    producto_id: string
+    usuario_id: string
+    cantidad: number
+    motivo: string
+    stock_antes: number
+    stock_despues: number
+    created_at?: Date | string
+  }
+
+  export type MovimientoStockUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    cantidad?: IntFieldUpdateOperationsInput | number
+    motivo?: StringFieldUpdateOperationsInput | string
+    stock_antes?: IntFieldUpdateOperationsInput | number
+    stock_despues?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    producto?: ProductoUpdateOneRequiredWithoutMovimientos_stockNestedInput
+    usuario?: UsuarioUpdateOneRequiredWithoutMovimientos_stockNestedInput
+  }
+
+  export type MovimientoStockUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    producto_id?: StringFieldUpdateOperationsInput | string
+    usuario_id?: StringFieldUpdateOperationsInput | string
+    cantidad?: IntFieldUpdateOperationsInput | number
+    motivo?: StringFieldUpdateOperationsInput | string
+    stock_antes?: IntFieldUpdateOperationsInput | number
+    stock_despues?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MovimientoStockCreateManyInput = {
+    id?: string
+    producto_id: string
+    usuario_id: string
+    cantidad: number
+    motivo: string
+    stock_antes: number
+    stock_despues: number
+    created_at?: Date | string
+  }
+
+  export type MovimientoStockUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    cantidad?: IntFieldUpdateOperationsInput | number
+    motivo?: StringFieldUpdateOperationsInput | string
+    stock_antes?: IntFieldUpdateOperationsInput | number
+    stock_despues?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MovimientoStockUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    producto_id?: StringFieldUpdateOperationsInput | string
+    usuario_id?: StringFieldUpdateOperationsInput | string
+    cantidad?: IntFieldUpdateOperationsInput | number
+    motivo?: StringFieldUpdateOperationsInput | string
+    stock_antes?: IntFieldUpdateOperationsInput | number
+    stock_despues?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ComisionCreateInput = {
@@ -54871,6 +56412,8 @@ export namespace Prisma {
     motivo_reapertura?: string | null
     fecha_reapertura?: Date | string | null
     monto_bencina?: number | null
+    km_inicial?: number | null
+    km_final?: number | null
     botellones_vacios?: BotellonVacioCreateNestedManyWithoutCuadraturaInput
     usuario: UsuarioCreateNestedOneWithoutCuadraturasInput
     retorno?: CuadraturaRetornoCreateNestedManyWithoutCuadraturaInput
@@ -54893,6 +56436,8 @@ export namespace Prisma {
     motivo_reapertura?: string | null
     fecha_reapertura?: Date | string | null
     monto_bencina?: number | null
+    km_inicial?: number | null
+    km_final?: number | null
     botellones_vacios?: BotellonVacioUncheckedCreateNestedManyWithoutCuadraturaInput
     retorno?: CuadraturaRetornoUncheckedCreateNestedManyWithoutCuadraturaInput
     salida?: CuadraturaSalidaUncheckedCreateNestedManyWithoutCuadraturaInput
@@ -54913,6 +56458,8 @@ export namespace Prisma {
     motivo_reapertura?: NullableStringFieldUpdateOperationsInput | string | null
     fecha_reapertura?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     monto_bencina?: NullableIntFieldUpdateOperationsInput | number | null
+    km_inicial?: NullableIntFieldUpdateOperationsInput | number | null
+    km_final?: NullableIntFieldUpdateOperationsInput | number | null
     botellones_vacios?: BotellonVacioUpdateManyWithoutCuadraturaNestedInput
     usuario?: UsuarioUpdateOneRequiredWithoutCuadraturasNestedInput
     retorno?: CuadraturaRetornoUpdateManyWithoutCuadraturaNestedInput
@@ -54935,6 +56482,8 @@ export namespace Prisma {
     motivo_reapertura?: NullableStringFieldUpdateOperationsInput | string | null
     fecha_reapertura?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     monto_bencina?: NullableIntFieldUpdateOperationsInput | number | null
+    km_inicial?: NullableIntFieldUpdateOperationsInput | number | null
+    km_final?: NullableIntFieldUpdateOperationsInput | number | null
     botellones_vacios?: BotellonVacioUncheckedUpdateManyWithoutCuadraturaNestedInput
     retorno?: CuadraturaRetornoUncheckedUpdateManyWithoutCuadraturaNestedInput
     salida?: CuadraturaSalidaUncheckedUpdateManyWithoutCuadraturaNestedInput
@@ -54956,6 +56505,8 @@ export namespace Prisma {
     motivo_reapertura?: string | null
     fecha_reapertura?: Date | string | null
     monto_bencina?: number | null
+    km_inicial?: number | null
+    km_final?: number | null
   }
 
   export type CuadraturaUpdateManyMutationInput = {
@@ -54970,6 +56521,8 @@ export namespace Prisma {
     motivo_reapertura?: NullableStringFieldUpdateOperationsInput | string | null
     fecha_reapertura?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     monto_bencina?: NullableIntFieldUpdateOperationsInput | number | null
+    km_inicial?: NullableIntFieldUpdateOperationsInput | number | null
+    km_final?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type CuadraturaUncheckedUpdateManyInput = {
@@ -54985,6 +56538,8 @@ export namespace Prisma {
     motivo_reapertura?: NullableStringFieldUpdateOperationsInput | string | null
     fecha_reapertura?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     monto_bencina?: NullableIntFieldUpdateOperationsInput | number | null
+    km_inicial?: NullableIntFieldUpdateOperationsInput | number | null
+    km_final?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type CuadraturaSalidaCreateInput = {
@@ -56451,6 +58006,12 @@ export namespace Prisma {
     none?: IncidenciaWhereInput
   }
 
+  export type MovimientoStockListRelationFilter = {
+    every?: MovimientoStockWhereInput
+    some?: MovimientoStockWhereInput
+    none?: MovimientoStockWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -56497,6 +58058,10 @@ export namespace Prisma {
   }
 
   export type IncidenciaOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type MovimientoStockOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -57110,6 +58675,61 @@ export namespace Prisma {
     _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
+  export type ProductoScalarRelationFilter = {
+    is?: ProductoWhereInput
+    isNot?: ProductoWhereInput
+  }
+
+  export type UsuarioScalarRelationFilter = {
+    is?: UsuarioWhereInput
+    isNot?: UsuarioWhereInput
+  }
+
+  export type MovimientoStockCountOrderByAggregateInput = {
+    id?: SortOrder
+    producto_id?: SortOrder
+    usuario_id?: SortOrder
+    cantidad?: SortOrder
+    motivo?: SortOrder
+    stock_antes?: SortOrder
+    stock_despues?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type MovimientoStockAvgOrderByAggregateInput = {
+    cantidad?: SortOrder
+    stock_antes?: SortOrder
+    stock_despues?: SortOrder
+  }
+
+  export type MovimientoStockMaxOrderByAggregateInput = {
+    id?: SortOrder
+    producto_id?: SortOrder
+    usuario_id?: SortOrder
+    cantidad?: SortOrder
+    motivo?: SortOrder
+    stock_antes?: SortOrder
+    stock_despues?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type MovimientoStockMinOrderByAggregateInput = {
+    id?: SortOrder
+    producto_id?: SortOrder
+    usuario_id?: SortOrder
+    cantidad?: SortOrder
+    motivo?: SortOrder
+    stock_antes?: SortOrder
+    stock_despues?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type MovimientoStockSumOrderByAggregateInput = {
+    cantidad?: SortOrder
+    stock_antes?: SortOrder
+    stock_despues?: SortOrder
+  }
+
   export type EnumTipoTransaccionFilter<$PrismaModel = never> = {
     equals?: $Enums.TipoTransaccion | EnumTipoTransaccionFieldRefInput<$PrismaModel>
     in?: $Enums.TipoTransaccion[] | ListEnumTipoTransaccionFieldRefInput<$PrismaModel>
@@ -57122,11 +58742,6 @@ export namespace Prisma {
     in?: $Enums.TipoCliente[] | ListEnumTipoClienteFieldRefInput<$PrismaModel>
     notIn?: $Enums.TipoCliente[] | ListEnumTipoClienteFieldRefInput<$PrismaModel>
     not?: NestedEnumTipoClienteFilter<$PrismaModel> | $Enums.TipoCliente
-  }
-
-  export type ProductoScalarRelationFilter = {
-    is?: ProductoWhereInput
-    isNot?: ProductoWhereInput
   }
 
   export type ComisionCountOrderByAggregateInput = {
@@ -57369,11 +58984,6 @@ export namespace Prisma {
     every?: ComunaRutaWhereInput
     some?: ComunaRutaWhereInput
     none?: ComunaRutaWhereInput
-  }
-
-  export type UsuarioScalarRelationFilter = {
-    is?: UsuarioWhereInput
-    isNot?: UsuarioWhereInput
   }
 
   export type ComunaRutaOrderByRelationAggregateInput = {
@@ -57935,6 +59545,8 @@ export namespace Prisma {
     motivo_reapertura?: SortOrder
     fecha_reapertura?: SortOrder
     monto_bencina?: SortOrder
+    km_inicial?: SortOrder
+    km_final?: SortOrder
   }
 
   export type CuadraturaAvgOrderByAggregateInput = {
@@ -57944,6 +59556,8 @@ export namespace Prisma {
     total_tarjeta?: SortOrder
     total_transferencia?: SortOrder
     monto_bencina?: SortOrder
+    km_inicial?: SortOrder
+    km_final?: SortOrder
   }
 
   export type CuadraturaMaxOrderByAggregateInput = {
@@ -57959,6 +59573,8 @@ export namespace Prisma {
     motivo_reapertura?: SortOrder
     fecha_reapertura?: SortOrder
     monto_bencina?: SortOrder
+    km_inicial?: SortOrder
+    km_final?: SortOrder
   }
 
   export type CuadraturaMinOrderByAggregateInput = {
@@ -57974,6 +59590,8 @@ export namespace Prisma {
     motivo_reapertura?: SortOrder
     fecha_reapertura?: SortOrder
     monto_bencina?: SortOrder
+    km_inicial?: SortOrder
+    km_final?: SortOrder
   }
 
   export type CuadraturaSumOrderByAggregateInput = {
@@ -57983,6 +59601,8 @@ export namespace Prisma {
     total_tarjeta?: SortOrder
     total_transferencia?: SortOrder
     monto_bencina?: SortOrder
+    km_inicial?: SortOrder
+    km_final?: SortOrder
   }
 
   export type EnumEstadoCuadraturaWithAggregatesFilter<$PrismaModel = never> = {
@@ -58983,6 +60603,13 @@ export namespace Prisma {
     connect?: IncidenciaWhereUniqueInput | IncidenciaWhereUniqueInput[]
   }
 
+  export type MovimientoStockCreateNestedManyWithoutUsuarioInput = {
+    create?: XOR<MovimientoStockCreateWithoutUsuarioInput, MovimientoStockUncheckedCreateWithoutUsuarioInput> | MovimientoStockCreateWithoutUsuarioInput[] | MovimientoStockUncheckedCreateWithoutUsuarioInput[]
+    connectOrCreate?: MovimientoStockCreateOrConnectWithoutUsuarioInput | MovimientoStockCreateOrConnectWithoutUsuarioInput[]
+    createMany?: MovimientoStockCreateManyUsuarioInputEnvelope
+    connect?: MovimientoStockWhereUniqueInput | MovimientoStockWhereUniqueInput[]
+  }
+
   export type BotellonDanadoUncheckedCreateNestedManyWithoutUsuarioInput = {
     create?: XOR<BotellonDanadoCreateWithoutUsuarioInput, BotellonDanadoUncheckedCreateWithoutUsuarioInput> | BotellonDanadoCreateWithoutUsuarioInput[] | BotellonDanadoUncheckedCreateWithoutUsuarioInput[]
     connectOrCreate?: BotellonDanadoCreateOrConnectWithoutUsuarioInput | BotellonDanadoCreateOrConnectWithoutUsuarioInput[]
@@ -59058,6 +60685,13 @@ export namespace Prisma {
     connectOrCreate?: IncidenciaCreateOrConnectWithoutUsuarioInput | IncidenciaCreateOrConnectWithoutUsuarioInput[]
     createMany?: IncidenciaCreateManyUsuarioInputEnvelope
     connect?: IncidenciaWhereUniqueInput | IncidenciaWhereUniqueInput[]
+  }
+
+  export type MovimientoStockUncheckedCreateNestedManyWithoutUsuarioInput = {
+    create?: XOR<MovimientoStockCreateWithoutUsuarioInput, MovimientoStockUncheckedCreateWithoutUsuarioInput> | MovimientoStockCreateWithoutUsuarioInput[] | MovimientoStockUncheckedCreateWithoutUsuarioInput[]
+    connectOrCreate?: MovimientoStockCreateOrConnectWithoutUsuarioInput | MovimientoStockCreateOrConnectWithoutUsuarioInput[]
+    createMany?: MovimientoStockCreateManyUsuarioInputEnvelope
+    connect?: MovimientoStockWhereUniqueInput | MovimientoStockWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -59248,6 +60882,20 @@ export namespace Prisma {
     deleteMany?: IncidenciaScalarWhereInput | IncidenciaScalarWhereInput[]
   }
 
+  export type MovimientoStockUpdateManyWithoutUsuarioNestedInput = {
+    create?: XOR<MovimientoStockCreateWithoutUsuarioInput, MovimientoStockUncheckedCreateWithoutUsuarioInput> | MovimientoStockCreateWithoutUsuarioInput[] | MovimientoStockUncheckedCreateWithoutUsuarioInput[]
+    connectOrCreate?: MovimientoStockCreateOrConnectWithoutUsuarioInput | MovimientoStockCreateOrConnectWithoutUsuarioInput[]
+    upsert?: MovimientoStockUpsertWithWhereUniqueWithoutUsuarioInput | MovimientoStockUpsertWithWhereUniqueWithoutUsuarioInput[]
+    createMany?: MovimientoStockCreateManyUsuarioInputEnvelope
+    set?: MovimientoStockWhereUniqueInput | MovimientoStockWhereUniqueInput[]
+    disconnect?: MovimientoStockWhereUniqueInput | MovimientoStockWhereUniqueInput[]
+    delete?: MovimientoStockWhereUniqueInput | MovimientoStockWhereUniqueInput[]
+    connect?: MovimientoStockWhereUniqueInput | MovimientoStockWhereUniqueInput[]
+    update?: MovimientoStockUpdateWithWhereUniqueWithoutUsuarioInput | MovimientoStockUpdateWithWhereUniqueWithoutUsuarioInput[]
+    updateMany?: MovimientoStockUpdateManyWithWhereWithoutUsuarioInput | MovimientoStockUpdateManyWithWhereWithoutUsuarioInput[]
+    deleteMany?: MovimientoStockScalarWhereInput | MovimientoStockScalarWhereInput[]
+  }
+
   export type BotellonDanadoUncheckedUpdateManyWithoutUsuarioNestedInput = {
     create?: XOR<BotellonDanadoCreateWithoutUsuarioInput, BotellonDanadoUncheckedCreateWithoutUsuarioInput> | BotellonDanadoCreateWithoutUsuarioInput[] | BotellonDanadoUncheckedCreateWithoutUsuarioInput[]
     connectOrCreate?: BotellonDanadoCreateOrConnectWithoutUsuarioInput | BotellonDanadoCreateOrConnectWithoutUsuarioInput[]
@@ -59400,6 +61048,20 @@ export namespace Prisma {
     update?: IncidenciaUpdateWithWhereUniqueWithoutUsuarioInput | IncidenciaUpdateWithWhereUniqueWithoutUsuarioInput[]
     updateMany?: IncidenciaUpdateManyWithWhereWithoutUsuarioInput | IncidenciaUpdateManyWithWhereWithoutUsuarioInput[]
     deleteMany?: IncidenciaScalarWhereInput | IncidenciaScalarWhereInput[]
+  }
+
+  export type MovimientoStockUncheckedUpdateManyWithoutUsuarioNestedInput = {
+    create?: XOR<MovimientoStockCreateWithoutUsuarioInput, MovimientoStockUncheckedCreateWithoutUsuarioInput> | MovimientoStockCreateWithoutUsuarioInput[] | MovimientoStockUncheckedCreateWithoutUsuarioInput[]
+    connectOrCreate?: MovimientoStockCreateOrConnectWithoutUsuarioInput | MovimientoStockCreateOrConnectWithoutUsuarioInput[]
+    upsert?: MovimientoStockUpsertWithWhereUniqueWithoutUsuarioInput | MovimientoStockUpsertWithWhereUniqueWithoutUsuarioInput[]
+    createMany?: MovimientoStockCreateManyUsuarioInputEnvelope
+    set?: MovimientoStockWhereUniqueInput | MovimientoStockWhereUniqueInput[]
+    disconnect?: MovimientoStockWhereUniqueInput | MovimientoStockWhereUniqueInput[]
+    delete?: MovimientoStockWhereUniqueInput | MovimientoStockWhereUniqueInput[]
+    connect?: MovimientoStockWhereUniqueInput | MovimientoStockWhereUniqueInput[]
+    update?: MovimientoStockUpdateWithWhereUniqueWithoutUsuarioInput | MovimientoStockUpdateWithWhereUniqueWithoutUsuarioInput[]
+    updateMany?: MovimientoStockUpdateManyWithWhereWithoutUsuarioInput | MovimientoStockUpdateManyWithWhereWithoutUsuarioInput[]
+    deleteMany?: MovimientoStockScalarWhereInput | MovimientoStockScalarWhereInput[]
   }
 
   export type AlertaVehiculoCreateNestedManyWithoutVehiculoInput = {
@@ -59841,6 +61503,13 @@ export namespace Prisma {
     connect?: StockFabricaWhereUniqueInput
   }
 
+  export type MovimientoStockCreateNestedManyWithoutProductoInput = {
+    create?: XOR<MovimientoStockCreateWithoutProductoInput, MovimientoStockUncheckedCreateWithoutProductoInput> | MovimientoStockCreateWithoutProductoInput[] | MovimientoStockUncheckedCreateWithoutProductoInput[]
+    connectOrCreate?: MovimientoStockCreateOrConnectWithoutProductoInput | MovimientoStockCreateOrConnectWithoutProductoInput[]
+    createMany?: MovimientoStockCreateManyProductoInputEnvelope
+    connect?: MovimientoStockWhereUniqueInput | MovimientoStockWhereUniqueInput[]
+  }
+
   export type ComisionUncheckedCreateNestedManyWithoutProductoInput = {
     create?: XOR<ComisionCreateWithoutProductoInput, ComisionUncheckedCreateWithoutProductoInput> | ComisionCreateWithoutProductoInput[] | ComisionUncheckedCreateWithoutProductoInput[]
     connectOrCreate?: ComisionCreateOrConnectWithoutProductoInput | ComisionCreateOrConnectWithoutProductoInput[]
@@ -59894,6 +61563,13 @@ export namespace Prisma {
     create?: XOR<StockFabricaCreateWithoutProductoInput, StockFabricaUncheckedCreateWithoutProductoInput>
     connectOrCreate?: StockFabricaCreateOrConnectWithoutProductoInput
     connect?: StockFabricaWhereUniqueInput
+  }
+
+  export type MovimientoStockUncheckedCreateNestedManyWithoutProductoInput = {
+    create?: XOR<MovimientoStockCreateWithoutProductoInput, MovimientoStockUncheckedCreateWithoutProductoInput> | MovimientoStockCreateWithoutProductoInput[] | MovimientoStockUncheckedCreateWithoutProductoInput[]
+    connectOrCreate?: MovimientoStockCreateOrConnectWithoutProductoInput | MovimientoStockCreateOrConnectWithoutProductoInput[]
+    createMany?: MovimientoStockCreateManyProductoInputEnvelope
+    connect?: MovimientoStockWhereUniqueInput | MovimientoStockWhereUniqueInput[]
   }
 
   export type EnumCategoriaProductoFieldUpdateOperationsInput = {
@@ -60016,6 +61692,20 @@ export namespace Prisma {
     update?: XOR<XOR<StockFabricaUpdateToOneWithWhereWithoutProductoInput, StockFabricaUpdateWithoutProductoInput>, StockFabricaUncheckedUpdateWithoutProductoInput>
   }
 
+  export type MovimientoStockUpdateManyWithoutProductoNestedInput = {
+    create?: XOR<MovimientoStockCreateWithoutProductoInput, MovimientoStockUncheckedCreateWithoutProductoInput> | MovimientoStockCreateWithoutProductoInput[] | MovimientoStockUncheckedCreateWithoutProductoInput[]
+    connectOrCreate?: MovimientoStockCreateOrConnectWithoutProductoInput | MovimientoStockCreateOrConnectWithoutProductoInput[]
+    upsert?: MovimientoStockUpsertWithWhereUniqueWithoutProductoInput | MovimientoStockUpsertWithWhereUniqueWithoutProductoInput[]
+    createMany?: MovimientoStockCreateManyProductoInputEnvelope
+    set?: MovimientoStockWhereUniqueInput | MovimientoStockWhereUniqueInput[]
+    disconnect?: MovimientoStockWhereUniqueInput | MovimientoStockWhereUniqueInput[]
+    delete?: MovimientoStockWhereUniqueInput | MovimientoStockWhereUniqueInput[]
+    connect?: MovimientoStockWhereUniqueInput | MovimientoStockWhereUniqueInput[]
+    update?: MovimientoStockUpdateWithWhereUniqueWithoutProductoInput | MovimientoStockUpdateWithWhereUniqueWithoutProductoInput[]
+    updateMany?: MovimientoStockUpdateManyWithWhereWithoutProductoInput | MovimientoStockUpdateManyWithWhereWithoutProductoInput[]
+    deleteMany?: MovimientoStockScalarWhereInput | MovimientoStockScalarWhereInput[]
+  }
+
   export type ComisionUncheckedUpdateManyWithoutProductoNestedInput = {
     create?: XOR<ComisionCreateWithoutProductoInput, ComisionUncheckedCreateWithoutProductoInput> | ComisionCreateWithoutProductoInput[] | ComisionUncheckedCreateWithoutProductoInput[]
     connectOrCreate?: ComisionCreateOrConnectWithoutProductoInput | ComisionCreateOrConnectWithoutProductoInput[]
@@ -60122,6 +61812,48 @@ export namespace Prisma {
     delete?: StockFabricaWhereInput | boolean
     connect?: StockFabricaWhereUniqueInput
     update?: XOR<XOR<StockFabricaUpdateToOneWithWhereWithoutProductoInput, StockFabricaUpdateWithoutProductoInput>, StockFabricaUncheckedUpdateWithoutProductoInput>
+  }
+
+  export type MovimientoStockUncheckedUpdateManyWithoutProductoNestedInput = {
+    create?: XOR<MovimientoStockCreateWithoutProductoInput, MovimientoStockUncheckedCreateWithoutProductoInput> | MovimientoStockCreateWithoutProductoInput[] | MovimientoStockUncheckedCreateWithoutProductoInput[]
+    connectOrCreate?: MovimientoStockCreateOrConnectWithoutProductoInput | MovimientoStockCreateOrConnectWithoutProductoInput[]
+    upsert?: MovimientoStockUpsertWithWhereUniqueWithoutProductoInput | MovimientoStockUpsertWithWhereUniqueWithoutProductoInput[]
+    createMany?: MovimientoStockCreateManyProductoInputEnvelope
+    set?: MovimientoStockWhereUniqueInput | MovimientoStockWhereUniqueInput[]
+    disconnect?: MovimientoStockWhereUniqueInput | MovimientoStockWhereUniqueInput[]
+    delete?: MovimientoStockWhereUniqueInput | MovimientoStockWhereUniqueInput[]
+    connect?: MovimientoStockWhereUniqueInput | MovimientoStockWhereUniqueInput[]
+    update?: MovimientoStockUpdateWithWhereUniqueWithoutProductoInput | MovimientoStockUpdateWithWhereUniqueWithoutProductoInput[]
+    updateMany?: MovimientoStockUpdateManyWithWhereWithoutProductoInput | MovimientoStockUpdateManyWithWhereWithoutProductoInput[]
+    deleteMany?: MovimientoStockScalarWhereInput | MovimientoStockScalarWhereInput[]
+  }
+
+  export type ProductoCreateNestedOneWithoutMovimientos_stockInput = {
+    create?: XOR<ProductoCreateWithoutMovimientos_stockInput, ProductoUncheckedCreateWithoutMovimientos_stockInput>
+    connectOrCreate?: ProductoCreateOrConnectWithoutMovimientos_stockInput
+    connect?: ProductoWhereUniqueInput
+  }
+
+  export type UsuarioCreateNestedOneWithoutMovimientos_stockInput = {
+    create?: XOR<UsuarioCreateWithoutMovimientos_stockInput, UsuarioUncheckedCreateWithoutMovimientos_stockInput>
+    connectOrCreate?: UsuarioCreateOrConnectWithoutMovimientos_stockInput
+    connect?: UsuarioWhereUniqueInput
+  }
+
+  export type ProductoUpdateOneRequiredWithoutMovimientos_stockNestedInput = {
+    create?: XOR<ProductoCreateWithoutMovimientos_stockInput, ProductoUncheckedCreateWithoutMovimientos_stockInput>
+    connectOrCreate?: ProductoCreateOrConnectWithoutMovimientos_stockInput
+    upsert?: ProductoUpsertWithoutMovimientos_stockInput
+    connect?: ProductoWhereUniqueInput
+    update?: XOR<XOR<ProductoUpdateToOneWithWhereWithoutMovimientos_stockInput, ProductoUpdateWithoutMovimientos_stockInput>, ProductoUncheckedUpdateWithoutMovimientos_stockInput>
+  }
+
+  export type UsuarioUpdateOneRequiredWithoutMovimientos_stockNestedInput = {
+    create?: XOR<UsuarioCreateWithoutMovimientos_stockInput, UsuarioUncheckedCreateWithoutMovimientos_stockInput>
+    connectOrCreate?: UsuarioCreateOrConnectWithoutMovimientos_stockInput
+    upsert?: UsuarioUpsertWithoutMovimientos_stockInput
+    connect?: UsuarioWhereUniqueInput
+    update?: XOR<XOR<UsuarioUpdateToOneWithWhereWithoutMovimientos_stockInput, UsuarioUpdateWithoutMovimientos_stockInput>, UsuarioUncheckedUpdateWithoutMovimientos_stockInput>
   }
 
   export type ProductoCreateNestedOneWithoutComisionesInput = {
@@ -62752,6 +64484,8 @@ export namespace Prisma {
     motivo_reapertura?: string | null
     fecha_reapertura?: Date | string | null
     monto_bencina?: number | null
+    km_inicial?: number | null
+    km_final?: number | null
     botellones_vacios?: BotellonVacioCreateNestedManyWithoutCuadraturaInput
     retorno?: CuadraturaRetornoCreateNestedManyWithoutCuadraturaInput
     salida?: CuadraturaSalidaCreateNestedManyWithoutCuadraturaInput
@@ -62772,6 +64506,8 @@ export namespace Prisma {
     motivo_reapertura?: string | null
     fecha_reapertura?: Date | string | null
     monto_bencina?: number | null
+    km_inicial?: number | null
+    km_final?: number | null
     botellones_vacios?: BotellonVacioUncheckedCreateNestedManyWithoutCuadraturaInput
     retorno?: CuadraturaRetornoUncheckedCreateNestedManyWithoutCuadraturaInput
     salida?: CuadraturaSalidaUncheckedCreateNestedManyWithoutCuadraturaInput
@@ -63089,6 +64825,36 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type MovimientoStockCreateWithoutUsuarioInput = {
+    id?: string
+    cantidad: number
+    motivo: string
+    stock_antes: number
+    stock_despues: number
+    created_at?: Date | string
+    producto: ProductoCreateNestedOneWithoutMovimientos_stockInput
+  }
+
+  export type MovimientoStockUncheckedCreateWithoutUsuarioInput = {
+    id?: string
+    producto_id: string
+    cantidad: number
+    motivo: string
+    stock_antes: number
+    stock_despues: number
+    created_at?: Date | string
+  }
+
+  export type MovimientoStockCreateOrConnectWithoutUsuarioInput = {
+    where: MovimientoStockWhereUniqueInput
+    create: XOR<MovimientoStockCreateWithoutUsuarioInput, MovimientoStockUncheckedCreateWithoutUsuarioInput>
+  }
+
+  export type MovimientoStockCreateManyUsuarioInputEnvelope = {
+    data: MovimientoStockCreateManyUsuarioInput | MovimientoStockCreateManyUsuarioInput[]
+    skipDuplicates?: boolean
+  }
+
   export type BotellonDanadoUpsertWithWhereUniqueWithoutUsuarioInput = {
     where: BotellonDanadoWhereUniqueInput
     update: XOR<BotellonDanadoUpdateWithoutUsuarioInput, BotellonDanadoUncheckedUpdateWithoutUsuarioInput>
@@ -63182,6 +64948,8 @@ export namespace Prisma {
     motivo_reapertura?: StringNullableFilter<"Cuadratura"> | string | null
     fecha_reapertura?: DateTimeNullableFilter<"Cuadratura"> | Date | string | null
     monto_bencina?: IntNullableFilter<"Cuadratura"> | number | null
+    km_inicial?: IntNullableFilter<"Cuadratura"> | number | null
+    km_final?: IntNullableFilter<"Cuadratura"> | number | null
   }
 
   export type GuiaDespachoUpsertWithWhereUniqueWithoutUsuario_repartidorInput = {
@@ -63471,6 +65239,36 @@ export namespace Prisma {
     cuadratura_id?: StringNullableFilter<"Incidencia"> | string | null
   }
 
+  export type MovimientoStockUpsertWithWhereUniqueWithoutUsuarioInput = {
+    where: MovimientoStockWhereUniqueInput
+    update: XOR<MovimientoStockUpdateWithoutUsuarioInput, MovimientoStockUncheckedUpdateWithoutUsuarioInput>
+    create: XOR<MovimientoStockCreateWithoutUsuarioInput, MovimientoStockUncheckedCreateWithoutUsuarioInput>
+  }
+
+  export type MovimientoStockUpdateWithWhereUniqueWithoutUsuarioInput = {
+    where: MovimientoStockWhereUniqueInput
+    data: XOR<MovimientoStockUpdateWithoutUsuarioInput, MovimientoStockUncheckedUpdateWithoutUsuarioInput>
+  }
+
+  export type MovimientoStockUpdateManyWithWhereWithoutUsuarioInput = {
+    where: MovimientoStockScalarWhereInput
+    data: XOR<MovimientoStockUpdateManyMutationInput, MovimientoStockUncheckedUpdateManyWithoutUsuarioInput>
+  }
+
+  export type MovimientoStockScalarWhereInput = {
+    AND?: MovimientoStockScalarWhereInput | MovimientoStockScalarWhereInput[]
+    OR?: MovimientoStockScalarWhereInput[]
+    NOT?: MovimientoStockScalarWhereInput | MovimientoStockScalarWhereInput[]
+    id?: StringFilter<"MovimientoStock"> | string
+    producto_id?: StringFilter<"MovimientoStock"> | string
+    usuario_id?: StringFilter<"MovimientoStock"> | string
+    cantidad?: IntFilter<"MovimientoStock"> | number
+    motivo?: StringFilter<"MovimientoStock"> | string
+    stock_antes?: IntFilter<"MovimientoStock"> | number
+    stock_despues?: IntFilter<"MovimientoStock"> | number
+    created_at?: DateTimeFilter<"MovimientoStock"> | Date | string
+  }
+
   export type AlertaVehiculoCreateWithoutVehiculoInput = {
     id?: string
     tipo: $Enums.TipoAlerta
@@ -63656,6 +65454,7 @@ export namespace Prisma {
     rutas_dia?: RutaDiaCreateNestedManyWithoutUsuarioInput
     stock_camion?: StockCamionCreateNestedManyWithoutUsuarioInput
     incidencias?: IncidenciaCreateNestedManyWithoutUsuarioInput
+    movimientos_stock?: MovimientoStockCreateNestedManyWithoutUsuarioInput
   }
 
   export type UsuarioUncheckedCreateWithoutVehiculoInput = {
@@ -63683,6 +65482,7 @@ export namespace Prisma {
     rutas_dia?: RutaDiaUncheckedCreateNestedManyWithoutUsuarioInput
     stock_camion?: StockCamionUncheckedCreateNestedManyWithoutUsuarioInput
     incidencias?: IncidenciaUncheckedCreateNestedManyWithoutUsuarioInput
+    movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutUsuarioInput
   }
 
   export type UsuarioCreateOrConnectWithoutVehiculoInput = {
@@ -63848,6 +65648,7 @@ export namespace Prisma {
     stock_camion?: StockCamionCreateNestedManyWithoutUsuarioInput
     vehiculo?: VehiculoCreateNestedOneWithoutUsuariosInput
     incidencias?: IncidenciaCreateNestedManyWithoutUsuarioInput
+    movimientos_stock?: MovimientoStockCreateNestedManyWithoutUsuarioInput
   }
 
   export type UsuarioUncheckedCreateWithoutMantencionesInput = {
@@ -63875,6 +65676,7 @@ export namespace Prisma {
     rutas_dia?: RutaDiaUncheckedCreateNestedManyWithoutUsuarioInput
     stock_camion?: StockCamionUncheckedCreateNestedManyWithoutUsuarioInput
     incidencias?: IncidenciaUncheckedCreateNestedManyWithoutUsuarioInput
+    movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutUsuarioInput
   }
 
   export type UsuarioCreateOrConnectWithoutMantencionesInput = {
@@ -63979,6 +65781,7 @@ export namespace Prisma {
     stock_camion?: StockCamionUpdateManyWithoutUsuarioNestedInput
     vehiculo?: VehiculoUpdateOneWithoutUsuariosNestedInput
     incidencias?: IncidenciaUpdateManyWithoutUsuarioNestedInput
+    movimientos_stock?: MovimientoStockUpdateManyWithoutUsuarioNestedInput
   }
 
   export type UsuarioUncheckedUpdateWithoutMantencionesInput = {
@@ -64006,6 +65809,7 @@ export namespace Prisma {
     rutas_dia?: RutaDiaUncheckedUpdateManyWithoutUsuarioNestedInput
     stock_camion?: StockCamionUncheckedUpdateManyWithoutUsuarioNestedInput
     incidencias?: IncidenciaUncheckedUpdateManyWithoutUsuarioNestedInput
+    movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutUsuarioNestedInput
   }
 
   export type VehiculoUpsertWithoutMantencionesInput = {
@@ -64427,6 +66231,36 @@ export namespace Prisma {
     create: XOR<StockFabricaCreateWithoutProductoInput, StockFabricaUncheckedCreateWithoutProductoInput>
   }
 
+  export type MovimientoStockCreateWithoutProductoInput = {
+    id?: string
+    cantidad: number
+    motivo: string
+    stock_antes: number
+    stock_despues: number
+    created_at?: Date | string
+    usuario: UsuarioCreateNestedOneWithoutMovimientos_stockInput
+  }
+
+  export type MovimientoStockUncheckedCreateWithoutProductoInput = {
+    id?: string
+    usuario_id: string
+    cantidad: number
+    motivo: string
+    stock_antes: number
+    stock_despues: number
+    created_at?: Date | string
+  }
+
+  export type MovimientoStockCreateOrConnectWithoutProductoInput = {
+    where: MovimientoStockWhereUniqueInput
+    create: XOR<MovimientoStockCreateWithoutProductoInput, MovimientoStockUncheckedCreateWithoutProductoInput>
+  }
+
+  export type MovimientoStockCreateManyProductoInputEnvelope = {
+    data: MovimientoStockCreateManyProductoInput | MovimientoStockCreateManyProductoInput[]
+    skipDuplicates?: boolean
+  }
+
   export type ComisionUpsertWithWhereUniqueWithoutProductoInput = {
     where: ComisionWhereUniqueInput
     update: XOR<ComisionUpdateWithoutProductoInput, ComisionUncheckedUpdateWithoutProductoInput>
@@ -64634,6 +66468,238 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type MovimientoStockUpsertWithWhereUniqueWithoutProductoInput = {
+    where: MovimientoStockWhereUniqueInput
+    update: XOR<MovimientoStockUpdateWithoutProductoInput, MovimientoStockUncheckedUpdateWithoutProductoInput>
+    create: XOR<MovimientoStockCreateWithoutProductoInput, MovimientoStockUncheckedCreateWithoutProductoInput>
+  }
+
+  export type MovimientoStockUpdateWithWhereUniqueWithoutProductoInput = {
+    where: MovimientoStockWhereUniqueInput
+    data: XOR<MovimientoStockUpdateWithoutProductoInput, MovimientoStockUncheckedUpdateWithoutProductoInput>
+  }
+
+  export type MovimientoStockUpdateManyWithWhereWithoutProductoInput = {
+    where: MovimientoStockScalarWhereInput
+    data: XOR<MovimientoStockUpdateManyMutationInput, MovimientoStockUncheckedUpdateManyWithoutProductoInput>
+  }
+
+  export type ProductoCreateWithoutMovimientos_stockInput = {
+    id?: string
+    nombre: string
+    categoria: $Enums.CategoriaProducto
+    precio_venta_nueva: number
+    precio_recarga?: number | null
+    stock_minimo?: number
+    activo?: boolean
+    comisiones?: ComisionCreateNestedManyWithoutProductoInput
+    cuadratura_retorno?: CuadraturaRetornoCreateNestedManyWithoutProductoInput
+    cuadratura_salida?: CuadraturaSalidaCreateNestedManyWithoutProductoInput
+    cuadratura_ventas?: CuadraturaVentaCreateNestedManyWithoutProductoInput
+    items_guia?: ItemGuiaCreateNestedManyWithoutProductoInput
+    pedidoItems?: PedidoItemCreateNestedManyWithoutProductoInput
+    stock_camion?: StockCamionCreateNestedManyWithoutProductoInput
+    stock_fabrica?: StockFabricaCreateNestedOneWithoutProductoInput
+  }
+
+  export type ProductoUncheckedCreateWithoutMovimientos_stockInput = {
+    id?: string
+    nombre: string
+    categoria: $Enums.CategoriaProducto
+    precio_venta_nueva: number
+    precio_recarga?: number | null
+    stock_minimo?: number
+    activo?: boolean
+    comisiones?: ComisionUncheckedCreateNestedManyWithoutProductoInput
+    cuadratura_retorno?: CuadraturaRetornoUncheckedCreateNestedManyWithoutProductoInput
+    cuadratura_salida?: CuadraturaSalidaUncheckedCreateNestedManyWithoutProductoInput
+    cuadratura_ventas?: CuadraturaVentaUncheckedCreateNestedManyWithoutProductoInput
+    items_guia?: ItemGuiaUncheckedCreateNestedManyWithoutProductoInput
+    pedidoItems?: PedidoItemUncheckedCreateNestedManyWithoutProductoInput
+    stock_camion?: StockCamionUncheckedCreateNestedManyWithoutProductoInput
+    stock_fabrica?: StockFabricaUncheckedCreateNestedOneWithoutProductoInput
+  }
+
+  export type ProductoCreateOrConnectWithoutMovimientos_stockInput = {
+    where: ProductoWhereUniqueInput
+    create: XOR<ProductoCreateWithoutMovimientos_stockInput, ProductoUncheckedCreateWithoutMovimientos_stockInput>
+  }
+
+  export type UsuarioCreateWithoutMovimientos_stockInput = {
+    id?: string
+    nombre: string
+    apellido?: string | null
+    rut: string
+    telefono: string
+    email: string
+    rol: $Enums.Rol
+    fecha_ingreso: Date | string
+    activo?: boolean
+    created_at?: Date | string
+    licencia_tipo?: string | null
+    recibe_comision?: boolean
+    vencimiento_lic?: Date | string | null
+    botellones_danados?: BotellonDanadoCreateNestedManyWithoutUsuarioInput
+    cargas_combustible?: CargaCombustibleCreateNestedManyWithoutUsuarioInput
+    cuadraturas?: CuadraturaCreateNestedManyWithoutUsuarioInput
+    guias?: GuiaDespachoCreateNestedManyWithoutUsuario_repartidorInput
+    log_accesos?: LogAccesoCreateNestedManyWithoutUsuarioInput
+    mantenciones?: MantencionCreateNestedManyWithoutUsuarioInput
+    produccion?: ProduccionDiariaCreateNestedManyWithoutUsuarioInput
+    rutas_base?: RutaBaseCreateNestedManyWithoutUsuarioInput
+    rutas_dia?: RutaDiaCreateNestedManyWithoutUsuarioInput
+    stock_camion?: StockCamionCreateNestedManyWithoutUsuarioInput
+    vehiculo?: VehiculoCreateNestedOneWithoutUsuariosInput
+    incidencias?: IncidenciaCreateNestedManyWithoutUsuarioInput
+  }
+
+  export type UsuarioUncheckedCreateWithoutMovimientos_stockInput = {
+    id?: string
+    nombre: string
+    apellido?: string | null
+    rut: string
+    telefono: string
+    email: string
+    rol: $Enums.Rol
+    vehiculo_id?: string | null
+    fecha_ingreso: Date | string
+    activo?: boolean
+    created_at?: Date | string
+    licencia_tipo?: string | null
+    recibe_comision?: boolean
+    vencimiento_lic?: Date | string | null
+    botellones_danados?: BotellonDanadoUncheckedCreateNestedManyWithoutUsuarioInput
+    cargas_combustible?: CargaCombustibleUncheckedCreateNestedManyWithoutUsuarioInput
+    cuadraturas?: CuadraturaUncheckedCreateNestedManyWithoutUsuarioInput
+    guias?: GuiaDespachoUncheckedCreateNestedManyWithoutUsuario_repartidorInput
+    log_accesos?: LogAccesoUncheckedCreateNestedManyWithoutUsuarioInput
+    mantenciones?: MantencionUncheckedCreateNestedManyWithoutUsuarioInput
+    produccion?: ProduccionDiariaUncheckedCreateNestedManyWithoutUsuarioInput
+    rutas_base?: RutaBaseUncheckedCreateNestedManyWithoutUsuarioInput
+    rutas_dia?: RutaDiaUncheckedCreateNestedManyWithoutUsuarioInput
+    stock_camion?: StockCamionUncheckedCreateNestedManyWithoutUsuarioInput
+    incidencias?: IncidenciaUncheckedCreateNestedManyWithoutUsuarioInput
+  }
+
+  export type UsuarioCreateOrConnectWithoutMovimientos_stockInput = {
+    where: UsuarioWhereUniqueInput
+    create: XOR<UsuarioCreateWithoutMovimientos_stockInput, UsuarioUncheckedCreateWithoutMovimientos_stockInput>
+  }
+
+  export type ProductoUpsertWithoutMovimientos_stockInput = {
+    update: XOR<ProductoUpdateWithoutMovimientos_stockInput, ProductoUncheckedUpdateWithoutMovimientos_stockInput>
+    create: XOR<ProductoCreateWithoutMovimientos_stockInput, ProductoUncheckedCreateWithoutMovimientos_stockInput>
+    where?: ProductoWhereInput
+  }
+
+  export type ProductoUpdateToOneWithWhereWithoutMovimientos_stockInput = {
+    where?: ProductoWhereInput
+    data: XOR<ProductoUpdateWithoutMovimientos_stockInput, ProductoUncheckedUpdateWithoutMovimientos_stockInput>
+  }
+
+  export type ProductoUpdateWithoutMovimientos_stockInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nombre?: StringFieldUpdateOperationsInput | string
+    categoria?: EnumCategoriaProductoFieldUpdateOperationsInput | $Enums.CategoriaProducto
+    precio_venta_nueva?: FloatFieldUpdateOperationsInput | number
+    precio_recarga?: NullableFloatFieldUpdateOperationsInput | number | null
+    stock_minimo?: IntFieldUpdateOperationsInput | number
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    comisiones?: ComisionUpdateManyWithoutProductoNestedInput
+    cuadratura_retorno?: CuadraturaRetornoUpdateManyWithoutProductoNestedInput
+    cuadratura_salida?: CuadraturaSalidaUpdateManyWithoutProductoNestedInput
+    cuadratura_ventas?: CuadraturaVentaUpdateManyWithoutProductoNestedInput
+    items_guia?: ItemGuiaUpdateManyWithoutProductoNestedInput
+    pedidoItems?: PedidoItemUpdateManyWithoutProductoNestedInput
+    stock_camion?: StockCamionUpdateManyWithoutProductoNestedInput
+    stock_fabrica?: StockFabricaUpdateOneWithoutProductoNestedInput
+  }
+
+  export type ProductoUncheckedUpdateWithoutMovimientos_stockInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nombre?: StringFieldUpdateOperationsInput | string
+    categoria?: EnumCategoriaProductoFieldUpdateOperationsInput | $Enums.CategoriaProducto
+    precio_venta_nueva?: FloatFieldUpdateOperationsInput | number
+    precio_recarga?: NullableFloatFieldUpdateOperationsInput | number | null
+    stock_minimo?: IntFieldUpdateOperationsInput | number
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    comisiones?: ComisionUncheckedUpdateManyWithoutProductoNestedInput
+    cuadratura_retorno?: CuadraturaRetornoUncheckedUpdateManyWithoutProductoNestedInput
+    cuadratura_salida?: CuadraturaSalidaUncheckedUpdateManyWithoutProductoNestedInput
+    cuadratura_ventas?: CuadraturaVentaUncheckedUpdateManyWithoutProductoNestedInput
+    items_guia?: ItemGuiaUncheckedUpdateManyWithoutProductoNestedInput
+    pedidoItems?: PedidoItemUncheckedUpdateManyWithoutProductoNestedInput
+    stock_camion?: StockCamionUncheckedUpdateManyWithoutProductoNestedInput
+    stock_fabrica?: StockFabricaUncheckedUpdateOneWithoutProductoNestedInput
+  }
+
+  export type UsuarioUpsertWithoutMovimientos_stockInput = {
+    update: XOR<UsuarioUpdateWithoutMovimientos_stockInput, UsuarioUncheckedUpdateWithoutMovimientos_stockInput>
+    create: XOR<UsuarioCreateWithoutMovimientos_stockInput, UsuarioUncheckedCreateWithoutMovimientos_stockInput>
+    where?: UsuarioWhereInput
+  }
+
+  export type UsuarioUpdateToOneWithWhereWithoutMovimientos_stockInput = {
+    where?: UsuarioWhereInput
+    data: XOR<UsuarioUpdateWithoutMovimientos_stockInput, UsuarioUncheckedUpdateWithoutMovimientos_stockInput>
+  }
+
+  export type UsuarioUpdateWithoutMovimientos_stockInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nombre?: StringFieldUpdateOperationsInput | string
+    apellido?: NullableStringFieldUpdateOperationsInput | string | null
+    rut?: StringFieldUpdateOperationsInput | string
+    telefono?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    rol?: EnumRolFieldUpdateOperationsInput | $Enums.Rol
+    fecha_ingreso?: DateTimeFieldUpdateOperationsInput | Date | string
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    licencia_tipo?: NullableStringFieldUpdateOperationsInput | string | null
+    recibe_comision?: BoolFieldUpdateOperationsInput | boolean
+    vencimiento_lic?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    botellones_danados?: BotellonDanadoUpdateManyWithoutUsuarioNestedInput
+    cargas_combustible?: CargaCombustibleUpdateManyWithoutUsuarioNestedInput
+    cuadraturas?: CuadraturaUpdateManyWithoutUsuarioNestedInput
+    guias?: GuiaDespachoUpdateManyWithoutUsuario_repartidorNestedInput
+    log_accesos?: LogAccesoUpdateManyWithoutUsuarioNestedInput
+    mantenciones?: MantencionUpdateManyWithoutUsuarioNestedInput
+    produccion?: ProduccionDiariaUpdateManyWithoutUsuarioNestedInput
+    rutas_base?: RutaBaseUpdateManyWithoutUsuarioNestedInput
+    rutas_dia?: RutaDiaUpdateManyWithoutUsuarioNestedInput
+    stock_camion?: StockCamionUpdateManyWithoutUsuarioNestedInput
+    vehiculo?: VehiculoUpdateOneWithoutUsuariosNestedInput
+    incidencias?: IncidenciaUpdateManyWithoutUsuarioNestedInput
+  }
+
+  export type UsuarioUncheckedUpdateWithoutMovimientos_stockInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nombre?: StringFieldUpdateOperationsInput | string
+    apellido?: NullableStringFieldUpdateOperationsInput | string | null
+    rut?: StringFieldUpdateOperationsInput | string
+    telefono?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    rol?: EnumRolFieldUpdateOperationsInput | $Enums.Rol
+    vehiculo_id?: NullableStringFieldUpdateOperationsInput | string | null
+    fecha_ingreso?: DateTimeFieldUpdateOperationsInput | Date | string
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    licencia_tipo?: NullableStringFieldUpdateOperationsInput | string | null
+    recibe_comision?: BoolFieldUpdateOperationsInput | boolean
+    vencimiento_lic?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    botellones_danados?: BotellonDanadoUncheckedUpdateManyWithoutUsuarioNestedInput
+    cargas_combustible?: CargaCombustibleUncheckedUpdateManyWithoutUsuarioNestedInput
+    cuadraturas?: CuadraturaUncheckedUpdateManyWithoutUsuarioNestedInput
+    guias?: GuiaDespachoUncheckedUpdateManyWithoutUsuario_repartidorNestedInput
+    log_accesos?: LogAccesoUncheckedUpdateManyWithoutUsuarioNestedInput
+    mantenciones?: MantencionUncheckedUpdateManyWithoutUsuarioNestedInput
+    produccion?: ProduccionDiariaUncheckedUpdateManyWithoutUsuarioNestedInput
+    rutas_base?: RutaBaseUncheckedUpdateManyWithoutUsuarioNestedInput
+    rutas_dia?: RutaDiaUncheckedUpdateManyWithoutUsuarioNestedInput
+    stock_camion?: StockCamionUncheckedUpdateManyWithoutUsuarioNestedInput
+    incidencias?: IncidenciaUncheckedUpdateManyWithoutUsuarioNestedInput
+  }
+
   export type ProductoCreateWithoutComisionesInput = {
     id?: string
     nombre: string
@@ -64649,6 +66715,7 @@ export namespace Prisma {
     pedidoItems?: PedidoItemCreateNestedManyWithoutProductoInput
     stock_camion?: StockCamionCreateNestedManyWithoutProductoInput
     stock_fabrica?: StockFabricaCreateNestedOneWithoutProductoInput
+    movimientos_stock?: MovimientoStockCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoUncheckedCreateWithoutComisionesInput = {
@@ -64666,6 +66733,7 @@ export namespace Prisma {
     pedidoItems?: PedidoItemUncheckedCreateNestedManyWithoutProductoInput
     stock_camion?: StockCamionUncheckedCreateNestedManyWithoutProductoInput
     stock_fabrica?: StockFabricaUncheckedCreateNestedOneWithoutProductoInput
+    movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoCreateOrConnectWithoutComisionesInput = {
@@ -64699,6 +66767,7 @@ export namespace Prisma {
     pedidoItems?: PedidoItemUpdateManyWithoutProductoNestedInput
     stock_camion?: StockCamionUpdateManyWithoutProductoNestedInput
     stock_fabrica?: StockFabricaUpdateOneWithoutProductoNestedInput
+    movimientos_stock?: MovimientoStockUpdateManyWithoutProductoNestedInput
   }
 
   export type ProductoUncheckedUpdateWithoutComisionesInput = {
@@ -64716,6 +66785,7 @@ export namespace Prisma {
     pedidoItems?: PedidoItemUncheckedUpdateManyWithoutProductoNestedInput
     stock_camion?: StockCamionUncheckedUpdateManyWithoutProductoNestedInput
     stock_fabrica?: StockFabricaUncheckedUpdateOneWithoutProductoNestedInput
+    movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutProductoNestedInput
   }
 
   export type BotellonDanadoCreateWithoutClienteInput = {
@@ -65252,6 +67322,7 @@ export namespace Prisma {
     stock_camion?: StockCamionCreateNestedManyWithoutUsuarioInput
     vehiculo?: VehiculoCreateNestedOneWithoutUsuariosInput
     incidencias?: IncidenciaCreateNestedManyWithoutUsuarioInput
+    movimientos_stock?: MovimientoStockCreateNestedManyWithoutUsuarioInput
   }
 
   export type UsuarioUncheckedCreateWithoutRutas_baseInput = {
@@ -65279,6 +67350,7 @@ export namespace Prisma {
     rutas_dia?: RutaDiaUncheckedCreateNestedManyWithoutUsuarioInput
     stock_camion?: StockCamionUncheckedCreateNestedManyWithoutUsuarioInput
     incidencias?: IncidenciaUncheckedCreateNestedManyWithoutUsuarioInput
+    movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutUsuarioInput
   }
 
   export type UsuarioCreateOrConnectWithoutRutas_baseInput = {
@@ -65428,6 +67500,7 @@ export namespace Prisma {
     stock_camion?: StockCamionUpdateManyWithoutUsuarioNestedInput
     vehiculo?: VehiculoUpdateOneWithoutUsuariosNestedInput
     incidencias?: IncidenciaUpdateManyWithoutUsuarioNestedInput
+    movimientos_stock?: MovimientoStockUpdateManyWithoutUsuarioNestedInput
   }
 
   export type UsuarioUncheckedUpdateWithoutRutas_baseInput = {
@@ -65455,6 +67528,7 @@ export namespace Prisma {
     rutas_dia?: RutaDiaUncheckedUpdateManyWithoutUsuarioNestedInput
     stock_camion?: StockCamionUncheckedUpdateManyWithoutUsuarioNestedInput
     incidencias?: IncidenciaUncheckedUpdateManyWithoutUsuarioNestedInput
+    movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutUsuarioNestedInput
   }
 
   export type VehiculoUpsertWithoutRutas_baseInput = {
@@ -65846,6 +67920,7 @@ export namespace Prisma {
     stock_camion?: StockCamionCreateNestedManyWithoutUsuarioInput
     vehiculo?: VehiculoCreateNestedOneWithoutUsuariosInput
     incidencias?: IncidenciaCreateNestedManyWithoutUsuarioInput
+    movimientos_stock?: MovimientoStockCreateNestedManyWithoutUsuarioInput
   }
 
   export type UsuarioUncheckedCreateWithoutRutas_diaInput = {
@@ -65873,6 +67948,7 @@ export namespace Prisma {
     rutas_base?: RutaBaseUncheckedCreateNestedManyWithoutUsuarioInput
     stock_camion?: StockCamionUncheckedCreateNestedManyWithoutUsuarioInput
     incidencias?: IncidenciaUncheckedCreateNestedManyWithoutUsuarioInput
+    movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutUsuarioInput
   }
 
   export type UsuarioCreateOrConnectWithoutRutas_diaInput = {
@@ -66004,6 +68080,7 @@ export namespace Prisma {
     stock_camion?: StockCamionUpdateManyWithoutUsuarioNestedInput
     vehiculo?: VehiculoUpdateOneWithoutUsuariosNestedInput
     incidencias?: IncidenciaUpdateManyWithoutUsuarioNestedInput
+    movimientos_stock?: MovimientoStockUpdateManyWithoutUsuarioNestedInput
   }
 
   export type UsuarioUncheckedUpdateWithoutRutas_diaInput = {
@@ -66031,6 +68108,7 @@ export namespace Prisma {
     rutas_base?: RutaBaseUncheckedUpdateManyWithoutUsuarioNestedInput
     stock_camion?: StockCamionUncheckedUpdateManyWithoutUsuarioNestedInput
     incidencias?: IncidenciaUncheckedUpdateManyWithoutUsuarioNestedInput
+    movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutUsuarioNestedInput
   }
 
   export type VehiculoUpsertWithoutRutas_diaInput = {
@@ -66731,6 +68809,7 @@ export namespace Prisma {
     items_guia?: ItemGuiaCreateNestedManyWithoutProductoInput
     stock_camion?: StockCamionCreateNestedManyWithoutProductoInput
     stock_fabrica?: StockFabricaCreateNestedOneWithoutProductoInput
+    movimientos_stock?: MovimientoStockCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoUncheckedCreateWithoutPedidoItemsInput = {
@@ -66748,6 +68827,7 @@ export namespace Prisma {
     items_guia?: ItemGuiaUncheckedCreateNestedManyWithoutProductoInput
     stock_camion?: StockCamionUncheckedCreateNestedManyWithoutProductoInput
     stock_fabrica?: StockFabricaUncheckedCreateNestedOneWithoutProductoInput
+    movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoCreateOrConnectWithoutPedidoItemsInput = {
@@ -66824,6 +68904,7 @@ export namespace Prisma {
     items_guia?: ItemGuiaUpdateManyWithoutProductoNestedInput
     stock_camion?: StockCamionUpdateManyWithoutProductoNestedInput
     stock_fabrica?: StockFabricaUpdateOneWithoutProductoNestedInput
+    movimientos_stock?: MovimientoStockUpdateManyWithoutProductoNestedInput
   }
 
   export type ProductoUncheckedUpdateWithoutPedidoItemsInput = {
@@ -66841,6 +68922,7 @@ export namespace Prisma {
     items_guia?: ItemGuiaUncheckedUpdateManyWithoutProductoNestedInput
     stock_camion?: StockCamionUncheckedUpdateManyWithoutProductoNestedInput
     stock_fabrica?: StockFabricaUncheckedUpdateOneWithoutProductoNestedInput
+    movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutProductoNestedInput
   }
 
   export type CuadraturaVentaCreateWithoutGuiaInput = {
@@ -66955,6 +69037,7 @@ export namespace Prisma {
     stock_camion?: StockCamionCreateNestedManyWithoutUsuarioInput
     vehiculo?: VehiculoCreateNestedOneWithoutUsuariosInput
     incidencias?: IncidenciaCreateNestedManyWithoutUsuarioInput
+    movimientos_stock?: MovimientoStockCreateNestedManyWithoutUsuarioInput
   }
 
   export type UsuarioUncheckedCreateWithoutGuiasInput = {
@@ -66982,6 +69065,7 @@ export namespace Prisma {
     rutas_dia?: RutaDiaUncheckedCreateNestedManyWithoutUsuarioInput
     stock_camion?: StockCamionUncheckedCreateNestedManyWithoutUsuarioInput
     incidencias?: IncidenciaUncheckedCreateNestedManyWithoutUsuarioInput
+    movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutUsuarioInput
   }
 
   export type UsuarioCreateOrConnectWithoutGuiasInput = {
@@ -67167,6 +69251,7 @@ export namespace Prisma {
     stock_camion?: StockCamionUpdateManyWithoutUsuarioNestedInput
     vehiculo?: VehiculoUpdateOneWithoutUsuariosNestedInput
     incidencias?: IncidenciaUpdateManyWithoutUsuarioNestedInput
+    movimientos_stock?: MovimientoStockUpdateManyWithoutUsuarioNestedInput
   }
 
   export type UsuarioUncheckedUpdateWithoutGuiasInput = {
@@ -67194,6 +69279,7 @@ export namespace Prisma {
     rutas_dia?: RutaDiaUncheckedUpdateManyWithoutUsuarioNestedInput
     stock_camion?: StockCamionUncheckedUpdateManyWithoutUsuarioNestedInput
     incidencias?: IncidenciaUncheckedUpdateManyWithoutUsuarioNestedInput
+    movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutUsuarioNestedInput
   }
 
   export type PedidoUpsertWithoutGuiaInput = {
@@ -67317,6 +69403,7 @@ export namespace Prisma {
     pedidoItems?: PedidoItemCreateNestedManyWithoutProductoInput
     stock_camion?: StockCamionCreateNestedManyWithoutProductoInput
     stock_fabrica?: StockFabricaCreateNestedOneWithoutProductoInput
+    movimientos_stock?: MovimientoStockCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoUncheckedCreateWithoutItems_guiaInput = {
@@ -67334,6 +69421,7 @@ export namespace Prisma {
     pedidoItems?: PedidoItemUncheckedCreateNestedManyWithoutProductoInput
     stock_camion?: StockCamionUncheckedCreateNestedManyWithoutProductoInput
     stock_fabrica?: StockFabricaUncheckedCreateNestedOneWithoutProductoInput
+    movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoCreateOrConnectWithoutItems_guiaInput = {
@@ -67419,6 +69507,7 @@ export namespace Prisma {
     pedidoItems?: PedidoItemUpdateManyWithoutProductoNestedInput
     stock_camion?: StockCamionUpdateManyWithoutProductoNestedInput
     stock_fabrica?: StockFabricaUpdateOneWithoutProductoNestedInput
+    movimientos_stock?: MovimientoStockUpdateManyWithoutProductoNestedInput
   }
 
   export type ProductoUncheckedUpdateWithoutItems_guiaInput = {
@@ -67436,6 +69525,7 @@ export namespace Prisma {
     pedidoItems?: PedidoItemUncheckedUpdateManyWithoutProductoNestedInput
     stock_camion?: StockCamionUncheckedUpdateManyWithoutProductoNestedInput
     stock_fabrica?: StockFabricaUncheckedUpdateOneWithoutProductoNestedInput
+    movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutProductoNestedInput
   }
 
   export type BotellonVacioCreateWithoutCuadraturaInput = {
@@ -67485,6 +69575,7 @@ export namespace Prisma {
     stock_camion?: StockCamionCreateNestedManyWithoutUsuarioInput
     vehiculo?: VehiculoCreateNestedOneWithoutUsuariosInput
     incidencias?: IncidenciaCreateNestedManyWithoutUsuarioInput
+    movimientos_stock?: MovimientoStockCreateNestedManyWithoutUsuarioInput
   }
 
   export type UsuarioUncheckedCreateWithoutCuadraturasInput = {
@@ -67512,6 +69603,7 @@ export namespace Prisma {
     rutas_dia?: RutaDiaUncheckedCreateNestedManyWithoutUsuarioInput
     stock_camion?: StockCamionUncheckedCreateNestedManyWithoutUsuarioInput
     incidencias?: IncidenciaUncheckedCreateNestedManyWithoutUsuarioInput
+    movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutUsuarioInput
   }
 
   export type UsuarioCreateOrConnectWithoutCuadraturasInput = {
@@ -67713,6 +69805,7 @@ export namespace Prisma {
     stock_camion?: StockCamionUpdateManyWithoutUsuarioNestedInput
     vehiculo?: VehiculoUpdateOneWithoutUsuariosNestedInput
     incidencias?: IncidenciaUpdateManyWithoutUsuarioNestedInput
+    movimientos_stock?: MovimientoStockUpdateManyWithoutUsuarioNestedInput
   }
 
   export type UsuarioUncheckedUpdateWithoutCuadraturasInput = {
@@ -67740,6 +69833,7 @@ export namespace Prisma {
     rutas_dia?: RutaDiaUncheckedUpdateManyWithoutUsuarioNestedInput
     stock_camion?: StockCamionUncheckedUpdateManyWithoutUsuarioNestedInput
     incidencias?: IncidenciaUncheckedUpdateManyWithoutUsuarioNestedInput
+    movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutUsuarioNestedInput
   }
 
   export type CuadraturaRetornoUpsertWithWhereUniqueWithoutCuadraturaInput = {
@@ -67845,6 +69939,8 @@ export namespace Prisma {
     motivo_reapertura?: string | null
     fecha_reapertura?: Date | string | null
     monto_bencina?: number | null
+    km_inicial?: number | null
+    km_final?: number | null
     botellones_vacios?: BotellonVacioCreateNestedManyWithoutCuadraturaInput
     usuario: UsuarioCreateNestedOneWithoutCuadraturasInput
     retorno?: CuadraturaRetornoCreateNestedManyWithoutCuadraturaInput
@@ -67866,6 +69962,8 @@ export namespace Prisma {
     motivo_reapertura?: string | null
     fecha_reapertura?: Date | string | null
     monto_bencina?: number | null
+    km_inicial?: number | null
+    km_final?: number | null
     botellones_vacios?: BotellonVacioUncheckedCreateNestedManyWithoutCuadraturaInput
     retorno?: CuadraturaRetornoUncheckedCreateNestedManyWithoutCuadraturaInput
     ventas?: CuadraturaVentaUncheckedCreateNestedManyWithoutCuadraturaInput
@@ -67893,6 +69991,7 @@ export namespace Prisma {
     pedidoItems?: PedidoItemCreateNestedManyWithoutProductoInput
     stock_camion?: StockCamionCreateNestedManyWithoutProductoInput
     stock_fabrica?: StockFabricaCreateNestedOneWithoutProductoInput
+    movimientos_stock?: MovimientoStockCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoUncheckedCreateWithoutCuadratura_salidaInput = {
@@ -67910,6 +70009,7 @@ export namespace Prisma {
     pedidoItems?: PedidoItemUncheckedCreateNestedManyWithoutProductoInput
     stock_camion?: StockCamionUncheckedCreateNestedManyWithoutProductoInput
     stock_fabrica?: StockFabricaUncheckedCreateNestedOneWithoutProductoInput
+    movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoCreateOrConnectWithoutCuadratura_salidaInput = {
@@ -67940,6 +70040,8 @@ export namespace Prisma {
     motivo_reapertura?: NullableStringFieldUpdateOperationsInput | string | null
     fecha_reapertura?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     monto_bencina?: NullableIntFieldUpdateOperationsInput | number | null
+    km_inicial?: NullableIntFieldUpdateOperationsInput | number | null
+    km_final?: NullableIntFieldUpdateOperationsInput | number | null
     botellones_vacios?: BotellonVacioUpdateManyWithoutCuadraturaNestedInput
     usuario?: UsuarioUpdateOneRequiredWithoutCuadraturasNestedInput
     retorno?: CuadraturaRetornoUpdateManyWithoutCuadraturaNestedInput
@@ -67961,6 +70063,8 @@ export namespace Prisma {
     motivo_reapertura?: NullableStringFieldUpdateOperationsInput | string | null
     fecha_reapertura?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     monto_bencina?: NullableIntFieldUpdateOperationsInput | number | null
+    km_inicial?: NullableIntFieldUpdateOperationsInput | number | null
+    km_final?: NullableIntFieldUpdateOperationsInput | number | null
     botellones_vacios?: BotellonVacioUncheckedUpdateManyWithoutCuadraturaNestedInput
     retorno?: CuadraturaRetornoUncheckedUpdateManyWithoutCuadraturaNestedInput
     ventas?: CuadraturaVentaUncheckedUpdateManyWithoutCuadraturaNestedInput
@@ -67994,6 +70098,7 @@ export namespace Prisma {
     pedidoItems?: PedidoItemUpdateManyWithoutProductoNestedInput
     stock_camion?: StockCamionUpdateManyWithoutProductoNestedInput
     stock_fabrica?: StockFabricaUpdateOneWithoutProductoNestedInput
+    movimientos_stock?: MovimientoStockUpdateManyWithoutProductoNestedInput
   }
 
   export type ProductoUncheckedUpdateWithoutCuadratura_salidaInput = {
@@ -68011,6 +70116,7 @@ export namespace Prisma {
     pedidoItems?: PedidoItemUncheckedUpdateManyWithoutProductoNestedInput
     stock_camion?: StockCamionUncheckedUpdateManyWithoutProductoNestedInput
     stock_fabrica?: StockFabricaUncheckedUpdateOneWithoutProductoNestedInput
+    movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutProductoNestedInput
   }
 
   export type CuadraturaCreateWithoutVentasInput = {
@@ -68025,6 +70131,8 @@ export namespace Prisma {
     motivo_reapertura?: string | null
     fecha_reapertura?: Date | string | null
     monto_bencina?: number | null
+    km_inicial?: number | null
+    km_final?: number | null
     botellones_vacios?: BotellonVacioCreateNestedManyWithoutCuadraturaInput
     usuario: UsuarioCreateNestedOneWithoutCuadraturasInput
     retorno?: CuadraturaRetornoCreateNestedManyWithoutCuadraturaInput
@@ -68046,6 +70154,8 @@ export namespace Prisma {
     motivo_reapertura?: string | null
     fecha_reapertura?: Date | string | null
     monto_bencina?: number | null
+    km_inicial?: number | null
+    km_final?: number | null
     botellones_vacios?: BotellonVacioUncheckedCreateNestedManyWithoutCuadraturaInput
     retorno?: CuadraturaRetornoUncheckedCreateNestedManyWithoutCuadraturaInput
     salida?: CuadraturaSalidaUncheckedCreateNestedManyWithoutCuadraturaInput
@@ -68120,6 +70230,7 @@ export namespace Prisma {
     pedidoItems?: PedidoItemCreateNestedManyWithoutProductoInput
     stock_camion?: StockCamionCreateNestedManyWithoutProductoInput
     stock_fabrica?: StockFabricaCreateNestedOneWithoutProductoInput
+    movimientos_stock?: MovimientoStockCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoUncheckedCreateWithoutCuadratura_ventasInput = {
@@ -68137,6 +70248,7 @@ export namespace Prisma {
     pedidoItems?: PedidoItemUncheckedCreateNestedManyWithoutProductoInput
     stock_camion?: StockCamionUncheckedCreateNestedManyWithoutProductoInput
     stock_fabrica?: StockFabricaUncheckedCreateNestedOneWithoutProductoInput
+    movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoCreateOrConnectWithoutCuadratura_ventasInput = {
@@ -68167,6 +70279,8 @@ export namespace Prisma {
     motivo_reapertura?: NullableStringFieldUpdateOperationsInput | string | null
     fecha_reapertura?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     monto_bencina?: NullableIntFieldUpdateOperationsInput | number | null
+    km_inicial?: NullableIntFieldUpdateOperationsInput | number | null
+    km_final?: NullableIntFieldUpdateOperationsInput | number | null
     botellones_vacios?: BotellonVacioUpdateManyWithoutCuadraturaNestedInput
     usuario?: UsuarioUpdateOneRequiredWithoutCuadraturasNestedInput
     retorno?: CuadraturaRetornoUpdateManyWithoutCuadraturaNestedInput
@@ -68188,6 +70302,8 @@ export namespace Prisma {
     motivo_reapertura?: NullableStringFieldUpdateOperationsInput | string | null
     fecha_reapertura?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     monto_bencina?: NullableIntFieldUpdateOperationsInput | number | null
+    km_inicial?: NullableIntFieldUpdateOperationsInput | number | null
+    km_final?: NullableIntFieldUpdateOperationsInput | number | null
     botellones_vacios?: BotellonVacioUncheckedUpdateManyWithoutCuadraturaNestedInput
     retorno?: CuadraturaRetornoUncheckedUpdateManyWithoutCuadraturaNestedInput
     salida?: CuadraturaSalidaUncheckedUpdateManyWithoutCuadraturaNestedInput
@@ -68273,6 +70389,7 @@ export namespace Prisma {
     pedidoItems?: PedidoItemUpdateManyWithoutProductoNestedInput
     stock_camion?: StockCamionUpdateManyWithoutProductoNestedInput
     stock_fabrica?: StockFabricaUpdateOneWithoutProductoNestedInput
+    movimientos_stock?: MovimientoStockUpdateManyWithoutProductoNestedInput
   }
 
   export type ProductoUncheckedUpdateWithoutCuadratura_ventasInput = {
@@ -68290,6 +70407,7 @@ export namespace Prisma {
     pedidoItems?: PedidoItemUncheckedUpdateManyWithoutProductoNestedInput
     stock_camion?: StockCamionUncheckedUpdateManyWithoutProductoNestedInput
     stock_fabrica?: StockFabricaUncheckedUpdateOneWithoutProductoNestedInput
+    movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutProductoNestedInput
   }
 
   export type CuadraturaCreateWithoutRetornoInput = {
@@ -68304,6 +70422,8 @@ export namespace Prisma {
     motivo_reapertura?: string | null
     fecha_reapertura?: Date | string | null
     monto_bencina?: number | null
+    km_inicial?: number | null
+    km_final?: number | null
     botellones_vacios?: BotellonVacioCreateNestedManyWithoutCuadraturaInput
     usuario: UsuarioCreateNestedOneWithoutCuadraturasInput
     salida?: CuadraturaSalidaCreateNestedManyWithoutCuadraturaInput
@@ -68325,6 +70445,8 @@ export namespace Prisma {
     motivo_reapertura?: string | null
     fecha_reapertura?: Date | string | null
     monto_bencina?: number | null
+    km_inicial?: number | null
+    km_final?: number | null
     botellones_vacios?: BotellonVacioUncheckedCreateNestedManyWithoutCuadraturaInput
     salida?: CuadraturaSalidaUncheckedCreateNestedManyWithoutCuadraturaInput
     ventas?: CuadraturaVentaUncheckedCreateNestedManyWithoutCuadraturaInput
@@ -68352,6 +70474,7 @@ export namespace Prisma {
     pedidoItems?: PedidoItemCreateNestedManyWithoutProductoInput
     stock_camion?: StockCamionCreateNestedManyWithoutProductoInput
     stock_fabrica?: StockFabricaCreateNestedOneWithoutProductoInput
+    movimientos_stock?: MovimientoStockCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoUncheckedCreateWithoutCuadratura_retornoInput = {
@@ -68369,6 +70492,7 @@ export namespace Prisma {
     pedidoItems?: PedidoItemUncheckedCreateNestedManyWithoutProductoInput
     stock_camion?: StockCamionUncheckedCreateNestedManyWithoutProductoInput
     stock_fabrica?: StockFabricaUncheckedCreateNestedOneWithoutProductoInput
+    movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoCreateOrConnectWithoutCuadratura_retornoInput = {
@@ -68399,6 +70523,8 @@ export namespace Prisma {
     motivo_reapertura?: NullableStringFieldUpdateOperationsInput | string | null
     fecha_reapertura?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     monto_bencina?: NullableIntFieldUpdateOperationsInput | number | null
+    km_inicial?: NullableIntFieldUpdateOperationsInput | number | null
+    km_final?: NullableIntFieldUpdateOperationsInput | number | null
     botellones_vacios?: BotellonVacioUpdateManyWithoutCuadraturaNestedInput
     usuario?: UsuarioUpdateOneRequiredWithoutCuadraturasNestedInput
     salida?: CuadraturaSalidaUpdateManyWithoutCuadraturaNestedInput
@@ -68420,6 +70546,8 @@ export namespace Prisma {
     motivo_reapertura?: NullableStringFieldUpdateOperationsInput | string | null
     fecha_reapertura?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     monto_bencina?: NullableIntFieldUpdateOperationsInput | number | null
+    km_inicial?: NullableIntFieldUpdateOperationsInput | number | null
+    km_final?: NullableIntFieldUpdateOperationsInput | number | null
     botellones_vacios?: BotellonVacioUncheckedUpdateManyWithoutCuadraturaNestedInput
     salida?: CuadraturaSalidaUncheckedUpdateManyWithoutCuadraturaNestedInput
     ventas?: CuadraturaVentaUncheckedUpdateManyWithoutCuadraturaNestedInput
@@ -68453,6 +70581,7 @@ export namespace Prisma {
     pedidoItems?: PedidoItemUpdateManyWithoutProductoNestedInput
     stock_camion?: StockCamionUpdateManyWithoutProductoNestedInput
     stock_fabrica?: StockFabricaUpdateOneWithoutProductoNestedInput
+    movimientos_stock?: MovimientoStockUpdateManyWithoutProductoNestedInput
   }
 
   export type ProductoUncheckedUpdateWithoutCuadratura_retornoInput = {
@@ -68470,6 +70599,7 @@ export namespace Prisma {
     pedidoItems?: PedidoItemUncheckedUpdateManyWithoutProductoNestedInput
     stock_camion?: StockCamionUncheckedUpdateManyWithoutProductoNestedInput
     stock_fabrica?: StockFabricaUncheckedUpdateOneWithoutProductoNestedInput
+    movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutProductoNestedInput
   }
 
   export type CuadraturaCreateWithoutGastosInput = {
@@ -68484,6 +70614,8 @@ export namespace Prisma {
     motivo_reapertura?: string | null
     fecha_reapertura?: Date | string | null
     monto_bencina?: number | null
+    km_inicial?: number | null
+    km_final?: number | null
     botellones_vacios?: BotellonVacioCreateNestedManyWithoutCuadraturaInput
     usuario: UsuarioCreateNestedOneWithoutCuadraturasInput
     retorno?: CuadraturaRetornoCreateNestedManyWithoutCuadraturaInput
@@ -68505,6 +70637,8 @@ export namespace Prisma {
     motivo_reapertura?: string | null
     fecha_reapertura?: Date | string | null
     monto_bencina?: number | null
+    km_inicial?: number | null
+    km_final?: number | null
     botellones_vacios?: BotellonVacioUncheckedCreateNestedManyWithoutCuadraturaInput
     retorno?: CuadraturaRetornoUncheckedCreateNestedManyWithoutCuadraturaInput
     salida?: CuadraturaSalidaUncheckedCreateNestedManyWithoutCuadraturaInput
@@ -68540,6 +70674,8 @@ export namespace Prisma {
     motivo_reapertura?: NullableStringFieldUpdateOperationsInput | string | null
     fecha_reapertura?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     monto_bencina?: NullableIntFieldUpdateOperationsInput | number | null
+    km_inicial?: NullableIntFieldUpdateOperationsInput | number | null
+    km_final?: NullableIntFieldUpdateOperationsInput | number | null
     botellones_vacios?: BotellonVacioUpdateManyWithoutCuadraturaNestedInput
     usuario?: UsuarioUpdateOneRequiredWithoutCuadraturasNestedInput
     retorno?: CuadraturaRetornoUpdateManyWithoutCuadraturaNestedInput
@@ -68561,6 +70697,8 @@ export namespace Prisma {
     motivo_reapertura?: NullableStringFieldUpdateOperationsInput | string | null
     fecha_reapertura?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     monto_bencina?: NullableIntFieldUpdateOperationsInput | number | null
+    km_inicial?: NullableIntFieldUpdateOperationsInput | number | null
+    km_final?: NullableIntFieldUpdateOperationsInput | number | null
     botellones_vacios?: BotellonVacioUncheckedUpdateManyWithoutCuadraturaNestedInput
     retorno?: CuadraturaRetornoUncheckedUpdateManyWithoutCuadraturaNestedInput
     salida?: CuadraturaSalidaUncheckedUpdateManyWithoutCuadraturaNestedInput
@@ -68580,6 +70718,8 @@ export namespace Prisma {
     motivo_reapertura?: string | null
     fecha_reapertura?: Date | string | null
     monto_bencina?: number | null
+    km_inicial?: number | null
+    km_final?: number | null
     usuario: UsuarioCreateNestedOneWithoutCuadraturasInput
     retorno?: CuadraturaRetornoCreateNestedManyWithoutCuadraturaInput
     salida?: CuadraturaSalidaCreateNestedManyWithoutCuadraturaInput
@@ -68601,6 +70741,8 @@ export namespace Prisma {
     motivo_reapertura?: string | null
     fecha_reapertura?: Date | string | null
     monto_bencina?: number | null
+    km_inicial?: number | null
+    km_final?: number | null
     retorno?: CuadraturaRetornoUncheckedCreateNestedManyWithoutCuadraturaInput
     salida?: CuadraturaSalidaUncheckedCreateNestedManyWithoutCuadraturaInput
     ventas?: CuadraturaVentaUncheckedCreateNestedManyWithoutCuadraturaInput
@@ -68636,6 +70778,8 @@ export namespace Prisma {
     motivo_reapertura?: NullableStringFieldUpdateOperationsInput | string | null
     fecha_reapertura?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     monto_bencina?: NullableIntFieldUpdateOperationsInput | number | null
+    km_inicial?: NullableIntFieldUpdateOperationsInput | number | null
+    km_final?: NullableIntFieldUpdateOperationsInput | number | null
     usuario?: UsuarioUpdateOneRequiredWithoutCuadraturasNestedInput
     retorno?: CuadraturaRetornoUpdateManyWithoutCuadraturaNestedInput
     salida?: CuadraturaSalidaUpdateManyWithoutCuadraturaNestedInput
@@ -68657,6 +70801,8 @@ export namespace Prisma {
     motivo_reapertura?: NullableStringFieldUpdateOperationsInput | string | null
     fecha_reapertura?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     monto_bencina?: NullableIntFieldUpdateOperationsInput | number | null
+    km_inicial?: NullableIntFieldUpdateOperationsInput | number | null
+    km_final?: NullableIntFieldUpdateOperationsInput | number | null
     retorno?: CuadraturaRetornoUncheckedUpdateManyWithoutCuadraturaNestedInput
     salida?: CuadraturaSalidaUncheckedUpdateManyWithoutCuadraturaNestedInput
     ventas?: CuadraturaVentaUncheckedUpdateManyWithoutCuadraturaNestedInput
@@ -68744,6 +70890,7 @@ export namespace Prisma {
     stock_camion?: StockCamionCreateNestedManyWithoutUsuarioInput
     vehiculo?: VehiculoCreateNestedOneWithoutUsuariosInput
     incidencias?: IncidenciaCreateNestedManyWithoutUsuarioInput
+    movimientos_stock?: MovimientoStockCreateNestedManyWithoutUsuarioInput
   }
 
   export type UsuarioUncheckedCreateWithoutBotellones_danadosInput = {
@@ -68771,6 +70918,7 @@ export namespace Prisma {
     rutas_dia?: RutaDiaUncheckedCreateNestedManyWithoutUsuarioInput
     stock_camion?: StockCamionUncheckedCreateNestedManyWithoutUsuarioInput
     incidencias?: IncidenciaUncheckedCreateNestedManyWithoutUsuarioInput
+    movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutUsuarioInput
   }
 
   export type UsuarioCreateOrConnectWithoutBotellones_danadosInput = {
@@ -68875,6 +71023,7 @@ export namespace Prisma {
     stock_camion?: StockCamionUpdateManyWithoutUsuarioNestedInput
     vehiculo?: VehiculoUpdateOneWithoutUsuariosNestedInput
     incidencias?: IncidenciaUpdateManyWithoutUsuarioNestedInput
+    movimientos_stock?: MovimientoStockUpdateManyWithoutUsuarioNestedInput
   }
 
   export type UsuarioUncheckedUpdateWithoutBotellones_danadosInput = {
@@ -68902,6 +71051,7 @@ export namespace Prisma {
     rutas_dia?: RutaDiaUncheckedUpdateManyWithoutUsuarioNestedInput
     stock_camion?: StockCamionUncheckedUpdateManyWithoutUsuarioNestedInput
     incidencias?: IncidenciaUncheckedUpdateManyWithoutUsuarioNestedInput
+    movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutUsuarioNestedInput
   }
 
   export type UsuarioCreateWithoutProduccionInput = {
@@ -68929,6 +71079,7 @@ export namespace Prisma {
     stock_camion?: StockCamionCreateNestedManyWithoutUsuarioInput
     vehiculo?: VehiculoCreateNestedOneWithoutUsuariosInput
     incidencias?: IncidenciaCreateNestedManyWithoutUsuarioInput
+    movimientos_stock?: MovimientoStockCreateNestedManyWithoutUsuarioInput
   }
 
   export type UsuarioUncheckedCreateWithoutProduccionInput = {
@@ -68956,6 +71107,7 @@ export namespace Prisma {
     rutas_dia?: RutaDiaUncheckedCreateNestedManyWithoutUsuarioInput
     stock_camion?: StockCamionUncheckedCreateNestedManyWithoutUsuarioInput
     incidencias?: IncidenciaUncheckedCreateNestedManyWithoutUsuarioInput
+    movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutUsuarioInput
   }
 
   export type UsuarioCreateOrConnectWithoutProduccionInput = {
@@ -68999,6 +71151,7 @@ export namespace Prisma {
     stock_camion?: StockCamionUpdateManyWithoutUsuarioNestedInput
     vehiculo?: VehiculoUpdateOneWithoutUsuariosNestedInput
     incidencias?: IncidenciaUpdateManyWithoutUsuarioNestedInput
+    movimientos_stock?: MovimientoStockUpdateManyWithoutUsuarioNestedInput
   }
 
   export type UsuarioUncheckedUpdateWithoutProduccionInput = {
@@ -69026,6 +71179,7 @@ export namespace Prisma {
     rutas_dia?: RutaDiaUncheckedUpdateManyWithoutUsuarioNestedInput
     stock_camion?: StockCamionUncheckedUpdateManyWithoutUsuarioNestedInput
     incidencias?: IncidenciaUncheckedUpdateManyWithoutUsuarioNestedInput
+    movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutUsuarioNestedInput
   }
 
   export type ProductoCreateWithoutStock_fabricaInput = {
@@ -69043,6 +71197,7 @@ export namespace Prisma {
     items_guia?: ItemGuiaCreateNestedManyWithoutProductoInput
     pedidoItems?: PedidoItemCreateNestedManyWithoutProductoInput
     stock_camion?: StockCamionCreateNestedManyWithoutProductoInput
+    movimientos_stock?: MovimientoStockCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoUncheckedCreateWithoutStock_fabricaInput = {
@@ -69060,6 +71215,7 @@ export namespace Prisma {
     items_guia?: ItemGuiaUncheckedCreateNestedManyWithoutProductoInput
     pedidoItems?: PedidoItemUncheckedCreateNestedManyWithoutProductoInput
     stock_camion?: StockCamionUncheckedCreateNestedManyWithoutProductoInput
+    movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoCreateOrConnectWithoutStock_fabricaInput = {
@@ -69093,6 +71249,7 @@ export namespace Prisma {
     items_guia?: ItemGuiaUpdateManyWithoutProductoNestedInput
     pedidoItems?: PedidoItemUpdateManyWithoutProductoNestedInput
     stock_camion?: StockCamionUpdateManyWithoutProductoNestedInput
+    movimientos_stock?: MovimientoStockUpdateManyWithoutProductoNestedInput
   }
 
   export type ProductoUncheckedUpdateWithoutStock_fabricaInput = {
@@ -69110,6 +71267,7 @@ export namespace Prisma {
     items_guia?: ItemGuiaUncheckedUpdateManyWithoutProductoNestedInput
     pedidoItems?: PedidoItemUncheckedUpdateManyWithoutProductoNestedInput
     stock_camion?: StockCamionUncheckedUpdateManyWithoutProductoNestedInput
+    movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutProductoNestedInput
   }
 
   export type ProductoCreateWithoutStock_camionInput = {
@@ -69127,6 +71285,7 @@ export namespace Prisma {
     items_guia?: ItemGuiaCreateNestedManyWithoutProductoInput
     pedidoItems?: PedidoItemCreateNestedManyWithoutProductoInput
     stock_fabrica?: StockFabricaCreateNestedOneWithoutProductoInput
+    movimientos_stock?: MovimientoStockCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoUncheckedCreateWithoutStock_camionInput = {
@@ -69144,6 +71303,7 @@ export namespace Prisma {
     items_guia?: ItemGuiaUncheckedCreateNestedManyWithoutProductoInput
     pedidoItems?: PedidoItemUncheckedCreateNestedManyWithoutProductoInput
     stock_fabrica?: StockFabricaUncheckedCreateNestedOneWithoutProductoInput
+    movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoCreateOrConnectWithoutStock_camionInput = {
@@ -69176,6 +71336,7 @@ export namespace Prisma {
     rutas_dia?: RutaDiaCreateNestedManyWithoutUsuarioInput
     vehiculo?: VehiculoCreateNestedOneWithoutUsuariosInput
     incidencias?: IncidenciaCreateNestedManyWithoutUsuarioInput
+    movimientos_stock?: MovimientoStockCreateNestedManyWithoutUsuarioInput
   }
 
   export type UsuarioUncheckedCreateWithoutStock_camionInput = {
@@ -69203,6 +71364,7 @@ export namespace Prisma {
     rutas_base?: RutaBaseUncheckedCreateNestedManyWithoutUsuarioInput
     rutas_dia?: RutaDiaUncheckedCreateNestedManyWithoutUsuarioInput
     incidencias?: IncidenciaUncheckedCreateNestedManyWithoutUsuarioInput
+    movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutUsuarioInput
   }
 
   export type UsuarioCreateOrConnectWithoutStock_camionInput = {
@@ -69236,6 +71398,7 @@ export namespace Prisma {
     items_guia?: ItemGuiaUpdateManyWithoutProductoNestedInput
     pedidoItems?: PedidoItemUpdateManyWithoutProductoNestedInput
     stock_fabrica?: StockFabricaUpdateOneWithoutProductoNestedInput
+    movimientos_stock?: MovimientoStockUpdateManyWithoutProductoNestedInput
   }
 
   export type ProductoUncheckedUpdateWithoutStock_camionInput = {
@@ -69253,6 +71416,7 @@ export namespace Prisma {
     items_guia?: ItemGuiaUncheckedUpdateManyWithoutProductoNestedInput
     pedidoItems?: PedidoItemUncheckedUpdateManyWithoutProductoNestedInput
     stock_fabrica?: StockFabricaUncheckedUpdateOneWithoutProductoNestedInput
+    movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutProductoNestedInput
   }
 
   export type UsuarioUpsertWithoutStock_camionInput = {
@@ -69291,6 +71455,7 @@ export namespace Prisma {
     rutas_dia?: RutaDiaUpdateManyWithoutUsuarioNestedInput
     vehiculo?: VehiculoUpdateOneWithoutUsuariosNestedInput
     incidencias?: IncidenciaUpdateManyWithoutUsuarioNestedInput
+    movimientos_stock?: MovimientoStockUpdateManyWithoutUsuarioNestedInput
   }
 
   export type UsuarioUncheckedUpdateWithoutStock_camionInput = {
@@ -69318,6 +71483,7 @@ export namespace Prisma {
     rutas_base?: RutaBaseUncheckedUpdateManyWithoutUsuarioNestedInput
     rutas_dia?: RutaDiaUncheckedUpdateManyWithoutUsuarioNestedInput
     incidencias?: IncidenciaUncheckedUpdateManyWithoutUsuarioNestedInput
+    movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutUsuarioNestedInput
   }
 
   export type UsuarioCreateWithoutLog_accesosInput = {
@@ -69345,6 +71511,7 @@ export namespace Prisma {
     stock_camion?: StockCamionCreateNestedManyWithoutUsuarioInput
     vehiculo?: VehiculoCreateNestedOneWithoutUsuariosInput
     incidencias?: IncidenciaCreateNestedManyWithoutUsuarioInput
+    movimientos_stock?: MovimientoStockCreateNestedManyWithoutUsuarioInput
   }
 
   export type UsuarioUncheckedCreateWithoutLog_accesosInput = {
@@ -69372,6 +71539,7 @@ export namespace Prisma {
     rutas_dia?: RutaDiaUncheckedCreateNestedManyWithoutUsuarioInput
     stock_camion?: StockCamionUncheckedCreateNestedManyWithoutUsuarioInput
     incidencias?: IncidenciaUncheckedCreateNestedManyWithoutUsuarioInput
+    movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutUsuarioInput
   }
 
   export type UsuarioCreateOrConnectWithoutLog_accesosInput = {
@@ -69415,6 +71583,7 @@ export namespace Prisma {
     stock_camion?: StockCamionUpdateManyWithoutUsuarioNestedInput
     vehiculo?: VehiculoUpdateOneWithoutUsuariosNestedInput
     incidencias?: IncidenciaUpdateManyWithoutUsuarioNestedInput
+    movimientos_stock?: MovimientoStockUpdateManyWithoutUsuarioNestedInput
   }
 
   export type UsuarioUncheckedUpdateWithoutLog_accesosInput = {
@@ -69442,6 +71611,7 @@ export namespace Prisma {
     rutas_dia?: RutaDiaUncheckedUpdateManyWithoutUsuarioNestedInput
     stock_camion?: StockCamionUncheckedUpdateManyWithoutUsuarioNestedInput
     incidencias?: IncidenciaUncheckedUpdateManyWithoutUsuarioNestedInput
+    movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutUsuarioNestedInput
   }
 
   export type ClienteCreateWithoutDispensadoresInput = {
@@ -70079,6 +72249,7 @@ export namespace Prisma {
     stock_camion?: StockCamionCreateNestedManyWithoutUsuarioInput
     vehiculo?: VehiculoCreateNestedOneWithoutUsuariosInput
     incidencias?: IncidenciaCreateNestedManyWithoutUsuarioInput
+    movimientos_stock?: MovimientoStockCreateNestedManyWithoutUsuarioInput
   }
 
   export type UsuarioUncheckedCreateWithoutCargas_combustibleInput = {
@@ -70106,6 +72277,7 @@ export namespace Prisma {
     rutas_dia?: RutaDiaUncheckedCreateNestedManyWithoutUsuarioInput
     stock_camion?: StockCamionUncheckedCreateNestedManyWithoutUsuarioInput
     incidencias?: IncidenciaUncheckedCreateNestedManyWithoutUsuarioInput
+    movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutUsuarioInput
   }
 
   export type UsuarioCreateOrConnectWithoutCargas_combustibleInput = {
@@ -70186,6 +72358,7 @@ export namespace Prisma {
     stock_camion?: StockCamionUpdateManyWithoutUsuarioNestedInput
     vehiculo?: VehiculoUpdateOneWithoutUsuariosNestedInput
     incidencias?: IncidenciaUpdateManyWithoutUsuarioNestedInput
+    movimientos_stock?: MovimientoStockUpdateManyWithoutUsuarioNestedInput
   }
 
   export type UsuarioUncheckedUpdateWithoutCargas_combustibleInput = {
@@ -70213,6 +72386,7 @@ export namespace Prisma {
     rutas_dia?: RutaDiaUncheckedUpdateManyWithoutUsuarioNestedInput
     stock_camion?: StockCamionUncheckedUpdateManyWithoutUsuarioNestedInput
     incidencias?: IncidenciaUncheckedUpdateManyWithoutUsuarioNestedInput
+    movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutUsuarioNestedInput
   }
 
   export type VehiculoUpsertWithoutCargas_combustibleInput = {
@@ -70365,6 +72539,7 @@ export namespace Prisma {
     rutas_dia?: RutaDiaCreateNestedManyWithoutUsuarioInput
     stock_camion?: StockCamionCreateNestedManyWithoutUsuarioInput
     vehiculo?: VehiculoCreateNestedOneWithoutUsuariosInput
+    movimientos_stock?: MovimientoStockCreateNestedManyWithoutUsuarioInput
   }
 
   export type UsuarioUncheckedCreateWithoutIncidenciasInput = {
@@ -70392,6 +72567,7 @@ export namespace Prisma {
     rutas_base?: RutaBaseUncheckedCreateNestedManyWithoutUsuarioInput
     rutas_dia?: RutaDiaUncheckedCreateNestedManyWithoutUsuarioInput
     stock_camion?: StockCamionUncheckedCreateNestedManyWithoutUsuarioInput
+    movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutUsuarioInput
   }
 
   export type UsuarioCreateOrConnectWithoutIncidenciasInput = {
@@ -70411,6 +72587,8 @@ export namespace Prisma {
     motivo_reapertura?: string | null
     fecha_reapertura?: Date | string | null
     monto_bencina?: number | null
+    km_inicial?: number | null
+    km_final?: number | null
     botellones_vacios?: BotellonVacioCreateNestedManyWithoutCuadraturaInput
     usuario: UsuarioCreateNestedOneWithoutCuadraturasInput
     retorno?: CuadraturaRetornoCreateNestedManyWithoutCuadraturaInput
@@ -70432,6 +72610,8 @@ export namespace Prisma {
     motivo_reapertura?: string | null
     fecha_reapertura?: Date | string | null
     monto_bencina?: number | null
+    km_inicial?: number | null
+    km_final?: number | null
     botellones_vacios?: BotellonVacioUncheckedCreateNestedManyWithoutCuadraturaInput
     retorno?: CuadraturaRetornoUncheckedCreateNestedManyWithoutCuadraturaInput
     salida?: CuadraturaSalidaUncheckedCreateNestedManyWithoutCuadraturaInput
@@ -70574,6 +72754,7 @@ export namespace Prisma {
     rutas_dia?: RutaDiaUpdateManyWithoutUsuarioNestedInput
     stock_camion?: StockCamionUpdateManyWithoutUsuarioNestedInput
     vehiculo?: VehiculoUpdateOneWithoutUsuariosNestedInput
+    movimientos_stock?: MovimientoStockUpdateManyWithoutUsuarioNestedInput
   }
 
   export type UsuarioUncheckedUpdateWithoutIncidenciasInput = {
@@ -70601,6 +72782,7 @@ export namespace Prisma {
     rutas_base?: RutaBaseUncheckedUpdateManyWithoutUsuarioNestedInput
     rutas_dia?: RutaDiaUncheckedUpdateManyWithoutUsuarioNestedInput
     stock_camion?: StockCamionUncheckedUpdateManyWithoutUsuarioNestedInput
+    movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutUsuarioNestedInput
   }
 
   export type CuadraturaUpsertWithoutIncidenciasInput = {
@@ -70626,6 +72808,8 @@ export namespace Prisma {
     motivo_reapertura?: NullableStringFieldUpdateOperationsInput | string | null
     fecha_reapertura?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     monto_bencina?: NullableIntFieldUpdateOperationsInput | number | null
+    km_inicial?: NullableIntFieldUpdateOperationsInput | number | null
+    km_final?: NullableIntFieldUpdateOperationsInput | number | null
     botellones_vacios?: BotellonVacioUpdateManyWithoutCuadraturaNestedInput
     usuario?: UsuarioUpdateOneRequiredWithoutCuadraturasNestedInput
     retorno?: CuadraturaRetornoUpdateManyWithoutCuadraturaNestedInput
@@ -70647,6 +72831,8 @@ export namespace Prisma {
     motivo_reapertura?: NullableStringFieldUpdateOperationsInput | string | null
     fecha_reapertura?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     monto_bencina?: NullableIntFieldUpdateOperationsInput | number | null
+    km_inicial?: NullableIntFieldUpdateOperationsInput | number | null
+    km_final?: NullableIntFieldUpdateOperationsInput | number | null
     botellones_vacios?: BotellonVacioUncheckedUpdateManyWithoutCuadraturaNestedInput
     retorno?: CuadraturaRetornoUncheckedUpdateManyWithoutCuadraturaNestedInput
     salida?: CuadraturaSalidaUncheckedUpdateManyWithoutCuadraturaNestedInput
@@ -70687,6 +72873,8 @@ export namespace Prisma {
     motivo_reapertura?: string | null
     fecha_reapertura?: Date | string | null
     monto_bencina?: number | null
+    km_inicial?: number | null
+    km_final?: number | null
   }
 
   export type GuiaDespachoCreateManyUsuario_repartidorInput = {
@@ -70773,6 +72961,16 @@ export namespace Prisma {
     cuadratura_id?: string | null
   }
 
+  export type MovimientoStockCreateManyUsuarioInput = {
+    id?: string
+    producto_id: string
+    cantidad: number
+    motivo: string
+    stock_antes: number
+    stock_despues: number
+    created_at?: Date | string
+  }
+
   export type BotellonDanadoUpdateWithoutUsuarioInput = {
     id?: StringFieldUpdateOperationsInput | string
     cuadratura_id?: StringFieldUpdateOperationsInput | string
@@ -70848,6 +73046,8 @@ export namespace Prisma {
     motivo_reapertura?: NullableStringFieldUpdateOperationsInput | string | null
     fecha_reapertura?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     monto_bencina?: NullableIntFieldUpdateOperationsInput | number | null
+    km_inicial?: NullableIntFieldUpdateOperationsInput | number | null
+    km_final?: NullableIntFieldUpdateOperationsInput | number | null
     botellones_vacios?: BotellonVacioUpdateManyWithoutCuadraturaNestedInput
     retorno?: CuadraturaRetornoUpdateManyWithoutCuadraturaNestedInput
     salida?: CuadraturaSalidaUpdateManyWithoutCuadraturaNestedInput
@@ -70868,6 +73068,8 @@ export namespace Prisma {
     motivo_reapertura?: NullableStringFieldUpdateOperationsInput | string | null
     fecha_reapertura?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     monto_bencina?: NullableIntFieldUpdateOperationsInput | number | null
+    km_inicial?: NullableIntFieldUpdateOperationsInput | number | null
+    km_final?: NullableIntFieldUpdateOperationsInput | number | null
     botellones_vacios?: BotellonVacioUncheckedUpdateManyWithoutCuadraturaNestedInput
     retorno?: CuadraturaRetornoUncheckedUpdateManyWithoutCuadraturaNestedInput
     salida?: CuadraturaSalidaUncheckedUpdateManyWithoutCuadraturaNestedInput
@@ -70888,6 +73090,8 @@ export namespace Prisma {
     motivo_reapertura?: NullableStringFieldUpdateOperationsInput | string | null
     fecha_reapertura?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     monto_bencina?: NullableIntFieldUpdateOperationsInput | number | null
+    km_inicial?: NullableIntFieldUpdateOperationsInput | number | null
+    km_final?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type GuiaDespachoUpdateWithoutUsuario_repartidorInput = {
@@ -71155,6 +73359,36 @@ export namespace Prisma {
     cuadratura_id?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type MovimientoStockUpdateWithoutUsuarioInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    cantidad?: IntFieldUpdateOperationsInput | number
+    motivo?: StringFieldUpdateOperationsInput | string
+    stock_antes?: IntFieldUpdateOperationsInput | number
+    stock_despues?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    producto?: ProductoUpdateOneRequiredWithoutMovimientos_stockNestedInput
+  }
+
+  export type MovimientoStockUncheckedUpdateWithoutUsuarioInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    producto_id?: StringFieldUpdateOperationsInput | string
+    cantidad?: IntFieldUpdateOperationsInput | number
+    motivo?: StringFieldUpdateOperationsInput | string
+    stock_antes?: IntFieldUpdateOperationsInput | number
+    stock_despues?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MovimientoStockUncheckedUpdateManyWithoutUsuarioInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    producto_id?: StringFieldUpdateOperationsInput | string
+    cantidad?: IntFieldUpdateOperationsInput | number
+    motivo?: StringFieldUpdateOperationsInput | string
+    stock_antes?: IntFieldUpdateOperationsInput | number
+    stock_despues?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type AlertaVehiculoCreateManyVehiculoInput = {
     id?: string
     tipo: $Enums.TipoAlerta
@@ -71406,6 +73640,7 @@ export namespace Prisma {
     rutas_dia?: RutaDiaUpdateManyWithoutUsuarioNestedInput
     stock_camion?: StockCamionUpdateManyWithoutUsuarioNestedInput
     incidencias?: IncidenciaUpdateManyWithoutUsuarioNestedInput
+    movimientos_stock?: MovimientoStockUpdateManyWithoutUsuarioNestedInput
   }
 
   export type UsuarioUncheckedUpdateWithoutVehiculoInput = {
@@ -71433,6 +73668,7 @@ export namespace Prisma {
     rutas_dia?: RutaDiaUncheckedUpdateManyWithoutUsuarioNestedInput
     stock_camion?: StockCamionUncheckedUpdateManyWithoutUsuarioNestedInput
     incidencias?: IncidenciaUncheckedUpdateManyWithoutUsuarioNestedInput
+    movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutUsuarioNestedInput
   }
 
   export type UsuarioUncheckedUpdateManyWithoutVehiculoInput = {
@@ -71532,6 +73768,16 @@ export namespace Prisma {
     usuario_id: string
     cantidad?: number
     updated_at?: Date | string
+  }
+
+  export type MovimientoStockCreateManyProductoInput = {
+    id?: string
+    usuario_id: string
+    cantidad: number
+    motivo: string
+    stock_antes: number
+    stock_despues: number
+    created_at?: Date | string
   }
 
   export type ComisionUpdateWithoutProductoInput = {
@@ -71697,6 +73943,36 @@ export namespace Prisma {
     usuario_id?: StringFieldUpdateOperationsInput | string
     cantidad?: IntFieldUpdateOperationsInput | number
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MovimientoStockUpdateWithoutProductoInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    cantidad?: IntFieldUpdateOperationsInput | number
+    motivo?: StringFieldUpdateOperationsInput | string
+    stock_antes?: IntFieldUpdateOperationsInput | number
+    stock_despues?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    usuario?: UsuarioUpdateOneRequiredWithoutMovimientos_stockNestedInput
+  }
+
+  export type MovimientoStockUncheckedUpdateWithoutProductoInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    usuario_id?: StringFieldUpdateOperationsInput | string
+    cantidad?: IntFieldUpdateOperationsInput | number
+    motivo?: StringFieldUpdateOperationsInput | string
+    stock_antes?: IntFieldUpdateOperationsInput | number
+    stock_despues?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MovimientoStockUncheckedUpdateManyWithoutProductoInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    usuario_id?: StringFieldUpdateOperationsInput | string
+    cantidad?: IntFieldUpdateOperationsInput | number
+    motivo?: StringFieldUpdateOperationsInput | string
+    stock_antes?: IntFieldUpdateOperationsInput | number
+    stock_despues?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type BotellonDanadoCreateManyClienteInput = {

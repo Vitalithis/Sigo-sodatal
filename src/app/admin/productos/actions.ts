@@ -117,3 +117,62 @@ export async function desactivarProductoAction(id: string) {
     return { success: false, message: error.message };
   }
 }
+export async function ajustarStockAction(datos: {
+  producto_id: string;
+  usuario_id: string;
+  cantidad: number;      // positivo o negativo
+  motivo: string;
+}) {
+  try {
+    const stockActual = await prisma.stockFabrica.findUnique({
+      where: { producto_id: datos.producto_id },
+    });
+
+    const stockAntes = stockActual?.cantidad ?? 0;
+    const stockDespues = stockAntes + datos.cantidad;
+
+    if (stockDespues < 0) {
+      return { success: false, message: 'El stock no puede quedar negativo.' };
+    }
+
+    await prisma.$transaction([
+      prisma.stockFabrica.upsert({
+        where: { producto_id: datos.producto_id },
+        update: { cantidad: stockDespues },
+        create: { producto_id: datos.producto_id, cantidad: stockDespues },
+      }),
+      prisma.movimientoStock.create({
+        data: {
+          producto_id: datos.producto_id,
+          usuario_id: datos.usuario_id,
+          cantidad: datos.cantidad,
+          motivo: datos.motivo,
+          stock_antes: stockAntes,
+          stock_despues: stockDespues,
+        },
+      }),
+    ]);
+
+    revalidatePath('/admin/productos');
+    return { success: true, stock_despues: stockDespues };
+  } catch (error: any) {
+    console.error('Error al ajustar stock:', error);
+    return { success: false, message: 'Error al ajustar el stock.' };
+  }
+}
+
+export async function obtenerMovimientosStockAction(producto_id: string) {
+  try {
+    const movimientos = await prisma.movimientoStock.findMany({
+      where: { producto_id },
+      orderBy: { created_at: 'desc' },
+      take: 50,
+      include: {
+        usuario: { select: { nombre: true, apellido: true } },
+      },
+    });
+    return { success: true, movimientos };
+  } catch (error: any) {
+    return { success: false, movimientos: [], message: error.message };
+  }
+}
