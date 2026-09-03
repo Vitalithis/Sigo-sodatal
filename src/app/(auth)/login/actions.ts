@@ -1,31 +1,11 @@
 'use server';
 
 import { redirect } from 'next/navigation';
-import { createServerClient } from '@supabase/ssr';
-import { cookies } from 'next/headers';
+import { auth } from '@/lib/auth';
+import { prisma } from '../../../../lib/prisma';
+import { headers } from 'next/headers';
 
 export type LoginState = { success: boolean; error: string };
-
-function getSupabase() {
-  const cookieStore = cookies();
-  return createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        get(name: string) {
-          return cookieStore.get(name)?.value;
-        },
-        set(name: string, value: string, options: any) {
-          cookieStore.set({ name, value, ...options });
-        },
-        remove(name: string, options: any) {
-          cookieStore.set({ name, value: '', ...options });
-        },
-      },
-    }
-  );
-}
 
 export async function login(
   prevState: LoginState,
@@ -38,35 +18,30 @@ export async function login(
     return { success: false, error: 'Debes ingresar RUT y contraseña.' };
   }
 
-  let rutaDestino = '';
+  const rutLimpio = rut.replace(/[^0-9kK]/g, '').toLowerCase();
+  const emailFormateado = `${rutLimpio}@sodatal.cl`;
 
   try {
-    const supabase = getSupabase();
-    const rutLimpio = rut.replace(/[^0-9kK]/g, '').toLowerCase();
-    const emailFormateado = `${rutLimpio}@sodatal.cl`;
-
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email: emailFormateado,
-      password: clave,
+    await auth.api.signInEmail({
+      body: { email: emailFormateado, password: clave },
+      headers: await headers(),
     });
-
-    if (error) throw new Error(error.message);
-
-    const rol = data.user?.user_metadata?.rol;
-
-    if (!rol || rol === 'PENDIENTE') {
-      rutaDestino = '/pendiente';
-    } else if (rol === 'REPARTIDOR') {
-      rutaDestino = '/repartidor';
-    } else {
-      rutaDestino = '/admin';
-    }
   } catch (error: any) {
     console.error('Error en login:', error.message);
     return { success: false, error: 'RUT o contraseña incorrectos.' };
   }
 
-  redirect(rutaDestino);
+  // Obtener rol desde tabla Usuario
+  const usuario = await prisma.usuario.findUnique({
+    where: { email: emailFormateado },
+    select: { rol: true },
+  });
+
+  const rol = usuario?.rol;
+
+  if (!rol) redirect('/pendiente');
+  if (rol === 'REPARTIDOR') redirect('/repartidor');
+  redirect('/admin');
 }
 
 export async function signup(
@@ -84,24 +59,18 @@ export async function signup(
     return { success: false, error: 'La contraseña debe tener al menos 6 caracteres.' };
   }
 
+  const rutLimpio = rut.replace(/[^0-9kK]/g, '').toLowerCase();
+  const emailFormateado = `${rutLimpio}@sodatal.cl`;
+
   try {
-    const supabase = getSupabase();
-    const rutLimpio = rut.replace(/[^0-9kK]/g, '').toLowerCase();
-    const emailFormateado = `${rutLimpio}@sodatal.cl`;
-
-    const { error } = await supabase.auth.signUp({
-      email: emailFormateado,
-      password: clave,
-      options: {
-        data: {
-          rol: 'PENDIENTE',
-          rut: rutLimpio,
-          nombre: nombre || null,
-        },
+    await auth.api.signUpEmail({
+      body: {
+        email: emailFormateado,
+        password: clave,
+        name: nombre || rutLimpio,
       },
+      headers: await headers(),
     });
-
-    if (error) throw new Error(error.message);
   } catch (error: any) {
     console.error('Error en signup:', error.message);
     return { success: false, error: 'No se pudo crear la cuenta. Verifica los datos.' };
@@ -111,7 +80,8 @@ export async function signup(
 }
 
 export async function logout() {
-  const supabase = getSupabase();
-  await supabase.auth.signOut();
+  await auth.api.signOut({
+    headers: await headers(),
+  });
   redirect('/login');
 }

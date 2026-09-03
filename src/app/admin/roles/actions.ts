@@ -1,27 +1,21 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { cookies } from 'next/headers';
-import { createServerClient } from '@supabase/ssr';
-import { createAdminClient } from '@/src/lib/supabase/admin';
+import { headers } from 'next/headers';
+import { auth } from '@/lib/auth';
+import { prisma } from '../../../../lib/prisma';
+import { Rol } from '../../../../lib/prisma/generated';
 
-const ROLES_VALIDOS = ['ADMIN', 'OFICINA', 'REPARTIDOR', 'PENDIENTE'];
+const ROLES_VALIDOS: Rol[] = ['ADMIN', 'OFICINA', 'REPARTIDOR'];
 
 async function getRolActual() {
-  const cookieStore = cookies();
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        get: (n: string) => cookieStore.get(n)?.value,
-        set() {},
-        remove() {},
-      },
-    }
-  );
-  const { data } = await supabase.auth.getUser();
-  return data.user?.user_metadata?.rol as string | undefined;
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session?.user?.email) return null;
+  const usuario = await prisma.usuario.findUnique({
+    where: { email: session.user.email },
+    select: { rol: true },
+  });
+  return usuario?.rol ?? null;
 }
 
 export async function listUsuarios() {
@@ -29,16 +23,23 @@ export async function listUsuarios() {
     throw new Error('No autorizado.');
   }
 
-  const admin = createAdminClient();
-  const { data, error } = await admin.auth.admin.listUsers();
-  if (error) throw new Error(error.message);
+  const usuarios = await prisma.usuario.findMany({
+    select: {
+      id: true,
+      email: true,
+      rol: true,
+      nombre: true,
+      created_at: true,
+    },
+    orderBy: { created_at: 'asc' },
+  });
 
-  return data.users.map((u) => ({
+  return usuarios.map((u) => ({
     id: u.id,
     email: u.email,
-    rol: u.user_metadata?.rol ?? 'PENDIENTE',
-    nombre: u.user_metadata?.nombre ?? null,
-    creadoEn: u.created_at,
+    rol: u.rol,
+    nombre: u.nombre,
+    creadoEn: u.created_at.toISOString(),
   }));
 }
 
@@ -46,19 +47,14 @@ export async function actualizarRol(userId: string, nuevoRol: string) {
   if ((await getRolActual()) !== 'ADMIN') {
     return { success: false, error: 'No autorizado.' };
   }
-  if (!ROLES_VALIDOS.includes(nuevoRol)) {
+  if (!ROLES_VALIDOS.includes(nuevoRol as Rol)) {
     return { success: false, error: 'Rol inválido.' };
   }
 
-  const admin = createAdminClient();
-  const { data: userData } = await admin.auth.admin.getUserById(userId);
-  const metadataActual = userData?.user?.user_metadata ?? {};
-
-  const { error } = await admin.auth.admin.updateUserById(userId, {
-    user_metadata: { ...metadataActual, rol: nuevoRol },
+  await prisma.usuario.update({
+    where: { id: userId },
+    data: { rol: nuevoRol as Rol },
   });
-
-  if (error) return { success: false, error: error.message };
 
   revalidatePath('/admin/roles');
   return { success: true, error: '' };

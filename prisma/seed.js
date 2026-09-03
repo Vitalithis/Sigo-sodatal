@@ -1,5 +1,5 @@
 // prisma/seed.js
-const { PrismaClient } = require('@prisma/client');
+const { PrismaClient } = require('../lib/prisma/generated');
 const { PrismaPg } = require('@prisma/adapter-pg');
 const { Pool } = require('pg');
 const dotenv = require('dotenv');

@@ -1,7 +1,6 @@
 'use server';
-
-import { prisma } from '@/lib/prisma';
-import { createClient } from '@/src/lib/supabase/server';
+import { auth } from '@/lib/auth';
+import { headers } from 'next/headers';
 import { revalidatePath } from 'next/cache';
 import { TipoTransaccion, TipoCliente, MetodoPago } from '@/lib/prisma/generated';
 
@@ -498,10 +497,17 @@ export async function reabrirCuadraturaAction(cuadraturaId: string, motivo: stri
       return { success: false, message: 'Debes indicar un motivo para reabrir la cuadratura.' };
     }
 
-    const supabase = createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    const rol = user?.user_metadata?.rol;
-    if (rol !== 'ADMIN') {
+    const session = await auth.api.getSession({ headers: await headers() });
+    if (!session?.user?.email) {
+      return { success: false, message: 'No autenticado.' };
+    }
+
+    const usuario = await prisma.usuario.findUnique({
+      where: { email: session.user.email },
+      select: { rol: true },
+    });
+
+    if (usuario?.rol !== 'ADMIN') {
       return { success: false, message: 'Solo un ADMIN puede reabrir una cuadratura cerrada.' };
     }
 

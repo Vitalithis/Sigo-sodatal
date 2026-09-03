@@ -1,15 +1,12 @@
 import { redirect } from 'next/navigation';
-import { createClient } from '@/src/lib/supabase/server';
+import { getUsuarioActual } from '@/lib/auth-session';
 import AuthForms from './AuthForms';
 
 export default async function LoginPage() {
-  const supabase = createClient();
-  const { data } = await supabase.auth.getUser();
+  const usuario = await getUsuarioActual();
 
-  if (data?.user) {
-    const rol = data.user.user_metadata?.rol;
-    if (!rol || rol === 'PENDIENTE') redirect('/pendiente');
-    else if (rol === 'REPARTIDOR') redirect('/repartidor');
+  if (usuario) {
+    if (usuario.rol === 'REPARTIDOR') redirect('/repartidor');
     else redirect('/admin');
   }
 

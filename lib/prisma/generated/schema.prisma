@@ -5,7 +5,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
+  url      = env("DATABASE_URL")
 }
 
 model Usuario {
@@ -156,6 +157,8 @@ model Cliente {
   paradas              ParadaDia[]
   pedidos              Pedido[]
   incidencias          Incidencia[]
+  frecuencia           Frecuencia             @default(SEMANAL)
+  semana_alterna       SemanaAlterna?
 }
 
 model RutaBase {
@@ -181,12 +184,14 @@ model ComunaRuta {
 }
 
 model ClienteRutaBase {
-  id           String   @id @default(uuid())
-  ruta_base_id String
-  cliente_id   String
-  orden        Int
-  cliente      Cliente  @relation(fields: [cliente_id], references: [id])
-  ruta_base    RutaBase @relation(fields: [ruta_base_id], references: [id])
+  id             String         @id @default(uuid())
+  ruta_base_id   String
+  cliente_id     String
+  orden          Int
+  frecuencia     Frecuencia     @default(SEMANAL)
+  semana_alterna SemanaAlterna?
+  cliente        Cliente        @relation(fields: [cliente_id], references: [id])
+  ruta_base      RutaBase       @relation(fields: [ruta_base_id], references: [id])
 }
 
 model RutaDia {
@@ -303,9 +308,10 @@ model Cuadratura {
   salida              CuadraturaSalida[]
   ventas              CuadraturaVenta[]
   gastos              CuadraturaGasto[]
-  incidencias         Incidencia[]
-  km_inicial          Int?
-  km_final            Int?
+
+  incidencias Incidencia[]
+  km_inicial  Int?
+  km_final    Int?
 
   @@unique([usuario_id, fecha])
 }
@@ -488,7 +494,7 @@ model Notificacion {
   usuario_destino_id String
   leida              Boolean  @default(false)
   created_at         DateTime @default(now())
-  metadata           Json?
+  metadata           Json?    @db.Json
 }
 
 model HistorialFinanciero {
@@ -532,6 +538,68 @@ model Incidencia {
   usuario       Usuario        @relation(fields: [usuario_id], references: [id])
   cuadratura_id String?
   cuadratura    Cuadratura?    @relation(fields: [cuadratura_id], references: [id])
+}
+
+model User {
+  id            String    @id
+  name          String
+  email         String    @unique
+  emailVerified Boolean   @default(false)
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  sessions      Session[]
+  accounts      Account[]
+
+  @@map("user")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId(length: 191)])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?   @db.Text
+  refreshToken          String?   @db.Text
+  idToken               String?   @db.Text
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?   @db.Text
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@unique([providerId, accountId])
+  @@index([userId(length: 191)])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier(length: 191)])
+  @@map("verification")
 }
 
 enum TipoIncidencia {

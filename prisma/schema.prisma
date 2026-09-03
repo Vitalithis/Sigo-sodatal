@@ -1,3 +1,4 @@
+
 generator client {
   provider   = "prisma-client-js"
   output     = "../lib/prisma/generated"
@@ -5,7 +6,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
+  url      = env("DATABASE_URL")
 }
 
 model Usuario {
@@ -34,8 +36,8 @@ model Usuario {
   rutas_dia          RutaDia[]
   stock_camion       StockCamion[]
   vehiculo           Vehiculo?          @relation(fields: [vehiculo_id], references: [id])
-  incidencias          Incidencia[]
-  movimientos_stock MovimientoStock[]
+  incidencias        Incidencia[]
+  movimientos_stock  MovimientoStock[]
 }
 
 model Vehiculo {
@@ -107,19 +109,20 @@ model Producto {
   pedidoItems        PedidoItem[]
   stock_camion       StockCamion[]
   stock_fabrica      StockFabrica?
-  movimientos_stock MovimientoStock[]
+  movimientos_stock  MovimientoStock[]
 }
+
 model MovimientoStock {
-  id          String       @id @default(uuid())
-  producto_id String
-  usuario_id  String
-  cantidad    Int          // positivo = entrada, negativo = salida
-  motivo      String
-  stock_antes Int
+  id            String   @id @default(uuid())
+  producto_id   String
+  usuario_id    String
+  cantidad      Int // positivo = entrada, negativo = salida
+  motivo        String
+  stock_antes   Int
   stock_despues Int
-  created_at  DateTime     @default(now())
-  producto    Producto     @relation(fields: [producto_id], references: [id])
-  usuario     Usuario      @relation(fields: [usuario_id], references: [id])
+  created_at    DateTime @default(now())
+  producto      Producto @relation(fields: [producto_id], references: [id])
+  usuario       Usuario  @relation(fields: [usuario_id], references: [id])
 }
 
 model Comision {
@@ -155,8 +158,8 @@ model Cliente {
   paradas              ParadaDia[]
   pedidos              Pedido[]
   incidencias          Incidencia[]
-  frecuencia     Frecuencia    @default(SEMANAL)
-  semana_alterna SemanaAlterna?
+  frecuencia           Frecuencia             @default(SEMANAL)
+  semana_alterna       SemanaAlterna?
 }
 
 model RutaBase {
@@ -216,38 +219,38 @@ model ParadaDia {
   cliente             Cliente      @relation(fields: [cliente_id], references: [id])
   pedido              Pedido?      @relation(fields: [pedido_id], references: [id])
   ruta_dia            RutaDia      @relation(fields: [ruta_dia_id], references: [id])
-  incidencias          Incidencia[]
+  incidencias         Incidencia[]
   orden_ajustado      Boolean      @default(false)
 }
 
 model Pedido {
-  id                  String       @id @default(uuid())
+  id                  String        @id @default(uuid())
   cliente_id          String
   fecha_solicitada    DateTime
   ruta_dia_id         String?
   notas               String?
   canal_origen        CanalOrigen
-  estado              EstadoPedido @default(PENDIENTE_CONFIRMACION)
+  estado              EstadoPedido  @default(PENDIENTE_CONFIRMACION)
   usuario_registro_id String
-  created_at          DateTime     @default(now())
-  pagado              Boolean      @default(false)   
-  metodo_pago_web     MetodoPago?                    
+  created_at          DateTime      @default(now())
+  pagado              Boolean       @default(false)
+  metodo_pago_web     MetodoPago?
   paradas             ParadaDia[]
-  cliente             Cliente      @relation(fields: [cliente_id], references: [id])
+  cliente             Cliente       @relation(fields: [cliente_id], references: [id])
   items               PedidoItem[]
-  guia                GuiaDespacho?                  
+  guia                GuiaDespacho?
 }
 
 model PedidoItem {
-  id                  String          @id @default(uuid())
-  pedido_id           String
-  producto_id         String
-  tipo_transaccion    TipoTransaccion
-  cantidad            Int             
-  cantidad_entregada  Int?            
-  precio_historico    Float           @default(0)
-  pedido              Pedido          @relation(fields: [pedido_id], references: [id], onDelete: Cascade)
-  producto            Producto        @relation(fields: [producto_id], references: [id])
+  id                 String          @id @default(uuid())
+  pedido_id          String
+  producto_id        String
+  tipo_transaccion   TipoTransaccion
+  cantidad           Int
+  cantidad_entregada Int?
+  precio_historico   Float           @default(0)
+  pedido             Pedido          @relation(fields: [pedido_id], references: [id], onDelete: Cascade)
+  producto           Producto        @relation(fields: [producto_id], references: [id])
 }
 
 model GuiaDespacho {
@@ -255,7 +258,7 @@ model GuiaDespacho {
   numero_correlativo           Int               @unique @default(autoincrement())
   fecha_emision                DateTime          @default(now())
   cliente_id                   String
-  pedido_id                    String?           @unique   
+  pedido_id                    String?           @unique
   direccion_entrega            String
   usuario_repartidor_id        String
   estado                       EstadoGuia
@@ -270,7 +273,7 @@ model GuiaDespacho {
   fecha_cierre                 DateTime?
   cuadratura_ventas            CuadraturaVenta[]
   cliente                      Cliente           @relation(fields: [cliente_id], references: [id])
-  usuario_repartidor            Usuario           @relation(fields: [usuario_repartidor_id], references: [id])
+  usuario_repartidor           Usuario           @relation(fields: [usuario_repartidor_id], references: [id])
   pedido                       Pedido?           @relation(fields: [pedido_id], references: [id])
   items                        ItemGuia[]
 }
@@ -307,10 +310,11 @@ model Cuadratura {
   ventas              CuadraturaVenta[]
   gastos              CuadraturaGasto[]
 
+  incidencias Incidencia[]
+  km_inicial  Int?
+  km_final    Int?
+
   @@unique([usuario_id, fecha])
-  incidencias    Incidencia[]
-  km_inicial Int?
-  km_final   Int?
 }
 
 model CuadraturaSalida {
@@ -349,7 +353,7 @@ model CuadraturaRetorno {
 model CuadraturaGasto {
   id            String     @id @default(uuid())
   cuadratura_id String
-  tipo          String     // libre: "ESTACIONAMIENTO", "PEAJE", etc.
+  tipo          String // libre: "ESTACIONAMIENTO", "PEAJE", etc.
   monto         Int
   descripcion   String?
   cuadratura    Cuadratura @relation(fields: [cuadratura_id], references: [id], onDelete: Cascade)
@@ -491,7 +495,7 @@ model Notificacion {
   usuario_destino_id String
   leida              Boolean  @default(false)
   created_at         DateTime @default(now())
-  metadata           Json?
+  metadata           Json?    @db.Json
 }
 
 model HistorialFinanciero {
@@ -522,27 +526,89 @@ model CargaCombustible {
 }
 
 model Incidencia {
-  id           String          @id @default(uuid())
-  cliente_id   String
-  parada_id    String?
-  tipo         TipoIncidencia
-  descripcion  String?
-  resuelta     Boolean         @default(false)
-  created_at   DateTime        @default(now())
-  usuario_id   String
-  cliente      Cliente         @relation(fields: [cliente_id], references: [id])
-  parada       ParadaDia?      @relation(fields: [parada_id], references: [id])
-  usuario      Usuario         @relation(fields: [usuario_id], references: [id])
-  cuadratura_id  String?
-  cuadratura     Cuadratura?  @relation(fields: [cuadratura_id], references: [id])
+  id            String         @id @default(uuid())
+  cliente_id    String
+  parada_id     String?
+  tipo          TipoIncidencia
+  descripcion   String?
+  resuelta      Boolean        @default(false)
+  created_at    DateTime       @default(now())
+  usuario_id    String
+  cliente       Cliente        @relation(fields: [cliente_id], references: [id])
+  parada        ParadaDia?     @relation(fields: [parada_id], references: [id])
+  usuario       Usuario        @relation(fields: [usuario_id], references: [id])
+  cuadratura_id String?
+  cuadratura    Cuadratura?    @relation(fields: [cuadratura_id], references: [id])
+}
+
+model User {
+  id            String    @id
+  name          String
+  email         String    @unique
+  emailVerified Boolean   @default(false)
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  sessions      Session[]
+  accounts      Account[]
+
+  @@map("user")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId(length: 191)])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?   @db.Text
+  refreshToken          String?   @db.Text
+  idToken               String?   @db.Text
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?   @db.Text
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@unique([providerId, accountId])
+  @@index([userId(length: 191)])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier(length: 191)])
+  @@map("verification")
 }
 
 enum TipoIncidencia {
   NO_ESTABA
   DEJADO_CONSERJERIA
   PRESTAMO_BOTELLON
-  CANTIDAD_PARCIAL    // entregó menos de lo pedido
-  REAGENDADO          // cliente pidió otro día
+  CANTIDAD_PARCIAL // entregó menos de lo pedido
+  REAGENDADO // cliente pidió otro día
   OTRO
 }
 
@@ -660,7 +726,7 @@ enum PreferenciaFacturacion {
 enum EstadoGuia {
   ENTREGADA_EFECTIVO
   ENTREGADA_TARJETA
-  ENTREGADA_TRANSFERENCIA   // nuevo
+  ENTREGADA_TRANSFERENCIA // nuevo
   ENTREGADA_CREDITO
   ANULADA
 }
