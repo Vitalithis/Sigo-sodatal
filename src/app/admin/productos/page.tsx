@@ -1,5 +1,5 @@
 import React from 'react';
-import { prisma } from '@/lib/prisma';
+import { prisma } from '@lib/prisma';
 import ProductManager from './components/ProductManager';
 import { Package } from 'lucide-react';
 

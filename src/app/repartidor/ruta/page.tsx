@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/prisma';
+import { prisma } from '@lib/prisma';
 import { getUsuarioActual } from '@/lib/auth-session';
 import ListaParadas from './components/ListaParadas';
 import { redirect } from 'next/navigation';

@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/prisma';
+import { prisma } from '@lib/prisma';
 import ProduccionCO2Manager from './components/ProduccionCO2Manager';
 import { Activity } from 'lucide-react';
 

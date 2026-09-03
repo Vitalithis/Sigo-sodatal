@@ -9,7 +9,7 @@ import {
   eliminarClienteDeRutaBaseAction,
   reordenarClienteRutaBaseAction
 } from './actions';
-import { DiaSemana } from '@/lib/prisma/generated/edge';
+import { DiaSemana } from '@lib/prisma/generated/edge';
 
 interface Props {
   rutasBaseIniciales: any[];

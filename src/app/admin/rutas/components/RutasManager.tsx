@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import NuevoPedidoModal from './NuevoPedidoModal';
-import { DiaSemana, EstadoParada } from '@/lib/prisma/generated'; 
+import { DiaSemana, EstadoParada } from '@lib/prisma/generated'; 
 import { 
   obtenerRutasPorFechaAction, 
   generarRutasDesdeBaseAction, 

@@ -1,7 +1,7 @@
 'use server';
 
-import { prisma } from '@/lib/prisma';
-import { TipoCliente, PreferenciaFacturacion } from '@/lib/prisma/generated';
+import { prisma } from '../../../../lib/prisma';
+import { TipoCliente, PreferenciaFacturacion } from '../../../../lib/prisma/generated';
 import { revalidatePath } from 'next/cache';
 
 export interface ClienteInput {

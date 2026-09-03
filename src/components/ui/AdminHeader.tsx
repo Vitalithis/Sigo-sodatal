@@ -2,8 +2,7 @@
 
 import React from 'react';
 import { Bell, MessageCircle, Search, LogOut } from 'lucide-react';
-import { logout } from '@/src/app/(auth)/login/actions';
-
+import { logout } from '@/app/(auth)/login/actions';
 interface Props {
   nombre: string;
   rol: string;

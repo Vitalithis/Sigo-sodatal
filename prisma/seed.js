@@ -1,27 +1,10 @@
 // prisma/seed.js
-const { PrismaClient } = require('../lib/prisma/generated');
-const { PrismaPg } = require('@prisma/adapter-pg');
-const { Pool } = require('pg');
-const dotenv = require('dotenv');
 const path = require('path');
+require('dotenv').config({ path: path.resolve(process.cwd(), '.env.local') });
 
-dotenv.config({ path: path.resolve(process.cwd(), '.env.local') });
+const { PrismaClient } = require('../lib/prisma/generated');
 
-// Prisma 7 ya no gestiona la URL automáticamente, tenemos que pasársela al Pool
-const connectionString = process.env.DIRECT_URL || process.env.DATABASE_URL;
-
-if (!connectionString) {
-  throw new Error('❌ No se encontró DIRECT_URL o DATABASE_URL en .env.local');
-}
-
-// 1. Inicializamos la conexión nativa de Postgres
-const pool = new Pool({ connectionString });
-
-// 2. Creamos el adaptador oficial
-const adapter = new PrismaPg(pool);
-
-// 3. ¡Por fin! Pasamos el adaptador a PrismaClient cumpliendo la regla de Prisma 7
-const prisma = new PrismaClient({ adapter });
+const prisma = new PrismaClient();
 
 async function main() {
   const configs = [
@@ -31,7 +14,7 @@ async function main() {
     { clave: 'stock_alerta_activa', valor: 'true' },
   ];
 
-  console.log(' Iniciando la carga de datos base...');
+  console.log('Iniciando la carga de datos base...');
 
   for (const config of configs) {
     await prisma.configuracion.upsert({
@@ -51,6 +34,4 @@ main()
   })
   .finally(async () => {
     await prisma.$disconnect();
-    // Cerramos el pool de Postgres para que la terminal no se quede colgada
-    await pool.end();
   });

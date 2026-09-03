@@ -1,6 +1,6 @@
 import { createPortal } from 'react-dom';
 import { X, Loader2, ToggleLeft, ToggleRight } from 'lucide-react';
-import { CategoriaProducto } from '@/lib/prisma/generated';
+import { CategoriaProducto } from '@lib/prisma/generated';
 import { Producto } from '../hooks/useProductManager';
 
 interface Props {

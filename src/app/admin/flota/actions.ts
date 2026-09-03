@@ -1,6 +1,6 @@
 'use server';
 
-import { prisma } from '@/lib/prisma';
+import { prisma } from '../../../../lib/prisma';
 import { revalidatePath } from 'next/cache';
 
 // Obtener vehículos (solo lectura, para poblar el selector de asignación)
@@ -40,7 +40,7 @@ export async function obtenerChoferesAction() {
 // import { revalidatePath } from 'next/cache';
 //
 // Asegúrate de que el archivo ya tenga 'use server'; al principio y el
-// import de prisma: import { prisma } from '@/lib/prisma';
+// import de prisma: import { prisma } from '@lib/prisma';
 
 export interface VehiculoInput {
   patente: string;

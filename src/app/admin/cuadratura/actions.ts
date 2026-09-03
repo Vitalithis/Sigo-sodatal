@@ -1,8 +1,9 @@
 'use server';
 import { auth } from '@/lib/auth';
+import { prisma } from '@lib/prisma';
 import { headers } from 'next/headers';
 import { revalidatePath } from 'next/cache';
-import { TipoTransaccion, TipoCliente, MetodoPago } from '@/lib/prisma/generated';
+import { TipoTransaccion, TipoCliente, MetodoPago } from '@lib/prisma/generated';
 
 // ----------------------------------------------------------------
 // Tipos

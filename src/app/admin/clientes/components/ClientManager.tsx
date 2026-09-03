@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useTransition, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { TipoCliente, PreferenciaFacturacion, Cliente } from '@/lib/prisma/generated';
+import { TipoCliente, PreferenciaFacturacion, Cliente } from '@lib/prisma/generated';
 import { crearClienteAction, editarClienteAction, eliminarClienteAction, ClienteInput } from '../actions';
 import { Search, Plus, Edit2, Trash2, Settings, AlertTriangle, X } from 'lucide-react';
 import { usePopup } from './hooks/usePopup';

@@ -1,5 +1,5 @@
 import React from 'react';
-import { prisma } from '@/lib/prisma';
+import { prisma } from '@lib/prisma';
 import ClientManager from './components/ClientManager';
 
 export const dynamic = 'force-dynamic';

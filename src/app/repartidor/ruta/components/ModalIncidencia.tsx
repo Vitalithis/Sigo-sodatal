@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { registrarIncidenciaAction } from '@/app/admin/rutas/actions';
-import { TipoIncidencia } from '@/lib/prisma/generated';
+import { TipoIncidencia } from '@lib/prisma/generated';
 
 interface ModalIncidenciaProps {
   parada: any;

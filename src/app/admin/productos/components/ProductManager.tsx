@@ -1,7 +1,7 @@
 'use client';
 
 import { Check, AlertCircle, X, Search, Filter, ArrowUpDown, Package, Plus, Edit, Trash2, RefreshCw, Boxes } from 'lucide-react';
-import { CategoriaProducto } from '@/lib/prisma/generated';
+import { CategoriaProducto } from '@lib/prisma/generated';
 import { useProductManager, Producto, UsuarioLite } from './hooks/useProductManager';
 import { ModalProducto } from './modals/ModalProducto';
 import { ModalEliminar } from './modals/ModalEliminar';

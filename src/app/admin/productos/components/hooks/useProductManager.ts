@@ -1,5 +1,5 @@
 import { useState, useTransition, useMemo, useEffect } from 'react';
-import { CategoriaProducto } from '@/lib/prisma/generated';
+import { CategoriaProducto } from '@lib/prisma/generated';
 import {
   crearProductoAction,
   editarProductoAction,

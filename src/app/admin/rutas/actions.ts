@@ -1,6 +1,6 @@
 'use server';
 
-import { prisma } from '@/lib/prisma';
+import { prisma } from '../../../../lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { 
   EstadoRuta, 
@@ -10,7 +10,7 @@ import {
   EstadoVehiculo, 
   DiaSemana,
   TipoIncidencia 
-} from '@/lib/prisma/generated';
+} from '../../../../lib/prisma/generated';
 /**
  * Obtiene todas las rutas reales y los pedidos flotantes para una fecha específica
  */

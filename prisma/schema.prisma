@@ -551,7 +551,7 @@ model User {
   updatedAt     DateTime  @updatedAt
   sessions      Session[]
   accounts      Account[]
-
+  rut String @unique
   @@map("user")
 }
 
@@ -574,6 +574,7 @@ model Account {
   id                    String    @id
   accountId             String
   providerId            String
+  issuer                String?
   userId                String
   user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   accessToken           String?   @db.Text
@@ -587,8 +588,6 @@ model Account {
   updatedAt             DateTime  @updatedAt
 
   @@unique([providerId, accountId])
-  @@index([userId(length: 191)])
-  @@map("account")
 }
 
 model Verification {

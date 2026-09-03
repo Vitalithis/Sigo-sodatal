@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/prisma';
+import { prisma } from '@lib/prisma';
 import { obtenerChoferesAction } from './actions';
 import FlotaTabs from './components/FlotaTabs';
 
