@@ -4,21 +4,15 @@ import { prisma } from '../../../../lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { CategoriaProducto } from '../../../../lib/prisma/generated';
 
-// ────────────────────────────────────────────────────────────────
-// Tipos
-// ────────────────────────────────────────────────────────────────
 export interface ProductoInput {
   nombre: string;
   categoria: CategoriaProducto;
   precio_venta_nueva: number;
-  precio_recarga?: number; // <-- Sin el "| null", solo opcional
+  precio_recarga?: number;
   stock_minimo: number;
   activo?: boolean;
 }
 
-// ────────────────────────────────────────────────────────────────
-// CRUD
-// ────────────────────────────────────────────────────────────────
 export async function obtenerProductosAction() {
   try {
     const productos = await prisma.producto.findMany({
@@ -91,8 +85,6 @@ export async function eliminarProductoAction(id: string) {
     revalidatePath('/admin/productos');
     return { success: true };
   } catch (error: any) {
-    // P2003: violación de clave foránea — el producto está referenciado
-    // en guías, cuadraturas, pedidos, comisiones o stock.
     if (error.code === 'P2003') {
       return {
         success: false,
@@ -117,10 +109,11 @@ export async function desactivarProductoAction(id: string) {
     return { success: false, message: error.message };
   }
 }
+
 export async function ajustarStockAction(datos: {
   producto_id: string;
   usuario_id: string;
-  cantidad: number;      // positivo o negativo
+  cantidad: number;
   motivo: string;
 }) {
   try {
@@ -139,7 +132,10 @@ export async function ajustarStockAction(datos: {
       prisma.stockFabrica.upsert({
         where: { producto_id: datos.producto_id },
         update: { cantidad: stockDespues },
-        create: { producto_id: datos.producto_id, cantidad: stockDespues },
+        create: {
+          cantidad: stockDespues,
+          producto: { connect: { id: datos.producto_id } },  // ← fix
+        },
       }),
       prisma.movimientoStock.create({
         data: {
