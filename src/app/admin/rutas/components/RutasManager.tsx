@@ -207,6 +207,7 @@ export default function RutasManager() {
       <NuevoPedidoModal 
         fecha={fechaSeleccionada} 
         isOpen={modalAbierto} 
+        rutasDia={rutas}  
         onClose={() => setModalAbierto(false)}
         onSuccess={() => {
           setModalAbierto(false);

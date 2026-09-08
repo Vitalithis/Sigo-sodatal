@@ -7,12 +7,14 @@ export default function NuevoPedidoModal({
   fecha, 
   isOpen, 
   onClose, 
-  onSuccess 
+  onSuccess,
+  rutasDia // 👈 NUEVO: Recibe las rutas/camiones del día actual
 }: { 
   fecha: string; 
   isOpen: boolean; 
   onClose: () => void;
   onSuccess: () => void;
+  rutasDia: any[]; 
 }) {
   // Estados de búsqueda
   const [criterioCliente, setCriterioCliente] = useState('');
@@ -26,13 +28,16 @@ export default function NuevoPedidoModal({
   const [telefono, setTelefono] = useState('');
   const [direccion, setDireccion] = useState('');
   const [sector, setSector] = useState('GENERAL'); 
-  const [tipoCliente, setTipoCliente] = useState('DOMICILIO'); // DOMICILIO | EMPRESA
-  const [canalOrigen, setCanalOrigen] = useState('LLAMADO'); // LLAMADO | WHATSAPP | WEB | WHATSAPP_BOT
+  const [tipoCliente, setTipoCliente] = useState('DOMICILIO');
+  const [canalOrigen, setCanalOrigen] = useState('LLAMADO'); 
   
   // Variables del Producto / PedidoItem
   const [productoId, setProductoId] = useState('');
   const [cantidad, setCantidad] = useState(1);
-  const [tipoTransaccion, setTipoTransaccion] = useState('RECARGA'); // RECARGA | VENTA
+  const [tipoTransaccion, setTipoTransaccion] = useState('RECARGA'); 
+
+  // 👇 NUEVO: Estado para saber a qué camión va
+  const [rutaDiaId, setRutaDiaId] = useState('');
 
   // Catálogos
   const [productos, setProductos] = useState<any[]>([]);
@@ -51,8 +56,14 @@ export default function NuevoPedidoModal({
       obtenerProductosAction().then(res => {
         if (res.success) setProductos(res.productos);
       });
+      // Si hay solo una ruta activa, seleccionarla por defecto
+      if (rutasDia.length === 1) {
+        setRutaDiaId(rutasDia[0].id);
+      } else {
+        setRutaDiaId('');
+      }
     }
-  }, [isOpen]);
+  }, [isOpen, rutasDia]);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -121,7 +132,6 @@ export default function NuevoPedidoModal({
     
     setGuardando(true);
 
-    // Payload actualizado con TODAS las variables obligatorias de Prisma
     const res = await guardarPedidoRapidoAction({
       fecha_solicitada: fecha,
       canal_origen: canalOrigen,
@@ -136,7 +146,8 @@ export default function NuevoPedidoModal({
       } : undefined,
       producto_id: productoId,
       cantidad: Number(cantidad),
-      tipo_transaccion: tipoTransaccion
+      tipo_transaccion: tipoTransaccion,
+      ruta_dia_id: rutaDiaId ? rutaDiaId : undefined // 👈 NUEVO: Enviar camión al backend
     });
 
     setGuardando(false);
@@ -168,52 +179,76 @@ export default function NuevoPedidoModal({
         </div>
 
         <form onSubmit={guardarPedido} className="p-5 space-y-4">
-          
-          {/* BUSCADOR DE CLIENTE */}
-          <div ref={dropClienteRef} className="relative">
-            <label className="block text-xs font-semibold text-gray-700 mb-1">Buscar Cliente (Dirección, Teléfono o Nombre)</label>
-            <div className="flex gap-2">
-              <input 
-                type="text" 
-                value={criterioCliente} 
-                onChange={(e) => {
-                  setCriterioCliente(e.target.value);
-                  if (clienteEncontrado) setClienteEncontrado(null); 
-                }}
-                placeholder="Ej: San Martin 450 o +569..."
-                className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500 outline-none"
-              />
-              {clienteEncontrado ? (
-                <button type="button" onClick={limpiarClienteSeleccionado} className="bg-red-50 border border-red-300 px-2 rounded text-xs hover:bg-red-100 font-medium text-red-600">Limpiar</button>
-              ) : (
-                <button type="button" onClick={buscarCliente} className="bg-gray-100 border border-gray-300 px-3 rounded text-sm hover:bg-gray-200 font-medium text-gray-700">
-                  {buscando ? '...' : 'Buscar'}
-                </button>
-              )}
-            </div>
 
-            {mostrarDropClientes && clientesSugeridos.length > 0 && (
-              <ul className="absolute z-50 w-full bg-white border border-gray-200 rounded mt-1 max-h-40 overflow-y-auto shadow-lg text-xs divide-y divide-gray-100">
-                {clientesSugeridos.map(cli => (
-                  <li key={cli.id} onClick={() => seleccionarCliente(cli)} className="p-2 hover:bg-blue-50 cursor-pointer flex flex-col gap-0.5 text-gray-700">
-                    <span className="font-bold text-gray-900">{cli.nombre}</span>
-                    <span className="text-gray-500 text-[11px]">📍 Sector: {cli.sector} - {cli.direccion}</span>
-                    <span className="text-blue-600 text-[10px]">📞 {cli.telefono}</span>
-                  </li>
-                ))}
-              </ul>
-            )}
-
-            {clienteEncontrado && (
-              <div className="flex items-center justify-between mt-1">
-                <p className="text-[11px] text-green-600 font-bold">✅ Cliente cargado desde base de datos.</p>
-                <button type="button" onClick={() => setEditandoCliente(!editandoCliente)} className={`text-[11px] px-2 py-0.5 rounded font-bold border transition-colors ${editandoCliente ? 'bg-orange-100 text-orange-700 border-orange-300' : 'bg-blue-50 text-blue-700 border-blue-300 hover:bg-blue-100'}`}>
-                  {editandoCliente ? '🔓 Modificando...' : '📝 Editar Datos'}
-                </button>
-              </div>
+        {/* BUSCADOR DE CLIENTE */}
+        <div ref={dropClienteRef} className="relative">
+          <label className="block text-xs font-semibold text-gray-700 mb-1">
+            Buscar Cliente (Dirección, Teléfono o Nombre)
+          </label>
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={criterioCliente}
+              onChange={(e) => {
+                setCriterioCliente(e.target.value);
+                if (clienteEncontrado) setClienteEncontrado(null);
+              }}
+              placeholder="Ej: San Martin 450 o +569..."
+              className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500 outline-none"
+            />
+            {clienteEncontrado ? (
+              <button
+                type="button"
+                onClick={limpiarClienteSeleccionado}
+                className="bg-red-50 border border-red-300 px-2 rounded text-xs hover:bg-red-100 font-medium text-red-600"
+              >
+                Limpiar
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={buscarCliente}
+                className="bg-gray-100 border border-gray-300 px-3 rounded text-sm hover:bg-gray-200 font-medium text-gray-700"
+              >
+                {buscando ? '...' : 'Buscar'}
+              </button>
             )}
           </div>
 
+          {mostrarDropClientes && clientesSugeridos.length > 0 && (
+            <ul className="absolute z-50 w-full bg-white border border-gray-200 rounded mt-1 max-h-40 overflow-y-auto shadow-lg text-xs divide-y divide-gray-100">
+              {clientesSugeridos.map(cli => (
+                <li
+                  key={cli.id}
+                  onClick={() => seleccionarCliente(cli)}
+                  className="p-2 hover:bg-blue-50 cursor-pointer flex flex-col gap-0.5 text-gray-700"
+                >
+                  <span className="font-bold text-gray-900">{cli.nombre}</span>
+                  <span className="text-gray-500 text-[11px]">📍 {cli.sector} — {cli.direccion}</span>
+                  <span className="text-blue-600 text-[10px]">📞 {cli.telefono}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+
+          {clienteEncontrado && (
+            <div className="flex items-center justify-between mt-1">
+              <p className="text-[11px] text-green-600 font-bold">✅ Cliente cargado desde base de datos.</p>
+              <button
+                type="button"
+                onClick={() => setEditandoCliente(!editandoCliente)}
+                className={`text-[11px] px-2 py-0.5 rounded font-bold border transition-colors ${
+                  editandoCliente
+                    ? 'bg-orange-100 text-orange-700 border-orange-300'
+                    : 'bg-blue-50 text-blue-700 border-blue-300 hover:bg-blue-100'
+                }`}
+              >
+                {editandoCliente ? '🔓 Modificando...' : '📝 Editar Datos'}
+              </button>
+            </div>
+          )}
+        </div>
+        
           {/* DATOS DEL CLIENTE Y CANAL */}
           <div className="grid grid-cols-2 gap-3 bg-gray-50 p-3 rounded-lg border border-gray-100">
             <div className="col-span-2">
@@ -252,6 +287,26 @@ export default function NuevoPedidoModal({
                 <option value="WEB">Página Web</option>
               </select>
             </div>
+          </div>
+
+          {/* 👇 NUEVO: ASIGNACIÓN A CAMIÓN */}
+          <div className="bg-yellow-50/50 p-3 rounded-lg border border-yellow-200">
+            <label className="block text-xs font-bold text-slate-800 mb-1">
+              🚚 Asignar a Camión / Ruta Activa
+            </label>
+            <select 
+              value={rutaDiaId} 
+              onChange={(e) => setRutaDiaId(e.target.value)} 
+              className="w-full border border-yellow-300 rounded px-3 py-2 text-sm bg-white font-medium text-slate-800 shadow-sm"
+            >
+              <option value="">-- Dejar sin asignar (Pendiente) --</option>
+              {rutasDia.map(r => (
+                <option key={r.id} value={r.id}>
+                  [{r.vehiculo?.patente}] {r.vehiculo?.marca} {r.vehiculo?.modelo} ({r.usuario?.nombre})
+                </option>
+              ))}
+            </select>
+            <p className="text-[10px] text-gray-500 mt-1">Si eliges un camión, el pedido se agregará automáticamente al final de su hoja de ruta.</p>
           </div>
 
           <div className="border-t border-gray-200 my-2"></div>
@@ -296,7 +351,7 @@ export default function NuevoPedidoModal({
           </div>
 
           <button type="submit" disabled={guardando} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded shadow-sm mt-4 disabled:opacity-50 transition-colors text-sm">
-            {guardando ? 'Guardando...' : '📥 Guardar e Ingresar a la Fecha'}
+            {guardando ? 'Guardando...' : '📥 Guardar e Ingresar a la Ruta'}
           </button>
         </form>
 

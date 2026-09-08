@@ -70,7 +70,7 @@ export default function RutasBaseManager({ rutasBaseIniciales, choferes, vehicul
     try {
       const res = await buscarClientesBaseAction(valor, rutaId);
       if (res.success) {
-        setResultadosCli({ ...resultadosCli, [rutaId]: [...res.clientes] });
+        setResultadosCli(prev => ({ ...prev, [rutaId]: res.clientes }));
       }
     } catch (err) {
       console.error('Error buscando clientes:', err);

@@ -85,7 +85,7 @@ export default function ClientManager({ initialClientes }: { initialClientes: an
     if (formData.tipo === TipoCliente.EMPRESA && !formData.rut_empresa) { setErrorForm('El RUT de la empresa es obligatorio.'); return; }
     startTransition(async () => {
       const res = editingClienteId ? await editarClienteAction(editingClienteId, formData) : await crearClienteAction(formData);
-      if (res.success) { setIsModalOpen(false); router.refresh(); showSuccess('Operación Exitosa', 'Los datos del cliente han sido guardados.'); }
+      if (res.success) { setIsModalOpen(false); showSuccess('Operación Exitosa', 'Los datos del cliente han sido guardados.'); }
       else { setErrorForm(res.message || 'Error inesperado.'); }
     });
   };

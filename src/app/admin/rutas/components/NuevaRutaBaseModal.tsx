@@ -126,7 +126,7 @@ export default function NuevaRutaBaseModal({ isOpen, onClose, onSuccess }: Props
                 className="w-full border border-gray-300 rounded p-2 focus:ring-2 focus:ring-blue-500 font-medium cursor-pointer"
               >
                 {vehiculos.map((v) => (
-                  <option key={v.id} value={v.id}>🚚 {v.marca} {v.modelo} ({v.patente})</option>
+                  <option key={v.id} value={v.id}>🚚 [{v.patente}] {v.marca} {v.modelo}</option>
                 ))}
               </select>
             )}
