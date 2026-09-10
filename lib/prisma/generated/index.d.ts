@@ -248,7 +248,8 @@ export type TipoIncidencia = (typeof TipoIncidencia)[keyof typeof TipoIncidencia
 export const Rol: {
   ADMIN: 'ADMIN',
   OFICINA: 'OFICINA',
-  REPARTIDOR: 'REPARTIDOR'
+  REPARTIDOR: 'REPARTIDOR',
+  PENDIENTE: 'PENDIENTE'
 };
 
 export type Rol = (typeof Rol)[keyof typeof Rol]
@@ -5483,6 +5484,7 @@ export namespace Prisma {
 
   export type UsuarioMinAggregateOutputType = {
     id: string | null
+    user_id: string | null
     nombre: string | null
     apellido: string | null
     rut: string | null
@@ -5500,6 +5502,7 @@ export namespace Prisma {
 
   export type UsuarioMaxAggregateOutputType = {
     id: string | null
+    user_id: string | null
     nombre: string | null
     apellido: string | null
     rut: string | null
@@ -5517,6 +5520,7 @@ export namespace Prisma {
 
   export type UsuarioCountAggregateOutputType = {
     id: number
+    user_id: number
     nombre: number
     apellido: number
     rut: number
@@ -5536,6 +5540,7 @@ export namespace Prisma {
 
   export type UsuarioMinAggregateInputType = {
     id?: true
+    user_id?: true
     nombre?: true
     apellido?: true
     rut?: true
@@ -5553,6 +5558,7 @@ export namespace Prisma {
 
   export type UsuarioMaxAggregateInputType = {
     id?: true
+    user_id?: true
     nombre?: true
     apellido?: true
     rut?: true
@@ -5570,6 +5576,7 @@ export namespace Prisma {
 
   export type UsuarioCountAggregateInputType = {
     id?: true
+    user_id?: true
     nombre?: true
     apellido?: true
     rut?: true
@@ -5660,6 +5667,7 @@ export namespace Prisma {
 
   export type UsuarioGroupByOutputType = {
     id: string
+    user_id: string | null
     nombre: string
     apellido: string | null
     rut: string
@@ -5694,6 +5702,7 @@ export namespace Prisma {
 
   export type UsuarioSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    user_id?: boolean
     nombre?: boolean
     apellido?: boolean
     rut?: boolean
@@ -5720,6 +5729,7 @@ export namespace Prisma {
     vehiculo?: boolean | Usuario$vehiculoArgs<ExtArgs>
     incidencias?: boolean | Usuario$incidenciasArgs<ExtArgs>
     movimientos_stock?: boolean | Usuario$movimientos_stockArgs<ExtArgs>
+    user?: boolean | Usuario$userArgs<ExtArgs>
     _count?: boolean | UsuarioCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["usuario"]>
 
@@ -5727,6 +5737,7 @@ export namespace Prisma {
 
   export type UsuarioSelectScalar = {
     id?: boolean
+    user_id?: boolean
     nombre?: boolean
     apellido?: boolean
     rut?: boolean
@@ -5742,7 +5753,7 @@ export namespace Prisma {
     vencimiento_lic?: boolean
   }
 
-  export type UsuarioOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nombre" | "apellido" | "rut" | "telefono" | "email" | "rol" | "vehiculo_id" | "fecha_ingreso" | "activo" | "created_at" | "licencia_tipo" | "recibe_comision" | "vencimiento_lic", ExtArgs["result"]["usuario"]>
+  export type UsuarioOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "user_id" | "nombre" | "apellido" | "rut" | "telefono" | "email" | "rol" | "vehiculo_id" | "fecha_ingreso" | "activo" | "created_at" | "licencia_tipo" | "recibe_comision" | "vencimiento_lic", ExtArgs["result"]["usuario"]>
   export type UsuarioInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     botellones_danados?: boolean | Usuario$botellones_danadosArgs<ExtArgs>
     cargas_combustible?: boolean | Usuario$cargas_combustibleArgs<ExtArgs>
@@ -5757,6 +5768,7 @@ export namespace Prisma {
     vehiculo?: boolean | Usuario$vehiculoArgs<ExtArgs>
     incidencias?: boolean | Usuario$incidenciasArgs<ExtArgs>
     movimientos_stock?: boolean | Usuario$movimientos_stockArgs<ExtArgs>
+    user?: boolean | Usuario$userArgs<ExtArgs>
     _count?: boolean | UsuarioCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -5776,9 +5788,11 @@ export namespace Prisma {
       vehiculo: Prisma.$VehiculoPayload<ExtArgs> | null
       incidencias: Prisma.$IncidenciaPayload<ExtArgs>[]
       movimientos_stock: Prisma.$MovimientoStockPayload<ExtArgs>[]
+      user: Prisma.$UserPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
+      user_id: string | null
       nombre: string
       apellido: string | null
       rut: string
@@ -6145,6 +6159,7 @@ export namespace Prisma {
     vehiculo<T extends Usuario$vehiculoArgs<ExtArgs> = {}>(args?: Subset<T, Usuario$vehiculoArgs<ExtArgs>>): Prisma__VehiculoClient<$Result.GetResult<Prisma.$VehiculoPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     incidencias<T extends Usuario$incidenciasArgs<ExtArgs> = {}>(args?: Subset<T, Usuario$incidenciasArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IncidenciaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     movimientos_stock<T extends Usuario$movimientos_stockArgs<ExtArgs> = {}>(args?: Subset<T, Usuario$movimientos_stockArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MovimientoStockPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    user<T extends Usuario$userArgs<ExtArgs> = {}>(args?: Subset<T, Usuario$userArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6175,6 +6190,7 @@ export namespace Prisma {
    */
   interface UsuarioFieldRefs {
     readonly id: FieldRef<"Usuario", 'String'>
+    readonly user_id: FieldRef<"Usuario", 'String'>
     readonly nombre: FieldRef<"Usuario", 'String'>
     readonly apellido: FieldRef<"Usuario", 'String'>
     readonly rut: FieldRef<"Usuario", 'String'>
@@ -6835,6 +6851,25 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: MovimientoStockScalarFieldEnum | MovimientoStockScalarFieldEnum[]
+  }
+
+  /**
+   * Usuario.user
+   */
+  export type Usuario$userArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
   }
 
   /**
@@ -45792,6 +45827,7 @@ export namespace Prisma {
     rut?: boolean
     sessions?: boolean | User$sessionsArgs<ExtArgs>
     accounts?: boolean | User$accountsArgs<ExtArgs>
+    usuario?: boolean | User$usuarioArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -45812,6 +45848,7 @@ export namespace Prisma {
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     sessions?: boolean | User$sessionsArgs<ExtArgs>
     accounts?: boolean | User$accountsArgs<ExtArgs>
+    usuario?: boolean | User$usuarioArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -45820,6 +45857,7 @@ export namespace Prisma {
     objects: {
       sessions: Prisma.$SessionPayload<ExtArgs>[]
       accounts: Prisma.$AccountPayload<ExtArgs>[]
+      usuario: Prisma.$UsuarioPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -46172,6 +46210,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     sessions<T extends User$sessionsArgs<ExtArgs> = {}>(args?: Subset<T, User$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     accounts<T extends User$accountsArgs<ExtArgs> = {}>(args?: Subset<T, User$accountsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    usuario<T extends User$usuarioArgs<ExtArgs> = {}>(args?: Subset<T, User$usuarioArgs<ExtArgs>>): Prisma__UsuarioClient<$Result.GetResult<Prisma.$UsuarioPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -46597,6 +46636,25 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: AccountScalarFieldEnum | AccountScalarFieldEnum[]
+  }
+
+  /**
+   * User.usuario
+   */
+  export type User$usuarioArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Usuario
+     */
+    select?: UsuarioSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Usuario
+     */
+    omit?: UsuarioOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UsuarioInclude<ExtArgs> | null
+    where?: UsuarioWhereInput
   }
 
   /**
@@ -49517,6 +49575,7 @@ export namespace Prisma {
 
   export const UsuarioScalarFieldEnum: {
     id: 'id',
+    user_id: 'user_id',
     nombre: 'nombre',
     apellido: 'apellido',
     rut: 'rut',
@@ -50134,6 +50193,7 @@ export namespace Prisma {
 
   export const UsuarioOrderByRelevanceFieldEnum: {
     id: 'id',
+    user_id: 'user_id',
     nombre: 'nombre',
     apellido: 'apellido',
     rut: 'rut',
@@ -50811,6 +50871,7 @@ export namespace Prisma {
     OR?: UsuarioWhereInput[]
     NOT?: UsuarioWhereInput | UsuarioWhereInput[]
     id?: StringFilter<"Usuario"> | string
+    user_id?: StringNullableFilter<"Usuario"> | string | null
     nombre?: StringFilter<"Usuario"> | string
     apellido?: StringNullableFilter<"Usuario"> | string | null
     rut?: StringFilter<"Usuario"> | string
@@ -50837,10 +50898,12 @@ export namespace Prisma {
     vehiculo?: XOR<VehiculoNullableScalarRelationFilter, VehiculoWhereInput> | null
     incidencias?: IncidenciaListRelationFilter
     movimientos_stock?: MovimientoStockListRelationFilter
+    user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
   }
 
   export type UsuarioOrderByWithRelationInput = {
     id?: SortOrder
+    user_id?: SortOrderInput | SortOrder
     nombre?: SortOrder
     apellido?: SortOrderInput | SortOrder
     rut?: SortOrder
@@ -50867,11 +50930,13 @@ export namespace Prisma {
     vehiculo?: VehiculoOrderByWithRelationInput
     incidencias?: IncidenciaOrderByRelationAggregateInput
     movimientos_stock?: MovimientoStockOrderByRelationAggregateInput
+    user?: UserOrderByWithRelationInput
     _relevance?: UsuarioOrderByRelevanceInput
   }
 
   export type UsuarioWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    user_id?: string
     rut?: string
     email?: string
     AND?: UsuarioWhereInput | UsuarioWhereInput[]
@@ -50901,10 +50966,12 @@ export namespace Prisma {
     vehiculo?: XOR<VehiculoNullableScalarRelationFilter, VehiculoWhereInput> | null
     incidencias?: IncidenciaListRelationFilter
     movimientos_stock?: MovimientoStockListRelationFilter
-  }, "id" | "rut" | "email">
+    user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+  }, "id" | "user_id" | "rut" | "email">
 
   export type UsuarioOrderByWithAggregationInput = {
     id?: SortOrder
+    user_id?: SortOrderInput | SortOrder
     nombre?: SortOrder
     apellido?: SortOrderInput | SortOrder
     rut?: SortOrder
@@ -50928,6 +50995,7 @@ export namespace Prisma {
     OR?: UsuarioScalarWhereWithAggregatesInput[]
     NOT?: UsuarioScalarWhereWithAggregatesInput | UsuarioScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Usuario"> | string
+    user_id?: StringNullableWithAggregatesFilter<"Usuario"> | string | null
     nombre?: StringWithAggregatesFilter<"Usuario"> | string
     apellido?: StringNullableWithAggregatesFilter<"Usuario"> | string | null
     rut?: StringWithAggregatesFilter<"Usuario"> | string
@@ -53795,6 +53863,7 @@ export namespace Prisma {
     rut?: StringFilter<"User"> | string
     sessions?: SessionListRelationFilter
     accounts?: AccountListRelationFilter
+    usuario?: XOR<UsuarioNullableScalarRelationFilter, UsuarioWhereInput> | null
   }
 
   export type UserOrderByWithRelationInput = {
@@ -53808,6 +53877,7 @@ export namespace Prisma {
     rut?: SortOrder
     sessions?: SessionOrderByRelationAggregateInput
     accounts?: AccountOrderByRelationAggregateInput
+    usuario?: UsuarioOrderByWithRelationInput
     _relevance?: UserOrderByRelevanceInput
   }
 
@@ -53825,6 +53895,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"User"> | Date | string
     sessions?: SessionListRelationFilter
     accounts?: AccountListRelationFilter
+    usuario?: XOR<UsuarioNullableScalarRelationFilter, UsuarioWhereInput> | null
   }, "id" | "email" | "rut">
 
   export type UserOrderByWithAggregationInput = {
@@ -54093,7 +54164,7 @@ export namespace Prisma {
     rut: string
     telefono: string
     email: string
-    rol: $Enums.Rol
+    rol?: $Enums.Rol
     fecha_ingreso: Date | string
     activo?: boolean
     created_at?: Date | string
@@ -54113,16 +54184,18 @@ export namespace Prisma {
     vehiculo?: VehiculoCreateNestedOneWithoutUsuariosInput
     incidencias?: IncidenciaCreateNestedManyWithoutUsuarioInput
     movimientos_stock?: MovimientoStockCreateNestedManyWithoutUsuarioInput
+    user?: UserCreateNestedOneWithoutUsuarioInput
   }
 
   export type UsuarioUncheckedCreateInput = {
     id?: string
+    user_id?: string | null
     nombre: string
     apellido?: string | null
     rut: string
     telefono: string
     email: string
-    rol: $Enums.Rol
+    rol?: $Enums.Rol
     vehiculo_id?: string | null
     fecha_ingreso: Date | string
     activo?: boolean
@@ -54171,10 +54244,12 @@ export namespace Prisma {
     vehiculo?: VehiculoUpdateOneWithoutUsuariosNestedInput
     incidencias?: IncidenciaUpdateManyWithoutUsuarioNestedInput
     movimientos_stock?: MovimientoStockUpdateManyWithoutUsuarioNestedInput
+    user?: UserUpdateOneWithoutUsuarioNestedInput
   }
 
   export type UsuarioUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    user_id?: NullableStringFieldUpdateOperationsInput | string | null
     nombre?: StringFieldUpdateOperationsInput | string
     apellido?: NullableStringFieldUpdateOperationsInput | string | null
     rut?: StringFieldUpdateOperationsInput | string
@@ -54204,12 +54279,13 @@ export namespace Prisma {
 
   export type UsuarioCreateManyInput = {
     id?: string
+    user_id?: string | null
     nombre: string
     apellido?: string | null
     rut: string
     telefono: string
     email: string
-    rol: $Enums.Rol
+    rol?: $Enums.Rol
     vehiculo_id?: string | null
     fecha_ingreso: Date | string
     activo?: boolean
@@ -54237,6 +54313,7 @@ export namespace Prisma {
 
   export type UsuarioUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
+    user_id?: NullableStringFieldUpdateOperationsInput | string | null
     nombre?: StringFieldUpdateOperationsInput | string
     apellido?: NullableStringFieldUpdateOperationsInput | string | null
     rut?: StringFieldUpdateOperationsInput | string
@@ -57172,6 +57249,7 @@ export namespace Prisma {
     rut: string
     sessions?: SessionCreateNestedManyWithoutUserInput
     accounts?: AccountCreateNestedManyWithoutUserInput
+    usuario?: UsuarioCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -57185,6 +57263,7 @@ export namespace Prisma {
     rut: string
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    usuario?: UsuarioUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -57198,6 +57277,7 @@ export namespace Prisma {
     rut?: StringFieldUpdateOperationsInput | string
     sessions?: SessionUpdateManyWithoutUserNestedInput
     accounts?: AccountUpdateManyWithoutUserNestedInput
+    usuario?: UsuarioUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -57211,6 +57291,7 @@ export namespace Prisma {
     rut?: StringFieldUpdateOperationsInput | string
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    usuario?: UsuarioUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -57644,6 +57725,11 @@ export namespace Prisma {
     none?: MovimientoStockWhereInput
   }
 
+  export type UserNullableScalarRelationFilter = {
+    is?: UserWhereInput | null
+    isNot?: UserWhereInput | null
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -57705,6 +57791,7 @@ export namespace Prisma {
 
   export type UsuarioCountOrderByAggregateInput = {
     id?: SortOrder
+    user_id?: SortOrder
     nombre?: SortOrder
     apellido?: SortOrder
     rut?: SortOrder
@@ -57722,6 +57809,7 @@ export namespace Prisma {
 
   export type UsuarioMaxOrderByAggregateInput = {
     id?: SortOrder
+    user_id?: SortOrder
     nombre?: SortOrder
     apellido?: SortOrder
     rut?: SortOrder
@@ -57739,6 +57827,7 @@ export namespace Prisma {
 
   export type UsuarioMinOrderByAggregateInput = {
     id?: SortOrder
+    user_id?: SortOrder
     nombre?: SortOrder
     apellido?: SortOrder
     rut?: SortOrder
@@ -60686,6 +60775,12 @@ export namespace Prisma {
     connect?: MovimientoStockWhereUniqueInput | MovimientoStockWhereUniqueInput[]
   }
 
+  export type UserCreateNestedOneWithoutUsuarioInput = {
+    create?: XOR<UserCreateWithoutUsuarioInput, UserUncheckedCreateWithoutUsuarioInput>
+    connectOrCreate?: UserCreateOrConnectWithoutUsuarioInput
+    connect?: UserWhereUniqueInput
+  }
+
   export type BotellonDanadoUncheckedCreateNestedManyWithoutUsuarioInput = {
     create?: XOR<BotellonDanadoCreateWithoutUsuarioInput, BotellonDanadoUncheckedCreateWithoutUsuarioInput> | BotellonDanadoCreateWithoutUsuarioInput[] | BotellonDanadoUncheckedCreateWithoutUsuarioInput[]
     connectOrCreate?: BotellonDanadoCreateOrConnectWithoutUsuarioInput | BotellonDanadoCreateOrConnectWithoutUsuarioInput[]
@@ -60970,6 +61065,16 @@ export namespace Prisma {
     update?: MovimientoStockUpdateWithWhereUniqueWithoutUsuarioInput | MovimientoStockUpdateWithWhereUniqueWithoutUsuarioInput[]
     updateMany?: MovimientoStockUpdateManyWithWhereWithoutUsuarioInput | MovimientoStockUpdateManyWithWhereWithoutUsuarioInput[]
     deleteMany?: MovimientoStockScalarWhereInput | MovimientoStockScalarWhereInput[]
+  }
+
+  export type UserUpdateOneWithoutUsuarioNestedInput = {
+    create?: XOR<UserCreateWithoutUsuarioInput, UserUncheckedCreateWithoutUsuarioInput>
+    connectOrCreate?: UserCreateOrConnectWithoutUsuarioInput
+    upsert?: UserUpsertWithoutUsuarioInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutUsuarioInput, UserUpdateWithoutUsuarioInput>, UserUncheckedUpdateWithoutUsuarioInput>
   }
 
   export type BotellonDanadoUncheckedUpdateManyWithoutUsuarioNestedInput = {
@@ -63836,6 +63941,12 @@ export namespace Prisma {
     connect?: AccountWhereUniqueInput | AccountWhereUniqueInput[]
   }
 
+  export type UsuarioCreateNestedOneWithoutUserInput = {
+    create?: XOR<UsuarioCreateWithoutUserInput, UsuarioUncheckedCreateWithoutUserInput>
+    connectOrCreate?: UsuarioCreateOrConnectWithoutUserInput
+    connect?: UsuarioWhereUniqueInput
+  }
+
   export type SessionUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
@@ -63848,6 +63959,12 @@ export namespace Prisma {
     connectOrCreate?: AccountCreateOrConnectWithoutUserInput | AccountCreateOrConnectWithoutUserInput[]
     createMany?: AccountCreateManyUserInputEnvelope
     connect?: AccountWhereUniqueInput | AccountWhereUniqueInput[]
+  }
+
+  export type UsuarioUncheckedCreateNestedOneWithoutUserInput = {
+    create?: XOR<UsuarioCreateWithoutUserInput, UsuarioUncheckedCreateWithoutUserInput>
+    connectOrCreate?: UsuarioCreateOrConnectWithoutUserInput
+    connect?: UsuarioWhereUniqueInput
   }
 
   export type SessionUpdateManyWithoutUserNestedInput = {
@@ -63878,6 +63995,16 @@ export namespace Prisma {
     deleteMany?: AccountScalarWhereInput | AccountScalarWhereInput[]
   }
 
+  export type UsuarioUpdateOneWithoutUserNestedInput = {
+    create?: XOR<UsuarioCreateWithoutUserInput, UsuarioUncheckedCreateWithoutUserInput>
+    connectOrCreate?: UsuarioCreateOrConnectWithoutUserInput
+    upsert?: UsuarioUpsertWithoutUserInput
+    disconnect?: UsuarioWhereInput | boolean
+    delete?: UsuarioWhereInput | boolean
+    connect?: UsuarioWhereUniqueInput
+    update?: XOR<XOR<UsuarioUpdateToOneWithWhereWithoutUserInput, UsuarioUpdateWithoutUserInput>, UsuarioUncheckedUpdateWithoutUserInput>
+  }
+
   export type SessionUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
@@ -63904,6 +64031,16 @@ export namespace Prisma {
     update?: AccountUpdateWithWhereUniqueWithoutUserInput | AccountUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: AccountUpdateManyWithWhereWithoutUserInput | AccountUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: AccountScalarWhereInput | AccountScalarWhereInput[]
+  }
+
+  export type UsuarioUncheckedUpdateOneWithoutUserNestedInput = {
+    create?: XOR<UsuarioCreateWithoutUserInput, UsuarioUncheckedCreateWithoutUserInput>
+    connectOrCreate?: UsuarioCreateOrConnectWithoutUserInput
+    upsert?: UsuarioUpsertWithoutUserInput
+    disconnect?: UsuarioWhereInput | boolean
+    delete?: UsuarioWhereInput | boolean
+    connect?: UsuarioWhereUniqueInput
+    update?: XOR<XOR<UsuarioUpdateToOneWithWhereWithoutUserInput, UsuarioUpdateWithoutUserInput>, UsuarioUncheckedUpdateWithoutUserInput>
   }
 
   export type UserCreateNestedOneWithoutSessionsInput = {
@@ -65047,6 +65184,37 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type UserCreateWithoutUsuarioInput = {
+    id: string
+    name: string
+    email: string
+    emailVerified?: boolean
+    image?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    rut: string
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    accounts?: AccountCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutUsuarioInput = {
+    id: string
+    name: string
+    email: string
+    emailVerified?: boolean
+    image?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    rut: string
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutUsuarioInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutUsuarioInput, UserUncheckedCreateWithoutUsuarioInput>
+  }
+
   export type BotellonDanadoUpsertWithWhereUniqueWithoutUsuarioInput = {
     where: BotellonDanadoWhereUniqueInput
     update: XOR<BotellonDanadoUpdateWithoutUsuarioInput, BotellonDanadoUncheckedUpdateWithoutUsuarioInput>
@@ -65461,6 +65629,43 @@ export namespace Prisma {
     created_at?: DateTimeFilter<"MovimientoStock"> | Date | string
   }
 
+  export type UserUpsertWithoutUsuarioInput = {
+    update: XOR<UserUpdateWithoutUsuarioInput, UserUncheckedUpdateWithoutUsuarioInput>
+    create: XOR<UserCreateWithoutUsuarioInput, UserUncheckedCreateWithoutUsuarioInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutUsuarioInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutUsuarioInput, UserUncheckedUpdateWithoutUsuarioInput>
+  }
+
+  export type UserUpdateWithoutUsuarioInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    rut?: StringFieldUpdateOperationsInput | string
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    accounts?: AccountUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutUsuarioInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    rut?: StringFieldUpdateOperationsInput | string
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+  }
+
   export type AlertaVehiculoCreateWithoutVehiculoInput = {
     id?: string
     tipo: $Enums.TipoAlerta
@@ -65628,7 +65833,7 @@ export namespace Prisma {
     rut: string
     telefono: string
     email: string
-    rol: $Enums.Rol
+    rol?: $Enums.Rol
     fecha_ingreso: Date | string
     activo?: boolean
     created_at?: Date | string
@@ -65647,16 +65852,18 @@ export namespace Prisma {
     stock_camion?: StockCamionCreateNestedManyWithoutUsuarioInput
     incidencias?: IncidenciaCreateNestedManyWithoutUsuarioInput
     movimientos_stock?: MovimientoStockCreateNestedManyWithoutUsuarioInput
+    user?: UserCreateNestedOneWithoutUsuarioInput
   }
 
   export type UsuarioUncheckedCreateWithoutVehiculoInput = {
     id?: string
+    user_id?: string | null
     nombre: string
     apellido?: string | null
     rut: string
     telefono: string
     email: string
-    rol: $Enums.Rol
+    rol?: $Enums.Rol
     fecha_ingreso: Date | string
     activo?: boolean
     created_at?: Date | string
@@ -65800,6 +66007,7 @@ export namespace Prisma {
     OR?: UsuarioScalarWhereInput[]
     NOT?: UsuarioScalarWhereInput | UsuarioScalarWhereInput[]
     id?: StringFilter<"Usuario"> | string
+    user_id?: StringNullableFilter<"Usuario"> | string | null
     nombre?: StringFilter<"Usuario"> | string
     apellido?: StringNullableFilter<"Usuario"> | string | null
     rut?: StringFilter<"Usuario"> | string
@@ -65822,7 +66030,7 @@ export namespace Prisma {
     rut: string
     telefono: string
     email: string
-    rol: $Enums.Rol
+    rol?: $Enums.Rol
     fecha_ingreso: Date | string
     activo?: boolean
     created_at?: Date | string
@@ -65841,16 +66049,18 @@ export namespace Prisma {
     vehiculo?: VehiculoCreateNestedOneWithoutUsuariosInput
     incidencias?: IncidenciaCreateNestedManyWithoutUsuarioInput
     movimientos_stock?: MovimientoStockCreateNestedManyWithoutUsuarioInput
+    user?: UserCreateNestedOneWithoutUsuarioInput
   }
 
   export type UsuarioUncheckedCreateWithoutMantencionesInput = {
     id?: string
+    user_id?: string | null
     nombre: string
     apellido?: string | null
     rut: string
     telefono: string
     email: string
-    rol: $Enums.Rol
+    rol?: $Enums.Rol
     vehiculo_id?: string | null
     fecha_ingreso: Date | string
     activo?: boolean
@@ -65974,10 +66184,12 @@ export namespace Prisma {
     vehiculo?: VehiculoUpdateOneWithoutUsuariosNestedInput
     incidencias?: IncidenciaUpdateManyWithoutUsuarioNestedInput
     movimientos_stock?: MovimientoStockUpdateManyWithoutUsuarioNestedInput
+    user?: UserUpdateOneWithoutUsuarioNestedInput
   }
 
   export type UsuarioUncheckedUpdateWithoutMantencionesInput = {
     id?: StringFieldUpdateOperationsInput | string
+    user_id?: NullableStringFieldUpdateOperationsInput | string | null
     nombre?: StringFieldUpdateOperationsInput | string
     apellido?: NullableStringFieldUpdateOperationsInput | string | null
     rut?: StringFieldUpdateOperationsInput | string
@@ -66724,7 +66936,7 @@ export namespace Prisma {
     rut: string
     telefono: string
     email: string
-    rol: $Enums.Rol
+    rol?: $Enums.Rol
     fecha_ingreso: Date | string
     activo?: boolean
     created_at?: Date | string
@@ -66743,16 +66955,18 @@ export namespace Prisma {
     stock_camion?: StockCamionCreateNestedManyWithoutUsuarioInput
     vehiculo?: VehiculoCreateNestedOneWithoutUsuariosInput
     incidencias?: IncidenciaCreateNestedManyWithoutUsuarioInput
+    user?: UserCreateNestedOneWithoutUsuarioInput
   }
 
   export type UsuarioUncheckedCreateWithoutMovimientos_stockInput = {
     id?: string
+    user_id?: string | null
     nombre: string
     apellido?: string | null
     rut: string
     telefono: string
     email: string
-    rol: $Enums.Rol
+    rol?: $Enums.Rol
     vehiculo_id?: string | null
     fecha_ingreso: Date | string
     activo?: boolean
@@ -66862,10 +67076,12 @@ export namespace Prisma {
     stock_camion?: StockCamionUpdateManyWithoutUsuarioNestedInput
     vehiculo?: VehiculoUpdateOneWithoutUsuariosNestedInput
     incidencias?: IncidenciaUpdateManyWithoutUsuarioNestedInput
+    user?: UserUpdateOneWithoutUsuarioNestedInput
   }
 
   export type UsuarioUncheckedUpdateWithoutMovimientos_stockInput = {
     id?: StringFieldUpdateOperationsInput | string
+    user_id?: NullableStringFieldUpdateOperationsInput | string | null
     nombre?: StringFieldUpdateOperationsInput | string
     apellido?: NullableStringFieldUpdateOperationsInput | string | null
     rut?: StringFieldUpdateOperationsInput | string
@@ -67506,7 +67722,7 @@ export namespace Prisma {
     rut: string
     telefono: string
     email: string
-    rol: $Enums.Rol
+    rol?: $Enums.Rol
     fecha_ingreso: Date | string
     activo?: boolean
     created_at?: Date | string
@@ -67525,16 +67741,18 @@ export namespace Prisma {
     vehiculo?: VehiculoCreateNestedOneWithoutUsuariosInput
     incidencias?: IncidenciaCreateNestedManyWithoutUsuarioInput
     movimientos_stock?: MovimientoStockCreateNestedManyWithoutUsuarioInput
+    user?: UserCreateNestedOneWithoutUsuarioInput
   }
 
   export type UsuarioUncheckedCreateWithoutRutas_baseInput = {
     id?: string
+    user_id?: string | null
     nombre: string
     apellido?: string | null
     rut: string
     telefono: string
     email: string
-    rol: $Enums.Rol
+    rol?: $Enums.Rol
     vehiculo_id?: string | null
     fecha_ingreso: Date | string
     activo?: boolean
@@ -67703,10 +67921,12 @@ export namespace Prisma {
     vehiculo?: VehiculoUpdateOneWithoutUsuariosNestedInput
     incidencias?: IncidenciaUpdateManyWithoutUsuarioNestedInput
     movimientos_stock?: MovimientoStockUpdateManyWithoutUsuarioNestedInput
+    user?: UserUpdateOneWithoutUsuarioNestedInput
   }
 
   export type UsuarioUncheckedUpdateWithoutRutas_baseInput = {
     id?: StringFieldUpdateOperationsInput | string
+    user_id?: NullableStringFieldUpdateOperationsInput | string | null
     nombre?: StringFieldUpdateOperationsInput | string
     apellido?: NullableStringFieldUpdateOperationsInput | string | null
     rut?: StringFieldUpdateOperationsInput | string
@@ -68112,7 +68332,7 @@ export namespace Prisma {
     rut: string
     telefono: string
     email: string
-    rol: $Enums.Rol
+    rol?: $Enums.Rol
     fecha_ingreso: Date | string
     activo?: boolean
     created_at?: Date | string
@@ -68131,16 +68351,18 @@ export namespace Prisma {
     vehiculo?: VehiculoCreateNestedOneWithoutUsuariosInput
     incidencias?: IncidenciaCreateNestedManyWithoutUsuarioInput
     movimientos_stock?: MovimientoStockCreateNestedManyWithoutUsuarioInput
+    user?: UserCreateNestedOneWithoutUsuarioInput
   }
 
   export type UsuarioUncheckedCreateWithoutRutas_diaInput = {
     id?: string
+    user_id?: string | null
     nombre: string
     apellido?: string | null
     rut: string
     telefono: string
     email: string
-    rol: $Enums.Rol
+    rol?: $Enums.Rol
     vehiculo_id?: string | null
     fecha_ingreso: Date | string
     activo?: boolean
@@ -68291,10 +68513,12 @@ export namespace Prisma {
     vehiculo?: VehiculoUpdateOneWithoutUsuariosNestedInput
     incidencias?: IncidenciaUpdateManyWithoutUsuarioNestedInput
     movimientos_stock?: MovimientoStockUpdateManyWithoutUsuarioNestedInput
+    user?: UserUpdateOneWithoutUsuarioNestedInput
   }
 
   export type UsuarioUncheckedUpdateWithoutRutas_diaInput = {
     id?: StringFieldUpdateOperationsInput | string
+    user_id?: NullableStringFieldUpdateOperationsInput | string | null
     nombre?: StringFieldUpdateOperationsInput | string
     apellido?: NullableStringFieldUpdateOperationsInput | string | null
     rut?: StringFieldUpdateOperationsInput | string
@@ -69249,7 +69473,7 @@ export namespace Prisma {
     rut: string
     telefono: string
     email: string
-    rol: $Enums.Rol
+    rol?: $Enums.Rol
     fecha_ingreso: Date | string
     activo?: boolean
     created_at?: Date | string
@@ -69268,16 +69492,18 @@ export namespace Prisma {
     vehiculo?: VehiculoCreateNestedOneWithoutUsuariosInput
     incidencias?: IncidenciaCreateNestedManyWithoutUsuarioInput
     movimientos_stock?: MovimientoStockCreateNestedManyWithoutUsuarioInput
+    user?: UserCreateNestedOneWithoutUsuarioInput
   }
 
   export type UsuarioUncheckedCreateWithoutGuiasInput = {
     id?: string
+    user_id?: string | null
     nombre: string
     apellido?: string | null
     rut: string
     telefono: string
     email: string
-    rol: $Enums.Rol
+    rol?: $Enums.Rol
     vehiculo_id?: string | null
     fecha_ingreso: Date | string
     activo?: boolean
@@ -69486,10 +69712,12 @@ export namespace Prisma {
     vehiculo?: VehiculoUpdateOneWithoutUsuariosNestedInput
     incidencias?: IncidenciaUpdateManyWithoutUsuarioNestedInput
     movimientos_stock?: MovimientoStockUpdateManyWithoutUsuarioNestedInput
+    user?: UserUpdateOneWithoutUsuarioNestedInput
   }
 
   export type UsuarioUncheckedUpdateWithoutGuiasInput = {
     id?: StringFieldUpdateOperationsInput | string
+    user_id?: NullableStringFieldUpdateOperationsInput | string | null
     nombre?: StringFieldUpdateOperationsInput | string
     apellido?: NullableStringFieldUpdateOperationsInput | string | null
     rut?: StringFieldUpdateOperationsInput | string
@@ -69791,7 +70019,7 @@ export namespace Prisma {
     rut: string
     telefono: string
     email: string
-    rol: $Enums.Rol
+    rol?: $Enums.Rol
     fecha_ingreso: Date | string
     activo?: boolean
     created_at?: Date | string
@@ -69810,16 +70038,18 @@ export namespace Prisma {
     vehiculo?: VehiculoCreateNestedOneWithoutUsuariosInput
     incidencias?: IncidenciaCreateNestedManyWithoutUsuarioInput
     movimientos_stock?: MovimientoStockCreateNestedManyWithoutUsuarioInput
+    user?: UserCreateNestedOneWithoutUsuarioInput
   }
 
   export type UsuarioUncheckedCreateWithoutCuadraturasInput = {
     id?: string
+    user_id?: string | null
     nombre: string
     apellido?: string | null
     rut: string
     telefono: string
     email: string
-    rol: $Enums.Rol
+    rol?: $Enums.Rol
     vehiculo_id?: string | null
     fecha_ingreso: Date | string
     activo?: boolean
@@ -70040,10 +70270,12 @@ export namespace Prisma {
     vehiculo?: VehiculoUpdateOneWithoutUsuariosNestedInput
     incidencias?: IncidenciaUpdateManyWithoutUsuarioNestedInput
     movimientos_stock?: MovimientoStockUpdateManyWithoutUsuarioNestedInput
+    user?: UserUpdateOneWithoutUsuarioNestedInput
   }
 
   export type UsuarioUncheckedUpdateWithoutCuadraturasInput = {
     id?: StringFieldUpdateOperationsInput | string
+    user_id?: NullableStringFieldUpdateOperationsInput | string | null
     nombre?: StringFieldUpdateOperationsInput | string
     apellido?: NullableStringFieldUpdateOperationsInput | string | null
     rut?: StringFieldUpdateOperationsInput | string
@@ -71110,7 +71342,7 @@ export namespace Prisma {
     rut: string
     telefono: string
     email: string
-    rol: $Enums.Rol
+    rol?: $Enums.Rol
     fecha_ingreso: Date | string
     activo?: boolean
     created_at?: Date | string
@@ -71129,16 +71361,18 @@ export namespace Prisma {
     vehiculo?: VehiculoCreateNestedOneWithoutUsuariosInput
     incidencias?: IncidenciaCreateNestedManyWithoutUsuarioInput
     movimientos_stock?: MovimientoStockCreateNestedManyWithoutUsuarioInput
+    user?: UserCreateNestedOneWithoutUsuarioInput
   }
 
   export type UsuarioUncheckedCreateWithoutBotellones_danadosInput = {
     id?: string
+    user_id?: string | null
     nombre: string
     apellido?: string | null
     rut: string
     telefono: string
     email: string
-    rol: $Enums.Rol
+    rol?: $Enums.Rol
     vehiculo_id?: string | null
     fecha_ingreso: Date | string
     activo?: boolean
@@ -71266,10 +71500,12 @@ export namespace Prisma {
     vehiculo?: VehiculoUpdateOneWithoutUsuariosNestedInput
     incidencias?: IncidenciaUpdateManyWithoutUsuarioNestedInput
     movimientos_stock?: MovimientoStockUpdateManyWithoutUsuarioNestedInput
+    user?: UserUpdateOneWithoutUsuarioNestedInput
   }
 
   export type UsuarioUncheckedUpdateWithoutBotellones_danadosInput = {
     id?: StringFieldUpdateOperationsInput | string
+    user_id?: NullableStringFieldUpdateOperationsInput | string | null
     nombre?: StringFieldUpdateOperationsInput | string
     apellido?: NullableStringFieldUpdateOperationsInput | string | null
     rut?: StringFieldUpdateOperationsInput | string
@@ -71303,7 +71539,7 @@ export namespace Prisma {
     rut: string
     telefono: string
     email: string
-    rol: $Enums.Rol
+    rol?: $Enums.Rol
     fecha_ingreso: Date | string
     activo?: boolean
     created_at?: Date | string
@@ -71322,16 +71558,18 @@ export namespace Prisma {
     vehiculo?: VehiculoCreateNestedOneWithoutUsuariosInput
     incidencias?: IncidenciaCreateNestedManyWithoutUsuarioInput
     movimientos_stock?: MovimientoStockCreateNestedManyWithoutUsuarioInput
+    user?: UserCreateNestedOneWithoutUsuarioInput
   }
 
   export type UsuarioUncheckedCreateWithoutProduccionInput = {
     id?: string
+    user_id?: string | null
     nombre: string
     apellido?: string | null
     rut: string
     telefono: string
     email: string
-    rol: $Enums.Rol
+    rol?: $Enums.Rol
     vehiculo_id?: string | null
     fecha_ingreso: Date | string
     activo?: boolean
@@ -71394,10 +71632,12 @@ export namespace Prisma {
     vehiculo?: VehiculoUpdateOneWithoutUsuariosNestedInput
     incidencias?: IncidenciaUpdateManyWithoutUsuarioNestedInput
     movimientos_stock?: MovimientoStockUpdateManyWithoutUsuarioNestedInput
+    user?: UserUpdateOneWithoutUsuarioNestedInput
   }
 
   export type UsuarioUncheckedUpdateWithoutProduccionInput = {
     id?: StringFieldUpdateOperationsInput | string
+    user_id?: NullableStringFieldUpdateOperationsInput | string | null
     nombre?: StringFieldUpdateOperationsInput | string
     apellido?: NullableStringFieldUpdateOperationsInput | string | null
     rut?: StringFieldUpdateOperationsInput | string
@@ -71560,7 +71800,7 @@ export namespace Prisma {
     rut: string
     telefono: string
     email: string
-    rol: $Enums.Rol
+    rol?: $Enums.Rol
     fecha_ingreso: Date | string
     activo?: boolean
     created_at?: Date | string
@@ -71579,16 +71819,18 @@ export namespace Prisma {
     vehiculo?: VehiculoCreateNestedOneWithoutUsuariosInput
     incidencias?: IncidenciaCreateNestedManyWithoutUsuarioInput
     movimientos_stock?: MovimientoStockCreateNestedManyWithoutUsuarioInput
+    user?: UserCreateNestedOneWithoutUsuarioInput
   }
 
   export type UsuarioUncheckedCreateWithoutStock_camionInput = {
     id?: string
+    user_id?: string | null
     nombre: string
     apellido?: string | null
     rut: string
     telefono: string
     email: string
-    rol: $Enums.Rol
+    rol?: $Enums.Rol
     vehiculo_id?: string | null
     fecha_ingreso: Date | string
     activo?: boolean
@@ -71698,10 +71940,12 @@ export namespace Prisma {
     vehiculo?: VehiculoUpdateOneWithoutUsuariosNestedInput
     incidencias?: IncidenciaUpdateManyWithoutUsuarioNestedInput
     movimientos_stock?: MovimientoStockUpdateManyWithoutUsuarioNestedInput
+    user?: UserUpdateOneWithoutUsuarioNestedInput
   }
 
   export type UsuarioUncheckedUpdateWithoutStock_camionInput = {
     id?: StringFieldUpdateOperationsInput | string
+    user_id?: NullableStringFieldUpdateOperationsInput | string | null
     nombre?: StringFieldUpdateOperationsInput | string
     apellido?: NullableStringFieldUpdateOperationsInput | string | null
     rut?: StringFieldUpdateOperationsInput | string
@@ -71735,7 +71979,7 @@ export namespace Prisma {
     rut: string
     telefono: string
     email: string
-    rol: $Enums.Rol
+    rol?: $Enums.Rol
     fecha_ingreso: Date | string
     activo?: boolean
     created_at?: Date | string
@@ -71754,16 +71998,18 @@ export namespace Prisma {
     vehiculo?: VehiculoCreateNestedOneWithoutUsuariosInput
     incidencias?: IncidenciaCreateNestedManyWithoutUsuarioInput
     movimientos_stock?: MovimientoStockCreateNestedManyWithoutUsuarioInput
+    user?: UserCreateNestedOneWithoutUsuarioInput
   }
 
   export type UsuarioUncheckedCreateWithoutLog_accesosInput = {
     id?: string
+    user_id?: string | null
     nombre: string
     apellido?: string | null
     rut: string
     telefono: string
     email: string
-    rol: $Enums.Rol
+    rol?: $Enums.Rol
     vehiculo_id?: string | null
     fecha_ingreso: Date | string
     activo?: boolean
@@ -71826,10 +72072,12 @@ export namespace Prisma {
     vehiculo?: VehiculoUpdateOneWithoutUsuariosNestedInput
     incidencias?: IncidenciaUpdateManyWithoutUsuarioNestedInput
     movimientos_stock?: MovimientoStockUpdateManyWithoutUsuarioNestedInput
+    user?: UserUpdateOneWithoutUsuarioNestedInput
   }
 
   export type UsuarioUncheckedUpdateWithoutLog_accesosInput = {
     id?: StringFieldUpdateOperationsInput | string
+    user_id?: NullableStringFieldUpdateOperationsInput | string | null
     nombre?: StringFieldUpdateOperationsInput | string
     apellido?: NullableStringFieldUpdateOperationsInput | string | null
     rut?: StringFieldUpdateOperationsInput | string
@@ -72489,7 +72737,7 @@ export namespace Prisma {
     rut: string
     telefono: string
     email: string
-    rol: $Enums.Rol
+    rol?: $Enums.Rol
     fecha_ingreso: Date | string
     activo?: boolean
     created_at?: Date | string
@@ -72508,16 +72756,18 @@ export namespace Prisma {
     vehiculo?: VehiculoCreateNestedOneWithoutUsuariosInput
     incidencias?: IncidenciaCreateNestedManyWithoutUsuarioInput
     movimientos_stock?: MovimientoStockCreateNestedManyWithoutUsuarioInput
+    user?: UserCreateNestedOneWithoutUsuarioInput
   }
 
   export type UsuarioUncheckedCreateWithoutCargas_combustibleInput = {
     id?: string
+    user_id?: string | null
     nombre: string
     apellido?: string | null
     rut: string
     telefono: string
     email: string
-    rol: $Enums.Rol
+    rol?: $Enums.Rol
     vehiculo_id?: string | null
     fecha_ingreso: Date | string
     activo?: boolean
@@ -72617,10 +72867,12 @@ export namespace Prisma {
     vehiculo?: VehiculoUpdateOneWithoutUsuariosNestedInput
     incidencias?: IncidenciaUpdateManyWithoutUsuarioNestedInput
     movimientos_stock?: MovimientoStockUpdateManyWithoutUsuarioNestedInput
+    user?: UserUpdateOneWithoutUsuarioNestedInput
   }
 
   export type UsuarioUncheckedUpdateWithoutCargas_combustibleInput = {
     id?: StringFieldUpdateOperationsInput | string
+    user_id?: NullableStringFieldUpdateOperationsInput | string | null
     nombre?: StringFieldUpdateOperationsInput | string
     apellido?: NullableStringFieldUpdateOperationsInput | string | null
     rut?: StringFieldUpdateOperationsInput | string
@@ -72783,7 +73035,7 @@ export namespace Prisma {
     rut: string
     telefono: string
     email: string
-    rol: $Enums.Rol
+    rol?: $Enums.Rol
     fecha_ingreso: Date | string
     activo?: boolean
     created_at?: Date | string
@@ -72802,16 +73054,18 @@ export namespace Prisma {
     stock_camion?: StockCamionCreateNestedManyWithoutUsuarioInput
     vehiculo?: VehiculoCreateNestedOneWithoutUsuariosInput
     movimientos_stock?: MovimientoStockCreateNestedManyWithoutUsuarioInput
+    user?: UserCreateNestedOneWithoutUsuarioInput
   }
 
   export type UsuarioUncheckedCreateWithoutIncidenciasInput = {
     id?: string
+    user_id?: string | null
     nombre: string
     apellido?: string | null
     rut: string
     telefono: string
     email: string
-    rol: $Enums.Rol
+    rol?: $Enums.Rol
     vehiculo_id?: string | null
     fecha_ingreso: Date | string
     activo?: boolean
@@ -73021,10 +73275,12 @@ export namespace Prisma {
     stock_camion?: StockCamionUpdateManyWithoutUsuarioNestedInput
     vehiculo?: VehiculoUpdateOneWithoutUsuariosNestedInput
     movimientos_stock?: MovimientoStockUpdateManyWithoutUsuarioNestedInput
+    user?: UserUpdateOneWithoutUsuarioNestedInput
   }
 
   export type UsuarioUncheckedUpdateWithoutIncidenciasInput = {
     id?: StringFieldUpdateOperationsInput | string
+    user_id?: NullableStringFieldUpdateOperationsInput | string | null
     nombre?: StringFieldUpdateOperationsInput | string
     apellido?: NullableStringFieldUpdateOperationsInput | string | null
     rut?: StringFieldUpdateOperationsInput | string
@@ -73178,6 +73434,69 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type UsuarioCreateWithoutUserInput = {
+    id?: string
+    nombre: string
+    apellido?: string | null
+    rut: string
+    telefono: string
+    email: string
+    rol?: $Enums.Rol
+    fecha_ingreso: Date | string
+    activo?: boolean
+    created_at?: Date | string
+    licencia_tipo?: string | null
+    recibe_comision?: boolean
+    vencimiento_lic?: Date | string | null
+    botellones_danados?: BotellonDanadoCreateNestedManyWithoutUsuarioInput
+    cargas_combustible?: CargaCombustibleCreateNestedManyWithoutUsuarioInput
+    cuadraturas?: CuadraturaCreateNestedManyWithoutUsuarioInput
+    guias?: GuiaDespachoCreateNestedManyWithoutUsuario_repartidorInput
+    log_accesos?: LogAccesoCreateNestedManyWithoutUsuarioInput
+    mantenciones?: MantencionCreateNestedManyWithoutUsuarioInput
+    produccion?: ProduccionDiariaCreateNestedManyWithoutUsuarioInput
+    rutas_base?: RutaBaseCreateNestedManyWithoutUsuarioInput
+    rutas_dia?: RutaDiaCreateNestedManyWithoutUsuarioInput
+    stock_camion?: StockCamionCreateNestedManyWithoutUsuarioInput
+    vehiculo?: VehiculoCreateNestedOneWithoutUsuariosInput
+    incidencias?: IncidenciaCreateNestedManyWithoutUsuarioInput
+    movimientos_stock?: MovimientoStockCreateNestedManyWithoutUsuarioInput
+  }
+
+  export type UsuarioUncheckedCreateWithoutUserInput = {
+    id?: string
+    nombre: string
+    apellido?: string | null
+    rut: string
+    telefono: string
+    email: string
+    rol?: $Enums.Rol
+    vehiculo_id?: string | null
+    fecha_ingreso: Date | string
+    activo?: boolean
+    created_at?: Date | string
+    licencia_tipo?: string | null
+    recibe_comision?: boolean
+    vencimiento_lic?: Date | string | null
+    botellones_danados?: BotellonDanadoUncheckedCreateNestedManyWithoutUsuarioInput
+    cargas_combustible?: CargaCombustibleUncheckedCreateNestedManyWithoutUsuarioInput
+    cuadraturas?: CuadraturaUncheckedCreateNestedManyWithoutUsuarioInput
+    guias?: GuiaDespachoUncheckedCreateNestedManyWithoutUsuario_repartidorInput
+    log_accesos?: LogAccesoUncheckedCreateNestedManyWithoutUsuarioInput
+    mantenciones?: MantencionUncheckedCreateNestedManyWithoutUsuarioInput
+    produccion?: ProduccionDiariaUncheckedCreateNestedManyWithoutUsuarioInput
+    rutas_base?: RutaBaseUncheckedCreateNestedManyWithoutUsuarioInput
+    rutas_dia?: RutaDiaUncheckedCreateNestedManyWithoutUsuarioInput
+    stock_camion?: StockCamionUncheckedCreateNestedManyWithoutUsuarioInput
+    incidencias?: IncidenciaUncheckedCreateNestedManyWithoutUsuarioInput
+    movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutUsuarioInput
+  }
+
+  export type UsuarioCreateOrConnectWithoutUserInput = {
+    where: UsuarioWhereUniqueInput
+    create: XOR<UsuarioCreateWithoutUserInput, UsuarioUncheckedCreateWithoutUserInput>
+  }
+
   export type SessionUpsertWithWhereUniqueWithoutUserInput = {
     where: SessionWhereUniqueInput
     update: XOR<SessionUpdateWithoutUserInput, SessionUncheckedUpdateWithoutUserInput>
@@ -73244,6 +73563,75 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Account"> | Date | string
   }
 
+  export type UsuarioUpsertWithoutUserInput = {
+    update: XOR<UsuarioUpdateWithoutUserInput, UsuarioUncheckedUpdateWithoutUserInput>
+    create: XOR<UsuarioCreateWithoutUserInput, UsuarioUncheckedCreateWithoutUserInput>
+    where?: UsuarioWhereInput
+  }
+
+  export type UsuarioUpdateToOneWithWhereWithoutUserInput = {
+    where?: UsuarioWhereInput
+    data: XOR<UsuarioUpdateWithoutUserInput, UsuarioUncheckedUpdateWithoutUserInput>
+  }
+
+  export type UsuarioUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nombre?: StringFieldUpdateOperationsInput | string
+    apellido?: NullableStringFieldUpdateOperationsInput | string | null
+    rut?: StringFieldUpdateOperationsInput | string
+    telefono?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    rol?: EnumRolFieldUpdateOperationsInput | $Enums.Rol
+    fecha_ingreso?: DateTimeFieldUpdateOperationsInput | Date | string
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    licencia_tipo?: NullableStringFieldUpdateOperationsInput | string | null
+    recibe_comision?: BoolFieldUpdateOperationsInput | boolean
+    vencimiento_lic?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    botellones_danados?: BotellonDanadoUpdateManyWithoutUsuarioNestedInput
+    cargas_combustible?: CargaCombustibleUpdateManyWithoutUsuarioNestedInput
+    cuadraturas?: CuadraturaUpdateManyWithoutUsuarioNestedInput
+    guias?: GuiaDespachoUpdateManyWithoutUsuario_repartidorNestedInput
+    log_accesos?: LogAccesoUpdateManyWithoutUsuarioNestedInput
+    mantenciones?: MantencionUpdateManyWithoutUsuarioNestedInput
+    produccion?: ProduccionDiariaUpdateManyWithoutUsuarioNestedInput
+    rutas_base?: RutaBaseUpdateManyWithoutUsuarioNestedInput
+    rutas_dia?: RutaDiaUpdateManyWithoutUsuarioNestedInput
+    stock_camion?: StockCamionUpdateManyWithoutUsuarioNestedInput
+    vehiculo?: VehiculoUpdateOneWithoutUsuariosNestedInput
+    incidencias?: IncidenciaUpdateManyWithoutUsuarioNestedInput
+    movimientos_stock?: MovimientoStockUpdateManyWithoutUsuarioNestedInput
+  }
+
+  export type UsuarioUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nombre?: StringFieldUpdateOperationsInput | string
+    apellido?: NullableStringFieldUpdateOperationsInput | string | null
+    rut?: StringFieldUpdateOperationsInput | string
+    telefono?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    rol?: EnumRolFieldUpdateOperationsInput | $Enums.Rol
+    vehiculo_id?: NullableStringFieldUpdateOperationsInput | string | null
+    fecha_ingreso?: DateTimeFieldUpdateOperationsInput | Date | string
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    licencia_tipo?: NullableStringFieldUpdateOperationsInput | string | null
+    recibe_comision?: BoolFieldUpdateOperationsInput | boolean
+    vencimiento_lic?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    botellones_danados?: BotellonDanadoUncheckedUpdateManyWithoutUsuarioNestedInput
+    cargas_combustible?: CargaCombustibleUncheckedUpdateManyWithoutUsuarioNestedInput
+    cuadraturas?: CuadraturaUncheckedUpdateManyWithoutUsuarioNestedInput
+    guias?: GuiaDespachoUncheckedUpdateManyWithoutUsuario_repartidorNestedInput
+    log_accesos?: LogAccesoUncheckedUpdateManyWithoutUsuarioNestedInput
+    mantenciones?: MantencionUncheckedUpdateManyWithoutUsuarioNestedInput
+    produccion?: ProduccionDiariaUncheckedUpdateManyWithoutUsuarioNestedInput
+    rutas_base?: RutaBaseUncheckedUpdateManyWithoutUsuarioNestedInput
+    rutas_dia?: RutaDiaUncheckedUpdateManyWithoutUsuarioNestedInput
+    stock_camion?: StockCamionUncheckedUpdateManyWithoutUsuarioNestedInput
+    incidencias?: IncidenciaUncheckedUpdateManyWithoutUsuarioNestedInput
+    movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutUsuarioNestedInput
+  }
+
   export type UserCreateWithoutSessionsInput = {
     id: string
     name: string
@@ -73254,6 +73642,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     rut: string
     accounts?: AccountCreateNestedManyWithoutUserInput
+    usuario?: UsuarioCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSessionsInput = {
@@ -73266,6 +73655,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     rut: string
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    usuario?: UsuarioUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSessionsInput = {
@@ -73294,6 +73684,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     rut?: StringFieldUpdateOperationsInput | string
     accounts?: AccountUpdateManyWithoutUserNestedInput
+    usuario?: UsuarioUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -73306,6 +73697,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     rut?: StringFieldUpdateOperationsInput | string
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    usuario?: UsuarioUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type UserCreateWithoutAccountsInput = {
@@ -73318,6 +73710,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     rut: string
     sessions?: SessionCreateNestedManyWithoutUserInput
+    usuario?: UsuarioCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAccountsInput = {
@@ -73330,6 +73723,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     rut: string
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    usuario?: UsuarioUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAccountsInput = {
@@ -73358,6 +73752,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     rut?: StringFieldUpdateOperationsInput | string
     sessions?: SessionUpdateManyWithoutUserNestedInput
+    usuario?: UsuarioUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -73370,6 +73765,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     rut?: StringFieldUpdateOperationsInput | string
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    usuario?: UsuarioUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type BotellonDanadoCreateManyUsuarioInput = {
@@ -73973,12 +74369,13 @@ export namespace Prisma {
 
   export type UsuarioCreateManyVehiculoInput = {
     id?: string
+    user_id?: string | null
     nombre: string
     apellido?: string | null
     rut: string
     telefono: string
     email: string
-    rol: $Enums.Rol
+    rol?: $Enums.Rol
     fecha_ingreso: Date | string
     activo?: boolean
     created_at?: Date | string
@@ -74173,10 +74570,12 @@ export namespace Prisma {
     stock_camion?: StockCamionUpdateManyWithoutUsuarioNestedInput
     incidencias?: IncidenciaUpdateManyWithoutUsuarioNestedInput
     movimientos_stock?: MovimientoStockUpdateManyWithoutUsuarioNestedInput
+    user?: UserUpdateOneWithoutUsuarioNestedInput
   }
 
   export type UsuarioUncheckedUpdateWithoutVehiculoInput = {
     id?: StringFieldUpdateOperationsInput | string
+    user_id?: NullableStringFieldUpdateOperationsInput | string | null
     nombre?: StringFieldUpdateOperationsInput | string
     apellido?: NullableStringFieldUpdateOperationsInput | string | null
     rut?: StringFieldUpdateOperationsInput | string
@@ -74205,6 +74604,7 @@ export namespace Prisma {
 
   export type UsuarioUncheckedUpdateManyWithoutVehiculoInput = {
     id?: StringFieldUpdateOperationsInput | string
+    user_id?: NullableStringFieldUpdateOperationsInput | string | null
     nombre?: StringFieldUpdateOperationsInput | string
     apellido?: NullableStringFieldUpdateOperationsInput | string | null
     rut?: StringFieldUpdateOperationsInput | string

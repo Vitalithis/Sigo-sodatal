@@ -1,6 +1,17 @@
+import { redirect } from 'next/navigation';
 import { logout } from '../(auth)/login/actions';
+import { getUsuarioActual } from '@/lib/auth-session';
 
-export default function PendientePage() {
+export default async function PendientePage() {
+  const usuario = await getUsuarioActual();
+
+  if (!usuario) redirect('/login');
+  
+  if (usuario.rol === 'ADMIN') redirect('/admin');
+  if (usuario.rol === 'OFICINA') redirect('/oficina');
+  if (usuario.rol === 'REPARTIDOR') redirect('/repartidor');
+
+  // Si llega aquí es porque rol es PENDIENTE
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-slate-50 p-8 text-center">
       <h1 className="text-2xl font-bold text-slate-900">SIGO Sodatal</h1>

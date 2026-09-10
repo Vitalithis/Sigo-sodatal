@@ -3,10 +3,16 @@ import { headers } from 'next/headers';
 import { prisma } from '../../lib/prisma';
 
 export async function getSession() {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-  return session;
+  try {
+    const headersList = await headers();
+    const session = await auth.api.getSession({
+      headers: headersList,
+    });
+    return session;
+  } catch (e) {
+    console.error('getSession error:', e);
+    return null;
+  }
 }
 
 export async function getUsuarioActual() {

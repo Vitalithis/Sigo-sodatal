@@ -11,12 +11,13 @@ datasource db {
 
 model Usuario {
   id                 String             @id @default(uuid())
+  user_id            String?            @unique
   nombre             String
   apellido           String?
   rut                String             @unique
   telefono           String
   email              String             @unique
-  rol                Rol
+  rol                Rol                @default(PENDIENTE)
   vehiculo_id        String?
   fecha_ingreso      DateTime
   activo             Boolean            @default(true)
@@ -37,6 +38,7 @@ model Usuario {
   vehiculo           Vehiculo?          @relation(fields: [vehiculo_id], references: [id])
   incidencias        Incidencia[]
   movimientos_stock  MovimientoStock[]
+  user               User?              @relation(fields: [user_id], references: [id])
 }
 
 model Vehiculo {
@@ -551,6 +553,7 @@ model User {
   sessions      Session[]
   accounts      Account[]
   rut           String    @unique
+  usuario       Usuario?
 
   @@map("user")
 }
@@ -615,6 +618,7 @@ enum Rol {
   ADMIN
   OFICINA
   REPARTIDOR
+  PENDIENTE
 }
 
 enum EstadoVehiculo {

@@ -51,6 +51,16 @@ export async function actualizarRol(userId: string, nuevoRol: string) {
     return { success: false, error: 'Rol inválido.' };
   }
 
+  // Proteger al superadmin
+  const objetivo = await prisma.usuario.findUnique({
+    where: { id: userId },
+    select: { email: true },
+  });
+
+  if (objetivo?.email === process.env.SUPERADMIN_EMAIL) {
+    return { success: false, error: 'No se puede modificar al superadministrador.' };
+  }
+
   await prisma.usuario.update({
     where: { id: userId },
     data: { rol: nuevoRol as Rol },

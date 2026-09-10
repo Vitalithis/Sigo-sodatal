@@ -8,9 +8,13 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   const usuario = await getUsuarioActual();
 
   if (!usuario) redirect('/login');
+  
+  if (usuario.rol === 'PENDIENTE') redirect('/pendiente');
+  if (usuario.rol === 'REPARTIDOR') redirect('/repartidor');
+  if (usuario.rol === 'OFICINA') redirect('/oficina');
 
-  const rol = usuario.rol ?? 'PENDIENTE';
-  const nombre = usuario.nombre ?? 'Usuario';
+  const rol = usuario.rol;
+  const nombre = usuario.nombre;
 
   return (
     <div className="flex h-screen bg-[#f4f6f9] font-sans w-full">

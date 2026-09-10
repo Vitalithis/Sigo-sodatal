@@ -180,14 +180,16 @@ export function useProductManager(initialProductos: Producto[], usuarioActualId:
     if (!stockProducto || stockCantidad === '' || !stockMotivo.trim()) {
       notify('error', 'Completa todos los campos del ajuste.'); return;
     }
-    const delta = stockTipo === 'entrada' ? Number(stockCantidad) : -Number(stockCantidad);
+    
     startTransition(async () => {
       const res = await ajustarStockAction({
         producto_id: stockProducto.id,
         usuario_id: usuarioActualId,
-        cantidad: delta,
+        cantidad: Number(stockCantidad), 
         motivo: stockMotivo.trim(),
+        tipo: stockTipo,
       });
+      
       if (res.success) {
         notify('success', `Stock actualizado. Nuevo stock: ${res.stock_despues} unidades.`);
         setIsStockOpen(false); setStockProducto(null);

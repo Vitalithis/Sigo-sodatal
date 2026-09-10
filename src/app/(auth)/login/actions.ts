@@ -68,6 +68,22 @@ export async function signup(
       } as any,
       headers: await headers(),
     });
+
+    // Buscar el User recién creado para vincularlo
+    const user = await prisma.user.findUnique({ where: { email } });
+
+    await prisma.usuario.create({
+      data: {
+        user_id: user?.id,
+        email,
+        nombre: nombre || email,
+        rut: rutLimpio,
+        telefono: '',
+        fecha_ingreso: new Date(),
+        // rol queda PENDIENTE por default
+      },
+    });
+
   } catch (error: any) {
     console.error('Error en signup:', error.message);
     if (error.message?.includes('already exists')) {
@@ -78,7 +94,6 @@ export async function signup(
 
   redirect('/pendiente');
 }
-
 export async function logout() {
   await auth.api.signOut({
     headers: await headers(),

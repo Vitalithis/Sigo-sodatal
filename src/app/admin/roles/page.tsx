@@ -7,14 +7,14 @@ export default async function RolesPage() {
 
   return (
     <div className="space-y-6">
-
-      {/* HEADER */}
-      <div className="flex items-center justify-between pb-4 border-b border-gray-200">
+      <div className="flex items-center gap-3 pb-4 border-b border-gray-200">
+        <ShieldCheck className="h-6 w-6 text-[#013299]" />
+        <div>
+          <h1 className="text-xl font-bold text-gray-900">Gestión de Roles</h1>
+          <p className="text-sm text-gray-500">Asigna roles a los usuarios registrados en el sistema</p>
+        </div>
       </div>
-
-      {/* TABLA */}
       <RolesTable usuarios={usuarios} />
-
     </div>
   );
 }

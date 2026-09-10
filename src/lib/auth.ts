@@ -29,7 +29,7 @@ export const auth = betterAuth({
       maxAge: 60 * 5,
     },
   },
-  plugins: [nextCookies()], // debe ir último en el array de plugins
+  plugins: [nextCookies()],
 });
 
 export type Session = typeof auth.$Infer.Session;
