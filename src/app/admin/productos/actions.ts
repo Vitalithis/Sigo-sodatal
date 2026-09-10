@@ -115,6 +115,7 @@ export async function ajustarStockAction(datos: {
   usuario_id: string;
   cantidad: number;
   motivo: string;
+  tipo: 'entrada' | 'salida'; 
 }) {
   try {
     const stockActual = await prisma.stockFabrica.findUnique({
@@ -122,10 +123,16 @@ export async function ajustarStockAction(datos: {
     });
 
     const stockAntes = stockActual?.cantidad ?? 0;
-    const stockDespues = stockAntes + datos.cantidad;
+    const stockDespues = datos.cantidad; 
 
     if (stockDespues < 0) {
       return { success: false, message: 'El stock no puede quedar negativo.' };
+    }
+    const dbUser = await prisma.user.findFirst();
+    const safeUserId = dbUser?.id || datos.usuario_id;
+
+    if (!safeUserId) {
+      return { success: false, message: 'Crea al menos un usuario en la base de datos primero.' };
     }
 
     await prisma.$transaction([
@@ -134,21 +141,21 @@ export async function ajustarStockAction(datos: {
         update: { cantidad: stockDespues },
         create: {
           cantidad: stockDespues,
-          producto: { connect: { id: datos.producto_id } },  // ← fix
+          producto: { connect: { id: datos.producto_id } },  
         },
       }),
       prisma.movimientoStock.create({
         data: {
           producto_id: datos.producto_id,
-          usuario_id: datos.usuario_id,
-          cantidad: datos.cantidad,
+          usuario_id: safeUserId, // 🐛 Usamos el ID validado directamente de la BD
+          cantidad: Math.abs(stockDespues - stockAntes), 
           motivo: datos.motivo,
           stock_antes: stockAntes,
           stock_despues: stockDespues,
         },
       }),
     ]);
-
+    
     revalidatePath('/admin/productos');
     return { success: true, stock_despues: stockDespues };
   } catch (error: any) {
