@@ -14,6 +14,7 @@ import {
   Package,
   FlaskConical,
   ShieldCheck,
+  Building2,
 } from 'lucide-react';
 
 export default function Sidebar({ rol }: { rol: string }) {
@@ -29,10 +30,14 @@ export default function Sidebar({ rol }: { rol: string }) {
     { name: 'Guías de Despacho',  href: '/admin/guias',       icon: FileText        },
     { name: 'Catálogo Productos', href: '/admin/productos',   icon: Package         },
     { name: 'Producción y CO2',   href: '/admin/produccion',  icon: FlaskConical    },
+    
     ...(rol === 'ADMIN'
-      ? [{ name: 'Roles', href: '/admin/roles', icon: ShieldCheck }]
-      : []),
-  ];
+  ? [
+      { name: 'Roles',    href: '/admin/roles',    icon: ShieldCheck },
+      { name: 'Sectores', href: '/admin/sectores', icon: Building2   },
+    ]
+  : []),
+];
 
   return (
     <aside

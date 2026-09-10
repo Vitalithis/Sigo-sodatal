@@ -64,10 +64,20 @@ export type Cliente = $Result.DefaultSelection<Prisma.$ClientePayload>
  */
 export type RutaBase = $Result.DefaultSelection<Prisma.$RutaBasePayload>
 /**
- * Model ComunaRuta
+ * Model RutaBaseSector
  * 
  */
-export type ComunaRuta = $Result.DefaultSelection<Prisma.$ComunaRutaPayload>
+export type RutaBaseSector = $Result.DefaultSelection<Prisma.$RutaBaseSectorPayload>
+/**
+ * Model Comuna
+ * 
+ */
+export type Comuna = $Result.DefaultSelection<Prisma.$ComunaPayload>
+/**
+ * Model Sector
+ * 
+ */
+export type Sector = $Result.DefaultSelection<Prisma.$SectorPayload>
 /**
  * Model ClienteRutaBase
  * 
@@ -757,14 +767,34 @@ export class PrismaClient<
   get rutaBase(): Prisma.RutaBaseDelegate<ExtArgs, ClientOptions>;
 
   /**
-   * `prisma.comunaRuta`: Exposes CRUD operations for the **ComunaRuta** model.
+   * `prisma.rutaBaseSector`: Exposes CRUD operations for the **RutaBaseSector** model.
     * Example usage:
     * ```ts
-    * // Fetch zero or more ComunaRutas
-    * const comunaRutas = await prisma.comunaRuta.findMany()
+    * // Fetch zero or more RutaBaseSectors
+    * const rutaBaseSectors = await prisma.rutaBaseSector.findMany()
     * ```
     */
-  get comunaRuta(): Prisma.ComunaRutaDelegate<ExtArgs, ClientOptions>;
+  get rutaBaseSector(): Prisma.RutaBaseSectorDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.comuna`: Exposes CRUD operations for the **Comuna** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Comunas
+    * const comunas = await prisma.comuna.findMany()
+    * ```
+    */
+  get comuna(): Prisma.ComunaDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.sector`: Exposes CRUD operations for the **Sector** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Sectors
+    * const sectors = await prisma.sector.findMany()
+    * ```
+    */
+  get sector(): Prisma.SectorDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.clienteRutaBase`: Exposes CRUD operations for the **ClienteRutaBase** model.
@@ -1536,7 +1566,9 @@ export namespace Prisma {
     Comision: 'Comision',
     Cliente: 'Cliente',
     RutaBase: 'RutaBase',
-    ComunaRuta: 'ComunaRuta',
+    RutaBaseSector: 'RutaBaseSector',
+    Comuna: 'Comuna',
+    Sector: 'Sector',
     ClienteRutaBase: 'ClienteRutaBase',
     RutaDia: 'RutaDia',
     ParadaDia: 'ParadaDia',
@@ -1587,7 +1619,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "usuario" | "vehiculo" | "mantencion" | "repuestoMantencion" | "alertaVehiculo" | "producto" | "movimientoStock" | "comision" | "cliente" | "rutaBase" | "comunaRuta" | "clienteRutaBase" | "rutaDia" | "paradaDia" | "pedido" | "pedidoItem" | "guiaDespacho" | "itemGuia" | "cuadratura" | "cuadraturaSalida" | "cuadraturaVenta" | "cuadraturaRetorno" | "cuadraturaGasto" | "botellonVacio" | "botellonDanado" | "produccionDiaria" | "tuboCO2" | "stockFabrica" | "stockCamion" | "configuracion" | "logAcceso" | "dispensador" | "mantencionDispensador" | "repuestoDispensador" | "maquinaReemplazo" | "notificacion" | "historialFinanciero" | "cargaCombustible" | "incidencia" | "user" | "session" | "account" | "verification"
+      modelProps: "usuario" | "vehiculo" | "mantencion" | "repuestoMantencion" | "alertaVehiculo" | "producto" | "movimientoStock" | "comision" | "cliente" | "rutaBase" | "rutaBaseSector" | "comuna" | "sector" | "clienteRutaBase" | "rutaDia" | "paradaDia" | "pedido" | "pedidoItem" | "guiaDespacho" | "itemGuia" | "cuadratura" | "cuadraturaSalida" | "cuadraturaVenta" | "cuadraturaRetorno" | "cuadraturaGasto" | "botellonVacio" | "botellonDanado" | "produccionDiaria" | "tuboCO2" | "stockFabrica" | "stockCamion" | "configuracion" | "logAcceso" | "dispensador" | "mantencionDispensador" | "repuestoDispensador" | "maquinaReemplazo" | "notificacion" | "historialFinanciero" | "cargaCombustible" | "incidencia" | "user" | "session" | "account" | "verification"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2251,69 +2283,201 @@ export namespace Prisma {
           }
         }
       }
-      ComunaRuta: {
-        payload: Prisma.$ComunaRutaPayload<ExtArgs>
-        fields: Prisma.ComunaRutaFieldRefs
+      RutaBaseSector: {
+        payload: Prisma.$RutaBaseSectorPayload<ExtArgs>
+        fields: Prisma.RutaBaseSectorFieldRefs
         operations: {
           findUnique: {
-            args: Prisma.ComunaRutaFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ComunaRutaPayload> | null
+            args: Prisma.RutaBaseSectorFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RutaBaseSectorPayload> | null
           }
           findUniqueOrThrow: {
-            args: Prisma.ComunaRutaFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ComunaRutaPayload>
+            args: Prisma.RutaBaseSectorFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RutaBaseSectorPayload>
           }
           findFirst: {
-            args: Prisma.ComunaRutaFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ComunaRutaPayload> | null
+            args: Prisma.RutaBaseSectorFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RutaBaseSectorPayload> | null
           }
           findFirstOrThrow: {
-            args: Prisma.ComunaRutaFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ComunaRutaPayload>
+            args: Prisma.RutaBaseSectorFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RutaBaseSectorPayload>
           }
           findMany: {
-            args: Prisma.ComunaRutaFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ComunaRutaPayload>[]
+            args: Prisma.RutaBaseSectorFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RutaBaseSectorPayload>[]
           }
           create: {
-            args: Prisma.ComunaRutaCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ComunaRutaPayload>
+            args: Prisma.RutaBaseSectorCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RutaBaseSectorPayload>
           }
           createMany: {
-            args: Prisma.ComunaRutaCreateManyArgs<ExtArgs>
+            args: Prisma.RutaBaseSectorCreateManyArgs<ExtArgs>
             result: BatchPayload
           }
           delete: {
-            args: Prisma.ComunaRutaDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ComunaRutaPayload>
+            args: Prisma.RutaBaseSectorDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RutaBaseSectorPayload>
           }
           update: {
-            args: Prisma.ComunaRutaUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ComunaRutaPayload>
+            args: Prisma.RutaBaseSectorUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RutaBaseSectorPayload>
           }
           deleteMany: {
-            args: Prisma.ComunaRutaDeleteManyArgs<ExtArgs>
+            args: Prisma.RutaBaseSectorDeleteManyArgs<ExtArgs>
             result: BatchPayload
           }
           updateMany: {
-            args: Prisma.ComunaRutaUpdateManyArgs<ExtArgs>
+            args: Prisma.RutaBaseSectorUpdateManyArgs<ExtArgs>
             result: BatchPayload
           }
           upsert: {
-            args: Prisma.ComunaRutaUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ComunaRutaPayload>
+            args: Prisma.RutaBaseSectorUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RutaBaseSectorPayload>
           }
           aggregate: {
-            args: Prisma.ComunaRutaAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateComunaRuta>
+            args: Prisma.RutaBaseSectorAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateRutaBaseSector>
           }
           groupBy: {
-            args: Prisma.ComunaRutaGroupByArgs<ExtArgs>
-            result: $Utils.Optional<ComunaRutaGroupByOutputType>[]
+            args: Prisma.RutaBaseSectorGroupByArgs<ExtArgs>
+            result: $Utils.Optional<RutaBaseSectorGroupByOutputType>[]
           }
           count: {
-            args: Prisma.ComunaRutaCountArgs<ExtArgs>
-            result: $Utils.Optional<ComunaRutaCountAggregateOutputType> | number
+            args: Prisma.RutaBaseSectorCountArgs<ExtArgs>
+            result: $Utils.Optional<RutaBaseSectorCountAggregateOutputType> | number
+          }
+        }
+      }
+      Comuna: {
+        payload: Prisma.$ComunaPayload<ExtArgs>
+        fields: Prisma.ComunaFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ComunaFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ComunaPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ComunaFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ComunaPayload>
+          }
+          findFirst: {
+            args: Prisma.ComunaFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ComunaPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ComunaFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ComunaPayload>
+          }
+          findMany: {
+            args: Prisma.ComunaFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ComunaPayload>[]
+          }
+          create: {
+            args: Prisma.ComunaCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ComunaPayload>
+          }
+          createMany: {
+            args: Prisma.ComunaCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.ComunaDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ComunaPayload>
+          }
+          update: {
+            args: Prisma.ComunaUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ComunaPayload>
+          }
+          deleteMany: {
+            args: Prisma.ComunaDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ComunaUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.ComunaUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ComunaPayload>
+          }
+          aggregate: {
+            args: Prisma.ComunaAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateComuna>
+          }
+          groupBy: {
+            args: Prisma.ComunaGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ComunaGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ComunaCountArgs<ExtArgs>
+            result: $Utils.Optional<ComunaCountAggregateOutputType> | number
+          }
+        }
+      }
+      Sector: {
+        payload: Prisma.$SectorPayload<ExtArgs>
+        fields: Prisma.SectorFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SectorFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SectorPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SectorFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SectorPayload>
+          }
+          findFirst: {
+            args: Prisma.SectorFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SectorPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SectorFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SectorPayload>
+          }
+          findMany: {
+            args: Prisma.SectorFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SectorPayload>[]
+          }
+          create: {
+            args: Prisma.SectorCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SectorPayload>
+          }
+          createMany: {
+            args: Prisma.SectorCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.SectorDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SectorPayload>
+          }
+          update: {
+            args: Prisma.SectorUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SectorPayload>
+          }
+          deleteMany: {
+            args: Prisma.SectorDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SectorUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.SectorUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SectorPayload>
+          }
+          aggregate: {
+            args: Prisma.SectorAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSector>
+          }
+          groupBy: {
+            args: Prisma.SectorGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SectorGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SectorCountArgs<ExtArgs>
+            result: $Utils.Optional<SectorCountAggregateOutputType> | number
           }
         }
       }
@@ -4535,7 +4699,9 @@ export namespace Prisma {
     comision?: ComisionOmit
     cliente?: ClienteOmit
     rutaBase?: RutaBaseOmit
-    comunaRuta?: ComunaRutaOmit
+    rutaBaseSector?: RutaBaseSectorOmit
+    comuna?: ComunaOmit
+    sector?: SectorOmit
     clienteRutaBase?: ClienteRutaBaseOmit
     rutaDia?: RutaDiaOmit
     paradaDia?: ParadaDiaOmit
@@ -5074,13 +5240,13 @@ export namespace Prisma {
 
   export type RutaBaseCountOutputType = {
     clientes: number
-    comunas: number
+    sectores: number
     rutas_dia: number
   }
 
   export type RutaBaseCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     clientes?: boolean | RutaBaseCountOutputTypeCountClientesArgs
-    comunas?: boolean | RutaBaseCountOutputTypeCountComunasArgs
+    sectores?: boolean | RutaBaseCountOutputTypeCountSectoresArgs
     rutas_dia?: boolean | RutaBaseCountOutputTypeCountRutas_diaArgs
   }
 
@@ -5105,8 +5271,8 @@ export namespace Prisma {
   /**
    * RutaBaseCountOutputType without action
    */
-  export type RutaBaseCountOutputTypeCountComunasArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: ComunaRutaWhereInput
+  export type RutaBaseCountOutputTypeCountSectoresArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RutaBaseSectorWhereInput
   }
 
   /**
@@ -5114,6 +5280,77 @@ export namespace Prisma {
    */
   export type RutaBaseCountOutputTypeCountRutas_diaArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: RutaDiaWhereInput
+  }
+
+
+  /**
+   * Count Type ComunaCountOutputType
+   */
+
+  export type ComunaCountOutputType = {
+    sectores: number
+  }
+
+  export type ComunaCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    sectores?: boolean | ComunaCountOutputTypeCountSectoresArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * ComunaCountOutputType without action
+   */
+  export type ComunaCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ComunaCountOutputType
+     */
+    select?: ComunaCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * ComunaCountOutputType without action
+   */
+  export type ComunaCountOutputTypeCountSectoresArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SectorWhereInput
+  }
+
+
+  /**
+   * Count Type SectorCountOutputType
+   */
+
+  export type SectorCountOutputType = {
+    clientes: number
+    rutas_base: number
+  }
+
+  export type SectorCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    clientes?: boolean | SectorCountOutputTypeCountClientesArgs
+    rutas_base?: boolean | SectorCountOutputTypeCountRutas_baseArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * SectorCountOutputType without action
+   */
+  export type SectorCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SectorCountOutputType
+     */
+    select?: SectorCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * SectorCountOutputType without action
+   */
+  export type SectorCountOutputTypeCountClientesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ClienteWhereInput
+  }
+
+  /**
+   * SectorCountOutputType without action
+   */
+  export type SectorCountOutputTypeCountRutas_baseArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RutaBaseSectorWhereInput
   }
 
 
@@ -14332,7 +14569,7 @@ export namespace Prisma {
     activo: boolean | null
     botellones_prestados: number | null
     preferencia_factura: $Enums.PreferenciaFacturacion | null
-    sector: string | null
+    sector_id: string | null
     frecuencia: $Enums.Frecuencia | null
     semana_alterna: $Enums.SemanaAlterna | null
   }
@@ -14352,7 +14589,7 @@ export namespace Prisma {
     activo: boolean | null
     botellones_prestados: number | null
     preferencia_factura: $Enums.PreferenciaFacturacion | null
-    sector: string | null
+    sector_id: string | null
     frecuencia: $Enums.Frecuencia | null
     semana_alterna: $Enums.SemanaAlterna | null
   }
@@ -14372,7 +14609,7 @@ export namespace Prisma {
     activo: number
     botellones_prestados: number
     preferencia_factura: number
-    sector: number
+    sector_id: number
     frecuencia: number
     semana_alterna: number
     _all: number
@@ -14402,7 +14639,7 @@ export namespace Prisma {
     activo?: true
     botellones_prestados?: true
     preferencia_factura?: true
-    sector?: true
+    sector_id?: true
     frecuencia?: true
     semana_alterna?: true
   }
@@ -14422,7 +14659,7 @@ export namespace Prisma {
     activo?: true
     botellones_prestados?: true
     preferencia_factura?: true
-    sector?: true
+    sector_id?: true
     frecuencia?: true
     semana_alterna?: true
   }
@@ -14442,7 +14679,7 @@ export namespace Prisma {
     activo?: true
     botellones_prestados?: true
     preferencia_factura?: true
-    sector?: true
+    sector_id?: true
     frecuencia?: true
     semana_alterna?: true
     _all?: true
@@ -14549,7 +14786,7 @@ export namespace Prisma {
     activo: boolean
     botellones_prestados: number
     preferencia_factura: $Enums.PreferenciaFacturacion
-    sector: string
+    sector_id: string | null
     frecuencia: $Enums.Frecuencia
     semana_alterna: $Enums.SemanaAlterna | null
     _count: ClienteCountAggregateOutputType | null
@@ -14588,9 +14825,10 @@ export namespace Prisma {
     activo?: boolean
     botellones_prestados?: boolean
     preferencia_factura?: boolean
-    sector?: boolean
+    sector_id?: boolean
     frecuencia?: boolean
     semana_alterna?: boolean
+    sector?: boolean | Cliente$sectorArgs<ExtArgs>
     botellones_danados?: boolean | Cliente$botellones_danadosArgs<ExtArgs>
     clientes_ruta?: boolean | Cliente$clientes_rutaArgs<ExtArgs>
     dispensadores?: boolean | Cliente$dispensadoresArgs<ExtArgs>
@@ -14619,13 +14857,14 @@ export namespace Prisma {
     activo?: boolean
     botellones_prestados?: boolean
     preferencia_factura?: boolean
-    sector?: boolean
+    sector_id?: boolean
     frecuencia?: boolean
     semana_alterna?: boolean
   }
 
-  export type ClienteOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nombre" | "tipo" | "direccion" | "telefono" | "email" | "rut_empresa" | "giro" | "modalidad_pago" | "tipo_ruta" | "notas" | "activo" | "botellones_prestados" | "preferencia_factura" | "sector" | "frecuencia" | "semana_alterna", ExtArgs["result"]["cliente"]>
+  export type ClienteOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nombre" | "tipo" | "direccion" | "telefono" | "email" | "rut_empresa" | "giro" | "modalidad_pago" | "tipo_ruta" | "notas" | "activo" | "botellones_prestados" | "preferencia_factura" | "sector_id" | "frecuencia" | "semana_alterna", ExtArgs["result"]["cliente"]>
   export type ClienteInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    sector?: boolean | Cliente$sectorArgs<ExtArgs>
     botellones_danados?: boolean | Cliente$botellones_danadosArgs<ExtArgs>
     clientes_ruta?: boolean | Cliente$clientes_rutaArgs<ExtArgs>
     dispensadores?: boolean | Cliente$dispensadoresArgs<ExtArgs>
@@ -14640,6 +14879,7 @@ export namespace Prisma {
   export type $ClientePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Cliente"
     objects: {
+      sector: Prisma.$SectorPayload<ExtArgs> | null
       botellones_danados: Prisma.$BotellonDanadoPayload<ExtArgs>[]
       clientes_ruta: Prisma.$ClienteRutaBasePayload<ExtArgs>[]
       dispensadores: Prisma.$DispensadorPayload<ExtArgs>[]
@@ -14664,7 +14904,7 @@ export namespace Prisma {
       activo: boolean
       botellones_prestados: number
       preferencia_factura: $Enums.PreferenciaFacturacion
-      sector: string
+      sector_id: string | null
       frecuencia: $Enums.Frecuencia
       semana_alterna: $Enums.SemanaAlterna | null
     }, ExtArgs["result"]["cliente"]>
@@ -15007,6 +15247,7 @@ export namespace Prisma {
    */
   export interface Prisma__ClienteClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    sector<T extends Cliente$sectorArgs<ExtArgs> = {}>(args?: Subset<T, Cliente$sectorArgs<ExtArgs>>): Prisma__SectorClient<$Result.GetResult<Prisma.$SectorPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     botellones_danados<T extends Cliente$botellones_danadosArgs<ExtArgs> = {}>(args?: Subset<T, Cliente$botellones_danadosArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BotellonDanadoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     clientes_ruta<T extends Cliente$clientes_rutaArgs<ExtArgs> = {}>(args?: Subset<T, Cliente$clientes_rutaArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ClienteRutaBasePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     dispensadores<T extends Cliente$dispensadoresArgs<ExtArgs> = {}>(args?: Subset<T, Cliente$dispensadoresArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DispensadorPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -15058,7 +15299,7 @@ export namespace Prisma {
     readonly activo: FieldRef<"Cliente", 'Boolean'>
     readonly botellones_prestados: FieldRef<"Cliente", 'Int'>
     readonly preferencia_factura: FieldRef<"Cliente", 'PreferenciaFacturacion'>
-    readonly sector: FieldRef<"Cliente", 'String'>
+    readonly sector_id: FieldRef<"Cliente", 'String'>
     readonly frecuencia: FieldRef<"Cliente", 'Frecuencia'>
     readonly semana_alterna: FieldRef<"Cliente", 'SemanaAlterna'>
   }
@@ -15401,6 +15642,25 @@ export namespace Prisma {
      * Limit how many Clientes to delete.
      */
     limit?: number
+  }
+
+  /**
+   * Cliente.sector
+   */
+  export type Cliente$sectorArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Sector
+     */
+    select?: SectorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Sector
+     */
+    omit?: SectorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SectorInclude<ExtArgs> | null
+    where?: SectorWhereInput
   }
 
   /**
@@ -15795,7 +16055,7 @@ export namespace Prisma {
     usuario_id?: boolean
     vehiculo_id?: boolean
     clientes?: boolean | RutaBase$clientesArgs<ExtArgs>
-    comunas?: boolean | RutaBase$comunasArgs<ExtArgs>
+    sectores?: boolean | RutaBase$sectoresArgs<ExtArgs>
     usuario?: boolean | UsuarioDefaultArgs<ExtArgs>
     vehiculo?: boolean | VehiculoDefaultArgs<ExtArgs>
     rutas_dia?: boolean | RutaBase$rutas_diaArgs<ExtArgs>
@@ -15817,7 +16077,7 @@ export namespace Prisma {
   export type RutaBaseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nombre" | "dia_semana" | "frecuencia" | "semana_alterna" | "usuario_id" | "vehiculo_id", ExtArgs["result"]["rutaBase"]>
   export type RutaBaseInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     clientes?: boolean | RutaBase$clientesArgs<ExtArgs>
-    comunas?: boolean | RutaBase$comunasArgs<ExtArgs>
+    sectores?: boolean | RutaBase$sectoresArgs<ExtArgs>
     usuario?: boolean | UsuarioDefaultArgs<ExtArgs>
     vehiculo?: boolean | VehiculoDefaultArgs<ExtArgs>
     rutas_dia?: boolean | RutaBase$rutas_diaArgs<ExtArgs>
@@ -15828,7 +16088,7 @@ export namespace Prisma {
     name: "RutaBase"
     objects: {
       clientes: Prisma.$ClienteRutaBasePayload<ExtArgs>[]
-      comunas: Prisma.$ComunaRutaPayload<ExtArgs>[]
+      sectores: Prisma.$RutaBaseSectorPayload<ExtArgs>[]
       usuario: Prisma.$UsuarioPayload<ExtArgs>
       vehiculo: Prisma.$VehiculoPayload<ExtArgs>
       rutas_dia: Prisma.$RutaDiaPayload<ExtArgs>[]
@@ -16182,7 +16442,7 @@ export namespace Prisma {
   export interface Prisma__RutaBaseClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     clientes<T extends RutaBase$clientesArgs<ExtArgs> = {}>(args?: Subset<T, RutaBase$clientesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ClienteRutaBasePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    comunas<T extends RutaBase$comunasArgs<ExtArgs> = {}>(args?: Subset<T, RutaBase$comunasArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ComunaRutaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    sectores<T extends RutaBase$sectoresArgs<ExtArgs> = {}>(args?: Subset<T, RutaBase$sectoresArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RutaBaseSectorPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     usuario<T extends UsuarioDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UsuarioDefaultArgs<ExtArgs>>): Prisma__UsuarioClient<$Result.GetResult<Prisma.$UsuarioPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     vehiculo<T extends VehiculoDefaultArgs<ExtArgs> = {}>(args?: Subset<T, VehiculoDefaultArgs<ExtArgs>>): Prisma__VehiculoClient<$Result.GetResult<Prisma.$VehiculoPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     rutas_dia<T extends RutaBase$rutas_diaArgs<ExtArgs> = {}>(args?: Subset<T, RutaBase$rutas_diaArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RutaDiaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -16589,27 +16849,27 @@ export namespace Prisma {
   }
 
   /**
-   * RutaBase.comunas
+   * RutaBase.sectores
    */
-  export type RutaBase$comunasArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type RutaBase$sectoresArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the ComunaRuta
+     * Select specific fields to fetch from the RutaBaseSector
      */
-    select?: ComunaRutaSelect<ExtArgs> | null
+    select?: RutaBaseSectorSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the ComunaRuta
+     * Omit specific fields from the RutaBaseSector
      */
-    omit?: ComunaRutaOmit<ExtArgs> | null
+    omit?: RutaBaseSectorOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ComunaRutaInclude<ExtArgs> | null
-    where?: ComunaRutaWhereInput
-    orderBy?: ComunaRutaOrderByWithRelationInput | ComunaRutaOrderByWithRelationInput[]
-    cursor?: ComunaRutaWhereUniqueInput
+    include?: RutaBaseSectorInclude<ExtArgs> | null
+    where?: RutaBaseSectorWhereInput
+    orderBy?: RutaBaseSectorOrderByWithRelationInput | RutaBaseSectorOrderByWithRelationInput[]
+    cursor?: RutaBaseSectorWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: ComunaRutaScalarFieldEnum | ComunaRutaScalarFieldEnum[]
+    distinct?: RutaBaseSectorScalarFieldEnum | RutaBaseSectorScalarFieldEnum[]
   }
 
   /**
@@ -16656,315 +16916,318 @@ export namespace Prisma {
 
 
   /**
-   * Model ComunaRuta
+   * Model RutaBaseSector
    */
 
-  export type AggregateComunaRuta = {
-    _count: ComunaRutaCountAggregateOutputType | null
-    _min: ComunaRutaMinAggregateOutputType | null
-    _max: ComunaRutaMaxAggregateOutputType | null
+  export type AggregateRutaBaseSector = {
+    _count: RutaBaseSectorCountAggregateOutputType | null
+    _min: RutaBaseSectorMinAggregateOutputType | null
+    _max: RutaBaseSectorMaxAggregateOutputType | null
   }
 
-  export type ComunaRutaMinAggregateOutputType = {
+  export type RutaBaseSectorMinAggregateOutputType = {
     id: string | null
     ruta_base_id: string | null
-    comuna: string | null
+    sector_id: string | null
   }
 
-  export type ComunaRutaMaxAggregateOutputType = {
+  export type RutaBaseSectorMaxAggregateOutputType = {
     id: string | null
     ruta_base_id: string | null
-    comuna: string | null
+    sector_id: string | null
   }
 
-  export type ComunaRutaCountAggregateOutputType = {
+  export type RutaBaseSectorCountAggregateOutputType = {
     id: number
     ruta_base_id: number
-    comuna: number
+    sector_id: number
     _all: number
   }
 
 
-  export type ComunaRutaMinAggregateInputType = {
+  export type RutaBaseSectorMinAggregateInputType = {
     id?: true
     ruta_base_id?: true
-    comuna?: true
+    sector_id?: true
   }
 
-  export type ComunaRutaMaxAggregateInputType = {
+  export type RutaBaseSectorMaxAggregateInputType = {
     id?: true
     ruta_base_id?: true
-    comuna?: true
+    sector_id?: true
   }
 
-  export type ComunaRutaCountAggregateInputType = {
+  export type RutaBaseSectorCountAggregateInputType = {
     id?: true
     ruta_base_id?: true
-    comuna?: true
+    sector_id?: true
     _all?: true
   }
 
-  export type ComunaRutaAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type RutaBaseSectorAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Filter which ComunaRuta to aggregate.
+     * Filter which RutaBaseSector to aggregate.
      */
-    where?: ComunaRutaWhereInput
+    where?: RutaBaseSectorWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of ComunaRutas to fetch.
+     * Determine the order of RutaBaseSectors to fetch.
      */
-    orderBy?: ComunaRutaOrderByWithRelationInput | ComunaRutaOrderByWithRelationInput[]
+    orderBy?: RutaBaseSectorOrderByWithRelationInput | RutaBaseSectorOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the start position
      */
-    cursor?: ComunaRutaWhereUniqueInput
+    cursor?: RutaBaseSectorWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` ComunaRutas from the position of the cursor.
+     * Take `±n` RutaBaseSectors from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` ComunaRutas.
+     * Skip the first `n` RutaBaseSectors.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
-     * Count returned ComunaRutas
+     * Count returned RutaBaseSectors
     **/
-    _count?: true | ComunaRutaCountAggregateInputType
+    _count?: true | RutaBaseSectorCountAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the minimum value
     **/
-    _min?: ComunaRutaMinAggregateInputType
+    _min?: RutaBaseSectorMinAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the maximum value
     **/
-    _max?: ComunaRutaMaxAggregateInputType
+    _max?: RutaBaseSectorMaxAggregateInputType
   }
 
-  export type GetComunaRutaAggregateType<T extends ComunaRutaAggregateArgs> = {
-        [P in keyof T & keyof AggregateComunaRuta]: P extends '_count' | 'count'
+  export type GetRutaBaseSectorAggregateType<T extends RutaBaseSectorAggregateArgs> = {
+        [P in keyof T & keyof AggregateRutaBaseSector]: P extends '_count' | 'count'
       ? T[P] extends true
         ? number
-        : GetScalarType<T[P], AggregateComunaRuta[P]>
-      : GetScalarType<T[P], AggregateComunaRuta[P]>
+        : GetScalarType<T[P], AggregateRutaBaseSector[P]>
+      : GetScalarType<T[P], AggregateRutaBaseSector[P]>
   }
 
 
 
 
-  export type ComunaRutaGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: ComunaRutaWhereInput
-    orderBy?: ComunaRutaOrderByWithAggregationInput | ComunaRutaOrderByWithAggregationInput[]
-    by: ComunaRutaScalarFieldEnum[] | ComunaRutaScalarFieldEnum
-    having?: ComunaRutaScalarWhereWithAggregatesInput
+  export type RutaBaseSectorGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RutaBaseSectorWhereInput
+    orderBy?: RutaBaseSectorOrderByWithAggregationInput | RutaBaseSectorOrderByWithAggregationInput[]
+    by: RutaBaseSectorScalarFieldEnum[] | RutaBaseSectorScalarFieldEnum
+    having?: RutaBaseSectorScalarWhereWithAggregatesInput
     take?: number
     skip?: number
-    _count?: ComunaRutaCountAggregateInputType | true
-    _min?: ComunaRutaMinAggregateInputType
-    _max?: ComunaRutaMaxAggregateInputType
+    _count?: RutaBaseSectorCountAggregateInputType | true
+    _min?: RutaBaseSectorMinAggregateInputType
+    _max?: RutaBaseSectorMaxAggregateInputType
   }
 
-  export type ComunaRutaGroupByOutputType = {
+  export type RutaBaseSectorGroupByOutputType = {
     id: string
     ruta_base_id: string
-    comuna: string
-    _count: ComunaRutaCountAggregateOutputType | null
-    _min: ComunaRutaMinAggregateOutputType | null
-    _max: ComunaRutaMaxAggregateOutputType | null
+    sector_id: string
+    _count: RutaBaseSectorCountAggregateOutputType | null
+    _min: RutaBaseSectorMinAggregateOutputType | null
+    _max: RutaBaseSectorMaxAggregateOutputType | null
   }
 
-  type GetComunaRutaGroupByPayload<T extends ComunaRutaGroupByArgs> = Prisma.PrismaPromise<
+  type GetRutaBaseSectorGroupByPayload<T extends RutaBaseSectorGroupByArgs> = Prisma.PrismaPromise<
     Array<
-      PickEnumerable<ComunaRutaGroupByOutputType, T['by']> &
+      PickEnumerable<RutaBaseSectorGroupByOutputType, T['by']> &
         {
-          [P in ((keyof T) & (keyof ComunaRutaGroupByOutputType))]: P extends '_count'
+          [P in ((keyof T) & (keyof RutaBaseSectorGroupByOutputType))]: P extends '_count'
             ? T[P] extends boolean
               ? number
-              : GetScalarType<T[P], ComunaRutaGroupByOutputType[P]>
-            : GetScalarType<T[P], ComunaRutaGroupByOutputType[P]>
+              : GetScalarType<T[P], RutaBaseSectorGroupByOutputType[P]>
+            : GetScalarType<T[P], RutaBaseSectorGroupByOutputType[P]>
         }
       >
     >
 
 
-  export type ComunaRutaSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type RutaBaseSectorSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     ruta_base_id?: boolean
-    comuna?: boolean
+    sector_id?: boolean
     ruta_base?: boolean | RutaBaseDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["comunaRuta"]>
+    sector?: boolean | SectorDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["rutaBaseSector"]>
 
 
 
-  export type ComunaRutaSelectScalar = {
+  export type RutaBaseSectorSelectScalar = {
     id?: boolean
     ruta_base_id?: boolean
-    comuna?: boolean
+    sector_id?: boolean
   }
 
-  export type ComunaRutaOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "ruta_base_id" | "comuna", ExtArgs["result"]["comunaRuta"]>
-  export type ComunaRutaInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type RutaBaseSectorOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "ruta_base_id" | "sector_id", ExtArgs["result"]["rutaBaseSector"]>
+  export type RutaBaseSectorInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     ruta_base?: boolean | RutaBaseDefaultArgs<ExtArgs>
+    sector?: boolean | SectorDefaultArgs<ExtArgs>
   }
 
-  export type $ComunaRutaPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "ComunaRuta"
+  export type $RutaBaseSectorPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "RutaBaseSector"
     objects: {
       ruta_base: Prisma.$RutaBasePayload<ExtArgs>
+      sector: Prisma.$SectorPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       ruta_base_id: string
-      comuna: string
-    }, ExtArgs["result"]["comunaRuta"]>
+      sector_id: string
+    }, ExtArgs["result"]["rutaBaseSector"]>
     composites: {}
   }
 
-  type ComunaRutaGetPayload<S extends boolean | null | undefined | ComunaRutaDefaultArgs> = $Result.GetResult<Prisma.$ComunaRutaPayload, S>
+  type RutaBaseSectorGetPayload<S extends boolean | null | undefined | RutaBaseSectorDefaultArgs> = $Result.GetResult<Prisma.$RutaBaseSectorPayload, S>
 
-  type ComunaRutaCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<ComunaRutaFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: ComunaRutaCountAggregateInputType | true
+  type RutaBaseSectorCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<RutaBaseSectorFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: RutaBaseSectorCountAggregateInputType | true
     }
 
-  export interface ComunaRutaDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ComunaRuta'], meta: { name: 'ComunaRuta' } }
+  export interface RutaBaseSectorDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['RutaBaseSector'], meta: { name: 'RutaBaseSector' } }
     /**
-     * Find zero or one ComunaRuta that matches the filter.
-     * @param {ComunaRutaFindUniqueArgs} args - Arguments to find a ComunaRuta
+     * Find zero or one RutaBaseSector that matches the filter.
+     * @param {RutaBaseSectorFindUniqueArgs} args - Arguments to find a RutaBaseSector
      * @example
-     * // Get one ComunaRuta
-     * const comunaRuta = await prisma.comunaRuta.findUnique({
+     * // Get one RutaBaseSector
+     * const rutaBaseSector = await prisma.rutaBaseSector.findUnique({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findUnique<T extends ComunaRutaFindUniqueArgs>(args: SelectSubset<T, ComunaRutaFindUniqueArgs<ExtArgs>>): Prisma__ComunaRutaClient<$Result.GetResult<Prisma.$ComunaRutaPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    findUnique<T extends RutaBaseSectorFindUniqueArgs>(args: SelectSubset<T, RutaBaseSectorFindUniqueArgs<ExtArgs>>): Prisma__RutaBaseSectorClient<$Result.GetResult<Prisma.$RutaBaseSectorPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find one ComunaRuta that matches the filter or throw an error with `error.code='P2025'`
+     * Find one RutaBaseSector that matches the filter or throw an error with `error.code='P2025'`
      * if no matches were found.
-     * @param {ComunaRutaFindUniqueOrThrowArgs} args - Arguments to find a ComunaRuta
+     * @param {RutaBaseSectorFindUniqueOrThrowArgs} args - Arguments to find a RutaBaseSector
      * @example
-     * // Get one ComunaRuta
-     * const comunaRuta = await prisma.comunaRuta.findUniqueOrThrow({
+     * // Get one RutaBaseSector
+     * const rutaBaseSector = await prisma.rutaBaseSector.findUniqueOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findUniqueOrThrow<T extends ComunaRutaFindUniqueOrThrowArgs>(args: SelectSubset<T, ComunaRutaFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ComunaRutaClient<$Result.GetResult<Prisma.$ComunaRutaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    findUniqueOrThrow<T extends RutaBaseSectorFindUniqueOrThrowArgs>(args: SelectSubset<T, RutaBaseSectorFindUniqueOrThrowArgs<ExtArgs>>): Prisma__RutaBaseSectorClient<$Result.GetResult<Prisma.$RutaBaseSectorPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find the first ComunaRuta that matches the filter.
+     * Find the first RutaBaseSector that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {ComunaRutaFindFirstArgs} args - Arguments to find a ComunaRuta
+     * @param {RutaBaseSectorFindFirstArgs} args - Arguments to find a RutaBaseSector
      * @example
-     * // Get one ComunaRuta
-     * const comunaRuta = await prisma.comunaRuta.findFirst({
+     * // Get one RutaBaseSector
+     * const rutaBaseSector = await prisma.rutaBaseSector.findFirst({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findFirst<T extends ComunaRutaFindFirstArgs>(args?: SelectSubset<T, ComunaRutaFindFirstArgs<ExtArgs>>): Prisma__ComunaRutaClient<$Result.GetResult<Prisma.$ComunaRutaPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    findFirst<T extends RutaBaseSectorFindFirstArgs>(args?: SelectSubset<T, RutaBaseSectorFindFirstArgs<ExtArgs>>): Prisma__RutaBaseSectorClient<$Result.GetResult<Prisma.$RutaBaseSectorPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find the first ComunaRuta that matches the filter or
+     * Find the first RutaBaseSector that matches the filter or
      * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {ComunaRutaFindFirstOrThrowArgs} args - Arguments to find a ComunaRuta
+     * @param {RutaBaseSectorFindFirstOrThrowArgs} args - Arguments to find a RutaBaseSector
      * @example
-     * // Get one ComunaRuta
-     * const comunaRuta = await prisma.comunaRuta.findFirstOrThrow({
+     * // Get one RutaBaseSector
+     * const rutaBaseSector = await prisma.rutaBaseSector.findFirstOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findFirstOrThrow<T extends ComunaRutaFindFirstOrThrowArgs>(args?: SelectSubset<T, ComunaRutaFindFirstOrThrowArgs<ExtArgs>>): Prisma__ComunaRutaClient<$Result.GetResult<Prisma.$ComunaRutaPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    findFirstOrThrow<T extends RutaBaseSectorFindFirstOrThrowArgs>(args?: SelectSubset<T, RutaBaseSectorFindFirstOrThrowArgs<ExtArgs>>): Prisma__RutaBaseSectorClient<$Result.GetResult<Prisma.$RutaBaseSectorPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find zero or more ComunaRutas that matches the filter.
+     * Find zero or more RutaBaseSectors that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {ComunaRutaFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @param {RutaBaseSectorFindManyArgs} args - Arguments to filter and select certain fields only.
      * @example
-     * // Get all ComunaRutas
-     * const comunaRutas = await prisma.comunaRuta.findMany()
+     * // Get all RutaBaseSectors
+     * const rutaBaseSectors = await prisma.rutaBaseSector.findMany()
      * 
-     * // Get first 10 ComunaRutas
-     * const comunaRutas = await prisma.comunaRuta.findMany({ take: 10 })
+     * // Get first 10 RutaBaseSectors
+     * const rutaBaseSectors = await prisma.rutaBaseSector.findMany({ take: 10 })
      * 
      * // Only select the `id`
-     * const comunaRutaWithIdOnly = await prisma.comunaRuta.findMany({ select: { id: true } })
+     * const rutaBaseSectorWithIdOnly = await prisma.rutaBaseSector.findMany({ select: { id: true } })
      * 
      */
-    findMany<T extends ComunaRutaFindManyArgs>(args?: SelectSubset<T, ComunaRutaFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ComunaRutaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+    findMany<T extends RutaBaseSectorFindManyArgs>(args?: SelectSubset<T, RutaBaseSectorFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RutaBaseSectorPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
     /**
-     * Create a ComunaRuta.
-     * @param {ComunaRutaCreateArgs} args - Arguments to create a ComunaRuta.
+     * Create a RutaBaseSector.
+     * @param {RutaBaseSectorCreateArgs} args - Arguments to create a RutaBaseSector.
      * @example
-     * // Create one ComunaRuta
-     * const ComunaRuta = await prisma.comunaRuta.create({
+     * // Create one RutaBaseSector
+     * const RutaBaseSector = await prisma.rutaBaseSector.create({
      *   data: {
-     *     // ... data to create a ComunaRuta
+     *     // ... data to create a RutaBaseSector
      *   }
      * })
      * 
      */
-    create<T extends ComunaRutaCreateArgs>(args: SelectSubset<T, ComunaRutaCreateArgs<ExtArgs>>): Prisma__ComunaRutaClient<$Result.GetResult<Prisma.$ComunaRutaPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    create<T extends RutaBaseSectorCreateArgs>(args: SelectSubset<T, RutaBaseSectorCreateArgs<ExtArgs>>): Prisma__RutaBaseSectorClient<$Result.GetResult<Prisma.$RutaBaseSectorPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Create many ComunaRutas.
-     * @param {ComunaRutaCreateManyArgs} args - Arguments to create many ComunaRutas.
+     * Create many RutaBaseSectors.
+     * @param {RutaBaseSectorCreateManyArgs} args - Arguments to create many RutaBaseSectors.
      * @example
-     * // Create many ComunaRutas
-     * const comunaRuta = await prisma.comunaRuta.createMany({
+     * // Create many RutaBaseSectors
+     * const rutaBaseSector = await prisma.rutaBaseSector.createMany({
      *   data: [
      *     // ... provide data here
      *   ]
      * })
      *     
      */
-    createMany<T extends ComunaRutaCreateManyArgs>(args?: SelectSubset<T, ComunaRutaCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    createMany<T extends RutaBaseSectorCreateManyArgs>(args?: SelectSubset<T, RutaBaseSectorCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Delete a ComunaRuta.
-     * @param {ComunaRutaDeleteArgs} args - Arguments to delete one ComunaRuta.
+     * Delete a RutaBaseSector.
+     * @param {RutaBaseSectorDeleteArgs} args - Arguments to delete one RutaBaseSector.
      * @example
-     * // Delete one ComunaRuta
-     * const ComunaRuta = await prisma.comunaRuta.delete({
+     * // Delete one RutaBaseSector
+     * const RutaBaseSector = await prisma.rutaBaseSector.delete({
      *   where: {
-     *     // ... filter to delete one ComunaRuta
+     *     // ... filter to delete one RutaBaseSector
      *   }
      * })
      * 
      */
-    delete<T extends ComunaRutaDeleteArgs>(args: SelectSubset<T, ComunaRutaDeleteArgs<ExtArgs>>): Prisma__ComunaRutaClient<$Result.GetResult<Prisma.$ComunaRutaPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    delete<T extends RutaBaseSectorDeleteArgs>(args: SelectSubset<T, RutaBaseSectorDeleteArgs<ExtArgs>>): Prisma__RutaBaseSectorClient<$Result.GetResult<Prisma.$RutaBaseSectorPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Update one ComunaRuta.
-     * @param {ComunaRutaUpdateArgs} args - Arguments to update one ComunaRuta.
+     * Update one RutaBaseSector.
+     * @param {RutaBaseSectorUpdateArgs} args - Arguments to update one RutaBaseSector.
      * @example
-     * // Update one ComunaRuta
-     * const comunaRuta = await prisma.comunaRuta.update({
+     * // Update one RutaBaseSector
+     * const rutaBaseSector = await prisma.rutaBaseSector.update({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -16974,30 +17237,30 @@ export namespace Prisma {
      * })
      * 
      */
-    update<T extends ComunaRutaUpdateArgs>(args: SelectSubset<T, ComunaRutaUpdateArgs<ExtArgs>>): Prisma__ComunaRutaClient<$Result.GetResult<Prisma.$ComunaRutaPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    update<T extends RutaBaseSectorUpdateArgs>(args: SelectSubset<T, RutaBaseSectorUpdateArgs<ExtArgs>>): Prisma__RutaBaseSectorClient<$Result.GetResult<Prisma.$RutaBaseSectorPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Delete zero or more ComunaRutas.
-     * @param {ComunaRutaDeleteManyArgs} args - Arguments to filter ComunaRutas to delete.
+     * Delete zero or more RutaBaseSectors.
+     * @param {RutaBaseSectorDeleteManyArgs} args - Arguments to filter RutaBaseSectors to delete.
      * @example
-     * // Delete a few ComunaRutas
-     * const { count } = await prisma.comunaRuta.deleteMany({
+     * // Delete a few RutaBaseSectors
+     * const { count } = await prisma.rutaBaseSector.deleteMany({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      * 
      */
-    deleteMany<T extends ComunaRutaDeleteManyArgs>(args?: SelectSubset<T, ComunaRutaDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    deleteMany<T extends RutaBaseSectorDeleteManyArgs>(args?: SelectSubset<T, RutaBaseSectorDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Update zero or more ComunaRutas.
+     * Update zero or more RutaBaseSectors.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {ComunaRutaUpdateManyArgs} args - Arguments to update one or more rows.
+     * @param {RutaBaseSectorUpdateManyArgs} args - Arguments to update one or more rows.
      * @example
-     * // Update many ComunaRutas
-     * const comunaRuta = await prisma.comunaRuta.updateMany({
+     * // Update many RutaBaseSectors
+     * const rutaBaseSector = await prisma.rutaBaseSector.updateMany({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -17007,56 +17270,56 @@ export namespace Prisma {
      * })
      * 
      */
-    updateMany<T extends ComunaRutaUpdateManyArgs>(args: SelectSubset<T, ComunaRutaUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    updateMany<T extends RutaBaseSectorUpdateManyArgs>(args: SelectSubset<T, RutaBaseSectorUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Create or update one ComunaRuta.
-     * @param {ComunaRutaUpsertArgs} args - Arguments to update or create a ComunaRuta.
+     * Create or update one RutaBaseSector.
+     * @param {RutaBaseSectorUpsertArgs} args - Arguments to update or create a RutaBaseSector.
      * @example
-     * // Update or create a ComunaRuta
-     * const comunaRuta = await prisma.comunaRuta.upsert({
+     * // Update or create a RutaBaseSector
+     * const rutaBaseSector = await prisma.rutaBaseSector.upsert({
      *   create: {
-     *     // ... data to create a ComunaRuta
+     *     // ... data to create a RutaBaseSector
      *   },
      *   update: {
      *     // ... in case it already exists, update
      *   },
      *   where: {
-     *     // ... the filter for the ComunaRuta we want to update
+     *     // ... the filter for the RutaBaseSector we want to update
      *   }
      * })
      */
-    upsert<T extends ComunaRutaUpsertArgs>(args: SelectSubset<T, ComunaRutaUpsertArgs<ExtArgs>>): Prisma__ComunaRutaClient<$Result.GetResult<Prisma.$ComunaRutaPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    upsert<T extends RutaBaseSectorUpsertArgs>(args: SelectSubset<T, RutaBaseSectorUpsertArgs<ExtArgs>>): Prisma__RutaBaseSectorClient<$Result.GetResult<Prisma.$RutaBaseSectorPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
 
     /**
-     * Count the number of ComunaRutas.
+     * Count the number of RutaBaseSectors.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {ComunaRutaCountArgs} args - Arguments to filter ComunaRutas to count.
+     * @param {RutaBaseSectorCountArgs} args - Arguments to filter RutaBaseSectors to count.
      * @example
-     * // Count the number of ComunaRutas
-     * const count = await prisma.comunaRuta.count({
+     * // Count the number of RutaBaseSectors
+     * const count = await prisma.rutaBaseSector.count({
      *   where: {
-     *     // ... the filter for the ComunaRutas we want to count
+     *     // ... the filter for the RutaBaseSectors we want to count
      *   }
      * })
     **/
-    count<T extends ComunaRutaCountArgs>(
-      args?: Subset<T, ComunaRutaCountArgs>,
+    count<T extends RutaBaseSectorCountArgs>(
+      args?: Subset<T, RutaBaseSectorCountArgs>,
     ): Prisma.PrismaPromise<
       T extends $Utils.Record<'select', any>
         ? T['select'] extends true
           ? number
-          : GetScalarType<T['select'], ComunaRutaCountAggregateOutputType>
+          : GetScalarType<T['select'], RutaBaseSectorCountAggregateOutputType>
         : number
     >
 
     /**
-     * Allows you to perform aggregations operations on a ComunaRuta.
+     * Allows you to perform aggregations operations on a RutaBaseSector.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {ComunaRutaAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @param {RutaBaseSectorAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
      * @example
      * // Ordered by age ascending
      * // Where email contains prisma.io
@@ -17076,13 +17339,13 @@ export namespace Prisma {
      *   take: 10,
      * })
     **/
-    aggregate<T extends ComunaRutaAggregateArgs>(args: Subset<T, ComunaRutaAggregateArgs>): Prisma.PrismaPromise<GetComunaRutaAggregateType<T>>
+    aggregate<T extends RutaBaseSectorAggregateArgs>(args: Subset<T, RutaBaseSectorAggregateArgs>): Prisma.PrismaPromise<GetRutaBaseSectorAggregateType<T>>
 
     /**
-     * Group by ComunaRuta.
+     * Group by RutaBaseSector.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {ComunaRutaGroupByArgs} args - Group by arguments.
+     * @param {RutaBaseSectorGroupByArgs} args - Group by arguments.
      * @example
      * // Group by city, order by createdAt, get count
      * const result = await prisma.user.groupBy({
@@ -17097,14 +17360,14 @@ export namespace Prisma {
      * 
     **/
     groupBy<
-      T extends ComunaRutaGroupByArgs,
+      T extends RutaBaseSectorGroupByArgs,
       HasSelectOrTake extends Or<
         Extends<'skip', Keys<T>>,
         Extends<'take', Keys<T>>
       >,
       OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: ComunaRutaGroupByArgs['orderBy'] }
-        : { orderBy?: ComunaRutaGroupByArgs['orderBy'] },
+        ? { orderBy: RutaBaseSectorGroupByArgs['orderBy'] }
+        : { orderBy?: RutaBaseSectorGroupByArgs['orderBy'] },
       OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
       ByFields extends MaybeTupleToUnion<T['by']>,
       ByValid extends Has<ByFields, OrderFields>,
@@ -17153,22 +17416,23 @@ export namespace Prisma {
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
-    >(args: SubsetIntersection<T, ComunaRutaGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetComunaRutaGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+    >(args: SubsetIntersection<T, RutaBaseSectorGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetRutaBaseSectorGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
   /**
-   * Fields of the ComunaRuta model
+   * Fields of the RutaBaseSector model
    */
-  readonly fields: ComunaRutaFieldRefs;
+  readonly fields: RutaBaseSectorFieldRefs;
   }
 
   /**
-   * The delegate class that acts as a "Promise-like" for ComunaRuta.
+   * The delegate class that acts as a "Promise-like" for RutaBaseSector.
    * Why is this prefixed with `Prisma__`?
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export interface Prisma__ComunaRutaClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+  export interface Prisma__RutaBaseSectorClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     ruta_base<T extends RutaBaseDefaultArgs<ExtArgs> = {}>(args?: Subset<T, RutaBaseDefaultArgs<ExtArgs>>): Prisma__RutaBaseClient<$Result.GetResult<Prisma.$RutaBasePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    sector<T extends SectorDefaultArgs<ExtArgs> = {}>(args?: Subset<T, SectorDefaultArgs<ExtArgs>>): Prisma__SectorClient<$Result.GetResult<Prisma.$SectorPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -17195,370 +17459,2279 @@ export namespace Prisma {
 
 
   /**
-   * Fields of the ComunaRuta model
+   * Fields of the RutaBaseSector model
    */
-  interface ComunaRutaFieldRefs {
-    readonly id: FieldRef<"ComunaRuta", 'String'>
-    readonly ruta_base_id: FieldRef<"ComunaRuta", 'String'>
-    readonly comuna: FieldRef<"ComunaRuta", 'String'>
+  interface RutaBaseSectorFieldRefs {
+    readonly id: FieldRef<"RutaBaseSector", 'String'>
+    readonly ruta_base_id: FieldRef<"RutaBaseSector", 'String'>
+    readonly sector_id: FieldRef<"RutaBaseSector", 'String'>
   }
     
 
   // Custom InputTypes
   /**
-   * ComunaRuta findUnique
+   * RutaBaseSector findUnique
    */
-  export type ComunaRutaFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type RutaBaseSectorFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the ComunaRuta
+     * Select specific fields to fetch from the RutaBaseSector
      */
-    select?: ComunaRutaSelect<ExtArgs> | null
+    select?: RutaBaseSectorSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the ComunaRuta
+     * Omit specific fields from the RutaBaseSector
      */
-    omit?: ComunaRutaOmit<ExtArgs> | null
+    omit?: RutaBaseSectorOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ComunaRutaInclude<ExtArgs> | null
+    include?: RutaBaseSectorInclude<ExtArgs> | null
     /**
-     * Filter, which ComunaRuta to fetch.
+     * Filter, which RutaBaseSector to fetch.
      */
-    where: ComunaRutaWhereUniqueInput
+    where: RutaBaseSectorWhereUniqueInput
   }
 
   /**
-   * ComunaRuta findUniqueOrThrow
+   * RutaBaseSector findUniqueOrThrow
    */
-  export type ComunaRutaFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type RutaBaseSectorFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the ComunaRuta
+     * Select specific fields to fetch from the RutaBaseSector
      */
-    select?: ComunaRutaSelect<ExtArgs> | null
+    select?: RutaBaseSectorSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the ComunaRuta
+     * Omit specific fields from the RutaBaseSector
      */
-    omit?: ComunaRutaOmit<ExtArgs> | null
+    omit?: RutaBaseSectorOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ComunaRutaInclude<ExtArgs> | null
+    include?: RutaBaseSectorInclude<ExtArgs> | null
     /**
-     * Filter, which ComunaRuta to fetch.
+     * Filter, which RutaBaseSector to fetch.
      */
-    where: ComunaRutaWhereUniqueInput
+    where: RutaBaseSectorWhereUniqueInput
   }
 
   /**
-   * ComunaRuta findFirst
+   * RutaBaseSector findFirst
    */
-  export type ComunaRutaFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type RutaBaseSectorFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the ComunaRuta
+     * Select specific fields to fetch from the RutaBaseSector
      */
-    select?: ComunaRutaSelect<ExtArgs> | null
+    select?: RutaBaseSectorSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the ComunaRuta
+     * Omit specific fields from the RutaBaseSector
      */
-    omit?: ComunaRutaOmit<ExtArgs> | null
+    omit?: RutaBaseSectorOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ComunaRutaInclude<ExtArgs> | null
+    include?: RutaBaseSectorInclude<ExtArgs> | null
     /**
-     * Filter, which ComunaRuta to fetch.
+     * Filter, which RutaBaseSector to fetch.
      */
-    where?: ComunaRutaWhereInput
+    where?: RutaBaseSectorWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of ComunaRutas to fetch.
+     * Determine the order of RutaBaseSectors to fetch.
      */
-    orderBy?: ComunaRutaOrderByWithRelationInput | ComunaRutaOrderByWithRelationInput[]
+    orderBy?: RutaBaseSectorOrderByWithRelationInput | RutaBaseSectorOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for ComunaRutas.
+     * Sets the position for searching for RutaBaseSectors.
      */
-    cursor?: ComunaRutaWhereUniqueInput
+    cursor?: RutaBaseSectorWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` ComunaRutas from the position of the cursor.
+     * Take `±n` RutaBaseSectors from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` ComunaRutas.
+     * Skip the first `n` RutaBaseSectors.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of ComunaRutas.
+     * Filter by unique combinations of RutaBaseSectors.
      */
-    distinct?: ComunaRutaScalarFieldEnum | ComunaRutaScalarFieldEnum[]
+    distinct?: RutaBaseSectorScalarFieldEnum | RutaBaseSectorScalarFieldEnum[]
   }
 
   /**
-   * ComunaRuta findFirstOrThrow
+   * RutaBaseSector findFirstOrThrow
    */
-  export type ComunaRutaFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type RutaBaseSectorFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the ComunaRuta
+     * Select specific fields to fetch from the RutaBaseSector
      */
-    select?: ComunaRutaSelect<ExtArgs> | null
+    select?: RutaBaseSectorSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the ComunaRuta
+     * Omit specific fields from the RutaBaseSector
      */
-    omit?: ComunaRutaOmit<ExtArgs> | null
+    omit?: RutaBaseSectorOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ComunaRutaInclude<ExtArgs> | null
+    include?: RutaBaseSectorInclude<ExtArgs> | null
     /**
-     * Filter, which ComunaRuta to fetch.
+     * Filter, which RutaBaseSector to fetch.
      */
-    where?: ComunaRutaWhereInput
+    where?: RutaBaseSectorWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of ComunaRutas to fetch.
+     * Determine the order of RutaBaseSectors to fetch.
      */
-    orderBy?: ComunaRutaOrderByWithRelationInput | ComunaRutaOrderByWithRelationInput[]
+    orderBy?: RutaBaseSectorOrderByWithRelationInput | RutaBaseSectorOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for ComunaRutas.
+     * Sets the position for searching for RutaBaseSectors.
      */
-    cursor?: ComunaRutaWhereUniqueInput
+    cursor?: RutaBaseSectorWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` ComunaRutas from the position of the cursor.
+     * Take `±n` RutaBaseSectors from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` ComunaRutas.
+     * Skip the first `n` RutaBaseSectors.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of ComunaRutas.
+     * Filter by unique combinations of RutaBaseSectors.
      */
-    distinct?: ComunaRutaScalarFieldEnum | ComunaRutaScalarFieldEnum[]
+    distinct?: RutaBaseSectorScalarFieldEnum | RutaBaseSectorScalarFieldEnum[]
   }
 
   /**
-   * ComunaRuta findMany
+   * RutaBaseSector findMany
    */
-  export type ComunaRutaFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type RutaBaseSectorFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the ComunaRuta
+     * Select specific fields to fetch from the RutaBaseSector
      */
-    select?: ComunaRutaSelect<ExtArgs> | null
+    select?: RutaBaseSectorSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the ComunaRuta
+     * Omit specific fields from the RutaBaseSector
      */
-    omit?: ComunaRutaOmit<ExtArgs> | null
+    omit?: RutaBaseSectorOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ComunaRutaInclude<ExtArgs> | null
+    include?: RutaBaseSectorInclude<ExtArgs> | null
     /**
-     * Filter, which ComunaRutas to fetch.
+     * Filter, which RutaBaseSectors to fetch.
      */
-    where?: ComunaRutaWhereInput
+    where?: RutaBaseSectorWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of ComunaRutas to fetch.
+     * Determine the order of RutaBaseSectors to fetch.
      */
-    orderBy?: ComunaRutaOrderByWithRelationInput | ComunaRutaOrderByWithRelationInput[]
+    orderBy?: RutaBaseSectorOrderByWithRelationInput | RutaBaseSectorOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for listing ComunaRutas.
+     * Sets the position for listing RutaBaseSectors.
      */
-    cursor?: ComunaRutaWhereUniqueInput
+    cursor?: RutaBaseSectorWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` ComunaRutas from the position of the cursor.
+     * Take `±n` RutaBaseSectors from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` ComunaRutas.
+     * Skip the first `n` RutaBaseSectors.
      */
     skip?: number
-    distinct?: ComunaRutaScalarFieldEnum | ComunaRutaScalarFieldEnum[]
+    distinct?: RutaBaseSectorScalarFieldEnum | RutaBaseSectorScalarFieldEnum[]
   }
 
   /**
-   * ComunaRuta create
+   * RutaBaseSector create
    */
-  export type ComunaRutaCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type RutaBaseSectorCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the ComunaRuta
+     * Select specific fields to fetch from the RutaBaseSector
      */
-    select?: ComunaRutaSelect<ExtArgs> | null
+    select?: RutaBaseSectorSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the ComunaRuta
+     * Omit specific fields from the RutaBaseSector
      */
-    omit?: ComunaRutaOmit<ExtArgs> | null
+    omit?: RutaBaseSectorOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ComunaRutaInclude<ExtArgs> | null
+    include?: RutaBaseSectorInclude<ExtArgs> | null
     /**
-     * The data needed to create a ComunaRuta.
+     * The data needed to create a RutaBaseSector.
      */
-    data: XOR<ComunaRutaCreateInput, ComunaRutaUncheckedCreateInput>
+    data: XOR<RutaBaseSectorCreateInput, RutaBaseSectorUncheckedCreateInput>
   }
 
   /**
-   * ComunaRuta createMany
+   * RutaBaseSector createMany
    */
-  export type ComunaRutaCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type RutaBaseSectorCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * The data used to create many ComunaRutas.
+     * The data used to create many RutaBaseSectors.
      */
-    data: ComunaRutaCreateManyInput | ComunaRutaCreateManyInput[]
+    data: RutaBaseSectorCreateManyInput | RutaBaseSectorCreateManyInput[]
     skipDuplicates?: boolean
   }
 
   /**
-   * ComunaRuta update
+   * RutaBaseSector update
    */
-  export type ComunaRutaUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type RutaBaseSectorUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the ComunaRuta
+     * Select specific fields to fetch from the RutaBaseSector
      */
-    select?: ComunaRutaSelect<ExtArgs> | null
+    select?: RutaBaseSectorSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the ComunaRuta
+     * Omit specific fields from the RutaBaseSector
      */
-    omit?: ComunaRutaOmit<ExtArgs> | null
+    omit?: RutaBaseSectorOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ComunaRutaInclude<ExtArgs> | null
+    include?: RutaBaseSectorInclude<ExtArgs> | null
     /**
-     * The data needed to update a ComunaRuta.
+     * The data needed to update a RutaBaseSector.
      */
-    data: XOR<ComunaRutaUpdateInput, ComunaRutaUncheckedUpdateInput>
+    data: XOR<RutaBaseSectorUpdateInput, RutaBaseSectorUncheckedUpdateInput>
     /**
-     * Choose, which ComunaRuta to update.
+     * Choose, which RutaBaseSector to update.
      */
-    where: ComunaRutaWhereUniqueInput
+    where: RutaBaseSectorWhereUniqueInput
   }
 
   /**
-   * ComunaRuta updateMany
+   * RutaBaseSector updateMany
    */
-  export type ComunaRutaUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type RutaBaseSectorUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * The data used to update ComunaRutas.
+     * The data used to update RutaBaseSectors.
      */
-    data: XOR<ComunaRutaUpdateManyMutationInput, ComunaRutaUncheckedUpdateManyInput>
+    data: XOR<RutaBaseSectorUpdateManyMutationInput, RutaBaseSectorUncheckedUpdateManyInput>
     /**
-     * Filter which ComunaRutas to update
+     * Filter which RutaBaseSectors to update
      */
-    where?: ComunaRutaWhereInput
+    where?: RutaBaseSectorWhereInput
     /**
-     * Limit how many ComunaRutas to update.
+     * Limit how many RutaBaseSectors to update.
      */
     limit?: number
   }
 
   /**
-   * ComunaRuta upsert
+   * RutaBaseSector upsert
    */
-  export type ComunaRutaUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type RutaBaseSectorUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the ComunaRuta
+     * Select specific fields to fetch from the RutaBaseSector
      */
-    select?: ComunaRutaSelect<ExtArgs> | null
+    select?: RutaBaseSectorSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the ComunaRuta
+     * Omit specific fields from the RutaBaseSector
      */
-    omit?: ComunaRutaOmit<ExtArgs> | null
+    omit?: RutaBaseSectorOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ComunaRutaInclude<ExtArgs> | null
+    include?: RutaBaseSectorInclude<ExtArgs> | null
     /**
-     * The filter to search for the ComunaRuta to update in case it exists.
+     * The filter to search for the RutaBaseSector to update in case it exists.
      */
-    where: ComunaRutaWhereUniqueInput
+    where: RutaBaseSectorWhereUniqueInput
     /**
-     * In case the ComunaRuta found by the `where` argument doesn't exist, create a new ComunaRuta with this data.
+     * In case the RutaBaseSector found by the `where` argument doesn't exist, create a new RutaBaseSector with this data.
      */
-    create: XOR<ComunaRutaCreateInput, ComunaRutaUncheckedCreateInput>
+    create: XOR<RutaBaseSectorCreateInput, RutaBaseSectorUncheckedCreateInput>
     /**
-     * In case the ComunaRuta was found with the provided `where` argument, update it with this data.
+     * In case the RutaBaseSector was found with the provided `where` argument, update it with this data.
      */
-    update: XOR<ComunaRutaUpdateInput, ComunaRutaUncheckedUpdateInput>
+    update: XOR<RutaBaseSectorUpdateInput, RutaBaseSectorUncheckedUpdateInput>
   }
 
   /**
-   * ComunaRuta delete
+   * RutaBaseSector delete
    */
-  export type ComunaRutaDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type RutaBaseSectorDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the ComunaRuta
+     * Select specific fields to fetch from the RutaBaseSector
      */
-    select?: ComunaRutaSelect<ExtArgs> | null
+    select?: RutaBaseSectorSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the ComunaRuta
+     * Omit specific fields from the RutaBaseSector
      */
-    omit?: ComunaRutaOmit<ExtArgs> | null
+    omit?: RutaBaseSectorOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ComunaRutaInclude<ExtArgs> | null
+    include?: RutaBaseSectorInclude<ExtArgs> | null
     /**
-     * Filter which ComunaRuta to delete.
+     * Filter which RutaBaseSector to delete.
      */
-    where: ComunaRutaWhereUniqueInput
+    where: RutaBaseSectorWhereUniqueInput
   }
 
   /**
-   * ComunaRuta deleteMany
+   * RutaBaseSector deleteMany
    */
-  export type ComunaRutaDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type RutaBaseSectorDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Filter which ComunaRutas to delete
+     * Filter which RutaBaseSectors to delete
      */
-    where?: ComunaRutaWhereInput
+    where?: RutaBaseSectorWhereInput
     /**
-     * Limit how many ComunaRutas to delete.
+     * Limit how many RutaBaseSectors to delete.
      */
     limit?: number
   }
 
   /**
-   * ComunaRuta without action
+   * RutaBaseSector without action
    */
-  export type ComunaRutaDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type RutaBaseSectorDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the ComunaRuta
+     * Select specific fields to fetch from the RutaBaseSector
      */
-    select?: ComunaRutaSelect<ExtArgs> | null
+    select?: RutaBaseSectorSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the ComunaRuta
+     * Omit specific fields from the RutaBaseSector
      */
-    omit?: ComunaRutaOmit<ExtArgs> | null
+    omit?: RutaBaseSectorOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ComunaRutaInclude<ExtArgs> | null
+    include?: RutaBaseSectorInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Comuna
+   */
+
+  export type AggregateComuna = {
+    _count: ComunaCountAggregateOutputType | null
+    _min: ComunaMinAggregateOutputType | null
+    _max: ComunaMaxAggregateOutputType | null
+  }
+
+  export type ComunaMinAggregateOutputType = {
+    id: string | null
+    nombre: string | null
+    activa: boolean | null
+  }
+
+  export type ComunaMaxAggregateOutputType = {
+    id: string | null
+    nombre: string | null
+    activa: boolean | null
+  }
+
+  export type ComunaCountAggregateOutputType = {
+    id: number
+    nombre: number
+    activa: number
+    _all: number
+  }
+
+
+  export type ComunaMinAggregateInputType = {
+    id?: true
+    nombre?: true
+    activa?: true
+  }
+
+  export type ComunaMaxAggregateInputType = {
+    id?: true
+    nombre?: true
+    activa?: true
+  }
+
+  export type ComunaCountAggregateInputType = {
+    id?: true
+    nombre?: true
+    activa?: true
+    _all?: true
+  }
+
+  export type ComunaAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Comuna to aggregate.
+     */
+    where?: ComunaWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Comunas to fetch.
+     */
+    orderBy?: ComunaOrderByWithRelationInput | ComunaOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ComunaWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Comunas from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Comunas.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Comunas
+    **/
+    _count?: true | ComunaCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ComunaMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ComunaMaxAggregateInputType
+  }
+
+  export type GetComunaAggregateType<T extends ComunaAggregateArgs> = {
+        [P in keyof T & keyof AggregateComuna]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateComuna[P]>
+      : GetScalarType<T[P], AggregateComuna[P]>
+  }
+
+
+
+
+  export type ComunaGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ComunaWhereInput
+    orderBy?: ComunaOrderByWithAggregationInput | ComunaOrderByWithAggregationInput[]
+    by: ComunaScalarFieldEnum[] | ComunaScalarFieldEnum
+    having?: ComunaScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ComunaCountAggregateInputType | true
+    _min?: ComunaMinAggregateInputType
+    _max?: ComunaMaxAggregateInputType
+  }
+
+  export type ComunaGroupByOutputType = {
+    id: string
+    nombre: string
+    activa: boolean
+    _count: ComunaCountAggregateOutputType | null
+    _min: ComunaMinAggregateOutputType | null
+    _max: ComunaMaxAggregateOutputType | null
+  }
+
+  type GetComunaGroupByPayload<T extends ComunaGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ComunaGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ComunaGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ComunaGroupByOutputType[P]>
+            : GetScalarType<T[P], ComunaGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ComunaSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    nombre?: boolean
+    activa?: boolean
+    sectores?: boolean | Comuna$sectoresArgs<ExtArgs>
+    _count?: boolean | ComunaCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["comuna"]>
+
+
+
+  export type ComunaSelectScalar = {
+    id?: boolean
+    nombre?: boolean
+    activa?: boolean
+  }
+
+  export type ComunaOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nombre" | "activa", ExtArgs["result"]["comuna"]>
+  export type ComunaInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    sectores?: boolean | Comuna$sectoresArgs<ExtArgs>
+    _count?: boolean | ComunaCountOutputTypeDefaultArgs<ExtArgs>
+  }
+
+  export type $ComunaPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Comuna"
+    objects: {
+      sectores: Prisma.$SectorPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      nombre: string
+      activa: boolean
+    }, ExtArgs["result"]["comuna"]>
+    composites: {}
+  }
+
+  type ComunaGetPayload<S extends boolean | null | undefined | ComunaDefaultArgs> = $Result.GetResult<Prisma.$ComunaPayload, S>
+
+  type ComunaCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ComunaFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ComunaCountAggregateInputType | true
+    }
+
+  export interface ComunaDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Comuna'], meta: { name: 'Comuna' } }
+    /**
+     * Find zero or one Comuna that matches the filter.
+     * @param {ComunaFindUniqueArgs} args - Arguments to find a Comuna
+     * @example
+     * // Get one Comuna
+     * const comuna = await prisma.comuna.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ComunaFindUniqueArgs>(args: SelectSubset<T, ComunaFindUniqueArgs<ExtArgs>>): Prisma__ComunaClient<$Result.GetResult<Prisma.$ComunaPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Comuna that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ComunaFindUniqueOrThrowArgs} args - Arguments to find a Comuna
+     * @example
+     * // Get one Comuna
+     * const comuna = await prisma.comuna.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ComunaFindUniqueOrThrowArgs>(args: SelectSubset<T, ComunaFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ComunaClient<$Result.GetResult<Prisma.$ComunaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Comuna that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ComunaFindFirstArgs} args - Arguments to find a Comuna
+     * @example
+     * // Get one Comuna
+     * const comuna = await prisma.comuna.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ComunaFindFirstArgs>(args?: SelectSubset<T, ComunaFindFirstArgs<ExtArgs>>): Prisma__ComunaClient<$Result.GetResult<Prisma.$ComunaPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Comuna that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ComunaFindFirstOrThrowArgs} args - Arguments to find a Comuna
+     * @example
+     * // Get one Comuna
+     * const comuna = await prisma.comuna.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ComunaFindFirstOrThrowArgs>(args?: SelectSubset<T, ComunaFindFirstOrThrowArgs<ExtArgs>>): Prisma__ComunaClient<$Result.GetResult<Prisma.$ComunaPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Comunas that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ComunaFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Comunas
+     * const comunas = await prisma.comuna.findMany()
+     * 
+     * // Get first 10 Comunas
+     * const comunas = await prisma.comuna.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const comunaWithIdOnly = await prisma.comuna.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ComunaFindManyArgs>(args?: SelectSubset<T, ComunaFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ComunaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Comuna.
+     * @param {ComunaCreateArgs} args - Arguments to create a Comuna.
+     * @example
+     * // Create one Comuna
+     * const Comuna = await prisma.comuna.create({
+     *   data: {
+     *     // ... data to create a Comuna
+     *   }
+     * })
+     * 
+     */
+    create<T extends ComunaCreateArgs>(args: SelectSubset<T, ComunaCreateArgs<ExtArgs>>): Prisma__ComunaClient<$Result.GetResult<Prisma.$ComunaPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Comunas.
+     * @param {ComunaCreateManyArgs} args - Arguments to create many Comunas.
+     * @example
+     * // Create many Comunas
+     * const comuna = await prisma.comuna.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ComunaCreateManyArgs>(args?: SelectSubset<T, ComunaCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a Comuna.
+     * @param {ComunaDeleteArgs} args - Arguments to delete one Comuna.
+     * @example
+     * // Delete one Comuna
+     * const Comuna = await prisma.comuna.delete({
+     *   where: {
+     *     // ... filter to delete one Comuna
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ComunaDeleteArgs>(args: SelectSubset<T, ComunaDeleteArgs<ExtArgs>>): Prisma__ComunaClient<$Result.GetResult<Prisma.$ComunaPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Comuna.
+     * @param {ComunaUpdateArgs} args - Arguments to update one Comuna.
+     * @example
+     * // Update one Comuna
+     * const comuna = await prisma.comuna.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ComunaUpdateArgs>(args: SelectSubset<T, ComunaUpdateArgs<ExtArgs>>): Prisma__ComunaClient<$Result.GetResult<Prisma.$ComunaPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Comunas.
+     * @param {ComunaDeleteManyArgs} args - Arguments to filter Comunas to delete.
+     * @example
+     * // Delete a few Comunas
+     * const { count } = await prisma.comuna.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ComunaDeleteManyArgs>(args?: SelectSubset<T, ComunaDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Comunas.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ComunaUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Comunas
+     * const comuna = await prisma.comuna.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ComunaUpdateManyArgs>(args: SelectSubset<T, ComunaUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Comuna.
+     * @param {ComunaUpsertArgs} args - Arguments to update or create a Comuna.
+     * @example
+     * // Update or create a Comuna
+     * const comuna = await prisma.comuna.upsert({
+     *   create: {
+     *     // ... data to create a Comuna
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Comuna we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ComunaUpsertArgs>(args: SelectSubset<T, ComunaUpsertArgs<ExtArgs>>): Prisma__ComunaClient<$Result.GetResult<Prisma.$ComunaPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Comunas.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ComunaCountArgs} args - Arguments to filter Comunas to count.
+     * @example
+     * // Count the number of Comunas
+     * const count = await prisma.comuna.count({
+     *   where: {
+     *     // ... the filter for the Comunas we want to count
+     *   }
+     * })
+    **/
+    count<T extends ComunaCountArgs>(
+      args?: Subset<T, ComunaCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ComunaCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Comuna.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ComunaAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ComunaAggregateArgs>(args: Subset<T, ComunaAggregateArgs>): Prisma.PrismaPromise<GetComunaAggregateType<T>>
+
+    /**
+     * Group by Comuna.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ComunaGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ComunaGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ComunaGroupByArgs['orderBy'] }
+        : { orderBy?: ComunaGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ComunaGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetComunaGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Comuna model
+   */
+  readonly fields: ComunaFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Comuna.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ComunaClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    sectores<T extends Comuna$sectoresArgs<ExtArgs> = {}>(args?: Subset<T, Comuna$sectoresArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SectorPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Comuna model
+   */
+  interface ComunaFieldRefs {
+    readonly id: FieldRef<"Comuna", 'String'>
+    readonly nombre: FieldRef<"Comuna", 'String'>
+    readonly activa: FieldRef<"Comuna", 'Boolean'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Comuna findUnique
+   */
+  export type ComunaFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Comuna
+     */
+    select?: ComunaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Comuna
+     */
+    omit?: ComunaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ComunaInclude<ExtArgs> | null
+    /**
+     * Filter, which Comuna to fetch.
+     */
+    where: ComunaWhereUniqueInput
+  }
+
+  /**
+   * Comuna findUniqueOrThrow
+   */
+  export type ComunaFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Comuna
+     */
+    select?: ComunaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Comuna
+     */
+    omit?: ComunaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ComunaInclude<ExtArgs> | null
+    /**
+     * Filter, which Comuna to fetch.
+     */
+    where: ComunaWhereUniqueInput
+  }
+
+  /**
+   * Comuna findFirst
+   */
+  export type ComunaFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Comuna
+     */
+    select?: ComunaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Comuna
+     */
+    omit?: ComunaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ComunaInclude<ExtArgs> | null
+    /**
+     * Filter, which Comuna to fetch.
+     */
+    where?: ComunaWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Comunas to fetch.
+     */
+    orderBy?: ComunaOrderByWithRelationInput | ComunaOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Comunas.
+     */
+    cursor?: ComunaWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Comunas from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Comunas.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Comunas.
+     */
+    distinct?: ComunaScalarFieldEnum | ComunaScalarFieldEnum[]
+  }
+
+  /**
+   * Comuna findFirstOrThrow
+   */
+  export type ComunaFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Comuna
+     */
+    select?: ComunaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Comuna
+     */
+    omit?: ComunaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ComunaInclude<ExtArgs> | null
+    /**
+     * Filter, which Comuna to fetch.
+     */
+    where?: ComunaWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Comunas to fetch.
+     */
+    orderBy?: ComunaOrderByWithRelationInput | ComunaOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Comunas.
+     */
+    cursor?: ComunaWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Comunas from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Comunas.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Comunas.
+     */
+    distinct?: ComunaScalarFieldEnum | ComunaScalarFieldEnum[]
+  }
+
+  /**
+   * Comuna findMany
+   */
+  export type ComunaFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Comuna
+     */
+    select?: ComunaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Comuna
+     */
+    omit?: ComunaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ComunaInclude<ExtArgs> | null
+    /**
+     * Filter, which Comunas to fetch.
+     */
+    where?: ComunaWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Comunas to fetch.
+     */
+    orderBy?: ComunaOrderByWithRelationInput | ComunaOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Comunas.
+     */
+    cursor?: ComunaWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Comunas from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Comunas.
+     */
+    skip?: number
+    distinct?: ComunaScalarFieldEnum | ComunaScalarFieldEnum[]
+  }
+
+  /**
+   * Comuna create
+   */
+  export type ComunaCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Comuna
+     */
+    select?: ComunaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Comuna
+     */
+    omit?: ComunaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ComunaInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Comuna.
+     */
+    data: XOR<ComunaCreateInput, ComunaUncheckedCreateInput>
+  }
+
+  /**
+   * Comuna createMany
+   */
+  export type ComunaCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Comunas.
+     */
+    data: ComunaCreateManyInput | ComunaCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Comuna update
+   */
+  export type ComunaUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Comuna
+     */
+    select?: ComunaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Comuna
+     */
+    omit?: ComunaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ComunaInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Comuna.
+     */
+    data: XOR<ComunaUpdateInput, ComunaUncheckedUpdateInput>
+    /**
+     * Choose, which Comuna to update.
+     */
+    where: ComunaWhereUniqueInput
+  }
+
+  /**
+   * Comuna updateMany
+   */
+  export type ComunaUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Comunas.
+     */
+    data: XOR<ComunaUpdateManyMutationInput, ComunaUncheckedUpdateManyInput>
+    /**
+     * Filter which Comunas to update
+     */
+    where?: ComunaWhereInput
+    /**
+     * Limit how many Comunas to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Comuna upsert
+   */
+  export type ComunaUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Comuna
+     */
+    select?: ComunaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Comuna
+     */
+    omit?: ComunaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ComunaInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Comuna to update in case it exists.
+     */
+    where: ComunaWhereUniqueInput
+    /**
+     * In case the Comuna found by the `where` argument doesn't exist, create a new Comuna with this data.
+     */
+    create: XOR<ComunaCreateInput, ComunaUncheckedCreateInput>
+    /**
+     * In case the Comuna was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ComunaUpdateInput, ComunaUncheckedUpdateInput>
+  }
+
+  /**
+   * Comuna delete
+   */
+  export type ComunaDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Comuna
+     */
+    select?: ComunaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Comuna
+     */
+    omit?: ComunaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ComunaInclude<ExtArgs> | null
+    /**
+     * Filter which Comuna to delete.
+     */
+    where: ComunaWhereUniqueInput
+  }
+
+  /**
+   * Comuna deleteMany
+   */
+  export type ComunaDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Comunas to delete
+     */
+    where?: ComunaWhereInput
+    /**
+     * Limit how many Comunas to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Comuna.sectores
+   */
+  export type Comuna$sectoresArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Sector
+     */
+    select?: SectorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Sector
+     */
+    omit?: SectorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SectorInclude<ExtArgs> | null
+    where?: SectorWhereInput
+    orderBy?: SectorOrderByWithRelationInput | SectorOrderByWithRelationInput[]
+    cursor?: SectorWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SectorScalarFieldEnum | SectorScalarFieldEnum[]
+  }
+
+  /**
+   * Comuna without action
+   */
+  export type ComunaDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Comuna
+     */
+    select?: ComunaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Comuna
+     */
+    omit?: ComunaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ComunaInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Sector
+   */
+
+  export type AggregateSector = {
+    _count: SectorCountAggregateOutputType | null
+    _min: SectorMinAggregateOutputType | null
+    _max: SectorMaxAggregateOutputType | null
+  }
+
+  export type SectorMinAggregateOutputType = {
+    id: string | null
+    nombre: string | null
+    comuna_id: string | null
+    activo: boolean | null
+  }
+
+  export type SectorMaxAggregateOutputType = {
+    id: string | null
+    nombre: string | null
+    comuna_id: string | null
+    activo: boolean | null
+  }
+
+  export type SectorCountAggregateOutputType = {
+    id: number
+    nombre: number
+    comuna_id: number
+    activo: number
+    _all: number
+  }
+
+
+  export type SectorMinAggregateInputType = {
+    id?: true
+    nombre?: true
+    comuna_id?: true
+    activo?: true
+  }
+
+  export type SectorMaxAggregateInputType = {
+    id?: true
+    nombre?: true
+    comuna_id?: true
+    activo?: true
+  }
+
+  export type SectorCountAggregateInputType = {
+    id?: true
+    nombre?: true
+    comuna_id?: true
+    activo?: true
+    _all?: true
+  }
+
+  export type SectorAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Sector to aggregate.
+     */
+    where?: SectorWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Sectors to fetch.
+     */
+    orderBy?: SectorOrderByWithRelationInput | SectorOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SectorWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Sectors from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Sectors.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Sectors
+    **/
+    _count?: true | SectorCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SectorMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SectorMaxAggregateInputType
+  }
+
+  export type GetSectorAggregateType<T extends SectorAggregateArgs> = {
+        [P in keyof T & keyof AggregateSector]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSector[P]>
+      : GetScalarType<T[P], AggregateSector[P]>
+  }
+
+
+
+
+  export type SectorGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SectorWhereInput
+    orderBy?: SectorOrderByWithAggregationInput | SectorOrderByWithAggregationInput[]
+    by: SectorScalarFieldEnum[] | SectorScalarFieldEnum
+    having?: SectorScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SectorCountAggregateInputType | true
+    _min?: SectorMinAggregateInputType
+    _max?: SectorMaxAggregateInputType
+  }
+
+  export type SectorGroupByOutputType = {
+    id: string
+    nombre: string
+    comuna_id: string
+    activo: boolean
+    _count: SectorCountAggregateOutputType | null
+    _min: SectorMinAggregateOutputType | null
+    _max: SectorMaxAggregateOutputType | null
+  }
+
+  type GetSectorGroupByPayload<T extends SectorGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SectorGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SectorGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SectorGroupByOutputType[P]>
+            : GetScalarType<T[P], SectorGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SectorSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    nombre?: boolean
+    comuna_id?: boolean
+    activo?: boolean
+    comuna?: boolean | ComunaDefaultArgs<ExtArgs>
+    clientes?: boolean | Sector$clientesArgs<ExtArgs>
+    rutas_base?: boolean | Sector$rutas_baseArgs<ExtArgs>
+    _count?: boolean | SectorCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["sector"]>
+
+
+
+  export type SectorSelectScalar = {
+    id?: boolean
+    nombre?: boolean
+    comuna_id?: boolean
+    activo?: boolean
+  }
+
+  export type SectorOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nombre" | "comuna_id" | "activo", ExtArgs["result"]["sector"]>
+  export type SectorInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    comuna?: boolean | ComunaDefaultArgs<ExtArgs>
+    clientes?: boolean | Sector$clientesArgs<ExtArgs>
+    rutas_base?: boolean | Sector$rutas_baseArgs<ExtArgs>
+    _count?: boolean | SectorCountOutputTypeDefaultArgs<ExtArgs>
+  }
+
+  export type $SectorPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Sector"
+    objects: {
+      comuna: Prisma.$ComunaPayload<ExtArgs>
+      clientes: Prisma.$ClientePayload<ExtArgs>[]
+      rutas_base: Prisma.$RutaBaseSectorPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      nombre: string
+      comuna_id: string
+      activo: boolean
+    }, ExtArgs["result"]["sector"]>
+    composites: {}
+  }
+
+  type SectorGetPayload<S extends boolean | null | undefined | SectorDefaultArgs> = $Result.GetResult<Prisma.$SectorPayload, S>
+
+  type SectorCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<SectorFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: SectorCountAggregateInputType | true
+    }
+
+  export interface SectorDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Sector'], meta: { name: 'Sector' } }
+    /**
+     * Find zero or one Sector that matches the filter.
+     * @param {SectorFindUniqueArgs} args - Arguments to find a Sector
+     * @example
+     * // Get one Sector
+     * const sector = await prisma.sector.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SectorFindUniqueArgs>(args: SelectSubset<T, SectorFindUniqueArgs<ExtArgs>>): Prisma__SectorClient<$Result.GetResult<Prisma.$SectorPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Sector that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {SectorFindUniqueOrThrowArgs} args - Arguments to find a Sector
+     * @example
+     * // Get one Sector
+     * const sector = await prisma.sector.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SectorFindUniqueOrThrowArgs>(args: SelectSubset<T, SectorFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SectorClient<$Result.GetResult<Prisma.$SectorPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Sector that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SectorFindFirstArgs} args - Arguments to find a Sector
+     * @example
+     * // Get one Sector
+     * const sector = await prisma.sector.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SectorFindFirstArgs>(args?: SelectSubset<T, SectorFindFirstArgs<ExtArgs>>): Prisma__SectorClient<$Result.GetResult<Prisma.$SectorPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Sector that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SectorFindFirstOrThrowArgs} args - Arguments to find a Sector
+     * @example
+     * // Get one Sector
+     * const sector = await prisma.sector.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SectorFindFirstOrThrowArgs>(args?: SelectSubset<T, SectorFindFirstOrThrowArgs<ExtArgs>>): Prisma__SectorClient<$Result.GetResult<Prisma.$SectorPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Sectors that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SectorFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Sectors
+     * const sectors = await prisma.sector.findMany()
+     * 
+     * // Get first 10 Sectors
+     * const sectors = await prisma.sector.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const sectorWithIdOnly = await prisma.sector.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends SectorFindManyArgs>(args?: SelectSubset<T, SectorFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SectorPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Sector.
+     * @param {SectorCreateArgs} args - Arguments to create a Sector.
+     * @example
+     * // Create one Sector
+     * const Sector = await prisma.sector.create({
+     *   data: {
+     *     // ... data to create a Sector
+     *   }
+     * })
+     * 
+     */
+    create<T extends SectorCreateArgs>(args: SelectSubset<T, SectorCreateArgs<ExtArgs>>): Prisma__SectorClient<$Result.GetResult<Prisma.$SectorPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Sectors.
+     * @param {SectorCreateManyArgs} args - Arguments to create many Sectors.
+     * @example
+     * // Create many Sectors
+     * const sector = await prisma.sector.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SectorCreateManyArgs>(args?: SelectSubset<T, SectorCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a Sector.
+     * @param {SectorDeleteArgs} args - Arguments to delete one Sector.
+     * @example
+     * // Delete one Sector
+     * const Sector = await prisma.sector.delete({
+     *   where: {
+     *     // ... filter to delete one Sector
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SectorDeleteArgs>(args: SelectSubset<T, SectorDeleteArgs<ExtArgs>>): Prisma__SectorClient<$Result.GetResult<Prisma.$SectorPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Sector.
+     * @param {SectorUpdateArgs} args - Arguments to update one Sector.
+     * @example
+     * // Update one Sector
+     * const sector = await prisma.sector.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SectorUpdateArgs>(args: SelectSubset<T, SectorUpdateArgs<ExtArgs>>): Prisma__SectorClient<$Result.GetResult<Prisma.$SectorPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Sectors.
+     * @param {SectorDeleteManyArgs} args - Arguments to filter Sectors to delete.
+     * @example
+     * // Delete a few Sectors
+     * const { count } = await prisma.sector.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SectorDeleteManyArgs>(args?: SelectSubset<T, SectorDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Sectors.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SectorUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Sectors
+     * const sector = await prisma.sector.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SectorUpdateManyArgs>(args: SelectSubset<T, SectorUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Sector.
+     * @param {SectorUpsertArgs} args - Arguments to update or create a Sector.
+     * @example
+     * // Update or create a Sector
+     * const sector = await prisma.sector.upsert({
+     *   create: {
+     *     // ... data to create a Sector
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Sector we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SectorUpsertArgs>(args: SelectSubset<T, SectorUpsertArgs<ExtArgs>>): Prisma__SectorClient<$Result.GetResult<Prisma.$SectorPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Sectors.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SectorCountArgs} args - Arguments to filter Sectors to count.
+     * @example
+     * // Count the number of Sectors
+     * const count = await prisma.sector.count({
+     *   where: {
+     *     // ... the filter for the Sectors we want to count
+     *   }
+     * })
+    **/
+    count<T extends SectorCountArgs>(
+      args?: Subset<T, SectorCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SectorCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Sector.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SectorAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SectorAggregateArgs>(args: Subset<T, SectorAggregateArgs>): Prisma.PrismaPromise<GetSectorAggregateType<T>>
+
+    /**
+     * Group by Sector.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SectorGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SectorGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SectorGroupByArgs['orderBy'] }
+        : { orderBy?: SectorGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SectorGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSectorGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Sector model
+   */
+  readonly fields: SectorFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Sector.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SectorClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    comuna<T extends ComunaDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ComunaDefaultArgs<ExtArgs>>): Prisma__ComunaClient<$Result.GetResult<Prisma.$ComunaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    clientes<T extends Sector$clientesArgs<ExtArgs> = {}>(args?: Subset<T, Sector$clientesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ClientePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    rutas_base<T extends Sector$rutas_baseArgs<ExtArgs> = {}>(args?: Subset<T, Sector$rutas_baseArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RutaBaseSectorPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Sector model
+   */
+  interface SectorFieldRefs {
+    readonly id: FieldRef<"Sector", 'String'>
+    readonly nombre: FieldRef<"Sector", 'String'>
+    readonly comuna_id: FieldRef<"Sector", 'String'>
+    readonly activo: FieldRef<"Sector", 'Boolean'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Sector findUnique
+   */
+  export type SectorFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Sector
+     */
+    select?: SectorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Sector
+     */
+    omit?: SectorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SectorInclude<ExtArgs> | null
+    /**
+     * Filter, which Sector to fetch.
+     */
+    where: SectorWhereUniqueInput
+  }
+
+  /**
+   * Sector findUniqueOrThrow
+   */
+  export type SectorFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Sector
+     */
+    select?: SectorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Sector
+     */
+    omit?: SectorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SectorInclude<ExtArgs> | null
+    /**
+     * Filter, which Sector to fetch.
+     */
+    where: SectorWhereUniqueInput
+  }
+
+  /**
+   * Sector findFirst
+   */
+  export type SectorFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Sector
+     */
+    select?: SectorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Sector
+     */
+    omit?: SectorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SectorInclude<ExtArgs> | null
+    /**
+     * Filter, which Sector to fetch.
+     */
+    where?: SectorWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Sectors to fetch.
+     */
+    orderBy?: SectorOrderByWithRelationInput | SectorOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Sectors.
+     */
+    cursor?: SectorWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Sectors from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Sectors.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Sectors.
+     */
+    distinct?: SectorScalarFieldEnum | SectorScalarFieldEnum[]
+  }
+
+  /**
+   * Sector findFirstOrThrow
+   */
+  export type SectorFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Sector
+     */
+    select?: SectorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Sector
+     */
+    omit?: SectorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SectorInclude<ExtArgs> | null
+    /**
+     * Filter, which Sector to fetch.
+     */
+    where?: SectorWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Sectors to fetch.
+     */
+    orderBy?: SectorOrderByWithRelationInput | SectorOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Sectors.
+     */
+    cursor?: SectorWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Sectors from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Sectors.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Sectors.
+     */
+    distinct?: SectorScalarFieldEnum | SectorScalarFieldEnum[]
+  }
+
+  /**
+   * Sector findMany
+   */
+  export type SectorFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Sector
+     */
+    select?: SectorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Sector
+     */
+    omit?: SectorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SectorInclude<ExtArgs> | null
+    /**
+     * Filter, which Sectors to fetch.
+     */
+    where?: SectorWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Sectors to fetch.
+     */
+    orderBy?: SectorOrderByWithRelationInput | SectorOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Sectors.
+     */
+    cursor?: SectorWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Sectors from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Sectors.
+     */
+    skip?: number
+    distinct?: SectorScalarFieldEnum | SectorScalarFieldEnum[]
+  }
+
+  /**
+   * Sector create
+   */
+  export type SectorCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Sector
+     */
+    select?: SectorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Sector
+     */
+    omit?: SectorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SectorInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Sector.
+     */
+    data: XOR<SectorCreateInput, SectorUncheckedCreateInput>
+  }
+
+  /**
+   * Sector createMany
+   */
+  export type SectorCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Sectors.
+     */
+    data: SectorCreateManyInput | SectorCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Sector update
+   */
+  export type SectorUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Sector
+     */
+    select?: SectorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Sector
+     */
+    omit?: SectorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SectorInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Sector.
+     */
+    data: XOR<SectorUpdateInput, SectorUncheckedUpdateInput>
+    /**
+     * Choose, which Sector to update.
+     */
+    where: SectorWhereUniqueInput
+  }
+
+  /**
+   * Sector updateMany
+   */
+  export type SectorUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Sectors.
+     */
+    data: XOR<SectorUpdateManyMutationInput, SectorUncheckedUpdateManyInput>
+    /**
+     * Filter which Sectors to update
+     */
+    where?: SectorWhereInput
+    /**
+     * Limit how many Sectors to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Sector upsert
+   */
+  export type SectorUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Sector
+     */
+    select?: SectorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Sector
+     */
+    omit?: SectorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SectorInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Sector to update in case it exists.
+     */
+    where: SectorWhereUniqueInput
+    /**
+     * In case the Sector found by the `where` argument doesn't exist, create a new Sector with this data.
+     */
+    create: XOR<SectorCreateInput, SectorUncheckedCreateInput>
+    /**
+     * In case the Sector was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SectorUpdateInput, SectorUncheckedUpdateInput>
+  }
+
+  /**
+   * Sector delete
+   */
+  export type SectorDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Sector
+     */
+    select?: SectorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Sector
+     */
+    omit?: SectorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SectorInclude<ExtArgs> | null
+    /**
+     * Filter which Sector to delete.
+     */
+    where: SectorWhereUniqueInput
+  }
+
+  /**
+   * Sector deleteMany
+   */
+  export type SectorDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Sectors to delete
+     */
+    where?: SectorWhereInput
+    /**
+     * Limit how many Sectors to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Sector.clientes
+   */
+  export type Sector$clientesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Cliente
+     */
+    select?: ClienteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Cliente
+     */
+    omit?: ClienteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ClienteInclude<ExtArgs> | null
+    where?: ClienteWhereInput
+    orderBy?: ClienteOrderByWithRelationInput | ClienteOrderByWithRelationInput[]
+    cursor?: ClienteWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ClienteScalarFieldEnum | ClienteScalarFieldEnum[]
+  }
+
+  /**
+   * Sector.rutas_base
+   */
+  export type Sector$rutas_baseArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RutaBaseSector
+     */
+    select?: RutaBaseSectorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RutaBaseSector
+     */
+    omit?: RutaBaseSectorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RutaBaseSectorInclude<ExtArgs> | null
+    where?: RutaBaseSectorWhereInput
+    orderBy?: RutaBaseSectorOrderByWithRelationInput | RutaBaseSectorOrderByWithRelationInput[]
+    cursor?: RutaBaseSectorWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: RutaBaseSectorScalarFieldEnum | RutaBaseSectorScalarFieldEnum[]
+  }
+
+  /**
+   * Sector without action
+   */
+  export type SectorDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Sector
+     */
+    select?: SectorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Sector
+     */
+    omit?: SectorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SectorInclude<ExtArgs> | null
   }
 
 
@@ -49701,7 +51874,7 @@ export namespace Prisma {
     activo: 'activo',
     botellones_prestados: 'botellones_prestados',
     preferencia_factura: 'preferencia_factura',
-    sector: 'sector',
+    sector_id: 'sector_id',
     frecuencia: 'frecuencia',
     semana_alterna: 'semana_alterna'
   };
@@ -49722,13 +51895,32 @@ export namespace Prisma {
   export type RutaBaseScalarFieldEnum = (typeof RutaBaseScalarFieldEnum)[keyof typeof RutaBaseScalarFieldEnum]
 
 
-  export const ComunaRutaScalarFieldEnum: {
+  export const RutaBaseSectorScalarFieldEnum: {
     id: 'id',
     ruta_base_id: 'ruta_base_id',
-    comuna: 'comuna'
+    sector_id: 'sector_id'
   };
 
-  export type ComunaRutaScalarFieldEnum = (typeof ComunaRutaScalarFieldEnum)[keyof typeof ComunaRutaScalarFieldEnum]
+  export type RutaBaseSectorScalarFieldEnum = (typeof RutaBaseSectorScalarFieldEnum)[keyof typeof RutaBaseSectorScalarFieldEnum]
+
+
+  export const ComunaScalarFieldEnum: {
+    id: 'id',
+    nombre: 'nombre',
+    activa: 'activa'
+  };
+
+  export type ComunaScalarFieldEnum = (typeof ComunaScalarFieldEnum)[keyof typeof ComunaScalarFieldEnum]
+
+
+  export const SectorScalarFieldEnum: {
+    id: 'id',
+    nombre: 'nombre',
+    comuna_id: 'comuna_id',
+    activo: 'activo'
+  };
+
+  export type SectorScalarFieldEnum = (typeof SectorScalarFieldEnum)[keyof typeof SectorScalarFieldEnum]
 
 
   export const ClienteRutaBaseScalarFieldEnum: {
@@ -50280,7 +52472,7 @@ export namespace Prisma {
     rut_empresa: 'rut_empresa',
     giro: 'giro',
     notas: 'notas',
-    sector: 'sector'
+    sector_id: 'sector_id'
   };
 
   export type ClienteOrderByRelevanceFieldEnum = (typeof ClienteOrderByRelevanceFieldEnum)[keyof typeof ClienteOrderByRelevanceFieldEnum]
@@ -50296,13 +52488,30 @@ export namespace Prisma {
   export type RutaBaseOrderByRelevanceFieldEnum = (typeof RutaBaseOrderByRelevanceFieldEnum)[keyof typeof RutaBaseOrderByRelevanceFieldEnum]
 
 
-  export const ComunaRutaOrderByRelevanceFieldEnum: {
+  export const RutaBaseSectorOrderByRelevanceFieldEnum: {
     id: 'id',
     ruta_base_id: 'ruta_base_id',
-    comuna: 'comuna'
+    sector_id: 'sector_id'
   };
 
-  export type ComunaRutaOrderByRelevanceFieldEnum = (typeof ComunaRutaOrderByRelevanceFieldEnum)[keyof typeof ComunaRutaOrderByRelevanceFieldEnum]
+  export type RutaBaseSectorOrderByRelevanceFieldEnum = (typeof RutaBaseSectorOrderByRelevanceFieldEnum)[keyof typeof RutaBaseSectorOrderByRelevanceFieldEnum]
+
+
+  export const ComunaOrderByRelevanceFieldEnum: {
+    id: 'id',
+    nombre: 'nombre'
+  };
+
+  export type ComunaOrderByRelevanceFieldEnum = (typeof ComunaOrderByRelevanceFieldEnum)[keyof typeof ComunaOrderByRelevanceFieldEnum]
+
+
+  export const SectorOrderByRelevanceFieldEnum: {
+    id: 'id',
+    nombre: 'nombre',
+    comuna_id: 'comuna_id'
+  };
+
+  export type SectorOrderByRelevanceFieldEnum = (typeof SectorOrderByRelevanceFieldEnum)[keyof typeof SectorOrderByRelevanceFieldEnum]
 
 
   export const ClienteRutaBaseOrderByRelevanceFieldEnum: {
@@ -51558,9 +53767,10 @@ export namespace Prisma {
     activo?: BoolFilter<"Cliente"> | boolean
     botellones_prestados?: IntFilter<"Cliente"> | number
     preferencia_factura?: EnumPreferenciaFacturacionFilter<"Cliente"> | $Enums.PreferenciaFacturacion
-    sector?: StringFilter<"Cliente"> | string
+    sector_id?: StringNullableFilter<"Cliente"> | string | null
     frecuencia?: EnumFrecuenciaFilter<"Cliente"> | $Enums.Frecuencia
     semana_alterna?: EnumSemanaAlternaNullableFilter<"Cliente"> | $Enums.SemanaAlterna | null
+    sector?: XOR<SectorNullableScalarRelationFilter, SectorWhereInput> | null
     botellones_danados?: BotellonDanadoListRelationFilter
     clientes_ruta?: ClienteRutaBaseListRelationFilter
     dispensadores?: DispensadorListRelationFilter
@@ -51586,9 +53796,10 @@ export namespace Prisma {
     activo?: SortOrder
     botellones_prestados?: SortOrder
     preferencia_factura?: SortOrder
-    sector?: SortOrder
+    sector_id?: SortOrderInput | SortOrder
     frecuencia?: SortOrder
     semana_alterna?: SortOrderInput | SortOrder
+    sector?: SectorOrderByWithRelationInput
     botellones_danados?: BotellonDanadoOrderByRelationAggregateInput
     clientes_ruta?: ClienteRutaBaseOrderByRelationAggregateInput
     dispensadores?: DispensadorOrderByRelationAggregateInput
@@ -51618,9 +53829,10 @@ export namespace Prisma {
     activo?: BoolFilter<"Cliente"> | boolean
     botellones_prestados?: IntFilter<"Cliente"> | number
     preferencia_factura?: EnumPreferenciaFacturacionFilter<"Cliente"> | $Enums.PreferenciaFacturacion
-    sector?: StringFilter<"Cliente"> | string
+    sector_id?: StringNullableFilter<"Cliente"> | string | null
     frecuencia?: EnumFrecuenciaFilter<"Cliente"> | $Enums.Frecuencia
     semana_alterna?: EnumSemanaAlternaNullableFilter<"Cliente"> | $Enums.SemanaAlterna | null
+    sector?: XOR<SectorNullableScalarRelationFilter, SectorWhereInput> | null
     botellones_danados?: BotellonDanadoListRelationFilter
     clientes_ruta?: ClienteRutaBaseListRelationFilter
     dispensadores?: DispensadorListRelationFilter
@@ -51646,7 +53858,7 @@ export namespace Prisma {
     activo?: SortOrder
     botellones_prestados?: SortOrder
     preferencia_factura?: SortOrder
-    sector?: SortOrder
+    sector_id?: SortOrderInput | SortOrder
     frecuencia?: SortOrder
     semana_alterna?: SortOrderInput | SortOrder
     _count?: ClienteCountOrderByAggregateInput
@@ -51674,7 +53886,7 @@ export namespace Prisma {
     activo?: BoolWithAggregatesFilter<"Cliente"> | boolean
     botellones_prestados?: IntWithAggregatesFilter<"Cliente"> | number
     preferencia_factura?: EnumPreferenciaFacturacionWithAggregatesFilter<"Cliente"> | $Enums.PreferenciaFacturacion
-    sector?: StringWithAggregatesFilter<"Cliente"> | string
+    sector_id?: StringNullableWithAggregatesFilter<"Cliente"> | string | null
     frecuencia?: EnumFrecuenciaWithAggregatesFilter<"Cliente"> | $Enums.Frecuencia
     semana_alterna?: EnumSemanaAlternaNullableWithAggregatesFilter<"Cliente"> | $Enums.SemanaAlterna | null
   }
@@ -51691,7 +53903,7 @@ export namespace Prisma {
     usuario_id?: StringFilter<"RutaBase"> | string
     vehiculo_id?: StringFilter<"RutaBase"> | string
     clientes?: ClienteRutaBaseListRelationFilter
-    comunas?: ComunaRutaListRelationFilter
+    sectores?: RutaBaseSectorListRelationFilter
     usuario?: XOR<UsuarioScalarRelationFilter, UsuarioWhereInput>
     vehiculo?: XOR<VehiculoScalarRelationFilter, VehiculoWhereInput>
     rutas_dia?: RutaDiaListRelationFilter
@@ -51706,7 +53918,7 @@ export namespace Prisma {
     usuario_id?: SortOrder
     vehiculo_id?: SortOrder
     clientes?: ClienteRutaBaseOrderByRelationAggregateInput
-    comunas?: ComunaRutaOrderByRelationAggregateInput
+    sectores?: RutaBaseSectorOrderByRelationAggregateInput
     usuario?: UsuarioOrderByWithRelationInput
     vehiculo?: VehiculoOrderByWithRelationInput
     rutas_dia?: RutaDiaOrderByRelationAggregateInput
@@ -51725,7 +53937,7 @@ export namespace Prisma {
     usuario_id?: StringFilter<"RutaBase"> | string
     vehiculo_id?: StringFilter<"RutaBase"> | string
     clientes?: ClienteRutaBaseListRelationFilter
-    comunas?: ComunaRutaListRelationFilter
+    sectores?: RutaBaseSectorListRelationFilter
     usuario?: XOR<UsuarioScalarRelationFilter, UsuarioWhereInput>
     vehiculo?: XOR<VehiculoScalarRelationFilter, VehiculoWhereInput>
     rutas_dia?: RutaDiaListRelationFilter
@@ -51757,50 +53969,158 @@ export namespace Prisma {
     vehiculo_id?: StringWithAggregatesFilter<"RutaBase"> | string
   }
 
-  export type ComunaRutaWhereInput = {
-    AND?: ComunaRutaWhereInput | ComunaRutaWhereInput[]
-    OR?: ComunaRutaWhereInput[]
-    NOT?: ComunaRutaWhereInput | ComunaRutaWhereInput[]
-    id?: StringFilter<"ComunaRuta"> | string
-    ruta_base_id?: StringFilter<"ComunaRuta"> | string
-    comuna?: StringFilter<"ComunaRuta"> | string
+  export type RutaBaseSectorWhereInput = {
+    AND?: RutaBaseSectorWhereInput | RutaBaseSectorWhereInput[]
+    OR?: RutaBaseSectorWhereInput[]
+    NOT?: RutaBaseSectorWhereInput | RutaBaseSectorWhereInput[]
+    id?: StringFilter<"RutaBaseSector"> | string
+    ruta_base_id?: StringFilter<"RutaBaseSector"> | string
+    sector_id?: StringFilter<"RutaBaseSector"> | string
     ruta_base?: XOR<RutaBaseScalarRelationFilter, RutaBaseWhereInput>
+    sector?: XOR<SectorScalarRelationFilter, SectorWhereInput>
   }
 
-  export type ComunaRutaOrderByWithRelationInput = {
+  export type RutaBaseSectorOrderByWithRelationInput = {
     id?: SortOrder
     ruta_base_id?: SortOrder
-    comuna?: SortOrder
+    sector_id?: SortOrder
     ruta_base?: RutaBaseOrderByWithRelationInput
-    _relevance?: ComunaRutaOrderByRelevanceInput
+    sector?: SectorOrderByWithRelationInput
+    _relevance?: RutaBaseSectorOrderByRelevanceInput
   }
 
-  export type ComunaRutaWhereUniqueInput = Prisma.AtLeast<{
+  export type RutaBaseSectorWhereUniqueInput = Prisma.AtLeast<{
     id?: string
-    AND?: ComunaRutaWhereInput | ComunaRutaWhereInput[]
-    OR?: ComunaRutaWhereInput[]
-    NOT?: ComunaRutaWhereInput | ComunaRutaWhereInput[]
-    ruta_base_id?: StringFilter<"ComunaRuta"> | string
-    comuna?: StringFilter<"ComunaRuta"> | string
+    ruta_base_id_sector_id?: RutaBaseSectorRuta_base_idSector_idCompoundUniqueInput
+    AND?: RutaBaseSectorWhereInput | RutaBaseSectorWhereInput[]
+    OR?: RutaBaseSectorWhereInput[]
+    NOT?: RutaBaseSectorWhereInput | RutaBaseSectorWhereInput[]
+    ruta_base_id?: StringFilter<"RutaBaseSector"> | string
+    sector_id?: StringFilter<"RutaBaseSector"> | string
     ruta_base?: XOR<RutaBaseScalarRelationFilter, RutaBaseWhereInput>
-  }, "id">
+    sector?: XOR<SectorScalarRelationFilter, SectorWhereInput>
+  }, "id" | "ruta_base_id_sector_id">
 
-  export type ComunaRutaOrderByWithAggregationInput = {
+  export type RutaBaseSectorOrderByWithAggregationInput = {
     id?: SortOrder
     ruta_base_id?: SortOrder
-    comuna?: SortOrder
-    _count?: ComunaRutaCountOrderByAggregateInput
-    _max?: ComunaRutaMaxOrderByAggregateInput
-    _min?: ComunaRutaMinOrderByAggregateInput
+    sector_id?: SortOrder
+    _count?: RutaBaseSectorCountOrderByAggregateInput
+    _max?: RutaBaseSectorMaxOrderByAggregateInput
+    _min?: RutaBaseSectorMinOrderByAggregateInput
   }
 
-  export type ComunaRutaScalarWhereWithAggregatesInput = {
-    AND?: ComunaRutaScalarWhereWithAggregatesInput | ComunaRutaScalarWhereWithAggregatesInput[]
-    OR?: ComunaRutaScalarWhereWithAggregatesInput[]
-    NOT?: ComunaRutaScalarWhereWithAggregatesInput | ComunaRutaScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"ComunaRuta"> | string
-    ruta_base_id?: StringWithAggregatesFilter<"ComunaRuta"> | string
-    comuna?: StringWithAggregatesFilter<"ComunaRuta"> | string
+  export type RutaBaseSectorScalarWhereWithAggregatesInput = {
+    AND?: RutaBaseSectorScalarWhereWithAggregatesInput | RutaBaseSectorScalarWhereWithAggregatesInput[]
+    OR?: RutaBaseSectorScalarWhereWithAggregatesInput[]
+    NOT?: RutaBaseSectorScalarWhereWithAggregatesInput | RutaBaseSectorScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"RutaBaseSector"> | string
+    ruta_base_id?: StringWithAggregatesFilter<"RutaBaseSector"> | string
+    sector_id?: StringWithAggregatesFilter<"RutaBaseSector"> | string
+  }
+
+  export type ComunaWhereInput = {
+    AND?: ComunaWhereInput | ComunaWhereInput[]
+    OR?: ComunaWhereInput[]
+    NOT?: ComunaWhereInput | ComunaWhereInput[]
+    id?: StringFilter<"Comuna"> | string
+    nombre?: StringFilter<"Comuna"> | string
+    activa?: BoolFilter<"Comuna"> | boolean
+    sectores?: SectorListRelationFilter
+  }
+
+  export type ComunaOrderByWithRelationInput = {
+    id?: SortOrder
+    nombre?: SortOrder
+    activa?: SortOrder
+    sectores?: SectorOrderByRelationAggregateInput
+    _relevance?: ComunaOrderByRelevanceInput
+  }
+
+  export type ComunaWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    nombre?: string
+    AND?: ComunaWhereInput | ComunaWhereInput[]
+    OR?: ComunaWhereInput[]
+    NOT?: ComunaWhereInput | ComunaWhereInput[]
+    activa?: BoolFilter<"Comuna"> | boolean
+    sectores?: SectorListRelationFilter
+  }, "id" | "nombre">
+
+  export type ComunaOrderByWithAggregationInput = {
+    id?: SortOrder
+    nombre?: SortOrder
+    activa?: SortOrder
+    _count?: ComunaCountOrderByAggregateInput
+    _max?: ComunaMaxOrderByAggregateInput
+    _min?: ComunaMinOrderByAggregateInput
+  }
+
+  export type ComunaScalarWhereWithAggregatesInput = {
+    AND?: ComunaScalarWhereWithAggregatesInput | ComunaScalarWhereWithAggregatesInput[]
+    OR?: ComunaScalarWhereWithAggregatesInput[]
+    NOT?: ComunaScalarWhereWithAggregatesInput | ComunaScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Comuna"> | string
+    nombre?: StringWithAggregatesFilter<"Comuna"> | string
+    activa?: BoolWithAggregatesFilter<"Comuna"> | boolean
+  }
+
+  export type SectorWhereInput = {
+    AND?: SectorWhereInput | SectorWhereInput[]
+    OR?: SectorWhereInput[]
+    NOT?: SectorWhereInput | SectorWhereInput[]
+    id?: StringFilter<"Sector"> | string
+    nombre?: StringFilter<"Sector"> | string
+    comuna_id?: StringFilter<"Sector"> | string
+    activo?: BoolFilter<"Sector"> | boolean
+    comuna?: XOR<ComunaScalarRelationFilter, ComunaWhereInput>
+    clientes?: ClienteListRelationFilter
+    rutas_base?: RutaBaseSectorListRelationFilter
+  }
+
+  export type SectorOrderByWithRelationInput = {
+    id?: SortOrder
+    nombre?: SortOrder
+    comuna_id?: SortOrder
+    activo?: SortOrder
+    comuna?: ComunaOrderByWithRelationInput
+    clientes?: ClienteOrderByRelationAggregateInput
+    rutas_base?: RutaBaseSectorOrderByRelationAggregateInput
+    _relevance?: SectorOrderByRelevanceInput
+  }
+
+  export type SectorWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    nombre_comuna_id?: SectorNombreComuna_idCompoundUniqueInput
+    AND?: SectorWhereInput | SectorWhereInput[]
+    OR?: SectorWhereInput[]
+    NOT?: SectorWhereInput | SectorWhereInput[]
+    nombre?: StringFilter<"Sector"> | string
+    comuna_id?: StringFilter<"Sector"> | string
+    activo?: BoolFilter<"Sector"> | boolean
+    comuna?: XOR<ComunaScalarRelationFilter, ComunaWhereInput>
+    clientes?: ClienteListRelationFilter
+    rutas_base?: RutaBaseSectorListRelationFilter
+  }, "id" | "nombre_comuna_id">
+
+  export type SectorOrderByWithAggregationInput = {
+    id?: SortOrder
+    nombre?: SortOrder
+    comuna_id?: SortOrder
+    activo?: SortOrder
+    _count?: SectorCountOrderByAggregateInput
+    _max?: SectorMaxOrderByAggregateInput
+    _min?: SectorMinOrderByAggregateInput
+  }
+
+  export type SectorScalarWhereWithAggregatesInput = {
+    AND?: SectorScalarWhereWithAggregatesInput | SectorScalarWhereWithAggregatesInput[]
+    OR?: SectorScalarWhereWithAggregatesInput[]
+    NOT?: SectorScalarWhereWithAggregatesInput | SectorScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Sector"> | string
+    nombre?: StringWithAggregatesFilter<"Sector"> | string
+    comuna_id?: StringWithAggregatesFilter<"Sector"> | string
+    activo?: BoolWithAggregatesFilter<"Sector"> | boolean
   }
 
   export type ClienteRutaBaseWhereInput = {
@@ -54898,9 +57218,9 @@ export namespace Prisma {
     activo?: boolean
     botellones_prestados?: number
     preferencia_factura?: $Enums.PreferenciaFacturacion
-    sector?: string
     frecuencia?: $Enums.Frecuencia
     semana_alterna?: $Enums.SemanaAlterna | null
+    sector?: SectorCreateNestedOneWithoutClientesInput
     botellones_danados?: BotellonDanadoCreateNestedManyWithoutClienteInput
     clientes_ruta?: ClienteRutaBaseCreateNestedManyWithoutClienteInput
     dispensadores?: DispensadorCreateNestedManyWithoutClienteInput
@@ -54926,7 +57246,7 @@ export namespace Prisma {
     activo?: boolean
     botellones_prestados?: number
     preferencia_factura?: $Enums.PreferenciaFacturacion
-    sector?: string
+    sector_id?: string | null
     frecuencia?: $Enums.Frecuencia
     semana_alterna?: $Enums.SemanaAlterna | null
     botellones_danados?: BotellonDanadoUncheckedCreateNestedManyWithoutClienteInput
@@ -54954,9 +57274,9 @@ export namespace Prisma {
     activo?: BoolFieldUpdateOperationsInput | boolean
     botellones_prestados?: IntFieldUpdateOperationsInput | number
     preferencia_factura?: EnumPreferenciaFacturacionFieldUpdateOperationsInput | $Enums.PreferenciaFacturacion
-    sector?: StringFieldUpdateOperationsInput | string
     frecuencia?: EnumFrecuenciaFieldUpdateOperationsInput | $Enums.Frecuencia
     semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
+    sector?: SectorUpdateOneWithoutClientesNestedInput
     botellones_danados?: BotellonDanadoUpdateManyWithoutClienteNestedInput
     clientes_ruta?: ClienteRutaBaseUpdateManyWithoutClienteNestedInput
     dispensadores?: DispensadorUpdateManyWithoutClienteNestedInput
@@ -54982,7 +57302,7 @@ export namespace Prisma {
     activo?: BoolFieldUpdateOperationsInput | boolean
     botellones_prestados?: IntFieldUpdateOperationsInput | number
     preferencia_factura?: EnumPreferenciaFacturacionFieldUpdateOperationsInput | $Enums.PreferenciaFacturacion
-    sector?: StringFieldUpdateOperationsInput | string
+    sector_id?: NullableStringFieldUpdateOperationsInput | string | null
     frecuencia?: EnumFrecuenciaFieldUpdateOperationsInput | $Enums.Frecuencia
     semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
     botellones_danados?: BotellonDanadoUncheckedUpdateManyWithoutClienteNestedInput
@@ -55010,7 +57330,7 @@ export namespace Prisma {
     activo?: boolean
     botellones_prestados?: number
     preferencia_factura?: $Enums.PreferenciaFacturacion
-    sector?: string
+    sector_id?: string | null
     frecuencia?: $Enums.Frecuencia
     semana_alterna?: $Enums.SemanaAlterna | null
   }
@@ -55030,7 +57350,6 @@ export namespace Prisma {
     activo?: BoolFieldUpdateOperationsInput | boolean
     botellones_prestados?: IntFieldUpdateOperationsInput | number
     preferencia_factura?: EnumPreferenciaFacturacionFieldUpdateOperationsInput | $Enums.PreferenciaFacturacion
-    sector?: StringFieldUpdateOperationsInput | string
     frecuencia?: EnumFrecuenciaFieldUpdateOperationsInput | $Enums.Frecuencia
     semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
   }
@@ -55050,7 +57369,7 @@ export namespace Prisma {
     activo?: BoolFieldUpdateOperationsInput | boolean
     botellones_prestados?: IntFieldUpdateOperationsInput | number
     preferencia_factura?: EnumPreferenciaFacturacionFieldUpdateOperationsInput | $Enums.PreferenciaFacturacion
-    sector?: StringFieldUpdateOperationsInput | string
+    sector_id?: NullableStringFieldUpdateOperationsInput | string | null
     frecuencia?: EnumFrecuenciaFieldUpdateOperationsInput | $Enums.Frecuencia
     semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
   }
@@ -55062,7 +57381,7 @@ export namespace Prisma {
     frecuencia?: $Enums.Frecuencia
     semana_alterna?: $Enums.SemanaAlterna | null
     clientes?: ClienteRutaBaseCreateNestedManyWithoutRuta_baseInput
-    comunas?: ComunaRutaCreateNestedManyWithoutRuta_baseInput
+    sectores?: RutaBaseSectorCreateNestedManyWithoutRuta_baseInput
     usuario: UsuarioCreateNestedOneWithoutRutas_baseInput
     vehiculo: VehiculoCreateNestedOneWithoutRutas_baseInput
     rutas_dia?: RutaDiaCreateNestedManyWithoutRuta_baseInput
@@ -55077,7 +57396,7 @@ export namespace Prisma {
     usuario_id: string
     vehiculo_id: string
     clientes?: ClienteRutaBaseUncheckedCreateNestedManyWithoutRuta_baseInput
-    comunas?: ComunaRutaUncheckedCreateNestedManyWithoutRuta_baseInput
+    sectores?: RutaBaseSectorUncheckedCreateNestedManyWithoutRuta_baseInput
     rutas_dia?: RutaDiaUncheckedCreateNestedManyWithoutRuta_baseInput
   }
 
@@ -55088,7 +57407,7 @@ export namespace Prisma {
     frecuencia?: EnumFrecuenciaFieldUpdateOperationsInput | $Enums.Frecuencia
     semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
     clientes?: ClienteRutaBaseUpdateManyWithoutRuta_baseNestedInput
-    comunas?: ComunaRutaUpdateManyWithoutRuta_baseNestedInput
+    sectores?: RutaBaseSectorUpdateManyWithoutRuta_baseNestedInput
     usuario?: UsuarioUpdateOneRequiredWithoutRutas_baseNestedInput
     vehiculo?: VehiculoUpdateOneRequiredWithoutRutas_baseNestedInput
     rutas_dia?: RutaDiaUpdateManyWithoutRuta_baseNestedInput
@@ -55103,7 +57422,7 @@ export namespace Prisma {
     usuario_id?: StringFieldUpdateOperationsInput | string
     vehiculo_id?: StringFieldUpdateOperationsInput | string
     clientes?: ClienteRutaBaseUncheckedUpdateManyWithoutRuta_baseNestedInput
-    comunas?: ComunaRutaUncheckedUpdateManyWithoutRuta_baseNestedInput
+    sectores?: RutaBaseSectorUncheckedUpdateManyWithoutRuta_baseNestedInput
     rutas_dia?: RutaDiaUncheckedUpdateManyWithoutRuta_baseNestedInput
   }
 
@@ -55135,45 +57454,146 @@ export namespace Prisma {
     vehiculo_id?: StringFieldUpdateOperationsInput | string
   }
 
-  export type ComunaRutaCreateInput = {
+  export type RutaBaseSectorCreateInput = {
     id?: string
-    comuna: string
-    ruta_base: RutaBaseCreateNestedOneWithoutComunasInput
+    ruta_base: RutaBaseCreateNestedOneWithoutSectoresInput
+    sector: SectorCreateNestedOneWithoutRutas_baseInput
   }
 
-  export type ComunaRutaUncheckedCreateInput = {
-    id?: string
-    ruta_base_id: string
-    comuna: string
-  }
-
-  export type ComunaRutaUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    comuna?: StringFieldUpdateOperationsInput | string
-    ruta_base?: RutaBaseUpdateOneRequiredWithoutComunasNestedInput
-  }
-
-  export type ComunaRutaUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    ruta_base_id?: StringFieldUpdateOperationsInput | string
-    comuna?: StringFieldUpdateOperationsInput | string
-  }
-
-  export type ComunaRutaCreateManyInput = {
+  export type RutaBaseSectorUncheckedCreateInput = {
     id?: string
     ruta_base_id: string
-    comuna: string
+    sector_id: string
   }
 
-  export type ComunaRutaUpdateManyMutationInput = {
+  export type RutaBaseSectorUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    comuna?: StringFieldUpdateOperationsInput | string
+    ruta_base?: RutaBaseUpdateOneRequiredWithoutSectoresNestedInput
+    sector?: SectorUpdateOneRequiredWithoutRutas_baseNestedInput
   }
 
-  export type ComunaRutaUncheckedUpdateManyInput = {
+  export type RutaBaseSectorUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     ruta_base_id?: StringFieldUpdateOperationsInput | string
-    comuna?: StringFieldUpdateOperationsInput | string
+    sector_id?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type RutaBaseSectorCreateManyInput = {
+    id?: string
+    ruta_base_id: string
+    sector_id: string
+  }
+
+  export type RutaBaseSectorUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type RutaBaseSectorUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ruta_base_id?: StringFieldUpdateOperationsInput | string
+    sector_id?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type ComunaCreateInput = {
+    id?: string
+    nombre: string
+    activa?: boolean
+    sectores?: SectorCreateNestedManyWithoutComunaInput
+  }
+
+  export type ComunaUncheckedCreateInput = {
+    id?: string
+    nombre: string
+    activa?: boolean
+    sectores?: SectorUncheckedCreateNestedManyWithoutComunaInput
+  }
+
+  export type ComunaUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nombre?: StringFieldUpdateOperationsInput | string
+    activa?: BoolFieldUpdateOperationsInput | boolean
+    sectores?: SectorUpdateManyWithoutComunaNestedInput
+  }
+
+  export type ComunaUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nombre?: StringFieldUpdateOperationsInput | string
+    activa?: BoolFieldUpdateOperationsInput | boolean
+    sectores?: SectorUncheckedUpdateManyWithoutComunaNestedInput
+  }
+
+  export type ComunaCreateManyInput = {
+    id?: string
+    nombre: string
+    activa?: boolean
+  }
+
+  export type ComunaUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nombre?: StringFieldUpdateOperationsInput | string
+    activa?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type ComunaUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nombre?: StringFieldUpdateOperationsInput | string
+    activa?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type SectorCreateInput = {
+    id?: string
+    nombre: string
+    activo?: boolean
+    comuna: ComunaCreateNestedOneWithoutSectoresInput
+    clientes?: ClienteCreateNestedManyWithoutSectorInput
+    rutas_base?: RutaBaseSectorCreateNestedManyWithoutSectorInput
+  }
+
+  export type SectorUncheckedCreateInput = {
+    id?: string
+    nombre: string
+    comuna_id: string
+    activo?: boolean
+    clientes?: ClienteUncheckedCreateNestedManyWithoutSectorInput
+    rutas_base?: RutaBaseSectorUncheckedCreateNestedManyWithoutSectorInput
+  }
+
+  export type SectorUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nombre?: StringFieldUpdateOperationsInput | string
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    comuna?: ComunaUpdateOneRequiredWithoutSectoresNestedInput
+    clientes?: ClienteUpdateManyWithoutSectorNestedInput
+    rutas_base?: RutaBaseSectorUpdateManyWithoutSectorNestedInput
+  }
+
+  export type SectorUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nombre?: StringFieldUpdateOperationsInput | string
+    comuna_id?: StringFieldUpdateOperationsInput | string
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    clientes?: ClienteUncheckedUpdateManyWithoutSectorNestedInput
+    rutas_base?: RutaBaseSectorUncheckedUpdateManyWithoutSectorNestedInput
+  }
+
+  export type SectorCreateManyInput = {
+    id?: string
+    nombre: string
+    comuna_id: string
+    activo?: boolean
+  }
+
+  export type SectorUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nombre?: StringFieldUpdateOperationsInput | string
+    activo?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type SectorUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nombre?: StringFieldUpdateOperationsInput | string
+    comuna_id?: StringFieldUpdateOperationsInput | string
+    activo?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type ClienteRutaBaseCreateInput = {
@@ -58600,6 +61020,11 @@ export namespace Prisma {
     not?: NestedEnumSemanaAlternaNullableFilter<$PrismaModel> | $Enums.SemanaAlterna | null
   }
 
+  export type SectorNullableScalarRelationFilter = {
+    is?: SectorWhereInput | null
+    isNot?: SectorWhereInput | null
+  }
+
   export type ClienteRutaBaseListRelationFilter = {
     every?: ClienteRutaBaseWhereInput
     some?: ClienteRutaBaseWhereInput
@@ -58671,7 +61096,7 @@ export namespace Prisma {
     activo?: SortOrder
     botellones_prestados?: SortOrder
     preferencia_factura?: SortOrder
-    sector?: SortOrder
+    sector_id?: SortOrder
     frecuencia?: SortOrder
     semana_alterna?: SortOrder
   }
@@ -58695,7 +61120,7 @@ export namespace Prisma {
     activo?: SortOrder
     botellones_prestados?: SortOrder
     preferencia_factura?: SortOrder
-    sector?: SortOrder
+    sector_id?: SortOrder
     frecuencia?: SortOrder
     semana_alterna?: SortOrder
   }
@@ -58715,7 +61140,7 @@ export namespace Prisma {
     activo?: SortOrder
     botellones_prestados?: SortOrder
     preferencia_factura?: SortOrder
-    sector?: SortOrder
+    sector_id?: SortOrder
     frecuencia?: SortOrder
     semana_alterna?: SortOrder
   }
@@ -58781,13 +61206,13 @@ export namespace Prisma {
     not?: NestedEnumDiaSemanaFilter<$PrismaModel> | $Enums.DiaSemana
   }
 
-  export type ComunaRutaListRelationFilter = {
-    every?: ComunaRutaWhereInput
-    some?: ComunaRutaWhereInput
-    none?: ComunaRutaWhereInput
+  export type RutaBaseSectorListRelationFilter = {
+    every?: RutaBaseSectorWhereInput
+    some?: RutaBaseSectorWhereInput
+    none?: RutaBaseSectorWhereInput
   }
 
-  export type ComunaRutaOrderByRelationAggregateInput = {
+  export type RutaBaseSectorOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -58842,28 +61267,119 @@ export namespace Prisma {
     isNot?: RutaBaseWhereInput
   }
 
-  export type ComunaRutaOrderByRelevanceInput = {
-    fields: ComunaRutaOrderByRelevanceFieldEnum | ComunaRutaOrderByRelevanceFieldEnum[]
+  export type SectorScalarRelationFilter = {
+    is?: SectorWhereInput
+    isNot?: SectorWhereInput
+  }
+
+  export type RutaBaseSectorOrderByRelevanceInput = {
+    fields: RutaBaseSectorOrderByRelevanceFieldEnum | RutaBaseSectorOrderByRelevanceFieldEnum[]
     sort: SortOrder
     search: string
   }
 
-  export type ComunaRutaCountOrderByAggregateInput = {
-    id?: SortOrder
-    ruta_base_id?: SortOrder
-    comuna?: SortOrder
+  export type RutaBaseSectorRuta_base_idSector_idCompoundUniqueInput = {
+    ruta_base_id: string
+    sector_id: string
   }
 
-  export type ComunaRutaMaxOrderByAggregateInput = {
+  export type RutaBaseSectorCountOrderByAggregateInput = {
     id?: SortOrder
     ruta_base_id?: SortOrder
-    comuna?: SortOrder
+    sector_id?: SortOrder
   }
 
-  export type ComunaRutaMinOrderByAggregateInput = {
+  export type RutaBaseSectorMaxOrderByAggregateInput = {
     id?: SortOrder
     ruta_base_id?: SortOrder
-    comuna?: SortOrder
+    sector_id?: SortOrder
+  }
+
+  export type RutaBaseSectorMinOrderByAggregateInput = {
+    id?: SortOrder
+    ruta_base_id?: SortOrder
+    sector_id?: SortOrder
+  }
+
+  export type SectorListRelationFilter = {
+    every?: SectorWhereInput
+    some?: SectorWhereInput
+    none?: SectorWhereInput
+  }
+
+  export type SectorOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ComunaOrderByRelevanceInput = {
+    fields: ComunaOrderByRelevanceFieldEnum | ComunaOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type ComunaCountOrderByAggregateInput = {
+    id?: SortOrder
+    nombre?: SortOrder
+    activa?: SortOrder
+  }
+
+  export type ComunaMaxOrderByAggregateInput = {
+    id?: SortOrder
+    nombre?: SortOrder
+    activa?: SortOrder
+  }
+
+  export type ComunaMinOrderByAggregateInput = {
+    id?: SortOrder
+    nombre?: SortOrder
+    activa?: SortOrder
+  }
+
+  export type ComunaScalarRelationFilter = {
+    is?: ComunaWhereInput
+    isNot?: ComunaWhereInput
+  }
+
+  export type ClienteListRelationFilter = {
+    every?: ClienteWhereInput
+    some?: ClienteWhereInput
+    none?: ClienteWhereInput
+  }
+
+  export type ClienteOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type SectorOrderByRelevanceInput = {
+    fields: SectorOrderByRelevanceFieldEnum | SectorOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type SectorNombreComuna_idCompoundUniqueInput = {
+    nombre: string
+    comuna_id: string
+  }
+
+  export type SectorCountOrderByAggregateInput = {
+    id?: SortOrder
+    nombre?: SortOrder
+    comuna_id?: SortOrder
+    activo?: SortOrder
+  }
+
+  export type SectorMaxOrderByAggregateInput = {
+    id?: SortOrder
+    nombre?: SortOrder
+    comuna_id?: SortOrder
+    activo?: SortOrder
+  }
+
+  export type SectorMinOrderByAggregateInput = {
+    id?: SortOrder
+    nombre?: SortOrder
+    comuna_id?: SortOrder
+    activo?: SortOrder
   }
 
   export type ClienteScalarRelationFilter = {
@@ -62059,6 +64575,12 @@ export namespace Prisma {
     update?: XOR<XOR<ProductoUpdateToOneWithWhereWithoutComisionesInput, ProductoUpdateWithoutComisionesInput>, ProductoUncheckedUpdateWithoutComisionesInput>
   }
 
+  export type SectorCreateNestedOneWithoutClientesInput = {
+    create?: XOR<SectorCreateWithoutClientesInput, SectorUncheckedCreateWithoutClientesInput>
+    connectOrCreate?: SectorCreateOrConnectWithoutClientesInput
+    connect?: SectorWhereUniqueInput
+  }
+
   export type BotellonDanadoCreateNestedManyWithoutClienteInput = {
     create?: XOR<BotellonDanadoCreateWithoutClienteInput, BotellonDanadoUncheckedCreateWithoutClienteInput> | BotellonDanadoCreateWithoutClienteInput[] | BotellonDanadoUncheckedCreateWithoutClienteInput[]
     connectOrCreate?: BotellonDanadoCreateOrConnectWithoutClienteInput | BotellonDanadoCreateOrConnectWithoutClienteInput[]
@@ -62189,6 +64711,16 @@ export namespace Prisma {
 
   export type NullableEnumSemanaAlternaFieldUpdateOperationsInput = {
     set?: $Enums.SemanaAlterna | null
+  }
+
+  export type SectorUpdateOneWithoutClientesNestedInput = {
+    create?: XOR<SectorCreateWithoutClientesInput, SectorUncheckedCreateWithoutClientesInput>
+    connectOrCreate?: SectorCreateOrConnectWithoutClientesInput
+    upsert?: SectorUpsertWithoutClientesInput
+    disconnect?: SectorWhereInput | boolean
+    delete?: SectorWhereInput | boolean
+    connect?: SectorWhereUniqueInput
+    update?: XOR<XOR<SectorUpdateToOneWithWhereWithoutClientesInput, SectorUpdateWithoutClientesInput>, SectorUncheckedUpdateWithoutClientesInput>
   }
 
   export type BotellonDanadoUpdateManyWithoutClienteNestedInput = {
@@ -62422,11 +64954,11 @@ export namespace Prisma {
     connect?: ClienteRutaBaseWhereUniqueInput | ClienteRutaBaseWhereUniqueInput[]
   }
 
-  export type ComunaRutaCreateNestedManyWithoutRuta_baseInput = {
-    create?: XOR<ComunaRutaCreateWithoutRuta_baseInput, ComunaRutaUncheckedCreateWithoutRuta_baseInput> | ComunaRutaCreateWithoutRuta_baseInput[] | ComunaRutaUncheckedCreateWithoutRuta_baseInput[]
-    connectOrCreate?: ComunaRutaCreateOrConnectWithoutRuta_baseInput | ComunaRutaCreateOrConnectWithoutRuta_baseInput[]
-    createMany?: ComunaRutaCreateManyRuta_baseInputEnvelope
-    connect?: ComunaRutaWhereUniqueInput | ComunaRutaWhereUniqueInput[]
+  export type RutaBaseSectorCreateNestedManyWithoutRuta_baseInput = {
+    create?: XOR<RutaBaseSectorCreateWithoutRuta_baseInput, RutaBaseSectorUncheckedCreateWithoutRuta_baseInput> | RutaBaseSectorCreateWithoutRuta_baseInput[] | RutaBaseSectorUncheckedCreateWithoutRuta_baseInput[]
+    connectOrCreate?: RutaBaseSectorCreateOrConnectWithoutRuta_baseInput | RutaBaseSectorCreateOrConnectWithoutRuta_baseInput[]
+    createMany?: RutaBaseSectorCreateManyRuta_baseInputEnvelope
+    connect?: RutaBaseSectorWhereUniqueInput | RutaBaseSectorWhereUniqueInput[]
   }
 
   export type UsuarioCreateNestedOneWithoutRutas_baseInput = {
@@ -62455,11 +64987,11 @@ export namespace Prisma {
     connect?: ClienteRutaBaseWhereUniqueInput | ClienteRutaBaseWhereUniqueInput[]
   }
 
-  export type ComunaRutaUncheckedCreateNestedManyWithoutRuta_baseInput = {
-    create?: XOR<ComunaRutaCreateWithoutRuta_baseInput, ComunaRutaUncheckedCreateWithoutRuta_baseInput> | ComunaRutaCreateWithoutRuta_baseInput[] | ComunaRutaUncheckedCreateWithoutRuta_baseInput[]
-    connectOrCreate?: ComunaRutaCreateOrConnectWithoutRuta_baseInput | ComunaRutaCreateOrConnectWithoutRuta_baseInput[]
-    createMany?: ComunaRutaCreateManyRuta_baseInputEnvelope
-    connect?: ComunaRutaWhereUniqueInput | ComunaRutaWhereUniqueInput[]
+  export type RutaBaseSectorUncheckedCreateNestedManyWithoutRuta_baseInput = {
+    create?: XOR<RutaBaseSectorCreateWithoutRuta_baseInput, RutaBaseSectorUncheckedCreateWithoutRuta_baseInput> | RutaBaseSectorCreateWithoutRuta_baseInput[] | RutaBaseSectorUncheckedCreateWithoutRuta_baseInput[]
+    connectOrCreate?: RutaBaseSectorCreateOrConnectWithoutRuta_baseInput | RutaBaseSectorCreateOrConnectWithoutRuta_baseInput[]
+    createMany?: RutaBaseSectorCreateManyRuta_baseInputEnvelope
+    connect?: RutaBaseSectorWhereUniqueInput | RutaBaseSectorWhereUniqueInput[]
   }
 
   export type RutaDiaUncheckedCreateNestedManyWithoutRuta_baseInput = {
@@ -62487,18 +65019,18 @@ export namespace Prisma {
     deleteMany?: ClienteRutaBaseScalarWhereInput | ClienteRutaBaseScalarWhereInput[]
   }
 
-  export type ComunaRutaUpdateManyWithoutRuta_baseNestedInput = {
-    create?: XOR<ComunaRutaCreateWithoutRuta_baseInput, ComunaRutaUncheckedCreateWithoutRuta_baseInput> | ComunaRutaCreateWithoutRuta_baseInput[] | ComunaRutaUncheckedCreateWithoutRuta_baseInput[]
-    connectOrCreate?: ComunaRutaCreateOrConnectWithoutRuta_baseInput | ComunaRutaCreateOrConnectWithoutRuta_baseInput[]
-    upsert?: ComunaRutaUpsertWithWhereUniqueWithoutRuta_baseInput | ComunaRutaUpsertWithWhereUniqueWithoutRuta_baseInput[]
-    createMany?: ComunaRutaCreateManyRuta_baseInputEnvelope
-    set?: ComunaRutaWhereUniqueInput | ComunaRutaWhereUniqueInput[]
-    disconnect?: ComunaRutaWhereUniqueInput | ComunaRutaWhereUniqueInput[]
-    delete?: ComunaRutaWhereUniqueInput | ComunaRutaWhereUniqueInput[]
-    connect?: ComunaRutaWhereUniqueInput | ComunaRutaWhereUniqueInput[]
-    update?: ComunaRutaUpdateWithWhereUniqueWithoutRuta_baseInput | ComunaRutaUpdateWithWhereUniqueWithoutRuta_baseInput[]
-    updateMany?: ComunaRutaUpdateManyWithWhereWithoutRuta_baseInput | ComunaRutaUpdateManyWithWhereWithoutRuta_baseInput[]
-    deleteMany?: ComunaRutaScalarWhereInput | ComunaRutaScalarWhereInput[]
+  export type RutaBaseSectorUpdateManyWithoutRuta_baseNestedInput = {
+    create?: XOR<RutaBaseSectorCreateWithoutRuta_baseInput, RutaBaseSectorUncheckedCreateWithoutRuta_baseInput> | RutaBaseSectorCreateWithoutRuta_baseInput[] | RutaBaseSectorUncheckedCreateWithoutRuta_baseInput[]
+    connectOrCreate?: RutaBaseSectorCreateOrConnectWithoutRuta_baseInput | RutaBaseSectorCreateOrConnectWithoutRuta_baseInput[]
+    upsert?: RutaBaseSectorUpsertWithWhereUniqueWithoutRuta_baseInput | RutaBaseSectorUpsertWithWhereUniqueWithoutRuta_baseInput[]
+    createMany?: RutaBaseSectorCreateManyRuta_baseInputEnvelope
+    set?: RutaBaseSectorWhereUniqueInput | RutaBaseSectorWhereUniqueInput[]
+    disconnect?: RutaBaseSectorWhereUniqueInput | RutaBaseSectorWhereUniqueInput[]
+    delete?: RutaBaseSectorWhereUniqueInput | RutaBaseSectorWhereUniqueInput[]
+    connect?: RutaBaseSectorWhereUniqueInput | RutaBaseSectorWhereUniqueInput[]
+    update?: RutaBaseSectorUpdateWithWhereUniqueWithoutRuta_baseInput | RutaBaseSectorUpdateWithWhereUniqueWithoutRuta_baseInput[]
+    updateMany?: RutaBaseSectorUpdateManyWithWhereWithoutRuta_baseInput | RutaBaseSectorUpdateManyWithWhereWithoutRuta_baseInput[]
+    deleteMany?: RutaBaseSectorScalarWhereInput | RutaBaseSectorScalarWhereInput[]
   }
 
   export type UsuarioUpdateOneRequiredWithoutRutas_baseNestedInput = {
@@ -62545,18 +65077,18 @@ export namespace Prisma {
     deleteMany?: ClienteRutaBaseScalarWhereInput | ClienteRutaBaseScalarWhereInput[]
   }
 
-  export type ComunaRutaUncheckedUpdateManyWithoutRuta_baseNestedInput = {
-    create?: XOR<ComunaRutaCreateWithoutRuta_baseInput, ComunaRutaUncheckedCreateWithoutRuta_baseInput> | ComunaRutaCreateWithoutRuta_baseInput[] | ComunaRutaUncheckedCreateWithoutRuta_baseInput[]
-    connectOrCreate?: ComunaRutaCreateOrConnectWithoutRuta_baseInput | ComunaRutaCreateOrConnectWithoutRuta_baseInput[]
-    upsert?: ComunaRutaUpsertWithWhereUniqueWithoutRuta_baseInput | ComunaRutaUpsertWithWhereUniqueWithoutRuta_baseInput[]
-    createMany?: ComunaRutaCreateManyRuta_baseInputEnvelope
-    set?: ComunaRutaWhereUniqueInput | ComunaRutaWhereUniqueInput[]
-    disconnect?: ComunaRutaWhereUniqueInput | ComunaRutaWhereUniqueInput[]
-    delete?: ComunaRutaWhereUniqueInput | ComunaRutaWhereUniqueInput[]
-    connect?: ComunaRutaWhereUniqueInput | ComunaRutaWhereUniqueInput[]
-    update?: ComunaRutaUpdateWithWhereUniqueWithoutRuta_baseInput | ComunaRutaUpdateWithWhereUniqueWithoutRuta_baseInput[]
-    updateMany?: ComunaRutaUpdateManyWithWhereWithoutRuta_baseInput | ComunaRutaUpdateManyWithWhereWithoutRuta_baseInput[]
-    deleteMany?: ComunaRutaScalarWhereInput | ComunaRutaScalarWhereInput[]
+  export type RutaBaseSectorUncheckedUpdateManyWithoutRuta_baseNestedInput = {
+    create?: XOR<RutaBaseSectorCreateWithoutRuta_baseInput, RutaBaseSectorUncheckedCreateWithoutRuta_baseInput> | RutaBaseSectorCreateWithoutRuta_baseInput[] | RutaBaseSectorUncheckedCreateWithoutRuta_baseInput[]
+    connectOrCreate?: RutaBaseSectorCreateOrConnectWithoutRuta_baseInput | RutaBaseSectorCreateOrConnectWithoutRuta_baseInput[]
+    upsert?: RutaBaseSectorUpsertWithWhereUniqueWithoutRuta_baseInput | RutaBaseSectorUpsertWithWhereUniqueWithoutRuta_baseInput[]
+    createMany?: RutaBaseSectorCreateManyRuta_baseInputEnvelope
+    set?: RutaBaseSectorWhereUniqueInput | RutaBaseSectorWhereUniqueInput[]
+    disconnect?: RutaBaseSectorWhereUniqueInput | RutaBaseSectorWhereUniqueInput[]
+    delete?: RutaBaseSectorWhereUniqueInput | RutaBaseSectorWhereUniqueInput[]
+    connect?: RutaBaseSectorWhereUniqueInput | RutaBaseSectorWhereUniqueInput[]
+    update?: RutaBaseSectorUpdateWithWhereUniqueWithoutRuta_baseInput | RutaBaseSectorUpdateWithWhereUniqueWithoutRuta_baseInput[]
+    updateMany?: RutaBaseSectorUpdateManyWithWhereWithoutRuta_baseInput | RutaBaseSectorUpdateManyWithWhereWithoutRuta_baseInput[]
+    deleteMany?: RutaBaseSectorScalarWhereInput | RutaBaseSectorScalarWhereInput[]
   }
 
   export type RutaDiaUncheckedUpdateManyWithoutRuta_baseNestedInput = {
@@ -62573,18 +65105,172 @@ export namespace Prisma {
     deleteMany?: RutaDiaScalarWhereInput | RutaDiaScalarWhereInput[]
   }
 
-  export type RutaBaseCreateNestedOneWithoutComunasInput = {
-    create?: XOR<RutaBaseCreateWithoutComunasInput, RutaBaseUncheckedCreateWithoutComunasInput>
-    connectOrCreate?: RutaBaseCreateOrConnectWithoutComunasInput
+  export type RutaBaseCreateNestedOneWithoutSectoresInput = {
+    create?: XOR<RutaBaseCreateWithoutSectoresInput, RutaBaseUncheckedCreateWithoutSectoresInput>
+    connectOrCreate?: RutaBaseCreateOrConnectWithoutSectoresInput
     connect?: RutaBaseWhereUniqueInput
   }
 
-  export type RutaBaseUpdateOneRequiredWithoutComunasNestedInput = {
-    create?: XOR<RutaBaseCreateWithoutComunasInput, RutaBaseUncheckedCreateWithoutComunasInput>
-    connectOrCreate?: RutaBaseCreateOrConnectWithoutComunasInput
-    upsert?: RutaBaseUpsertWithoutComunasInput
+  export type SectorCreateNestedOneWithoutRutas_baseInput = {
+    create?: XOR<SectorCreateWithoutRutas_baseInput, SectorUncheckedCreateWithoutRutas_baseInput>
+    connectOrCreate?: SectorCreateOrConnectWithoutRutas_baseInput
+    connect?: SectorWhereUniqueInput
+  }
+
+  export type RutaBaseUpdateOneRequiredWithoutSectoresNestedInput = {
+    create?: XOR<RutaBaseCreateWithoutSectoresInput, RutaBaseUncheckedCreateWithoutSectoresInput>
+    connectOrCreate?: RutaBaseCreateOrConnectWithoutSectoresInput
+    upsert?: RutaBaseUpsertWithoutSectoresInput
     connect?: RutaBaseWhereUniqueInput
-    update?: XOR<XOR<RutaBaseUpdateToOneWithWhereWithoutComunasInput, RutaBaseUpdateWithoutComunasInput>, RutaBaseUncheckedUpdateWithoutComunasInput>
+    update?: XOR<XOR<RutaBaseUpdateToOneWithWhereWithoutSectoresInput, RutaBaseUpdateWithoutSectoresInput>, RutaBaseUncheckedUpdateWithoutSectoresInput>
+  }
+
+  export type SectorUpdateOneRequiredWithoutRutas_baseNestedInput = {
+    create?: XOR<SectorCreateWithoutRutas_baseInput, SectorUncheckedCreateWithoutRutas_baseInput>
+    connectOrCreate?: SectorCreateOrConnectWithoutRutas_baseInput
+    upsert?: SectorUpsertWithoutRutas_baseInput
+    connect?: SectorWhereUniqueInput
+    update?: XOR<XOR<SectorUpdateToOneWithWhereWithoutRutas_baseInput, SectorUpdateWithoutRutas_baseInput>, SectorUncheckedUpdateWithoutRutas_baseInput>
+  }
+
+  export type SectorCreateNestedManyWithoutComunaInput = {
+    create?: XOR<SectorCreateWithoutComunaInput, SectorUncheckedCreateWithoutComunaInput> | SectorCreateWithoutComunaInput[] | SectorUncheckedCreateWithoutComunaInput[]
+    connectOrCreate?: SectorCreateOrConnectWithoutComunaInput | SectorCreateOrConnectWithoutComunaInput[]
+    createMany?: SectorCreateManyComunaInputEnvelope
+    connect?: SectorWhereUniqueInput | SectorWhereUniqueInput[]
+  }
+
+  export type SectorUncheckedCreateNestedManyWithoutComunaInput = {
+    create?: XOR<SectorCreateWithoutComunaInput, SectorUncheckedCreateWithoutComunaInput> | SectorCreateWithoutComunaInput[] | SectorUncheckedCreateWithoutComunaInput[]
+    connectOrCreate?: SectorCreateOrConnectWithoutComunaInput | SectorCreateOrConnectWithoutComunaInput[]
+    createMany?: SectorCreateManyComunaInputEnvelope
+    connect?: SectorWhereUniqueInput | SectorWhereUniqueInput[]
+  }
+
+  export type SectorUpdateManyWithoutComunaNestedInput = {
+    create?: XOR<SectorCreateWithoutComunaInput, SectorUncheckedCreateWithoutComunaInput> | SectorCreateWithoutComunaInput[] | SectorUncheckedCreateWithoutComunaInput[]
+    connectOrCreate?: SectorCreateOrConnectWithoutComunaInput | SectorCreateOrConnectWithoutComunaInput[]
+    upsert?: SectorUpsertWithWhereUniqueWithoutComunaInput | SectorUpsertWithWhereUniqueWithoutComunaInput[]
+    createMany?: SectorCreateManyComunaInputEnvelope
+    set?: SectorWhereUniqueInput | SectorWhereUniqueInput[]
+    disconnect?: SectorWhereUniqueInput | SectorWhereUniqueInput[]
+    delete?: SectorWhereUniqueInput | SectorWhereUniqueInput[]
+    connect?: SectorWhereUniqueInput | SectorWhereUniqueInput[]
+    update?: SectorUpdateWithWhereUniqueWithoutComunaInput | SectorUpdateWithWhereUniqueWithoutComunaInput[]
+    updateMany?: SectorUpdateManyWithWhereWithoutComunaInput | SectorUpdateManyWithWhereWithoutComunaInput[]
+    deleteMany?: SectorScalarWhereInput | SectorScalarWhereInput[]
+  }
+
+  export type SectorUncheckedUpdateManyWithoutComunaNestedInput = {
+    create?: XOR<SectorCreateWithoutComunaInput, SectorUncheckedCreateWithoutComunaInput> | SectorCreateWithoutComunaInput[] | SectorUncheckedCreateWithoutComunaInput[]
+    connectOrCreate?: SectorCreateOrConnectWithoutComunaInput | SectorCreateOrConnectWithoutComunaInput[]
+    upsert?: SectorUpsertWithWhereUniqueWithoutComunaInput | SectorUpsertWithWhereUniqueWithoutComunaInput[]
+    createMany?: SectorCreateManyComunaInputEnvelope
+    set?: SectorWhereUniqueInput | SectorWhereUniqueInput[]
+    disconnect?: SectorWhereUniqueInput | SectorWhereUniqueInput[]
+    delete?: SectorWhereUniqueInput | SectorWhereUniqueInput[]
+    connect?: SectorWhereUniqueInput | SectorWhereUniqueInput[]
+    update?: SectorUpdateWithWhereUniqueWithoutComunaInput | SectorUpdateWithWhereUniqueWithoutComunaInput[]
+    updateMany?: SectorUpdateManyWithWhereWithoutComunaInput | SectorUpdateManyWithWhereWithoutComunaInput[]
+    deleteMany?: SectorScalarWhereInput | SectorScalarWhereInput[]
+  }
+
+  export type ComunaCreateNestedOneWithoutSectoresInput = {
+    create?: XOR<ComunaCreateWithoutSectoresInput, ComunaUncheckedCreateWithoutSectoresInput>
+    connectOrCreate?: ComunaCreateOrConnectWithoutSectoresInput
+    connect?: ComunaWhereUniqueInput
+  }
+
+  export type ClienteCreateNestedManyWithoutSectorInput = {
+    create?: XOR<ClienteCreateWithoutSectorInput, ClienteUncheckedCreateWithoutSectorInput> | ClienteCreateWithoutSectorInput[] | ClienteUncheckedCreateWithoutSectorInput[]
+    connectOrCreate?: ClienteCreateOrConnectWithoutSectorInput | ClienteCreateOrConnectWithoutSectorInput[]
+    createMany?: ClienteCreateManySectorInputEnvelope
+    connect?: ClienteWhereUniqueInput | ClienteWhereUniqueInput[]
+  }
+
+  export type RutaBaseSectorCreateNestedManyWithoutSectorInput = {
+    create?: XOR<RutaBaseSectorCreateWithoutSectorInput, RutaBaseSectorUncheckedCreateWithoutSectorInput> | RutaBaseSectorCreateWithoutSectorInput[] | RutaBaseSectorUncheckedCreateWithoutSectorInput[]
+    connectOrCreate?: RutaBaseSectorCreateOrConnectWithoutSectorInput | RutaBaseSectorCreateOrConnectWithoutSectorInput[]
+    createMany?: RutaBaseSectorCreateManySectorInputEnvelope
+    connect?: RutaBaseSectorWhereUniqueInput | RutaBaseSectorWhereUniqueInput[]
+  }
+
+  export type ClienteUncheckedCreateNestedManyWithoutSectorInput = {
+    create?: XOR<ClienteCreateWithoutSectorInput, ClienteUncheckedCreateWithoutSectorInput> | ClienteCreateWithoutSectorInput[] | ClienteUncheckedCreateWithoutSectorInput[]
+    connectOrCreate?: ClienteCreateOrConnectWithoutSectorInput | ClienteCreateOrConnectWithoutSectorInput[]
+    createMany?: ClienteCreateManySectorInputEnvelope
+    connect?: ClienteWhereUniqueInput | ClienteWhereUniqueInput[]
+  }
+
+  export type RutaBaseSectorUncheckedCreateNestedManyWithoutSectorInput = {
+    create?: XOR<RutaBaseSectorCreateWithoutSectorInput, RutaBaseSectorUncheckedCreateWithoutSectorInput> | RutaBaseSectorCreateWithoutSectorInput[] | RutaBaseSectorUncheckedCreateWithoutSectorInput[]
+    connectOrCreate?: RutaBaseSectorCreateOrConnectWithoutSectorInput | RutaBaseSectorCreateOrConnectWithoutSectorInput[]
+    createMany?: RutaBaseSectorCreateManySectorInputEnvelope
+    connect?: RutaBaseSectorWhereUniqueInput | RutaBaseSectorWhereUniqueInput[]
+  }
+
+  export type ComunaUpdateOneRequiredWithoutSectoresNestedInput = {
+    create?: XOR<ComunaCreateWithoutSectoresInput, ComunaUncheckedCreateWithoutSectoresInput>
+    connectOrCreate?: ComunaCreateOrConnectWithoutSectoresInput
+    upsert?: ComunaUpsertWithoutSectoresInput
+    connect?: ComunaWhereUniqueInput
+    update?: XOR<XOR<ComunaUpdateToOneWithWhereWithoutSectoresInput, ComunaUpdateWithoutSectoresInput>, ComunaUncheckedUpdateWithoutSectoresInput>
+  }
+
+  export type ClienteUpdateManyWithoutSectorNestedInput = {
+    create?: XOR<ClienteCreateWithoutSectorInput, ClienteUncheckedCreateWithoutSectorInput> | ClienteCreateWithoutSectorInput[] | ClienteUncheckedCreateWithoutSectorInput[]
+    connectOrCreate?: ClienteCreateOrConnectWithoutSectorInput | ClienteCreateOrConnectWithoutSectorInput[]
+    upsert?: ClienteUpsertWithWhereUniqueWithoutSectorInput | ClienteUpsertWithWhereUniqueWithoutSectorInput[]
+    createMany?: ClienteCreateManySectorInputEnvelope
+    set?: ClienteWhereUniqueInput | ClienteWhereUniqueInput[]
+    disconnect?: ClienteWhereUniqueInput | ClienteWhereUniqueInput[]
+    delete?: ClienteWhereUniqueInput | ClienteWhereUniqueInput[]
+    connect?: ClienteWhereUniqueInput | ClienteWhereUniqueInput[]
+    update?: ClienteUpdateWithWhereUniqueWithoutSectorInput | ClienteUpdateWithWhereUniqueWithoutSectorInput[]
+    updateMany?: ClienteUpdateManyWithWhereWithoutSectorInput | ClienteUpdateManyWithWhereWithoutSectorInput[]
+    deleteMany?: ClienteScalarWhereInput | ClienteScalarWhereInput[]
+  }
+
+  export type RutaBaseSectorUpdateManyWithoutSectorNestedInput = {
+    create?: XOR<RutaBaseSectorCreateWithoutSectorInput, RutaBaseSectorUncheckedCreateWithoutSectorInput> | RutaBaseSectorCreateWithoutSectorInput[] | RutaBaseSectorUncheckedCreateWithoutSectorInput[]
+    connectOrCreate?: RutaBaseSectorCreateOrConnectWithoutSectorInput | RutaBaseSectorCreateOrConnectWithoutSectorInput[]
+    upsert?: RutaBaseSectorUpsertWithWhereUniqueWithoutSectorInput | RutaBaseSectorUpsertWithWhereUniqueWithoutSectorInput[]
+    createMany?: RutaBaseSectorCreateManySectorInputEnvelope
+    set?: RutaBaseSectorWhereUniqueInput | RutaBaseSectorWhereUniqueInput[]
+    disconnect?: RutaBaseSectorWhereUniqueInput | RutaBaseSectorWhereUniqueInput[]
+    delete?: RutaBaseSectorWhereUniqueInput | RutaBaseSectorWhereUniqueInput[]
+    connect?: RutaBaseSectorWhereUniqueInput | RutaBaseSectorWhereUniqueInput[]
+    update?: RutaBaseSectorUpdateWithWhereUniqueWithoutSectorInput | RutaBaseSectorUpdateWithWhereUniqueWithoutSectorInput[]
+    updateMany?: RutaBaseSectorUpdateManyWithWhereWithoutSectorInput | RutaBaseSectorUpdateManyWithWhereWithoutSectorInput[]
+    deleteMany?: RutaBaseSectorScalarWhereInput | RutaBaseSectorScalarWhereInput[]
+  }
+
+  export type ClienteUncheckedUpdateManyWithoutSectorNestedInput = {
+    create?: XOR<ClienteCreateWithoutSectorInput, ClienteUncheckedCreateWithoutSectorInput> | ClienteCreateWithoutSectorInput[] | ClienteUncheckedCreateWithoutSectorInput[]
+    connectOrCreate?: ClienteCreateOrConnectWithoutSectorInput | ClienteCreateOrConnectWithoutSectorInput[]
+    upsert?: ClienteUpsertWithWhereUniqueWithoutSectorInput | ClienteUpsertWithWhereUniqueWithoutSectorInput[]
+    createMany?: ClienteCreateManySectorInputEnvelope
+    set?: ClienteWhereUniqueInput | ClienteWhereUniqueInput[]
+    disconnect?: ClienteWhereUniqueInput | ClienteWhereUniqueInput[]
+    delete?: ClienteWhereUniqueInput | ClienteWhereUniqueInput[]
+    connect?: ClienteWhereUniqueInput | ClienteWhereUniqueInput[]
+    update?: ClienteUpdateWithWhereUniqueWithoutSectorInput | ClienteUpdateWithWhereUniqueWithoutSectorInput[]
+    updateMany?: ClienteUpdateManyWithWhereWithoutSectorInput | ClienteUpdateManyWithWhereWithoutSectorInput[]
+    deleteMany?: ClienteScalarWhereInput | ClienteScalarWhereInput[]
+  }
+
+  export type RutaBaseSectorUncheckedUpdateManyWithoutSectorNestedInput = {
+    create?: XOR<RutaBaseSectorCreateWithoutSectorInput, RutaBaseSectorUncheckedCreateWithoutSectorInput> | RutaBaseSectorCreateWithoutSectorInput[] | RutaBaseSectorUncheckedCreateWithoutSectorInput[]
+    connectOrCreate?: RutaBaseSectorCreateOrConnectWithoutSectorInput | RutaBaseSectorCreateOrConnectWithoutSectorInput[]
+    upsert?: RutaBaseSectorUpsertWithWhereUniqueWithoutSectorInput | RutaBaseSectorUpsertWithWhereUniqueWithoutSectorInput[]
+    createMany?: RutaBaseSectorCreateManySectorInputEnvelope
+    set?: RutaBaseSectorWhereUniqueInput | RutaBaseSectorWhereUniqueInput[]
+    disconnect?: RutaBaseSectorWhereUniqueInput | RutaBaseSectorWhereUniqueInput[]
+    delete?: RutaBaseSectorWhereUniqueInput | RutaBaseSectorWhereUniqueInput[]
+    connect?: RutaBaseSectorWhereUniqueInput | RutaBaseSectorWhereUniqueInput[]
+    update?: RutaBaseSectorUpdateWithWhereUniqueWithoutSectorInput | RutaBaseSectorUpdateWithWhereUniqueWithoutSectorInput[]
+    updateMany?: RutaBaseSectorUpdateManyWithWhereWithoutSectorInput | RutaBaseSectorUpdateManyWithWhereWithoutSectorInput[]
+    deleteMany?: RutaBaseSectorScalarWhereInput | RutaBaseSectorScalarWhereInput[]
   }
 
   export type ClienteCreateNestedOneWithoutClientes_rutaInput = {
@@ -65006,7 +67692,7 @@ export namespace Prisma {
     frecuencia?: $Enums.Frecuencia
     semana_alterna?: $Enums.SemanaAlterna | null
     clientes?: ClienteRutaBaseCreateNestedManyWithoutRuta_baseInput
-    comunas?: ComunaRutaCreateNestedManyWithoutRuta_baseInput
+    sectores?: RutaBaseSectorCreateNestedManyWithoutRuta_baseInput
     vehiculo: VehiculoCreateNestedOneWithoutRutas_baseInput
     rutas_dia?: RutaDiaCreateNestedManyWithoutRuta_baseInput
   }
@@ -65019,7 +67705,7 @@ export namespace Prisma {
     semana_alterna?: $Enums.SemanaAlterna | null
     vehiculo_id: string
     clientes?: ClienteRutaBaseUncheckedCreateNestedManyWithoutRuta_baseInput
-    comunas?: ComunaRutaUncheckedCreateNestedManyWithoutRuta_baseInput
+    sectores?: RutaBaseSectorUncheckedCreateNestedManyWithoutRuta_baseInput
     rutas_dia?: RutaDiaUncheckedCreateNestedManyWithoutRuta_baseInput
   }
 
@@ -65771,7 +68457,7 @@ export namespace Prisma {
     frecuencia?: $Enums.Frecuencia
     semana_alterna?: $Enums.SemanaAlterna | null
     clientes?: ClienteRutaBaseCreateNestedManyWithoutRuta_baseInput
-    comunas?: ComunaRutaCreateNestedManyWithoutRuta_baseInput
+    sectores?: RutaBaseSectorCreateNestedManyWithoutRuta_baseInput
     usuario: UsuarioCreateNestedOneWithoutRutas_baseInput
     rutas_dia?: RutaDiaCreateNestedManyWithoutRuta_baseInput
   }
@@ -65784,7 +68470,7 @@ export namespace Prisma {
     semana_alterna?: $Enums.SemanaAlterna | null
     usuario_id: string
     clientes?: ClienteRutaBaseUncheckedCreateNestedManyWithoutRuta_baseInput
-    comunas?: ComunaRutaUncheckedCreateNestedManyWithoutRuta_baseInput
+    sectores?: RutaBaseSectorUncheckedCreateNestedManyWithoutRuta_baseInput
     rutas_dia?: RutaDiaUncheckedCreateNestedManyWithoutRuta_baseInput
   }
 
@@ -67196,6 +69882,27 @@ export namespace Prisma {
     movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutProductoNestedInput
   }
 
+  export type SectorCreateWithoutClientesInput = {
+    id?: string
+    nombre: string
+    activo?: boolean
+    comuna: ComunaCreateNestedOneWithoutSectoresInput
+    rutas_base?: RutaBaseSectorCreateNestedManyWithoutSectorInput
+  }
+
+  export type SectorUncheckedCreateWithoutClientesInput = {
+    id?: string
+    nombre: string
+    comuna_id: string
+    activo?: boolean
+    rutas_base?: RutaBaseSectorUncheckedCreateNestedManyWithoutSectorInput
+  }
+
+  export type SectorCreateOrConnectWithoutClientesInput = {
+    where: SectorWhereUniqueInput
+    create: XOR<SectorCreateWithoutClientesInput, SectorUncheckedCreateWithoutClientesInput>
+  }
+
   export type BotellonDanadoCreateWithoutClienteInput = {
     id?: string
     cuadratura_id: string
@@ -67470,6 +70177,33 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type SectorUpsertWithoutClientesInput = {
+    update: XOR<SectorUpdateWithoutClientesInput, SectorUncheckedUpdateWithoutClientesInput>
+    create: XOR<SectorCreateWithoutClientesInput, SectorUncheckedCreateWithoutClientesInput>
+    where?: SectorWhereInput
+  }
+
+  export type SectorUpdateToOneWithWhereWithoutClientesInput = {
+    where?: SectorWhereInput
+    data: XOR<SectorUpdateWithoutClientesInput, SectorUncheckedUpdateWithoutClientesInput>
+  }
+
+  export type SectorUpdateWithoutClientesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nombre?: StringFieldUpdateOperationsInput | string
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    comuna?: ComunaUpdateOneRequiredWithoutSectoresNestedInput
+    rutas_base?: RutaBaseSectorUpdateManyWithoutSectorNestedInput
+  }
+
+  export type SectorUncheckedUpdateWithoutClientesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nombre?: StringFieldUpdateOperationsInput | string
+    comuna_id?: StringFieldUpdateOperationsInput | string
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    rutas_base?: RutaBaseSectorUncheckedUpdateManyWithoutSectorNestedInput
+  }
+
   export type BotellonDanadoUpsertWithWhereUniqueWithoutClienteInput = {
     where: BotellonDanadoWhereUniqueInput
     update: XOR<BotellonDanadoUpdateWithoutClienteInput, BotellonDanadoUncheckedUpdateWithoutClienteInput>
@@ -67695,23 +70429,23 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type ComunaRutaCreateWithoutRuta_baseInput = {
+  export type RutaBaseSectorCreateWithoutRuta_baseInput = {
     id?: string
-    comuna: string
+    sector: SectorCreateNestedOneWithoutRutas_baseInput
   }
 
-  export type ComunaRutaUncheckedCreateWithoutRuta_baseInput = {
+  export type RutaBaseSectorUncheckedCreateWithoutRuta_baseInput = {
     id?: string
-    comuna: string
+    sector_id: string
   }
 
-  export type ComunaRutaCreateOrConnectWithoutRuta_baseInput = {
-    where: ComunaRutaWhereUniqueInput
-    create: XOR<ComunaRutaCreateWithoutRuta_baseInput, ComunaRutaUncheckedCreateWithoutRuta_baseInput>
+  export type RutaBaseSectorCreateOrConnectWithoutRuta_baseInput = {
+    where: RutaBaseSectorWhereUniqueInput
+    create: XOR<RutaBaseSectorCreateWithoutRuta_baseInput, RutaBaseSectorUncheckedCreateWithoutRuta_baseInput>
   }
 
-  export type ComunaRutaCreateManyRuta_baseInputEnvelope = {
-    data: ComunaRutaCreateManyRuta_baseInput | ComunaRutaCreateManyRuta_baseInput[]
+  export type RutaBaseSectorCreateManyRuta_baseInputEnvelope = {
+    data: RutaBaseSectorCreateManyRuta_baseInput | RutaBaseSectorCreateManyRuta_baseInput[]
     skipDuplicates?: boolean
   }
 
@@ -67859,29 +70593,29 @@ export namespace Prisma {
     data: XOR<ClienteRutaBaseUpdateManyMutationInput, ClienteRutaBaseUncheckedUpdateManyWithoutRuta_baseInput>
   }
 
-  export type ComunaRutaUpsertWithWhereUniqueWithoutRuta_baseInput = {
-    where: ComunaRutaWhereUniqueInput
-    update: XOR<ComunaRutaUpdateWithoutRuta_baseInput, ComunaRutaUncheckedUpdateWithoutRuta_baseInput>
-    create: XOR<ComunaRutaCreateWithoutRuta_baseInput, ComunaRutaUncheckedCreateWithoutRuta_baseInput>
+  export type RutaBaseSectorUpsertWithWhereUniqueWithoutRuta_baseInput = {
+    where: RutaBaseSectorWhereUniqueInput
+    update: XOR<RutaBaseSectorUpdateWithoutRuta_baseInput, RutaBaseSectorUncheckedUpdateWithoutRuta_baseInput>
+    create: XOR<RutaBaseSectorCreateWithoutRuta_baseInput, RutaBaseSectorUncheckedCreateWithoutRuta_baseInput>
   }
 
-  export type ComunaRutaUpdateWithWhereUniqueWithoutRuta_baseInput = {
-    where: ComunaRutaWhereUniqueInput
-    data: XOR<ComunaRutaUpdateWithoutRuta_baseInput, ComunaRutaUncheckedUpdateWithoutRuta_baseInput>
+  export type RutaBaseSectorUpdateWithWhereUniqueWithoutRuta_baseInput = {
+    where: RutaBaseSectorWhereUniqueInput
+    data: XOR<RutaBaseSectorUpdateWithoutRuta_baseInput, RutaBaseSectorUncheckedUpdateWithoutRuta_baseInput>
   }
 
-  export type ComunaRutaUpdateManyWithWhereWithoutRuta_baseInput = {
-    where: ComunaRutaScalarWhereInput
-    data: XOR<ComunaRutaUpdateManyMutationInput, ComunaRutaUncheckedUpdateManyWithoutRuta_baseInput>
+  export type RutaBaseSectorUpdateManyWithWhereWithoutRuta_baseInput = {
+    where: RutaBaseSectorScalarWhereInput
+    data: XOR<RutaBaseSectorUpdateManyMutationInput, RutaBaseSectorUncheckedUpdateManyWithoutRuta_baseInput>
   }
 
-  export type ComunaRutaScalarWhereInput = {
-    AND?: ComunaRutaScalarWhereInput | ComunaRutaScalarWhereInput[]
-    OR?: ComunaRutaScalarWhereInput[]
-    NOT?: ComunaRutaScalarWhereInput | ComunaRutaScalarWhereInput[]
-    id?: StringFilter<"ComunaRuta"> | string
-    ruta_base_id?: StringFilter<"ComunaRuta"> | string
-    comuna?: StringFilter<"ComunaRuta"> | string
+  export type RutaBaseSectorScalarWhereInput = {
+    AND?: RutaBaseSectorScalarWhereInput | RutaBaseSectorScalarWhereInput[]
+    OR?: RutaBaseSectorScalarWhereInput[]
+    NOT?: RutaBaseSectorScalarWhereInput | RutaBaseSectorScalarWhereInput[]
+    id?: StringFilter<"RutaBaseSector"> | string
+    ruta_base_id?: StringFilter<"RutaBaseSector"> | string
+    sector_id?: StringFilter<"RutaBaseSector"> | string
   }
 
   export type UsuarioUpsertWithoutRutas_baseInput = {
@@ -68012,7 +70746,7 @@ export namespace Prisma {
     data: XOR<RutaDiaUpdateManyMutationInput, RutaDiaUncheckedUpdateManyWithoutRuta_baseInput>
   }
 
-  export type RutaBaseCreateWithoutComunasInput = {
+  export type RutaBaseCreateWithoutSectoresInput = {
     id?: string
     nombre: string
     dia_semana: $Enums.DiaSemana
@@ -68024,7 +70758,7 @@ export namespace Prisma {
     rutas_dia?: RutaDiaCreateNestedManyWithoutRuta_baseInput
   }
 
-  export type RutaBaseUncheckedCreateWithoutComunasInput = {
+  export type RutaBaseUncheckedCreateWithoutSectoresInput = {
     id?: string
     nombre: string
     dia_semana: $Enums.DiaSemana
@@ -68036,23 +70770,44 @@ export namespace Prisma {
     rutas_dia?: RutaDiaUncheckedCreateNestedManyWithoutRuta_baseInput
   }
 
-  export type RutaBaseCreateOrConnectWithoutComunasInput = {
+  export type RutaBaseCreateOrConnectWithoutSectoresInput = {
     where: RutaBaseWhereUniqueInput
-    create: XOR<RutaBaseCreateWithoutComunasInput, RutaBaseUncheckedCreateWithoutComunasInput>
+    create: XOR<RutaBaseCreateWithoutSectoresInput, RutaBaseUncheckedCreateWithoutSectoresInput>
   }
 
-  export type RutaBaseUpsertWithoutComunasInput = {
-    update: XOR<RutaBaseUpdateWithoutComunasInput, RutaBaseUncheckedUpdateWithoutComunasInput>
-    create: XOR<RutaBaseCreateWithoutComunasInput, RutaBaseUncheckedCreateWithoutComunasInput>
+  export type SectorCreateWithoutRutas_baseInput = {
+    id?: string
+    nombre: string
+    activo?: boolean
+    comuna: ComunaCreateNestedOneWithoutSectoresInput
+    clientes?: ClienteCreateNestedManyWithoutSectorInput
+  }
+
+  export type SectorUncheckedCreateWithoutRutas_baseInput = {
+    id?: string
+    nombre: string
+    comuna_id: string
+    activo?: boolean
+    clientes?: ClienteUncheckedCreateNestedManyWithoutSectorInput
+  }
+
+  export type SectorCreateOrConnectWithoutRutas_baseInput = {
+    where: SectorWhereUniqueInput
+    create: XOR<SectorCreateWithoutRutas_baseInput, SectorUncheckedCreateWithoutRutas_baseInput>
+  }
+
+  export type RutaBaseUpsertWithoutSectoresInput = {
+    update: XOR<RutaBaseUpdateWithoutSectoresInput, RutaBaseUncheckedUpdateWithoutSectoresInput>
+    create: XOR<RutaBaseCreateWithoutSectoresInput, RutaBaseUncheckedCreateWithoutSectoresInput>
     where?: RutaBaseWhereInput
   }
 
-  export type RutaBaseUpdateToOneWithWhereWithoutComunasInput = {
+  export type RutaBaseUpdateToOneWithWhereWithoutSectoresInput = {
     where?: RutaBaseWhereInput
-    data: XOR<RutaBaseUpdateWithoutComunasInput, RutaBaseUncheckedUpdateWithoutComunasInput>
+    data: XOR<RutaBaseUpdateWithoutSectoresInput, RutaBaseUncheckedUpdateWithoutSectoresInput>
   }
 
-  export type RutaBaseUpdateWithoutComunasInput = {
+  export type RutaBaseUpdateWithoutSectoresInput = {
     id?: StringFieldUpdateOperationsInput | string
     nombre?: StringFieldUpdateOperationsInput | string
     dia_semana?: EnumDiaSemanaFieldUpdateOperationsInput | $Enums.DiaSemana
@@ -68064,7 +70819,7 @@ export namespace Prisma {
     rutas_dia?: RutaDiaUpdateManyWithoutRuta_baseNestedInput
   }
 
-  export type RutaBaseUncheckedUpdateWithoutComunasInput = {
+  export type RutaBaseUncheckedUpdateWithoutSectoresInput = {
     id?: StringFieldUpdateOperationsInput | string
     nombre?: StringFieldUpdateOperationsInput | string
     dia_semana?: EnumDiaSemanaFieldUpdateOperationsInput | $Enums.DiaSemana
@@ -68074,6 +70829,264 @@ export namespace Prisma {
     vehiculo_id?: StringFieldUpdateOperationsInput | string
     clientes?: ClienteRutaBaseUncheckedUpdateManyWithoutRuta_baseNestedInput
     rutas_dia?: RutaDiaUncheckedUpdateManyWithoutRuta_baseNestedInput
+  }
+
+  export type SectorUpsertWithoutRutas_baseInput = {
+    update: XOR<SectorUpdateWithoutRutas_baseInput, SectorUncheckedUpdateWithoutRutas_baseInput>
+    create: XOR<SectorCreateWithoutRutas_baseInput, SectorUncheckedCreateWithoutRutas_baseInput>
+    where?: SectorWhereInput
+  }
+
+  export type SectorUpdateToOneWithWhereWithoutRutas_baseInput = {
+    where?: SectorWhereInput
+    data: XOR<SectorUpdateWithoutRutas_baseInput, SectorUncheckedUpdateWithoutRutas_baseInput>
+  }
+
+  export type SectorUpdateWithoutRutas_baseInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nombre?: StringFieldUpdateOperationsInput | string
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    comuna?: ComunaUpdateOneRequiredWithoutSectoresNestedInput
+    clientes?: ClienteUpdateManyWithoutSectorNestedInput
+  }
+
+  export type SectorUncheckedUpdateWithoutRutas_baseInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nombre?: StringFieldUpdateOperationsInput | string
+    comuna_id?: StringFieldUpdateOperationsInput | string
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    clientes?: ClienteUncheckedUpdateManyWithoutSectorNestedInput
+  }
+
+  export type SectorCreateWithoutComunaInput = {
+    id?: string
+    nombre: string
+    activo?: boolean
+    clientes?: ClienteCreateNestedManyWithoutSectorInput
+    rutas_base?: RutaBaseSectorCreateNestedManyWithoutSectorInput
+  }
+
+  export type SectorUncheckedCreateWithoutComunaInput = {
+    id?: string
+    nombre: string
+    activo?: boolean
+    clientes?: ClienteUncheckedCreateNestedManyWithoutSectorInput
+    rutas_base?: RutaBaseSectorUncheckedCreateNestedManyWithoutSectorInput
+  }
+
+  export type SectorCreateOrConnectWithoutComunaInput = {
+    where: SectorWhereUniqueInput
+    create: XOR<SectorCreateWithoutComunaInput, SectorUncheckedCreateWithoutComunaInput>
+  }
+
+  export type SectorCreateManyComunaInputEnvelope = {
+    data: SectorCreateManyComunaInput | SectorCreateManyComunaInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type SectorUpsertWithWhereUniqueWithoutComunaInput = {
+    where: SectorWhereUniqueInput
+    update: XOR<SectorUpdateWithoutComunaInput, SectorUncheckedUpdateWithoutComunaInput>
+    create: XOR<SectorCreateWithoutComunaInput, SectorUncheckedCreateWithoutComunaInput>
+  }
+
+  export type SectorUpdateWithWhereUniqueWithoutComunaInput = {
+    where: SectorWhereUniqueInput
+    data: XOR<SectorUpdateWithoutComunaInput, SectorUncheckedUpdateWithoutComunaInput>
+  }
+
+  export type SectorUpdateManyWithWhereWithoutComunaInput = {
+    where: SectorScalarWhereInput
+    data: XOR<SectorUpdateManyMutationInput, SectorUncheckedUpdateManyWithoutComunaInput>
+  }
+
+  export type SectorScalarWhereInput = {
+    AND?: SectorScalarWhereInput | SectorScalarWhereInput[]
+    OR?: SectorScalarWhereInput[]
+    NOT?: SectorScalarWhereInput | SectorScalarWhereInput[]
+    id?: StringFilter<"Sector"> | string
+    nombre?: StringFilter<"Sector"> | string
+    comuna_id?: StringFilter<"Sector"> | string
+    activo?: BoolFilter<"Sector"> | boolean
+  }
+
+  export type ComunaCreateWithoutSectoresInput = {
+    id?: string
+    nombre: string
+    activa?: boolean
+  }
+
+  export type ComunaUncheckedCreateWithoutSectoresInput = {
+    id?: string
+    nombre: string
+    activa?: boolean
+  }
+
+  export type ComunaCreateOrConnectWithoutSectoresInput = {
+    where: ComunaWhereUniqueInput
+    create: XOR<ComunaCreateWithoutSectoresInput, ComunaUncheckedCreateWithoutSectoresInput>
+  }
+
+  export type ClienteCreateWithoutSectorInput = {
+    id?: string
+    nombre: string
+    tipo: $Enums.TipoCliente
+    direccion: string
+    telefono: string
+    email?: string | null
+    rut_empresa?: string | null
+    giro?: string | null
+    modalidad_pago?: $Enums.ModalidadPago
+    tipo_ruta?: $Enums.TipoRuta
+    notas?: string | null
+    activo?: boolean
+    botellones_prestados?: number
+    preferencia_factura?: $Enums.PreferenciaFacturacion
+    frecuencia?: $Enums.Frecuencia
+    semana_alterna?: $Enums.SemanaAlterna | null
+    botellones_danados?: BotellonDanadoCreateNestedManyWithoutClienteInput
+    clientes_ruta?: ClienteRutaBaseCreateNestedManyWithoutClienteInput
+    dispensadores?: DispensadorCreateNestedManyWithoutClienteInput
+    guias?: GuiaDespachoCreateNestedManyWithoutClienteInput
+    historial_financiero?: HistorialFinancieroCreateNestedManyWithoutClienteInput
+    paradas?: ParadaDiaCreateNestedManyWithoutClienteInput
+    pedidos?: PedidoCreateNestedManyWithoutClienteInput
+    incidencias?: IncidenciaCreateNestedManyWithoutClienteInput
+  }
+
+  export type ClienteUncheckedCreateWithoutSectorInput = {
+    id?: string
+    nombre: string
+    tipo: $Enums.TipoCliente
+    direccion: string
+    telefono: string
+    email?: string | null
+    rut_empresa?: string | null
+    giro?: string | null
+    modalidad_pago?: $Enums.ModalidadPago
+    tipo_ruta?: $Enums.TipoRuta
+    notas?: string | null
+    activo?: boolean
+    botellones_prestados?: number
+    preferencia_factura?: $Enums.PreferenciaFacturacion
+    frecuencia?: $Enums.Frecuencia
+    semana_alterna?: $Enums.SemanaAlterna | null
+    botellones_danados?: BotellonDanadoUncheckedCreateNestedManyWithoutClienteInput
+    clientes_ruta?: ClienteRutaBaseUncheckedCreateNestedManyWithoutClienteInput
+    dispensadores?: DispensadorUncheckedCreateNestedManyWithoutClienteInput
+    guias?: GuiaDespachoUncheckedCreateNestedManyWithoutClienteInput
+    historial_financiero?: HistorialFinancieroUncheckedCreateNestedManyWithoutClienteInput
+    paradas?: ParadaDiaUncheckedCreateNestedManyWithoutClienteInput
+    pedidos?: PedidoUncheckedCreateNestedManyWithoutClienteInput
+    incidencias?: IncidenciaUncheckedCreateNestedManyWithoutClienteInput
+  }
+
+  export type ClienteCreateOrConnectWithoutSectorInput = {
+    where: ClienteWhereUniqueInput
+    create: XOR<ClienteCreateWithoutSectorInput, ClienteUncheckedCreateWithoutSectorInput>
+  }
+
+  export type ClienteCreateManySectorInputEnvelope = {
+    data: ClienteCreateManySectorInput | ClienteCreateManySectorInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type RutaBaseSectorCreateWithoutSectorInput = {
+    id?: string
+    ruta_base: RutaBaseCreateNestedOneWithoutSectoresInput
+  }
+
+  export type RutaBaseSectorUncheckedCreateWithoutSectorInput = {
+    id?: string
+    ruta_base_id: string
+  }
+
+  export type RutaBaseSectorCreateOrConnectWithoutSectorInput = {
+    where: RutaBaseSectorWhereUniqueInput
+    create: XOR<RutaBaseSectorCreateWithoutSectorInput, RutaBaseSectorUncheckedCreateWithoutSectorInput>
+  }
+
+  export type RutaBaseSectorCreateManySectorInputEnvelope = {
+    data: RutaBaseSectorCreateManySectorInput | RutaBaseSectorCreateManySectorInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ComunaUpsertWithoutSectoresInput = {
+    update: XOR<ComunaUpdateWithoutSectoresInput, ComunaUncheckedUpdateWithoutSectoresInput>
+    create: XOR<ComunaCreateWithoutSectoresInput, ComunaUncheckedCreateWithoutSectoresInput>
+    where?: ComunaWhereInput
+  }
+
+  export type ComunaUpdateToOneWithWhereWithoutSectoresInput = {
+    where?: ComunaWhereInput
+    data: XOR<ComunaUpdateWithoutSectoresInput, ComunaUncheckedUpdateWithoutSectoresInput>
+  }
+
+  export type ComunaUpdateWithoutSectoresInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nombre?: StringFieldUpdateOperationsInput | string
+    activa?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type ComunaUncheckedUpdateWithoutSectoresInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nombre?: StringFieldUpdateOperationsInput | string
+    activa?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type ClienteUpsertWithWhereUniqueWithoutSectorInput = {
+    where: ClienteWhereUniqueInput
+    update: XOR<ClienteUpdateWithoutSectorInput, ClienteUncheckedUpdateWithoutSectorInput>
+    create: XOR<ClienteCreateWithoutSectorInput, ClienteUncheckedCreateWithoutSectorInput>
+  }
+
+  export type ClienteUpdateWithWhereUniqueWithoutSectorInput = {
+    where: ClienteWhereUniqueInput
+    data: XOR<ClienteUpdateWithoutSectorInput, ClienteUncheckedUpdateWithoutSectorInput>
+  }
+
+  export type ClienteUpdateManyWithWhereWithoutSectorInput = {
+    where: ClienteScalarWhereInput
+    data: XOR<ClienteUpdateManyMutationInput, ClienteUncheckedUpdateManyWithoutSectorInput>
+  }
+
+  export type ClienteScalarWhereInput = {
+    AND?: ClienteScalarWhereInput | ClienteScalarWhereInput[]
+    OR?: ClienteScalarWhereInput[]
+    NOT?: ClienteScalarWhereInput | ClienteScalarWhereInput[]
+    id?: StringFilter<"Cliente"> | string
+    nombre?: StringFilter<"Cliente"> | string
+    tipo?: EnumTipoClienteFilter<"Cliente"> | $Enums.TipoCliente
+    direccion?: StringFilter<"Cliente"> | string
+    telefono?: StringFilter<"Cliente"> | string
+    email?: StringNullableFilter<"Cliente"> | string | null
+    rut_empresa?: StringNullableFilter<"Cliente"> | string | null
+    giro?: StringNullableFilter<"Cliente"> | string | null
+    modalidad_pago?: EnumModalidadPagoFilter<"Cliente"> | $Enums.ModalidadPago
+    tipo_ruta?: EnumTipoRutaFilter<"Cliente"> | $Enums.TipoRuta
+    notas?: StringNullableFilter<"Cliente"> | string | null
+    activo?: BoolFilter<"Cliente"> | boolean
+    botellones_prestados?: IntFilter<"Cliente"> | number
+    preferencia_factura?: EnumPreferenciaFacturacionFilter<"Cliente"> | $Enums.PreferenciaFacturacion
+    sector_id?: StringNullableFilter<"Cliente"> | string | null
+    frecuencia?: EnumFrecuenciaFilter<"Cliente"> | $Enums.Frecuencia
+    semana_alterna?: EnumSemanaAlternaNullableFilter<"Cliente"> | $Enums.SemanaAlterna | null
+  }
+
+  export type RutaBaseSectorUpsertWithWhereUniqueWithoutSectorInput = {
+    where: RutaBaseSectorWhereUniqueInput
+    update: XOR<RutaBaseSectorUpdateWithoutSectorInput, RutaBaseSectorUncheckedUpdateWithoutSectorInput>
+    create: XOR<RutaBaseSectorCreateWithoutSectorInput, RutaBaseSectorUncheckedCreateWithoutSectorInput>
+  }
+
+  export type RutaBaseSectorUpdateWithWhereUniqueWithoutSectorInput = {
+    where: RutaBaseSectorWhereUniqueInput
+    data: XOR<RutaBaseSectorUpdateWithoutSectorInput, RutaBaseSectorUncheckedUpdateWithoutSectorInput>
+  }
+
+  export type RutaBaseSectorUpdateManyWithWhereWithoutSectorInput = {
+    where: RutaBaseSectorScalarWhereInput
+    data: XOR<RutaBaseSectorUpdateManyMutationInput, RutaBaseSectorUncheckedUpdateManyWithoutSectorInput>
   }
 
   export type ClienteCreateWithoutClientes_rutaInput = {
@@ -68091,9 +71104,9 @@ export namespace Prisma {
     activo?: boolean
     botellones_prestados?: number
     preferencia_factura?: $Enums.PreferenciaFacturacion
-    sector?: string
     frecuencia?: $Enums.Frecuencia
     semana_alterna?: $Enums.SemanaAlterna | null
+    sector?: SectorCreateNestedOneWithoutClientesInput
     botellones_danados?: BotellonDanadoCreateNestedManyWithoutClienteInput
     dispensadores?: DispensadorCreateNestedManyWithoutClienteInput
     guias?: GuiaDespachoCreateNestedManyWithoutClienteInput
@@ -68118,7 +71131,7 @@ export namespace Prisma {
     activo?: boolean
     botellones_prestados?: number
     preferencia_factura?: $Enums.PreferenciaFacturacion
-    sector?: string
+    sector_id?: string | null
     frecuencia?: $Enums.Frecuencia
     semana_alterna?: $Enums.SemanaAlterna | null
     botellones_danados?: BotellonDanadoUncheckedCreateNestedManyWithoutClienteInput
@@ -68141,7 +71154,7 @@ export namespace Prisma {
     dia_semana: $Enums.DiaSemana
     frecuencia?: $Enums.Frecuencia
     semana_alterna?: $Enums.SemanaAlterna | null
-    comunas?: ComunaRutaCreateNestedManyWithoutRuta_baseInput
+    sectores?: RutaBaseSectorCreateNestedManyWithoutRuta_baseInput
     usuario: UsuarioCreateNestedOneWithoutRutas_baseInput
     vehiculo: VehiculoCreateNestedOneWithoutRutas_baseInput
     rutas_dia?: RutaDiaCreateNestedManyWithoutRuta_baseInput
@@ -68155,7 +71168,7 @@ export namespace Prisma {
     semana_alterna?: $Enums.SemanaAlterna | null
     usuario_id: string
     vehiculo_id: string
-    comunas?: ComunaRutaUncheckedCreateNestedManyWithoutRuta_baseInput
+    sectores?: RutaBaseSectorUncheckedCreateNestedManyWithoutRuta_baseInput
     rutas_dia?: RutaDiaUncheckedCreateNestedManyWithoutRuta_baseInput
   }
 
@@ -68190,9 +71203,9 @@ export namespace Prisma {
     activo?: BoolFieldUpdateOperationsInput | boolean
     botellones_prestados?: IntFieldUpdateOperationsInput | number
     preferencia_factura?: EnumPreferenciaFacturacionFieldUpdateOperationsInput | $Enums.PreferenciaFacturacion
-    sector?: StringFieldUpdateOperationsInput | string
     frecuencia?: EnumFrecuenciaFieldUpdateOperationsInput | $Enums.Frecuencia
     semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
+    sector?: SectorUpdateOneWithoutClientesNestedInput
     botellones_danados?: BotellonDanadoUpdateManyWithoutClienteNestedInput
     dispensadores?: DispensadorUpdateManyWithoutClienteNestedInput
     guias?: GuiaDespachoUpdateManyWithoutClienteNestedInput
@@ -68217,7 +71230,7 @@ export namespace Prisma {
     activo?: BoolFieldUpdateOperationsInput | boolean
     botellones_prestados?: IntFieldUpdateOperationsInput | number
     preferencia_factura?: EnumPreferenciaFacturacionFieldUpdateOperationsInput | $Enums.PreferenciaFacturacion
-    sector?: StringFieldUpdateOperationsInput | string
+    sector_id?: NullableStringFieldUpdateOperationsInput | string | null
     frecuencia?: EnumFrecuenciaFieldUpdateOperationsInput | $Enums.Frecuencia
     semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
     botellones_danados?: BotellonDanadoUncheckedUpdateManyWithoutClienteNestedInput
@@ -68246,7 +71259,7 @@ export namespace Prisma {
     dia_semana?: EnumDiaSemanaFieldUpdateOperationsInput | $Enums.DiaSemana
     frecuencia?: EnumFrecuenciaFieldUpdateOperationsInput | $Enums.Frecuencia
     semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
-    comunas?: ComunaRutaUpdateManyWithoutRuta_baseNestedInput
+    sectores?: RutaBaseSectorUpdateManyWithoutRuta_baseNestedInput
     usuario?: UsuarioUpdateOneRequiredWithoutRutas_baseNestedInput
     vehiculo?: VehiculoUpdateOneRequiredWithoutRutas_baseNestedInput
     rutas_dia?: RutaDiaUpdateManyWithoutRuta_baseNestedInput
@@ -68260,7 +71273,7 @@ export namespace Prisma {
     semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
     usuario_id?: StringFieldUpdateOperationsInput | string
     vehiculo_id?: StringFieldUpdateOperationsInput | string
-    comunas?: ComunaRutaUncheckedUpdateManyWithoutRuta_baseNestedInput
+    sectores?: RutaBaseSectorUncheckedUpdateManyWithoutRuta_baseNestedInput
     rutas_dia?: RutaDiaUncheckedUpdateManyWithoutRuta_baseNestedInput
   }
 
@@ -68303,7 +71316,7 @@ export namespace Prisma {
     frecuencia?: $Enums.Frecuencia
     semana_alterna?: $Enums.SemanaAlterna | null
     clientes?: ClienteRutaBaseCreateNestedManyWithoutRuta_baseInput
-    comunas?: ComunaRutaCreateNestedManyWithoutRuta_baseInput
+    sectores?: RutaBaseSectorCreateNestedManyWithoutRuta_baseInput
     usuario: UsuarioCreateNestedOneWithoutRutas_baseInput
     vehiculo: VehiculoCreateNestedOneWithoutRutas_baseInput
   }
@@ -68317,7 +71330,7 @@ export namespace Prisma {
     usuario_id: string
     vehiculo_id: string
     clientes?: ClienteRutaBaseUncheckedCreateNestedManyWithoutRuta_baseInput
-    comunas?: ComunaRutaUncheckedCreateNestedManyWithoutRuta_baseInput
+    sectores?: RutaBaseSectorUncheckedCreateNestedManyWithoutRuta_baseInput
   }
 
   export type RutaBaseCreateOrConnectWithoutRutas_diaInput = {
@@ -68459,7 +71472,7 @@ export namespace Prisma {
     frecuencia?: EnumFrecuenciaFieldUpdateOperationsInput | $Enums.Frecuencia
     semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
     clientes?: ClienteRutaBaseUpdateManyWithoutRuta_baseNestedInput
-    comunas?: ComunaRutaUpdateManyWithoutRuta_baseNestedInput
+    sectores?: RutaBaseSectorUpdateManyWithoutRuta_baseNestedInput
     usuario?: UsuarioUpdateOneRequiredWithoutRutas_baseNestedInput
     vehiculo?: VehiculoUpdateOneRequiredWithoutRutas_baseNestedInput
   }
@@ -68473,7 +71486,7 @@ export namespace Prisma {
     usuario_id?: StringFieldUpdateOperationsInput | string
     vehiculo_id?: StringFieldUpdateOperationsInput | string
     clientes?: ClienteRutaBaseUncheckedUpdateManyWithoutRuta_baseNestedInput
-    comunas?: ComunaRutaUncheckedUpdateManyWithoutRuta_baseNestedInput
+    sectores?: RutaBaseSectorUncheckedUpdateManyWithoutRuta_baseNestedInput
   }
 
   export type UsuarioUpsertWithoutRutas_diaInput = {
@@ -68603,9 +71616,9 @@ export namespace Prisma {
     activo?: boolean
     botellones_prestados?: number
     preferencia_factura?: $Enums.PreferenciaFacturacion
-    sector?: string
     frecuencia?: $Enums.Frecuencia
     semana_alterna?: $Enums.SemanaAlterna | null
+    sector?: SectorCreateNestedOneWithoutClientesInput
     botellones_danados?: BotellonDanadoCreateNestedManyWithoutClienteInput
     clientes_ruta?: ClienteRutaBaseCreateNestedManyWithoutClienteInput
     dispensadores?: DispensadorCreateNestedManyWithoutClienteInput
@@ -68630,7 +71643,7 @@ export namespace Prisma {
     activo?: boolean
     botellones_prestados?: number
     preferencia_factura?: $Enums.PreferenciaFacturacion
-    sector?: string
+    sector_id?: string | null
     frecuencia?: $Enums.Frecuencia
     semana_alterna?: $Enums.SemanaAlterna | null
     botellones_danados?: BotellonDanadoUncheckedCreateNestedManyWithoutClienteInput
@@ -68765,9 +71778,9 @@ export namespace Prisma {
     activo?: BoolFieldUpdateOperationsInput | boolean
     botellones_prestados?: IntFieldUpdateOperationsInput | number
     preferencia_factura?: EnumPreferenciaFacturacionFieldUpdateOperationsInput | $Enums.PreferenciaFacturacion
-    sector?: StringFieldUpdateOperationsInput | string
     frecuencia?: EnumFrecuenciaFieldUpdateOperationsInput | $Enums.Frecuencia
     semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
+    sector?: SectorUpdateOneWithoutClientesNestedInput
     botellones_danados?: BotellonDanadoUpdateManyWithoutClienteNestedInput
     clientes_ruta?: ClienteRutaBaseUpdateManyWithoutClienteNestedInput
     dispensadores?: DispensadorUpdateManyWithoutClienteNestedInput
@@ -68792,7 +71805,7 @@ export namespace Prisma {
     activo?: BoolFieldUpdateOperationsInput | boolean
     botellones_prestados?: IntFieldUpdateOperationsInput | number
     preferencia_factura?: EnumPreferenciaFacturacionFieldUpdateOperationsInput | $Enums.PreferenciaFacturacion
-    sector?: StringFieldUpdateOperationsInput | string
+    sector_id?: NullableStringFieldUpdateOperationsInput | string | null
     frecuencia?: EnumFrecuenciaFieldUpdateOperationsInput | $Enums.Frecuencia
     semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
     botellones_danados?: BotellonDanadoUncheckedUpdateManyWithoutClienteNestedInput
@@ -68939,9 +71952,9 @@ export namespace Prisma {
     activo?: boolean
     botellones_prestados?: number
     preferencia_factura?: $Enums.PreferenciaFacturacion
-    sector?: string
     frecuencia?: $Enums.Frecuencia
     semana_alterna?: $Enums.SemanaAlterna | null
+    sector?: SectorCreateNestedOneWithoutClientesInput
     botellones_danados?: BotellonDanadoCreateNestedManyWithoutClienteInput
     clientes_ruta?: ClienteRutaBaseCreateNestedManyWithoutClienteInput
     dispensadores?: DispensadorCreateNestedManyWithoutClienteInput
@@ -68966,7 +71979,7 @@ export namespace Prisma {
     activo?: boolean
     botellones_prestados?: number
     preferencia_factura?: $Enums.PreferenciaFacturacion
-    sector?: string
+    sector_id?: string | null
     frecuencia?: $Enums.Frecuencia
     semana_alterna?: $Enums.SemanaAlterna | null
     botellones_danados?: BotellonDanadoUncheckedCreateNestedManyWithoutClienteInput
@@ -69100,9 +72113,9 @@ export namespace Prisma {
     activo?: BoolFieldUpdateOperationsInput | boolean
     botellones_prestados?: IntFieldUpdateOperationsInput | number
     preferencia_factura?: EnumPreferenciaFacturacionFieldUpdateOperationsInput | $Enums.PreferenciaFacturacion
-    sector?: StringFieldUpdateOperationsInput | string
     frecuencia?: EnumFrecuenciaFieldUpdateOperationsInput | $Enums.Frecuencia
     semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
+    sector?: SectorUpdateOneWithoutClientesNestedInput
     botellones_danados?: BotellonDanadoUpdateManyWithoutClienteNestedInput
     clientes_ruta?: ClienteRutaBaseUpdateManyWithoutClienteNestedInput
     dispensadores?: DispensadorUpdateManyWithoutClienteNestedInput
@@ -69127,7 +72140,7 @@ export namespace Prisma {
     activo?: BoolFieldUpdateOperationsInput | boolean
     botellones_prestados?: IntFieldUpdateOperationsInput | number
     preferencia_factura?: EnumPreferenciaFacturacionFieldUpdateOperationsInput | $Enums.PreferenciaFacturacion
-    sector?: StringFieldUpdateOperationsInput | string
+    sector_id?: NullableStringFieldUpdateOperationsInput | string | null
     frecuencia?: EnumFrecuenciaFieldUpdateOperationsInput | $Enums.Frecuencia
     semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
     botellones_danados?: BotellonDanadoUncheckedUpdateManyWithoutClienteNestedInput
@@ -69422,9 +72435,9 @@ export namespace Prisma {
     activo?: boolean
     botellones_prestados?: number
     preferencia_factura?: $Enums.PreferenciaFacturacion
-    sector?: string
     frecuencia?: $Enums.Frecuencia
     semana_alterna?: $Enums.SemanaAlterna | null
+    sector?: SectorCreateNestedOneWithoutClientesInput
     botellones_danados?: BotellonDanadoCreateNestedManyWithoutClienteInput
     clientes_ruta?: ClienteRutaBaseCreateNestedManyWithoutClienteInput
     dispensadores?: DispensadorCreateNestedManyWithoutClienteInput
@@ -69449,7 +72462,7 @@ export namespace Prisma {
     activo?: boolean
     botellones_prestados?: number
     preferencia_factura?: $Enums.PreferenciaFacturacion
-    sector?: string
+    sector_id?: string | null
     frecuencia?: $Enums.Frecuencia
     semana_alterna?: $Enums.SemanaAlterna | null
     botellones_danados?: BotellonDanadoUncheckedCreateNestedManyWithoutClienteInput
@@ -69636,9 +72649,9 @@ export namespace Prisma {
     activo?: BoolFieldUpdateOperationsInput | boolean
     botellones_prestados?: IntFieldUpdateOperationsInput | number
     preferencia_factura?: EnumPreferenciaFacturacionFieldUpdateOperationsInput | $Enums.PreferenciaFacturacion
-    sector?: StringFieldUpdateOperationsInput | string
     frecuencia?: EnumFrecuenciaFieldUpdateOperationsInput | $Enums.Frecuencia
     semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
+    sector?: SectorUpdateOneWithoutClientesNestedInput
     botellones_danados?: BotellonDanadoUpdateManyWithoutClienteNestedInput
     clientes_ruta?: ClienteRutaBaseUpdateManyWithoutClienteNestedInput
     dispensadores?: DispensadorUpdateManyWithoutClienteNestedInput
@@ -69663,7 +72676,7 @@ export namespace Prisma {
     activo?: BoolFieldUpdateOperationsInput | boolean
     botellones_prestados?: IntFieldUpdateOperationsInput | number
     preferencia_factura?: EnumPreferenciaFacturacionFieldUpdateOperationsInput | $Enums.PreferenciaFacturacion
-    sector?: StringFieldUpdateOperationsInput | string
+    sector_id?: NullableStringFieldUpdateOperationsInput | string | null
     frecuencia?: EnumFrecuenciaFieldUpdateOperationsInput | $Enums.Frecuencia
     semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
     botellones_danados?: BotellonDanadoUncheckedUpdateManyWithoutClienteNestedInput
@@ -71291,9 +74304,9 @@ export namespace Prisma {
     activo?: boolean
     botellones_prestados?: number
     preferencia_factura?: $Enums.PreferenciaFacturacion
-    sector?: string
     frecuencia?: $Enums.Frecuencia
     semana_alterna?: $Enums.SemanaAlterna | null
+    sector?: SectorCreateNestedOneWithoutClientesInput
     clientes_ruta?: ClienteRutaBaseCreateNestedManyWithoutClienteInput
     dispensadores?: DispensadorCreateNestedManyWithoutClienteInput
     guias?: GuiaDespachoCreateNestedManyWithoutClienteInput
@@ -71318,7 +74331,7 @@ export namespace Prisma {
     activo?: boolean
     botellones_prestados?: number
     preferencia_factura?: $Enums.PreferenciaFacturacion
-    sector?: string
+    sector_id?: string | null
     frecuencia?: $Enums.Frecuencia
     semana_alterna?: $Enums.SemanaAlterna | null
     clientes_ruta?: ClienteRutaBaseUncheckedCreateNestedManyWithoutClienteInput
@@ -71424,9 +74437,9 @@ export namespace Prisma {
     activo?: BoolFieldUpdateOperationsInput | boolean
     botellones_prestados?: IntFieldUpdateOperationsInput | number
     preferencia_factura?: EnumPreferenciaFacturacionFieldUpdateOperationsInput | $Enums.PreferenciaFacturacion
-    sector?: StringFieldUpdateOperationsInput | string
     frecuencia?: EnumFrecuenciaFieldUpdateOperationsInput | $Enums.Frecuencia
     semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
+    sector?: SectorUpdateOneWithoutClientesNestedInput
     clientes_ruta?: ClienteRutaBaseUpdateManyWithoutClienteNestedInput
     dispensadores?: DispensadorUpdateManyWithoutClienteNestedInput
     guias?: GuiaDespachoUpdateManyWithoutClienteNestedInput
@@ -71451,7 +74464,7 @@ export namespace Prisma {
     activo?: BoolFieldUpdateOperationsInput | boolean
     botellones_prestados?: IntFieldUpdateOperationsInput | number
     preferencia_factura?: EnumPreferenciaFacturacionFieldUpdateOperationsInput | $Enums.PreferenciaFacturacion
-    sector?: StringFieldUpdateOperationsInput | string
+    sector_id?: NullableStringFieldUpdateOperationsInput | string | null
     frecuencia?: EnumFrecuenciaFieldUpdateOperationsInput | $Enums.Frecuencia
     semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
     clientes_ruta?: ClienteRutaBaseUncheckedUpdateManyWithoutClienteNestedInput
@@ -72119,9 +75132,9 @@ export namespace Prisma {
     activo?: boolean
     botellones_prestados?: number
     preferencia_factura?: $Enums.PreferenciaFacturacion
-    sector?: string
     frecuencia?: $Enums.Frecuencia
     semana_alterna?: $Enums.SemanaAlterna | null
+    sector?: SectorCreateNestedOneWithoutClientesInput
     botellones_danados?: BotellonDanadoCreateNestedManyWithoutClienteInput
     clientes_ruta?: ClienteRutaBaseCreateNestedManyWithoutClienteInput
     guias?: GuiaDespachoCreateNestedManyWithoutClienteInput
@@ -72146,7 +75159,7 @@ export namespace Prisma {
     activo?: boolean
     botellones_prestados?: number
     preferencia_factura?: $Enums.PreferenciaFacturacion
-    sector?: string
+    sector_id?: string | null
     frecuencia?: $Enums.Frecuencia
     semana_alterna?: $Enums.SemanaAlterna | null
     botellones_danados?: BotellonDanadoUncheckedCreateNestedManyWithoutClienteInput
@@ -72231,9 +75244,9 @@ export namespace Prisma {
     activo?: BoolFieldUpdateOperationsInput | boolean
     botellones_prestados?: IntFieldUpdateOperationsInput | number
     preferencia_factura?: EnumPreferenciaFacturacionFieldUpdateOperationsInput | $Enums.PreferenciaFacturacion
-    sector?: StringFieldUpdateOperationsInput | string
     frecuencia?: EnumFrecuenciaFieldUpdateOperationsInput | $Enums.Frecuencia
     semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
+    sector?: SectorUpdateOneWithoutClientesNestedInput
     botellones_danados?: BotellonDanadoUpdateManyWithoutClienteNestedInput
     clientes_ruta?: ClienteRutaBaseUpdateManyWithoutClienteNestedInput
     guias?: GuiaDespachoUpdateManyWithoutClienteNestedInput
@@ -72258,7 +75271,7 @@ export namespace Prisma {
     activo?: BoolFieldUpdateOperationsInput | boolean
     botellones_prestados?: IntFieldUpdateOperationsInput | number
     preferencia_factura?: EnumPreferenciaFacturacionFieldUpdateOperationsInput | $Enums.PreferenciaFacturacion
-    sector?: StringFieldUpdateOperationsInput | string
+    sector_id?: NullableStringFieldUpdateOperationsInput | string | null
     frecuencia?: EnumFrecuenciaFieldUpdateOperationsInput | $Enums.Frecuencia
     semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
     botellones_danados?: BotellonDanadoUncheckedUpdateManyWithoutClienteNestedInput
@@ -72621,9 +75634,9 @@ export namespace Prisma {
     activo?: boolean
     botellones_prestados?: number
     preferencia_factura?: $Enums.PreferenciaFacturacion
-    sector?: string
     frecuencia?: $Enums.Frecuencia
     semana_alterna?: $Enums.SemanaAlterna | null
+    sector?: SectorCreateNestedOneWithoutClientesInput
     botellones_danados?: BotellonDanadoCreateNestedManyWithoutClienteInput
     clientes_ruta?: ClienteRutaBaseCreateNestedManyWithoutClienteInput
     dispensadores?: DispensadorCreateNestedManyWithoutClienteInput
@@ -72648,7 +75661,7 @@ export namespace Prisma {
     activo?: boolean
     botellones_prestados?: number
     preferencia_factura?: $Enums.PreferenciaFacturacion
-    sector?: string
+    sector_id?: string | null
     frecuencia?: $Enums.Frecuencia
     semana_alterna?: $Enums.SemanaAlterna | null
     botellones_danados?: BotellonDanadoUncheckedCreateNestedManyWithoutClienteInput
@@ -72691,9 +75704,9 @@ export namespace Prisma {
     activo?: BoolFieldUpdateOperationsInput | boolean
     botellones_prestados?: IntFieldUpdateOperationsInput | number
     preferencia_factura?: EnumPreferenciaFacturacionFieldUpdateOperationsInput | $Enums.PreferenciaFacturacion
-    sector?: StringFieldUpdateOperationsInput | string
     frecuencia?: EnumFrecuenciaFieldUpdateOperationsInput | $Enums.Frecuencia
     semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
+    sector?: SectorUpdateOneWithoutClientesNestedInput
     botellones_danados?: BotellonDanadoUpdateManyWithoutClienteNestedInput
     clientes_ruta?: ClienteRutaBaseUpdateManyWithoutClienteNestedInput
     dispensadores?: DispensadorUpdateManyWithoutClienteNestedInput
@@ -72718,7 +75731,7 @@ export namespace Prisma {
     activo?: BoolFieldUpdateOperationsInput | boolean
     botellones_prestados?: IntFieldUpdateOperationsInput | number
     preferencia_factura?: EnumPreferenciaFacturacionFieldUpdateOperationsInput | $Enums.PreferenciaFacturacion
-    sector?: StringFieldUpdateOperationsInput | string
+    sector_id?: NullableStringFieldUpdateOperationsInput | string | null
     frecuencia?: EnumFrecuenciaFieldUpdateOperationsInput | $Enums.Frecuencia
     semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
     botellones_danados?: BotellonDanadoUncheckedUpdateManyWithoutClienteNestedInput
@@ -72957,9 +75970,9 @@ export namespace Prisma {
     activo?: boolean
     botellones_prestados?: number
     preferencia_factura?: $Enums.PreferenciaFacturacion
-    sector?: string
     frecuencia?: $Enums.Frecuencia
     semana_alterna?: $Enums.SemanaAlterna | null
+    sector?: SectorCreateNestedOneWithoutClientesInput
     botellones_danados?: BotellonDanadoCreateNestedManyWithoutClienteInput
     clientes_ruta?: ClienteRutaBaseCreateNestedManyWithoutClienteInput
     dispensadores?: DispensadorCreateNestedManyWithoutClienteInput
@@ -72984,7 +75997,7 @@ export namespace Prisma {
     activo?: boolean
     botellones_prestados?: number
     preferencia_factura?: $Enums.PreferenciaFacturacion
-    sector?: string
+    sector_id?: string | null
     frecuencia?: $Enums.Frecuencia
     semana_alterna?: $Enums.SemanaAlterna | null
     botellones_danados?: BotellonDanadoUncheckedCreateNestedManyWithoutClienteInput
@@ -73166,9 +76179,9 @@ export namespace Prisma {
     activo?: BoolFieldUpdateOperationsInput | boolean
     botellones_prestados?: IntFieldUpdateOperationsInput | number
     preferencia_factura?: EnumPreferenciaFacturacionFieldUpdateOperationsInput | $Enums.PreferenciaFacturacion
-    sector?: StringFieldUpdateOperationsInput | string
     frecuencia?: EnumFrecuenciaFieldUpdateOperationsInput | $Enums.Frecuencia
     semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
+    sector?: SectorUpdateOneWithoutClientesNestedInput
     botellones_danados?: BotellonDanadoUpdateManyWithoutClienteNestedInput
     clientes_ruta?: ClienteRutaBaseUpdateManyWithoutClienteNestedInput
     dispensadores?: DispensadorUpdateManyWithoutClienteNestedInput
@@ -73193,7 +76206,7 @@ export namespace Prisma {
     activo?: BoolFieldUpdateOperationsInput | boolean
     botellones_prestados?: IntFieldUpdateOperationsInput | number
     preferencia_factura?: EnumPreferenciaFacturacionFieldUpdateOperationsInput | $Enums.PreferenciaFacturacion
-    sector?: StringFieldUpdateOperationsInput | string
+    sector_id?: NullableStringFieldUpdateOperationsInput | string | null
     frecuencia?: EnumFrecuenciaFieldUpdateOperationsInput | $Enums.Frecuencia
     semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
     botellones_danados?: BotellonDanadoUncheckedUpdateManyWithoutClienteNestedInput
@@ -74181,7 +77194,7 @@ export namespace Prisma {
     frecuencia?: EnumFrecuenciaFieldUpdateOperationsInput | $Enums.Frecuencia
     semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
     clientes?: ClienteRutaBaseUpdateManyWithoutRuta_baseNestedInput
-    comunas?: ComunaRutaUpdateManyWithoutRuta_baseNestedInput
+    sectores?: RutaBaseSectorUpdateManyWithoutRuta_baseNestedInput
     vehiculo?: VehiculoUpdateOneRequiredWithoutRutas_baseNestedInput
     rutas_dia?: RutaDiaUpdateManyWithoutRuta_baseNestedInput
   }
@@ -74194,7 +77207,7 @@ export namespace Prisma {
     semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
     vehiculo_id?: StringFieldUpdateOperationsInput | string
     clientes?: ClienteRutaBaseUncheckedUpdateManyWithoutRuta_baseNestedInput
-    comunas?: ComunaRutaUncheckedUpdateManyWithoutRuta_baseNestedInput
+    sectores?: RutaBaseSectorUncheckedUpdateManyWithoutRuta_baseNestedInput
     rutas_dia?: RutaDiaUncheckedUpdateManyWithoutRuta_baseNestedInput
   }
 
@@ -74492,7 +77505,7 @@ export namespace Prisma {
     frecuencia?: EnumFrecuenciaFieldUpdateOperationsInput | $Enums.Frecuencia
     semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
     clientes?: ClienteRutaBaseUpdateManyWithoutRuta_baseNestedInput
-    comunas?: ComunaRutaUpdateManyWithoutRuta_baseNestedInput
+    sectores?: RutaBaseSectorUpdateManyWithoutRuta_baseNestedInput
     usuario?: UsuarioUpdateOneRequiredWithoutRutas_baseNestedInput
     rutas_dia?: RutaDiaUpdateManyWithoutRuta_baseNestedInput
   }
@@ -74505,7 +77518,7 @@ export namespace Prisma {
     semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
     usuario_id?: StringFieldUpdateOperationsInput | string
     clientes?: ClienteRutaBaseUncheckedUpdateManyWithoutRuta_baseNestedInput
-    comunas?: ComunaRutaUncheckedUpdateManyWithoutRuta_baseNestedInput
+    sectores?: RutaBaseSectorUncheckedUpdateManyWithoutRuta_baseNestedInput
     rutas_dia?: RutaDiaUncheckedUpdateManyWithoutRuta_baseNestedInput
   }
 
@@ -75288,9 +78301,9 @@ export namespace Prisma {
     semana_alterna?: $Enums.SemanaAlterna | null
   }
 
-  export type ComunaRutaCreateManyRuta_baseInput = {
+  export type RutaBaseSectorCreateManyRuta_baseInput = {
     id?: string
-    comuna: string
+    sector_id: string
   }
 
   export type RutaDiaCreateManyRuta_baseInput = {
@@ -75325,19 +78338,19 @@ export namespace Prisma {
     semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
   }
 
-  export type ComunaRutaUpdateWithoutRuta_baseInput = {
+  export type RutaBaseSectorUpdateWithoutRuta_baseInput = {
     id?: StringFieldUpdateOperationsInput | string
-    comuna?: StringFieldUpdateOperationsInput | string
+    sector?: SectorUpdateOneRequiredWithoutRutas_baseNestedInput
   }
 
-  export type ComunaRutaUncheckedUpdateWithoutRuta_baseInput = {
+  export type RutaBaseSectorUncheckedUpdateWithoutRuta_baseInput = {
     id?: StringFieldUpdateOperationsInput | string
-    comuna?: StringFieldUpdateOperationsInput | string
+    sector_id?: StringFieldUpdateOperationsInput | string
   }
 
-  export type ComunaRutaUncheckedUpdateManyWithoutRuta_baseInput = {
+  export type RutaBaseSectorUncheckedUpdateManyWithoutRuta_baseInput = {
     id?: StringFieldUpdateOperationsInput | string
-    comuna?: StringFieldUpdateOperationsInput | string
+    sector_id?: StringFieldUpdateOperationsInput | string
   }
 
   export type RutaDiaUpdateWithoutRuta_baseInput = {
@@ -75364,6 +78377,146 @@ export namespace Prisma {
     usuario_id?: StringFieldUpdateOperationsInput | string
     vehiculo_id?: StringFieldUpdateOperationsInput | string
     estado?: EnumEstadoRutaFieldUpdateOperationsInput | $Enums.EstadoRuta
+  }
+
+  export type SectorCreateManyComunaInput = {
+    id?: string
+    nombre: string
+    activo?: boolean
+  }
+
+  export type SectorUpdateWithoutComunaInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nombre?: StringFieldUpdateOperationsInput | string
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    clientes?: ClienteUpdateManyWithoutSectorNestedInput
+    rutas_base?: RutaBaseSectorUpdateManyWithoutSectorNestedInput
+  }
+
+  export type SectorUncheckedUpdateWithoutComunaInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nombre?: StringFieldUpdateOperationsInput | string
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    clientes?: ClienteUncheckedUpdateManyWithoutSectorNestedInput
+    rutas_base?: RutaBaseSectorUncheckedUpdateManyWithoutSectorNestedInput
+  }
+
+  export type SectorUncheckedUpdateManyWithoutComunaInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nombre?: StringFieldUpdateOperationsInput | string
+    activo?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type ClienteCreateManySectorInput = {
+    id?: string
+    nombre: string
+    tipo: $Enums.TipoCliente
+    direccion: string
+    telefono: string
+    email?: string | null
+    rut_empresa?: string | null
+    giro?: string | null
+    modalidad_pago?: $Enums.ModalidadPago
+    tipo_ruta?: $Enums.TipoRuta
+    notas?: string | null
+    activo?: boolean
+    botellones_prestados?: number
+    preferencia_factura?: $Enums.PreferenciaFacturacion
+    frecuencia?: $Enums.Frecuencia
+    semana_alterna?: $Enums.SemanaAlterna | null
+  }
+
+  export type RutaBaseSectorCreateManySectorInput = {
+    id?: string
+    ruta_base_id: string
+  }
+
+  export type ClienteUpdateWithoutSectorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nombre?: StringFieldUpdateOperationsInput | string
+    tipo?: EnumTipoClienteFieldUpdateOperationsInput | $Enums.TipoCliente
+    direccion?: StringFieldUpdateOperationsInput | string
+    telefono?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    rut_empresa?: NullableStringFieldUpdateOperationsInput | string | null
+    giro?: NullableStringFieldUpdateOperationsInput | string | null
+    modalidad_pago?: EnumModalidadPagoFieldUpdateOperationsInput | $Enums.ModalidadPago
+    tipo_ruta?: EnumTipoRutaFieldUpdateOperationsInput | $Enums.TipoRuta
+    notas?: NullableStringFieldUpdateOperationsInput | string | null
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    botellones_prestados?: IntFieldUpdateOperationsInput | number
+    preferencia_factura?: EnumPreferenciaFacturacionFieldUpdateOperationsInput | $Enums.PreferenciaFacturacion
+    frecuencia?: EnumFrecuenciaFieldUpdateOperationsInput | $Enums.Frecuencia
+    semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
+    botellones_danados?: BotellonDanadoUpdateManyWithoutClienteNestedInput
+    clientes_ruta?: ClienteRutaBaseUpdateManyWithoutClienteNestedInput
+    dispensadores?: DispensadorUpdateManyWithoutClienteNestedInput
+    guias?: GuiaDespachoUpdateManyWithoutClienteNestedInput
+    historial_financiero?: HistorialFinancieroUpdateManyWithoutClienteNestedInput
+    paradas?: ParadaDiaUpdateManyWithoutClienteNestedInput
+    pedidos?: PedidoUpdateManyWithoutClienteNestedInput
+    incidencias?: IncidenciaUpdateManyWithoutClienteNestedInput
+  }
+
+  export type ClienteUncheckedUpdateWithoutSectorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nombre?: StringFieldUpdateOperationsInput | string
+    tipo?: EnumTipoClienteFieldUpdateOperationsInput | $Enums.TipoCliente
+    direccion?: StringFieldUpdateOperationsInput | string
+    telefono?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    rut_empresa?: NullableStringFieldUpdateOperationsInput | string | null
+    giro?: NullableStringFieldUpdateOperationsInput | string | null
+    modalidad_pago?: EnumModalidadPagoFieldUpdateOperationsInput | $Enums.ModalidadPago
+    tipo_ruta?: EnumTipoRutaFieldUpdateOperationsInput | $Enums.TipoRuta
+    notas?: NullableStringFieldUpdateOperationsInput | string | null
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    botellones_prestados?: IntFieldUpdateOperationsInput | number
+    preferencia_factura?: EnumPreferenciaFacturacionFieldUpdateOperationsInput | $Enums.PreferenciaFacturacion
+    frecuencia?: EnumFrecuenciaFieldUpdateOperationsInput | $Enums.Frecuencia
+    semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
+    botellones_danados?: BotellonDanadoUncheckedUpdateManyWithoutClienteNestedInput
+    clientes_ruta?: ClienteRutaBaseUncheckedUpdateManyWithoutClienteNestedInput
+    dispensadores?: DispensadorUncheckedUpdateManyWithoutClienteNestedInput
+    guias?: GuiaDespachoUncheckedUpdateManyWithoutClienteNestedInput
+    historial_financiero?: HistorialFinancieroUncheckedUpdateManyWithoutClienteNestedInput
+    paradas?: ParadaDiaUncheckedUpdateManyWithoutClienteNestedInput
+    pedidos?: PedidoUncheckedUpdateManyWithoutClienteNestedInput
+    incidencias?: IncidenciaUncheckedUpdateManyWithoutClienteNestedInput
+  }
+
+  export type ClienteUncheckedUpdateManyWithoutSectorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nombre?: StringFieldUpdateOperationsInput | string
+    tipo?: EnumTipoClienteFieldUpdateOperationsInput | $Enums.TipoCliente
+    direccion?: StringFieldUpdateOperationsInput | string
+    telefono?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    rut_empresa?: NullableStringFieldUpdateOperationsInput | string | null
+    giro?: NullableStringFieldUpdateOperationsInput | string | null
+    modalidad_pago?: EnumModalidadPagoFieldUpdateOperationsInput | $Enums.ModalidadPago
+    tipo_ruta?: EnumTipoRutaFieldUpdateOperationsInput | $Enums.TipoRuta
+    notas?: NullableStringFieldUpdateOperationsInput | string | null
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    botellones_prestados?: IntFieldUpdateOperationsInput | number
+    preferencia_factura?: EnumPreferenciaFacturacionFieldUpdateOperationsInput | $Enums.PreferenciaFacturacion
+    frecuencia?: EnumFrecuenciaFieldUpdateOperationsInput | $Enums.Frecuencia
+    semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
+  }
+
+  export type RutaBaseSectorUpdateWithoutSectorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ruta_base?: RutaBaseUpdateOneRequiredWithoutSectoresNestedInput
+  }
+
+  export type RutaBaseSectorUncheckedUpdateWithoutSectorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ruta_base_id?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type RutaBaseSectorUncheckedUpdateManyWithoutSectorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ruta_base_id?: StringFieldUpdateOperationsInput | string
   }
 
   export type ParadaDiaCreateManyRuta_diaInput = {

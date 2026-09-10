@@ -151,7 +151,8 @@ model Cliente {
   activo               Boolean                @default(true)
   botellones_prestados Int                    @default(0)
   preferencia_factura  PreferenciaFacturacion @default(BOLETA)
-  sector               String                 @default("GENERAL")
+  sector_id  String?
+  sector     Sector?  @relation(fields: [sector_id], references: [id])
   botellones_danados   BotellonDanado[]
   clientes_ruta        ClienteRutaBase[]
   dispensadores        Dispensador[]
@@ -173,17 +174,37 @@ model RutaBase {
   usuario_id     String
   vehiculo_id    String
   clientes       ClienteRutaBase[]
-  comunas        ComunaRuta[]
+  sectores       RutaBaseSector[]  
   usuario        Usuario           @relation(fields: [usuario_id], references: [id])
   vehiculo       Vehiculo          @relation(fields: [vehiculo_id], references: [id])
   rutas_dia      RutaDia[]
 }
-
-model ComunaRuta {
+model RutaBaseSector {
   id           String   @id @default(uuid())
   ruta_base_id String
-  comuna       String
-  ruta_base    RutaBase @relation(fields: [ruta_base_id], references: [id])
+  sector_id    String
+  ruta_base    RutaBase @relation(fields: [ruta_base_id], references: [id], onDelete: Cascade)
+  sector       Sector   @relation(fields: [sector_id], references: [id])
+
+  @@unique([ruta_base_id, sector_id])
+}
+
+model Comuna {
+  id       String   @id @default(uuid())
+  nombre   String   @unique
+  activa   Boolean  @default(true)
+  sectores Sector[]
+}
+model Sector {
+  id           String           @id @default(uuid())
+  nombre       String
+  comuna_id    String
+  activo       Boolean          @default(true)
+  comuna       Comuna           @relation(fields: [comuna_id], references: [id])
+  clientes     Cliente[]
+  rutas_base   RutaBaseSector[]
+
+  @@unique([nombre, comuna_id])
 }
 
 model ClienteRutaBase {
