@@ -4,14 +4,21 @@ import { getSessionCookie } from 'better-auth/cookies';
 
 export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
+
+  //  EXCLUIR RUTAS COMPLETAMENTE DEL MIDDLEWARE
+  if (path.startsWith('/login') || path.startsWith('/pendiente')) {
+    return NextResponse.next();
+  }
+
+  //Lógica normal para el resto del proyecto 
   const sessionCookie = getSessionCookie(request);
   const isAuthenticated = !!sessionCookie;
 
-  if (!isAuthenticated && path !== '/login') {
+  if (!isAuthenticated) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
 
-  if (isAuthenticated && (path === '/login' || path === '/')) {
+  if (isAuthenticated && path === '/') {
     return NextResponse.redirect(new URL('/admin', request.url));
   }
 
