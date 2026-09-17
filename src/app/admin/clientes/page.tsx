@@ -13,6 +13,11 @@ export default async function ClientesPage() {
         }
       },
       historial_financiero: true,
+      sector: {              // ← NUEVO
+        include: {
+          comuna: true,      // ← NUEVO
+        },
+      },
     },
     orderBy: {
       nombre: 'asc',

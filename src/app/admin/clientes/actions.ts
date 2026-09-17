@@ -16,6 +16,7 @@ export interface ClienteInput {
   notas?: string;
   activo: boolean;
   botellones_prestados: number;
+  sector_id?: string | null;
 }
 
 // 1. Crear Cliente
@@ -29,12 +30,25 @@ export async function crearClienteAction(data: ClienteInput) {
   }
 }
 
-// 2. Editar Cliente
+// 2. Editar Cliente (Sanitizado para ignorar relaciones anidadas accidentales)
 export async function editarClienteAction(id: string, data: ClienteInput) {
   try {
     await prisma.cliente.update({
       where: { id },
-      data,
+      data: {
+        nombre: data.nombre,
+        tipo: data.tipo,
+        direccion: data.direccion,
+        telefono: data.telefono,
+        email: data.email || null,
+        rut_empresa: data.rut_empresa || null,
+        giro: data.giro || null,
+        preferencia_factura: data.preferencia_factura,
+        notas: data.notas || null,
+        activo: data.activo,
+        botellones_prestados: data.botellones_prestados ?? 0,
+        sector_id: data.sector_id || null,
+      },
     });
     revalidatePath('/admin/clientes');
     return { success: true };
@@ -43,17 +57,17 @@ export async function editarClienteAction(id: string, data: ClienteInput) {
   }
 }
 
-// 3. Desactivar / Dar de baja Cliente
-export async function desactivarClienteAction(id: string) {
+// 3. Desactivar / Activar Cliente
+export async function desactivarClienteAction(id: string, estado: boolean = false) {
   try {
     await prisma.cliente.update({
       where: { id },
-      data: { activo: false },
+      data: { activo: estado },
     });
     revalidatePath('/admin/clientes');
     return { success: true };
   } catch (error: any) {
-    return { success: false, message: 'No se pudo desactivar el cliente.' };
+    return { success: false, message: 'No se pudo actualizar el estado del cliente.' };
   }
 }
 
@@ -68,52 +82,48 @@ export async function eliminarClienteAction(id: string) {
   }
 }
 
-// 5. Asignar Dispensador (CORREGIDO Y MAPEADO EL PRECIO DE ARRIENDO)
+// 5. Asignar Dispensador (Corregido: sin campo 'tipo' en create)
 export async function asignarDispensadorAction(clienteId: string, payload: any) {
   try {
     const numeroSerieLimpio = payload.numeroSerie || payload.numero_serie || null;
 
-    if (numeroSerieLimpio) {
-      // Validamos si la serie ya existe en la BD para evitar el error único de Prisma
+    if (numeroSerieLimpio && numeroSerieLimpio !== 'S/N') {
       const existeSerie = await prisma.dispensador.findUnique({
         where: { numero_serie: numeroSerieLimpio }
       });
-
       if (existeSerie) {
         return {
           success: false,
-          message: `El número de serie "${numeroSerieLimpio}" ya está registrado en el sistema. Verifica la placa.`
+          message: `El número de serie "${numeroSerieLimpio}" ya está registrado en el sistema.`
         };
       }
     }
 
-    // CORRECCIÓN: Rescatamos el precio de arriendo y nos aseguramos de que sea un entero puro
-    const precioFinal = parseInt(payload.precioArriendo || payload.precio_arriendo) || 0;
+    const precioFinal = parseInt(payload.precioArriendo || payload.precio_arriendo, 10) || 0;
 
-    await prisma.dispensador.create({
+    const dispensador = await prisma.dispensador.create({
       data: {
-        marca: payload.marca || payload.tipo,
-        modelo: payload.modelo || "Estándar",        
+        marca: payload.marca,
+        modelo: payload.modelo || 'Estándar',
         numero_serie: numeroSerieLimpio,
         foto_url: payload.fotoUrl || payload.foto_url || null,
-        cliente_id: clienteId,      
-        precio_arriendo: precioFinal, 
-        estado: payload.estado || "EN_CLIENTE"
+        cliente_id: clienteId,
+        precio_arriendo: precioFinal,
+        estado: payload.estado || 'EN_CLIENTE',
       }
     });
 
     revalidatePath('/admin/clientes');
-    return { success: true };
+    return { success: true, data: dispensador };
   } catch (error: any) {
-    console.error("Error al asignar dispensador:", error);
-    return { success: false, message: 'Error interno al guardar el dispensador.' };
+    console.error('Error al asignar dispensador:', error);
+    return { success: false, message: error.message || 'Error interno al guardar el dispensador.' };
   }
 }
 
-// 6. Registrar Mantención (CORREGIDO EXACTO A TU MANTENCIONDISPENSADOR)
+// 6. Registrar Mantención
 export async function registrarMantencionAction(clienteId: string, payload: any) {
   try {
-    // 1. Buscamos primero un dispensador activo de este cliente para asociar la mantención
     const dispensador = await prisma.dispensador.findFirst({
       where: { cliente_id: clienteId }
     });
@@ -121,64 +131,63 @@ export async function registrarMantencionAction(clienteId: string, payload: any)
     if (!dispensador) {
       return {
         success: false,
-        message: "No se encontró ningún dispensador asociado a este cliente para enviarlo a taller."
+        message: 'No se encontró ningún dispensador asociado a este cliente para enviarlo a taller.'
       };
     }
 
-    // 2. Insertamos la orden técnica en el modelo real
     await prisma.mantencionDispensador.create({
       data: {
         dispensador_id: dispensador.id,
-        problema_reportated: payload.motivoFalla || "Revisión técnica general", // Machea tu campo real
-        foto_ingreso_url: payload.fotoUrl || "https://placeholder.com/no-image.png", // Obligatorio en tu schema
-        diagnostico: "Pendiente de revisión en taller",
+        problema_reportated: payload.motivoFalla || 'Revisión técnica general',
+        foto_ingreso_url: payload.fotoUrl || 'https://placeholder.com/no-image.png',
+        diagnostico: 'Pendiente de revisión en taller',
         costo_total: 0,
         mano_de_obra: 0,
         costo_repuestos: 0
       }
     });
-    
+
     revalidatePath('/admin/clientes');
     return { success: true };
   } catch (error: any) {
-    console.error("Error en taller:", error);
+    console.error('Error en taller:', error);
     return { success: false, message: 'Error al registrar la orden técnica en el taller.' };
   }
 }
 
-// 7. Registrar Movimiento Financiero (CORREGIDO EXACTO A TU HISTORIALFINANCIERO)
+// 7. Registrar Movimiento Financiero
 export async function registrarMovimientoFinancieroAction(clienteId: string, payload: any) {
   try {
     await prisma.historialFinanciero.create({
       data: {
         cliente_id: clienteId,
-        tipo: payload.tipo,        // ENUMS: COMPRA_BOTELLON, ARRIENDO_DISPENSADOR, PAGO_RECIBIDO, AJUSTE_CREDITO
-        descripcion: payload.descripcion || "Movimiento de caja",
+        tipo: payload.tipo,
+        descripcion: payload.descripcion || 'Movimiento de caja',
         monto: parseFloat(payload.monto) || 0,
         sincronizado_facturacion: false
       }
     });
-    
+
     revalidatePath('/admin/clientes');
     return { success: true };
   } catch (error: any) {
-    console.error("Error en finanzas:", error);
+    console.error('Error en finanzas:', error);
     return { success: false, message: 'Error al procesar el registro de caja.' };
   }
 }
 
-// 8. Modificar un Dispensador Existente (ACTUALIZADO CON SOPORTE PARA CAMBIO DE FOTO)
+// 8. Modificar un Dispensador Existente
 export async function editarDispensadorAction(dispensadorId: string, payload: any) {
   try {
     await prisma.dispensador.update({
       where: { id: dispensadorId },
       data: {
         marca: payload.marca,
-        modelo: payload.modelo || "Estándar",
+        modelo: payload.modelo || 'Estándar',
         numero_serie: payload.numeroSerie || payload.numero_serie || null,
-        estado: payload.estado, // EN_CLIENTE, EN_TALLER, REEMPLAZADO_TEMPORALMENTE
-        precio_arriendo: parseInt(payload.precioArriendo || payload.precio_arriendo) || 0,
-        foto_url: payload.fotoUrl || payload.foto_url || undefined // Guardamos la nueva foto si viene en el payload
+        estado: payload.estado,
+        precio_arriendo: parseInt(payload.precioArriendo || payload.precio_arriendo, 10) || 0,
+        foto_url: payload.fotoUrl || payload.foto_url || undefined
       }
     });
 
@@ -193,12 +202,9 @@ export async function editarDispensadorAction(dispensadorId: string, payload: an
 // 9. Quitar/Eliminar Dispensador
 export async function eliminarDispensadorAction(dispensadorId: string) {
   try {
-    // Primero borramos sus mantenciones asociadas para evitar errores de llave foránea (Constraint)
     await prisma.mantencionDispensador.deleteMany({
       where: { dispensador_id: dispensadorId }
     });
-
-    // Ahora sí eliminamos el dispensador de forma segura
     await prisma.dispensador.delete({
       where: { id: dispensadorId }
     });
@@ -211,11 +217,7 @@ export async function eliminarDispensadorAction(dispensadorId: string) {
   }
 }
 
-// ----------------------------------------------------------------
-// BLOQUE 2.4 y 2.5: INCIDENCIAS E HISTORIAL
-// ----------------------------------------------------------------
-
-// 10. Obtener Historial Completo del Cliente (Mejorado para el plan 2.4)
+// 10. Obtener Historial Completo del Cliente
 export async function obtenerHistorialClienteAction(clienteId: string) {
   try {
     const cliente = await prisma.cliente.findUnique({
@@ -245,14 +247,14 @@ export async function obtenerHistorialClienteAction(clienteId: string) {
 
     return { success: true, cliente };
   } catch (error: any) {
-    console.error("Error al obtener historial:", error);
+    console.error('Error al obtener historial:', error);
     return { success: false, message: error.message || 'Error interno al cargar el historial.' };
   }
 }
 
-// 11. Resolver Incidencia (Nuevo para el plan 2.5)
+// 11. Resolver Incidencia
 export async function resolverIncidenciaAction(
-  incidenciaId: string, 
+  incidenciaId: string,
   payload?: { cantidad_faltante_entregada?: number; pedido_item_id?: string }
 ) {
   try {
@@ -262,17 +264,15 @@ export async function resolverIncidenciaAction(
         include: { cliente: true }
       });
 
-      if (!incidencia) throw new Error("Incidencia no encontrada.");
-      if (incidencia.resuelta) throw new Error("Esta incidencia ya fue resuelta anteriormente.");
+      if (!incidencia) throw new Error('Incidencia no encontrada.');
+      if (incidencia.resuelta) throw new Error('Esta incidencia ya fue resuelta anteriormente.');
 
-      // Marcar la incidencia como resuelta
       await tx.incidencia.update({
         where: { id: incidenciaId },
         data: { resuelta: true }
       });
 
-      // Lógica de negocio 1: Si recuperamos un botellón prestado, rebajamos la deuda del cliente
-      if (incidencia.tipo === "PRESTAMO_BOTELLON") {
+      if (incidencia.tipo === 'PRESTAMO_BOTELLON') {
         const nuevosPrestados = Math.max(0, incidencia.cliente.botellones_prestados - 1);
         await tx.cliente.update({
           where: { id: incidencia.cliente_id },
@@ -280,10 +280,9 @@ export async function resolverIncidenciaAction(
         });
       }
 
-      // Lógica de negocio 2: Si era entrega parcial y traen el resto, actualizamos el item del pedido
       if (
-        incidencia.tipo === "CANTIDAD_PARCIAL" && 
-        payload?.pedido_item_id && 
+        incidencia.tipo === 'CANTIDAD_PARCIAL' &&
+        payload?.pedido_item_id &&
         payload?.cantidad_faltante_entregada
       ) {
         await tx.pedidoItem.update({
@@ -300,7 +299,27 @@ export async function resolverIncidenciaAction(
     revalidatePath('/admin/clientes');
     return { success: true };
   } catch (error: any) {
-    console.error("Error al resolver incidencia:", error);
-    return { success: false, message: error.message || "Error al procesar la resolución de la incidencia." };
+    console.error('Error al resolver incidencia:', error);
+    return { success: false, message: error.message || 'Error al procesar la resolución de la incidencia.' };
+  }
+}
+
+// 12. Obtener Comunas con sus Sectores
+export async function obtenerComunasConSectoresAction() {
+  try {
+    const comunas = await prisma.comuna.findMany({
+      where: { activa: true },
+      orderBy: { nombre: 'asc' },
+      include: {
+        sectores: {
+          where: { activo: true },
+          orderBy: { nombre: 'asc' },
+          select: { id: true, nombre: true },
+        },
+      },
+    });
+    return { success: true, comunas };
+  } catch (error: any) {
+    return { success: false, comunas: [], message: error.message };
   }
 }

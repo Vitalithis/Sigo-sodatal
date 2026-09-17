@@ -466,7 +466,7 @@ model Dispensador {
   marca           String
   modelo          String
   numero_serie    String?                 @unique
-  foto_url        String?
+  foto_url        String?                 @db.LongText
   estado          EstadoDispensador       @default(EN_CLIENTE)
   precio_arriendo Int                     @default(0)
   cliente         Cliente                 @relation(fields: [cliente_id], references: [id])
