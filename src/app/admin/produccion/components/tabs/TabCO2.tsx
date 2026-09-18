@@ -1,4 +1,5 @@
-import { Plus, ClipboardList, FlaskConical, Settings, AlertTriangle } from 'lucide-react';
+import { useState } from 'react';
+import { Plus, ClipboardList, FlaskConical, Settings, AlertTriangle, ChevronLeft, ChevronRight } from 'lucide-react';
 import { TuboRow } from '../hooks/useProduccionCO2';
 
 const ic = 'w-full border border-gray-200 rounded-xl px-3 py-2 text-xs text-gray-800 bg-white focus:outline-none focus:ring-2 focus:ring-[#283289]/20 focus:border-[#283289] transition-colors';
@@ -25,14 +26,22 @@ interface Props {
   onSubmitConfig: (e: React.FormEvent) => void;
   onCerrarTubo: (id: string) => void;
   cargando: boolean;
+  showConfirm: (titulo: string, mensaje: string, onConfirm: () => void) => void;
 }
 
 export function TabCO2({
   tubos, tuboActivo, estadoTubo, umbralAlerta,
   formTubo, onChangeTubo, onSubmitTubo,
   formConfig, onChangeConfig, onSubmitConfig,
-  onCerrarTubo, cargando,
+  onCerrarTubo, cargando, showConfirm,
 }: Props) {
+  // Estado para la paginación
+  const [paginaActual, setPaginaActual] = useState(1);
+  const ITEMS_POR_PAGINA = 10;
+  
+  const totalPaginas = Math.max(1, Math.ceil(tubos.length / ITEMS_POR_PAGINA));
+  const tubosPaginados = tubos.slice((paginaActual - 1) * ITEMS_POR_PAGINA, paginaActual * ITEMS_POR_PAGINA);
+
   return (
     <div className="space-y-6">
 
@@ -83,8 +92,17 @@ export function TabCO2({
                     </div>
                   )}
                 </div>
-                <button onClick={() => onCerrarTubo(tuboActivo.id)} disabled={cargando}
-                  className="w-full mt-2 border border-gray-200 hover:bg-gray-50 disabled:opacity-50 text-gray-600 font-semibold py-2 rounded-xl transition-colors text-xs">
+                <button 
+                  onClick={() => {
+                    showConfirm(
+                      'Cerrar Tubo de CO₂',
+                      '¿Estás seguro de que deseas cerrar este tubo manualmente? Ya no se contabilizará para las nuevas producciones.',
+                      () => onCerrarTubo(tuboActivo.id)
+                    );
+                  }} 
+                  disabled={cargando}
+                  className="w-full mt-2 border border-gray-200 hover:bg-gray-50 disabled:opacity-50 text-gray-600 font-semibold py-2 rounded-xl transition-colors text-xs"
+                >
                   Cerrar tubo manualmente
                 </button>
               </div>
@@ -120,14 +138,8 @@ export function TabCO2({
                   onChange={(e) => onChangeTubo({ peso_kg: e.target.value })} className={ic} />
               </div>
             )}
-            <div>
-              <label className={lc}>Rendimiento estimado (sodas) <span className="text-gray-300 font-normal">— opcional</span></label>
-              <input type="number" min={1} placeholder="Se autocompleta con 45/35 kg"
-                value={formTubo.rendimiento_estimado}
-                onChange={(e) => onChangeTubo({ rendimiento_estimado: e.target.value })} className={ic} />
-            </div>
             <button type="submit" disabled={cargando}
-              className="w-full bg-[#283289] hover:bg-[#1e2670] disabled:opacity-50 text-white font-bold py-2.5 rounded-xl transition-colors">
+              className="w-full bg-[#283289] hover:bg-[#1e2670] disabled:opacity-50 text-white font-bold py-2.5 rounded-xl transition-colors mt-2">
               {cargando ? 'Guardando...' : 'Registrar y activar tubo'}
             </button>
             <p className="text-[10px] text-gray-400">Al activar este tubo, cualquier otro tubo activo se cerrará automáticamente.</p>
@@ -164,7 +176,7 @@ export function TabCO2({
         </div>
       </div>
 
-      {/* Historial tubos */}
+      {/* Historial tubos paginado */}
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
         <div className="px-5 py-4 border-b border-gray-100 flex items-center gap-2">
           <ClipboardList className="h-4 w-4 text-[#283289]" />
@@ -187,7 +199,7 @@ export function TabCO2({
               {tubos.length === 0 && (
                 <tr><td colSpan={7} className="py-10 text-center text-gray-400 text-xs">Sin tubos registrados todavía.</td></tr>
               )}
-              {tubos.map((t) => (
+              {tubosPaginados.map((t) => (
                 <tr key={t.id} className="border-t border-gray-50 hover:bg-slate-50 transition-colors">
                   <td className="px-5 py-3 font-semibold text-gray-800">{formatFecha(t.fecha_llegada)}</td>
                   <td className="px-3 py-3 text-gray-600">{t.peso_kg} kg</td>
@@ -205,6 +217,31 @@ export function TabCO2({
             </tbody>
           </table>
         </div>
+        
+        {/* Controles de Paginación */}
+        {totalPaginas > 1 && (
+          <div className="px-5 py-3 border-t border-gray-100 flex items-center justify-between bg-gray-50/50">
+            <button 
+              type="button" 
+              onClick={() => setPaginaActual(p => Math.max(1, p - 1))} 
+              disabled={paginaActual === 1} 
+              className="p-1.5 rounded-lg hover:bg-gray-200 disabled:opacity-40 disabled:hover:bg-transparent transition-colors flex items-center gap-1 text-gray-600 font-semibold"
+            >
+              <ChevronLeft className="w-4 h-4" /> Anterior
+            </button>
+            <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">
+              Página {paginaActual} de {totalPaginas}
+            </span>
+            <button 
+              type="button" 
+              onClick={() => setPaginaActual(p => Math.min(totalPaginas, p + 1))} 
+              disabled={paginaActual === totalPaginas} 
+              className="p-1.5 rounded-lg hover:bg-gray-200 disabled:opacity-40 disabled:hover:bg-transparent transition-colors flex items-center gap-1 text-gray-600 font-semibold"
+            >
+              Siguiente <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

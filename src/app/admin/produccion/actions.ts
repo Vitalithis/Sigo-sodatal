@@ -8,7 +8,7 @@ import { CategoriaProducto } from '../../../../lib/prisma/generated';
 // Tipos
 // ────────────────────────────────────────────────────────────────
 export interface ProduccionDiariaInput {
-  fecha: string; // YYYY-MM-DD
+  fecha: string;
   botellon10_cantidad: number;
   botellon20_cantidad: number;
   sodas_cantidad: number;
@@ -19,9 +19,9 @@ export interface ProduccionDiariaInput {
 }
 
 export interface TuboCO2Input {
-  fecha_llegada: string; // YYYY-MM-DD
+  fecha_llegada: string;
   peso_kg: number;
-  rendimiento_estimado?: number; // opcional: si no se manda, se autocompleta desde configuración
+  rendimiento_estimado?: number;
 }
 
 export interface ConfiguracionCO2Input {
@@ -31,7 +31,7 @@ export interface ConfiguracionCO2Input {
 }
 
 export type ProduccionDiariaResult =
-  | { success: true; produccion: Awaited<ReturnType<typeof prisma.produccionDiaria.create>>; alertaCO2: string | null }
+  | { success: true; produccion: any; alertaCO2: string | null }
   | { success: false; message: string };
 
 // ────────────────────────────────────────────────────────────────
@@ -68,6 +68,14 @@ export async function crearProduccionDiariaAction(data: ProduccionDiariaInput): 
     if (data.ppm === undefined || data.ppm === null) return { success: false, message: 'Debes indicar el PPM medido.' };
 
     const fechaNormalizada = new Date(`${data.fecha}T00:00:00`);
+    
+    // 🔥 NUEVO: Bloqueo estricto de fechas futuras en el servidor
+    const fechaHoy = new Date();
+    fechaHoy.setHours(0, 0, 0, 0);
+
+    if (fechaNormalizada > fechaHoy) {
+      return { success: false, message: 'No puedes registrar producción con una fecha futura. Revisa el día ingresado.' };
+    }
 
     const existente = await prisma.produccionDiaria.findUnique({ where: { fecha: fechaNormalizada } });
     if (existente) {
@@ -94,7 +102,6 @@ export async function crearProduccionDiariaAction(data: ProduccionDiariaInput): 
         },
       });
 
-      // Regla de negocio 2: el stock de fábrica sube con la producción del día
       const movimientos: { categoria: CategoriaProducto; cantidad: number }[] = [
         { categoria: 'BOTELLON10', cantidad: botellon10 },
         { categoria: 'BOTELLON20', cantidad: botellon20 },
@@ -104,7 +111,7 @@ export async function crearProduccionDiariaAction(data: ProduccionDiariaInput): 
       for (const mov of movimientos) {
         if (mov.cantidad <= 0) continue;
         const producto = await tx.producto.findFirst({ where: { categoria: mov.categoria, activo: true } });
-        if (!producto) continue; // no bloquea la producción si el producto no existe en catálogo
+        if (!producto) continue; 
         await tx.stockFabrica.upsert({
           where: { producto_id: producto.id },
           create: { producto_id: producto.id, cantidad: mov.cantidad },
@@ -112,7 +119,7 @@ export async function crearProduccionDiariaAction(data: ProduccionDiariaInput): 
         });
       }
 
-      // Regla de negocio 4: consumo de CO₂ al producir sodas
+      // Consumo de CO₂ al producir sodas (Visual, sin auto-cierre)
       if (sodas > 0) {
         const tuboActivo = await tx.tuboCO2.findFirst({ where: { activo: true }, orderBy: { fecha_llegada: 'asc' } });
 
@@ -121,30 +128,25 @@ export async function crearProduccionDiariaAction(data: ProduccionDiariaInput): 
         } else {
           const kgConsumidos = sodas * (tuboActivo.peso_kg / tuboActivo.rendimiento_estimado);
           const nuevoKgConsumidos = tuboActivo.kg_consumidos + kgConsumidos;
-          const seAgoto = nuevoKgConsumidos >= tuboActivo.peso_kg;
 
           await tx.tuboCO2.update({
             where: { id: tuboActivo.id },
             data: {
               kg_consumidos: nuevoKgConsumidos,
               sodas_producidas_total: { increment: sodas },
-              activo: !seAgoto,
-              fecha_cierre: seAgoto ? new Date() : null,
             },
           });
 
-          if (seAgoto) {
-            alertaCO2 = 'El tubo de CO₂ activo se agotó con esta producción. Ingresa un tubo nuevo antes de seguir produciendo sodas.';
-          } else {
-            const restante = Math.max(tuboActivo.peso_kg - nuevoKgConsumidos, 0);
-            const porcentajeRestante = (restante / tuboActivo.peso_kg) * 100;
+          const restante = Math.max(tuboActivo.peso_kg - nuevoKgConsumidos, 0);
+          const porcentajeRestante = (restante / tuboActivo.peso_kg) * 100;
 
-            const configAlerta = await tx.configuracion.findUnique({ where: { clave: 'co2_alerta_porcentaje' } });
-            const umbral = configAlerta ? parseFloat(configAlerta.valor) : 20;
+          const configAlerta = await tx.configuracion.findUnique({ where: { clave: 'co2_alerta_porcentaje' } });
+          const umbral = configAlerta ? parseFloat(configAlerta.valor) : 20;
 
-            if (porcentajeRestante <= umbral) {
-              alertaCO2 = `El tubo de CO₂ activo quedó al ${porcentajeRestante.toFixed(1)}% de su capacidad. Considera tener un tubo de respaldo listo.`;
-            }
+          if (porcentajeRestante <= 0) {
+            alertaCO2 = 'El tubo de CO₂ superó su rendimiento estimado, pero sigue activo. Recuerda cerrarlo manualmente en el panel de CO2 cuando se vacíe.';
+          } else if (porcentajeRestante <= umbral) {
+            alertaCO2 = `El tubo de CO₂ activo quedó a un estimado de ${porcentajeRestante.toFixed(1)}% de su capacidad.`;
           }
         }
       }
@@ -177,6 +179,42 @@ export async function crearTuboCO2Action(data: TuboCO2Input) {
     if (!data.fecha_llegada) return { success: false, message: 'Debes indicar la fecha de llegada del tubo.' };
     if (!data.peso_kg || data.peso_kg <= 0) return { success: false, message: 'Debes indicar el peso del tubo en kg.' };
 
+    const fechaNormalizada = new Date(`${data.fecha_llegada}T00:00:00`);
+    
+    // Obtenemos la fecha actual a las 00:00 para comparar de forma justa
+    const fechaHoy = new Date();
+    fechaHoy.setHours(0, 0, 0, 0);
+
+    // 1. Bloqueo de fechas futuras con mensaje visible
+    if (fechaNormalizada > fechaHoy) {
+      return { success: false, message: 'No puedes registrar un tubo con fecha futura. Revisa la fecha ingresada.' };
+    }
+
+    // 2. Bloqueo de fechas duplicadas
+    const tuboExistente = await prisma.tuboCO2.findFirst({
+      where: { fecha_llegada: fechaNormalizada }
+    });
+
+    if (tuboExistente) {
+      return { 
+        success: false, 
+        message: 'Ya registraste un tubo de CO₂ para esta misma fecha. No puedes abrir dos tubos el mismo día.' 
+      };
+    }
+
+    // 3. Bloqueo de fechas pasadas (anteriores al tubo activo actual)
+    const tuboActivoActual = await prisma.tuboCO2.findFirst({
+      where: { activo: true },
+      orderBy: { fecha_llegada: 'desc' }
+    });
+
+    if (tuboActivoActual && fechaNormalizada < tuboActivoActual.fecha_llegada) {
+      return { 
+        success: false, 
+        message: 'No puedes registrar un tubo con fecha anterior al tubo activo actual. Cierra el tubo actual primero o corrige la fecha.' 
+      };
+    }
+
     let rendimiento = data.rendimiento_estimado;
 
     if (!rendimiento) {
@@ -190,12 +228,11 @@ export async function crearTuboCO2Action(data: TuboCO2Input) {
     if (!rendimiento || rendimiento <= 0) {
       return {
         success: false,
-        message: 'No hay un rendimiento configurado para ese peso de tubo. Indica el rendimiento estimado manualmente.',
+        message: 'No hay un rendimiento configurado para ese peso de tubo. Configúralo en la sección de la derecha.',
       };
     }
 
     await prisma.$transaction(async (tx) => {
-      // Solo puede existir un tubo activo a la vez: cerramos cualquier otro que siga activo
       await tx.tuboCO2.updateMany({
         where: { activo: true },
         data: { activo: false, fecha_cierre: new Date() },
@@ -203,7 +240,7 @@ export async function crearTuboCO2Action(data: TuboCO2Input) {
 
       await tx.tuboCO2.create({
         data: {
-          fecha_llegada: new Date(`${data.fecha_llegada}T00:00:00`),
+          fecha_llegada: fechaNormalizada,
           peso_kg: data.peso_kg,
           rendimiento_estimado: rendimiento,
           activo: true,
@@ -217,7 +254,6 @@ export async function crearTuboCO2Action(data: TuboCO2Input) {
     return { success: false, message: error.message };
   }
 }
-
 export async function cerrarTuboCO2Action(tuboId: string) {
   try {
     await prisma.tuboCO2.update({

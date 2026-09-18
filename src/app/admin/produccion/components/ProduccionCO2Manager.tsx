@@ -1,10 +1,15 @@
 'use client';
 
 import { useState } from 'react';
-import { Factory, FlaskConical, AlertTriangle, CheckCircle, Info } from 'lucide-react';
+import { Factory, FlaskConical, AlertTriangle, CheckCircle, Info, BarChart3 } from 'lucide-react';
 import { useProduccionCO2, UsuarioLite, ProduccionRow, TuboRow, ConfigRow } from './hooks/useProduccionCO2';
 import { TabProduccion } from './tabs/TabProduccion';
 import { TabCO2 } from './tabs/TabCO2';
+import { TabReportes } from './tabs/TabReportes'; 
+
+// Importaciones del PopupGlobal 
+import { usePopup } from '../../clientes/components/hooks/usePopup';
+import PopupGlobal from '../../clientes/components/PopupGlobal';
 
 interface Props {
   produccionInicial: ProduccionRow[];
@@ -14,7 +19,10 @@ interface Props {
 }
 
 export default function ProduccionCO2Manager(props: Props) {
-  const [tab, setTab] = useState<'produccion' | 'co2'>('produccion');
+  const [tab, setTab] = useState<'produccion' | 'co2' | 'reportes'>('produccion');
+  
+  const { popup, showConfirm, close } = usePopup();
+
   const {
     produccion, tubos, cargando, banner,
     tuboActivo, estadoTubo, umbralAlerta,
@@ -27,12 +35,14 @@ export default function ProduccionCO2Manager(props: Props) {
 
   return (
     <div className="space-y-6">
+      <PopupGlobal popup={popup} onClose={close} />
 
       {/* Pestañas */}
       <div className="flex gap-2 border-b border-gray-200">
         {[
           { key: 'produccion', label: 'Producción diaria', icon: <Factory className="h-3.5 w-3.5" /> },
           { key: 'co2', label: 'CO₂ y tubos', icon: <FlaskConical className="h-3.5 w-3.5" /> },
+          { key: 'reportes', label: 'Reportes y KPI', icon: <BarChart3 className="h-3.5 w-3.5" /> },
         ].map(({ key, label, icon }) => (
           <button key={key} onClick={() => setTab(key as any)}
             className={`flex items-center gap-2 px-4 py-2.5 text-xs font-bold rounded-t-lg border-b-2 transition-colors ${
@@ -59,6 +69,7 @@ export default function ProduccionCO2Manager(props: Props) {
         </div>
       )}
 
+      {/* Renderizado condicional ajustado para 3 vistas */}
       {tab === 'produccion' ? (
         <TabProduccion
           produccion={produccion}
@@ -68,7 +79,7 @@ export default function ProduccionCO2Manager(props: Props) {
           usuarios={props.usuarios}
           cargando={cargando}
         />
-      ) : (
+      ) : tab === 'co2' ? (
         <TabCO2
           tubos={tubos}
           tuboActivo={tuboActivo}
@@ -82,7 +93,10 @@ export default function ProduccionCO2Manager(props: Props) {
           onSubmitConfig={manejarGuardarConfig}
           onCerrarTubo={manejarCerrarTubo}
           cargando={cargando}
+          showConfirm={showConfirm}
         />
+      ) : (
+        <TabReportes produccion={produccion} tubos={tubos} />
       )}
     </div>
   );

@@ -152,11 +152,17 @@ export function useProduccionCO2({ produccionInicial, tubosIniciales, configInic
   };
 
   const manejarCerrarTubo = async (tuboId: string) => {
-    if (!confirm('¿Cerrar este tubo de CO₂ manualmente? Ya no se usará para calcular consumo.')) return;
+    // 🔥 Se eliminó el confirm() nativo porque ahora TabCO2 ejecuta showConfirm()
     setCargando(true);
     const res = await cerrarTuboCO2Action(tuboId);
-    if (res.success) { await refrescarTubos(); setBanner({ tipo: 'ok', texto: 'Tubo cerrado.' }); }
-    else setBanner({ tipo: 'error', texto: res.message || 'No se pudo cerrar el tubo.' });
+    
+    if (res.success) { 
+      await refrescarTubos(); 
+      setBanner({ tipo: 'ok', texto: 'Tubo cerrado.' }); 
+    } else {
+      setBanner({ tipo: 'error', texto: res.message || 'No se pudo cerrar el tubo.' });
+    }
+    
     setCargando(false);
   };
 
