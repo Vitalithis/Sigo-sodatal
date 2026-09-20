@@ -16,7 +16,17 @@ export async function obtenerRutasBaseAction() {
         vehiculo: true,
         clientes: {
           orderBy: { orden: 'asc' },
-          include: { cliente: true }
+          include: {
+            cliente: {
+              include: {
+                sector: {
+                  include: {
+                    comuna: true
+                  }
+                }
+              }
+            }
+          }
         }
       },
       orderBy: { dia_semana: 'asc' }
@@ -75,8 +85,9 @@ export async function buscarClientesBaseAction(criterio: string, rutaBaseId?: st
         AND: [
           {
             OR: [
-              { nombre: { contains: criterio, mode: 'insensitive' } },
-              { direccion: { contains: criterio, mode: 'insensitive' } }
+              // Eliminado el mode: 'insensitive' incompatible con MySQL
+              { nombre: { contains: criterio } },
+              { direccion: { contains: criterio } }
             ]
           },
           idsExcluidos.length > 0 ? { id: { notIn: idsExcluidos } } : {}
@@ -100,9 +111,18 @@ export async function buscarClientesBaseAction(criterio: string, rutaBaseId?: st
 }
 
 /**
- * Agrega un cliente a la ruta base
+ * Agrega un cliente a la ruta base, con sus cantidades por defecto
+ * (bidones de 20L, 10L y sodas) para esta plantilla.
  */
-export async function agregarClienteARutaBaseAction(rutaBaseId: string, clienteId: string) {
+export async function agregarClienteARutaBaseAction(
+  rutaBaseId: string,
+  clienteId: string,
+  cantidades: {
+    bot20_default: number;
+    bot10_default: number;
+    soda_default: number;
+  }
+) {
   try {
     const conteo = await prisma.clienteRutaBase.count({
       where: { ruta_base_id: rutaBaseId }
@@ -112,7 +132,10 @@ export async function agregarClienteARutaBaseAction(rutaBaseId: string, clienteI
       data: {
         ruta_base_id: rutaBaseId,
         cliente_id: clienteId,
-        orden: conteo + 1
+        orden: conteo + 1,
+        bot20_default: cantidades.bot20_default,
+        bot10_default: cantidades.bot10_default,
+        soda_default: cantidades.soda_default
       }
     });
 
@@ -125,23 +148,49 @@ export async function agregarClienteARutaBaseAction(rutaBaseId: string, clienteI
 }
 
 /**
+ * Actualiza las cantidades por defecto de un cliente ya asignado a la ruta base
+ */
+export async function actualizarCantidadesClienteRutaBaseAction(
+  clienteRutaBaseId: string,
+  cantidades: {
+    bot20_default: number;
+    bot10_default: number;
+    soda_default: number;
+  }
+) {
+  try {
+    await prisma.clienteRutaBase.update({
+      where: { id: clienteRutaBaseId },
+      data: {
+        bot20_default: cantidades.bot20_default,
+        bot10_default: cantidades.bot10_default,
+        soda_default: cantidades.soda_default
+      }
+    });
+
+    revalidatePath('/admin/rutas-base');
+    return { success: true };
+  } catch (error: any) {
+    console.error('Error al actualizar cantidades de cliente en ruta base:', error);
+    return { success: false, message: error.message };
+  }
+}
+
+/**
  * Elimina un cliente de la ruta base y reordena los restantes
  */
 export async function eliminarClienteDeRutaBaseAction(clienteRutaBaseId: string, rutaBaseId: string) {
   try {
-    // Obtiene el orden del que se va a eliminar
     const registro = await prisma.clienteRutaBase.findUnique({
       where: { id: clienteRutaBaseId }
     });
 
     if (!registro) return { success: false, message: 'Registro no encontrado' };
 
-    // Elimina el registro
     await prisma.clienteRutaBase.delete({
       where: { id: clienteRutaBaseId }
     });
 
-    // Reordena los que quedaron después del eliminado
     const restantes = await prisma.clienteRutaBase.findMany({
       where: {
         ruta_base_id: rutaBaseId,
@@ -182,7 +231,6 @@ export async function reordenarClienteRutaBaseAction(
 
     const ordenObjetivo = direccion === 'subir' ? actual.orden - 1 : actual.orden + 1;
 
-    // Busca el vecino con el que hay que intercambiar
     const vecino = await prisma.clienteRutaBase.findFirst({
       where: {
         ruta_base_id: rutaBaseId,
@@ -192,7 +240,6 @@ export async function reordenarClienteRutaBaseAction(
 
     if (!vecino) return { success: false, message: 'No se puede mover en esa dirección' };
 
-    // Intercambia los órdenes
     await prisma.$transaction([
       prisma.clienteRutaBase.update({
         where: { id: actual.id },

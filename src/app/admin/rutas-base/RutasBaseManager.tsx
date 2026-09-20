@@ -1,15 +1,17 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   crearRutaBaseAction,
   buscarClientesBaseAction,
   agregarClienteARutaBaseAction,
   obtenerRutasBaseAction,
   eliminarClienteDeRutaBaseAction,
-  reordenarClienteRutaBaseAction
+  reordenarClienteRutaBaseAction,
+  actualizarCantidadesClienteRutaBaseAction
 } from './actions';
 import { DiaSemana } from '@lib/prisma/generated/edge';
+import { Search, Droplet, GlassWater } from 'lucide-react';
 
 interface Props {
   rutasBaseIniciales: any[];
@@ -17,10 +19,33 @@ interface Props {
   vehiculos: any[];
 }
 
+interface Cantidades {
+  bot20_default: number;
+  bot10_default: number;
+  soda_default: number;
+}
+
+const CANTIDADES_VACIAS: Cantidades = { bot20_default: 0, bot10_default: 0, soda_default: 0 };
+
 export default function RutasBaseManager({ rutasBaseIniciales, choferes, vehiculos }: Props) {
   const [rutasBase, setRutasBase] = useState(rutasBaseIniciales);
   const [cargando, setCargando] = useState(false);
+
+  // Estados para el buscador
   const [buscando, setBuscando] = useState<{ [key: string]: boolean }>({});
+  const [busquedas, setBusquedas] = useState<{ [key: string]: string }>({});
+  const [resultadosCli, setResultadosCli] = useState<{ [key: string]: any[] }>({});
+
+  // Ref para manejar el debounce y no saturar la base de datos
+  const timerBuscador = useRef<{ [key: string]: NodeJS.Timeout }>({});
+
+  // Estado del modal de alta (cliente seleccionado pendiente de confirmar cantidades)
+  const [pendiente, setPendiente] = useState<{ rutaId: string; cliente: any } | null>(null);
+  const [cantidadesModal, setCantidadesModal] = useState<Cantidades>(CANTIDADES_VACIAS);
+
+  // Estado de edición inline en la tabla
+  const [editando, setEditando] = useState<string | null>(null); // id de ClienteRutaBase
+  const [cantidadesEdicion, setCantidadesEdicion] = useState<Cantidades>(CANTIDADES_VACIAS);
 
   const [form, setForm] = useState<{
     nombre: string;
@@ -33,9 +58,6 @@ export default function RutasBaseManager({ rutasBaseIniciales, choferes, vehicul
     usuario_id: '',
     vehiculo_id: ''
   });
-
-  const [busquedas, setBusquedas] = useState<{ [key: string]: string }>({});
-  const [resultadosCli, setResultadosCli] = useState<{ [key: string]: any[] }>({});
 
   const dias: DiaSemana[] = ['LUNES', 'MARTES', 'MIERCOLES', 'JUEVES', 'VIERNES'];
 
@@ -60,31 +82,56 @@ export default function RutasBaseManager({ rutasBaseIniciales, choferes, vehicul
     setCargando(false);
   };
 
-  const buscarClientes = async (rutaId: string, valor: string) => {
+  const buscarClientes = (rutaId: string, valor: string) => {
     setBusquedas(prev => ({ ...prev, [rutaId]: valor }));
+
+    if (timerBuscador.current[rutaId]) {
+      clearTimeout(timerBuscador.current[rutaId]);
+    }
+
     if (valor.trim().length < 2) {
       setResultadosCli(prev => ({ ...prev, [rutaId]: [] }));
+      setBuscando(prev => ({ ...prev, [rutaId]: false }));
       return;
     }
+
     setBuscando(prev => ({ ...prev, [rutaId]: true }));
-    try {
-      const res = await buscarClientesBaseAction(valor, rutaId);
-      if (res.success) {
-        setResultadosCli(prev => ({ ...prev, [rutaId]: res.clientes }));
+
+    timerBuscador.current[rutaId] = setTimeout(async () => {
+      try {
+        const res = await buscarClientesBaseAction(valor, rutaId);
+        if (res.success) {
+          setResultadosCli(prev => ({ ...prev, [rutaId]: res.clientes }));
+        }
+      } catch (err) {
+        console.error('Error buscando clientes:', err);
+      } finally {
+        setBuscando(prev => ({ ...prev, [rutaId]: false }));
       }
-    } catch (err) {
-      console.error('Error buscando clientes:', err);
-    } finally {
-      setBuscando(prev => ({ ...prev, [rutaId]: false }));
-    }
+    }, 350);
   };
 
-  const vincularClientefijo = async (rutaId: string, clienteId: string) => {
+  // Al elegir un resultado del buscador, no se agrega directo: se abre el modal de cantidades
+  const seleccionarClienteParaAlta = (rutaId: string, cliente: any) => {
+    setPendiente({ rutaId, cliente });
+    setCantidadesModal(CANTIDADES_VACIAS);
+    // Limpiar buscador y dropdown de esa ruta
+    setBusquedas(prev => ({ ...prev, [rutaId]: '' }));
+    setResultadosCli(prev => ({ ...prev, [rutaId]: [] }));
+  };
+
+  const cancelarAlta = () => {
+    setPendiente(null);
+    setCantidadesModal(CANTIDADES_VACIAS);
+  };
+
+  const confirmarAlta = async () => {
+    if (!pendiente) return;
     setCargando(true);
-    const res = await agregarClienteARutaBaseAction(rutaId, clienteId);
+    const res = await agregarClienteARutaBaseAction(pendiente.rutaId, pendiente.cliente.id, cantidadesModal);
     if (res.success) {
-      setBusquedas(prev => ({ ...prev, [rutaId]: '' }));
-      setResultadosCli(prev => ({ ...prev, [rutaId]: [] }));
+      setPendiente(null);
+      setCantidadesModal(CANTIDADES_VACIAS);
       await refrescar();
     } else {
       alert(res.message);
@@ -115,42 +162,69 @@ export default function RutasBaseManager({ rutasBaseIniciales, choferes, vehicul
     setCargando(false);
   };
 
-  return (
-    <div className="grid grid-cols-1 xl:grid-cols-4 gap-6 font-sans text-gray-900">
+  // --- Edición inline de cantidades en la tabla ---
+  const iniciarEdicion = (c: any) => {
+    setEditando(c.id);
+    setCantidadesEdicion({
+      bot20_default: c.bot20_default ?? 0,
+      bot10_default: c.bot10_default ?? 0,
+      soda_default: c.soda_default ?? 0
+    });
+  };
 
-      {/* PANEL IZQUIERDO */}
-      <div className="xl:col-span-1 bg-white p-4 rounded-lg border border-gray-200 shadow-sm h-fit">
-        <h2 className="text-xs font-black text-gray-700 uppercase tracking-wider mb-3 pb-1.5 border-b border-gray-100">
+  const cancelarEdicion = () => {
+    setEditando(null);
+    setCantidadesEdicion(CANTIDADES_VACIAS);
+  };
+
+  const guardarEdicion = async (clienteRutaBaseId: string) => {
+    setCargando(true);
+    const res = await actualizarCantidadesClienteRutaBaseAction(clienteRutaBaseId, cantidadesEdicion);
+    if (res.success) {
+      setEditando(null);
+      await refrescar();
+    } else {
+      alert(res.message);
+    }
+    setCargando(false);
+  };
+
+  return (
+    <div className="grid grid-cols-1 xl:grid-cols-4 gap-6 font-sans text-slate-800">
+
+      {/* PANEL IZQUIERDO: Formulario de Creación */}
+      <div className="xl:col-span-1 bg-white p-5 rounded-xl border border-slate-200 shadow-sm h-fit">
+        <h2 className="text-xs font-black text-slate-700 uppercase tracking-wider mb-4 pb-3 border-b border-slate-100 flex items-center gap-2">
           🛠️ Nueva Plantilla de Ruta
         </h2>
-        <form onSubmit={manejarCrearRuta} className="space-y-3 text-xs">
+        <form onSubmit={manejarCrearRuta} className="space-y-4 text-xs">
           <div>
-            <label className="block font-bold text-gray-600 mb-1">Nombre Descriptivo</label>
+            <label className="block font-bold text-slate-600 mb-1.5">Nombre Descriptivo</label>
             <input
               type="text"
               placeholder="Ej: Ruta Centro - Sur"
               value={form.nombre}
               onChange={e => setForm({ ...form, nombre: e.target.value })}
-              className="border border-gray-300 rounded p-1.5 w-full font-medium"
+              className="border border-slate-300 rounded-lg p-2.5 w-full font-medium focus:ring-2 focus:ring-[#1e40af]/20 focus:border-[#1e40af] outline-none transition-colors"
               required
             />
           </div>
           <div>
-            <label className="block font-bold text-gray-600 mb-1">Día Fijo de Operación</label>
+            <label className="block font-bold text-slate-600 mb-1.5">Día Fijo de Operación</label>
             <select
               value={form.dia_semana}
               onChange={e => setForm({ ...form, dia_semana: e.target.value as DiaSemana })}
-              className="border border-gray-300 rounded p-1.5 w-full font-bold bg-white text-gray-700"
+              className="border border-slate-300 rounded-lg p-2.5 w-full font-bold bg-white text-slate-800 focus:ring-2 focus:ring-[#1e40af]/20 focus:border-[#1e40af] outline-none transition-colors"
             >
               {dias.map(d => <option key={d} value={d}>{d}</option>)}
             </select>
           </div>
           <div>
-            <label className="block font-bold text-gray-600 mb-1">Repartidor Encargado</label>
+            <label className="block font-bold text-slate-600 mb-1.5">Repartidor Encargado</label>
             <select
               value={form.usuario_id}
               onChange={e => setForm({ ...form, usuario_id: e.target.value })}
-              className="border border-gray-300 rounded p-1.5 w-full font-medium bg-white"
+              className="border border-slate-300 rounded-lg p-2.5 w-full font-medium bg-white focus:ring-2 focus:ring-[#1e40af]/20 focus:border-[#1e40af] outline-none transition-colors"
               required
             >
               <option value="">-- Seleccionar Chofer --</option>
@@ -158,31 +232,31 @@ export default function RutasBaseManager({ rutasBaseIniciales, choferes, vehicul
             </select>
           </div>
           <div>
-            <label className="block font-bold text-gray-600 mb-1">Camión Habitual</label>
+            <label className="block font-bold text-slate-600 mb-1.5">Camión Habitual</label>
             <select
               value={form.vehiculo_id}
               onChange={e => setForm({ ...form, vehiculo_id: e.target.value })}
-              className="border border-gray-300 rounded p-1.5 w-full font-medium bg-white"
+              className="border border-slate-300 rounded-lg p-2.5 w-full font-medium bg-white focus:ring-2 focus:ring-[#1e40af]/20 focus:border-[#1e40af] outline-none transition-colors"
               required
             >
               <option value="">-- Seleccionar Vehículo --</option>
-              {vehiculos.map(v => <option key={v.id} value={v.id}>{v.marca} ({v.patente})</option>)}
+              {vehiculos.map(v => <option key={v.id} value={v.id}>[{v.patente}] {v.marca}</option>)}
             </select>
           </div>
           <button
             type="submit"
             disabled={cargando}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold p-2 rounded transition-colors uppercase tracking-wider text-[11px] mt-2"
+            className="w-full bg-[#1e40af] hover:bg-blue-800 text-white font-bold p-3 rounded-lg transition-colors uppercase tracking-wider mt-4"
           >
             {cargando ? 'Guardando...' : '⚡ Crear Estructura'}
           </button>
         </form>
       </div>
 
-      {/* PANEL DERECHO */}
-      <div className="xl:col-span-3 space-y-4">
+      {/* PANEL DERECHO: Tarjetas de Rutas Base (Estilo Apilado) */}
+      <div className="xl:col-span-3 space-y-6">
         {rutasBase.length === 0 ? (
-          <div className="bg-white p-8 text-center text-xs text-gray-400 font-medium border border-dashed rounded-lg">
+          <div className="bg-white p-12 text-center text-xs text-slate-400 font-medium border border-dashed border-slate-300 rounded-xl">
             No hay plantillas base definidas todavía. Crea una a la izquierda para empezar.
           </div>
         ) : (
@@ -190,149 +264,294 @@ export default function RutasBaseManager({ rutasBaseIniciales, choferes, vehicul
             const resultados = resultadosCli[rb.id] ?? [];
             const busquedaActual = busquedas[rb.id] ?? '';
             const estaBuscando = buscando[rb.id] ?? false;
-            const totalClientes = rb.clientes.length;
 
             return (
-              <div
-                key={rb.id}
-                className="bg-white border border-gray-200 rounded-lg shadow-sm grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-gray-100"
-              >
-                {/* Bloque 1: Cabecera + Buscador */}
-                <div className="p-3 bg-slate-50/50 flex flex-col justify-between">
-                  <div>
-                    <div className="flex items-center gap-1.5 mb-1">
-                      <span className="bg-slate-800 text-white text-[10px] font-black px-1.5 py-0.5 rounded tracking-wide uppercase">
-                        {rb.dia_semana}
-                      </span>
-                      <h3 className="text-xs font-black text-slate-800 truncate">{rb.nombre}</h3>
+              <div key={rb.id} className="bg-white border border-slate-200 rounded-xl shadow-sm flex flex-col">
+
+                {/* CABECERA (Info + Buscador) */}
+                <div className="bg-slate-50/80 p-4 border-b border-slate-200 rounded-t-xl flex flex-col lg:flex-row justify-between lg:items-center gap-4 relative z-20">
+
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+                    <div>
+                      <div className="flex items-center gap-2 mb-1.5">
+                        <span className="bg-[#0f172a] text-white text-[10px] font-black px-2 py-0.5 rounded tracking-widest uppercase">
+                          {rb.dia_semana}
+                        </span>
+                        <h3 className="text-sm font-black text-slate-800">{rb.nombre}</h3>
+                      </div>
+                      <div className="flex items-center gap-4 text-xs font-medium text-slate-600">
+                        <span className="flex items-center gap-1.5">
+                          👤 <span className="font-bold text-slate-800">{rb.usuario?.nombre} {rb.usuario?.apellido}</span>
+                        </span>
+                        <span className="flex items-center gap-1.5 border-l border-slate-300 pl-4">
+                          🚚 <span className="font-bold text-slate-800">{rb.vehiculo?.marca} ({rb.vehiculo?.patente})</span>
+                        </span>
+                      </div>
                     </div>
-                    <p className="text-[11px] text-gray-600 font-bold">👤 {rb.usuario?.nombre} {rb.usuario?.apellido}</p>
-                    <p className="text-[10px] text-gray-400 font-medium">🚚 {rb.vehiculo?.marca} ({rb.vehiculo?.patente})</p>
                   </div>
 
-                  {/* Buscador */}
-                  <div className="mt-4 text-xs">
-                    <label className="block text-[10px] font-bold text-gray-500 mb-1 uppercase">
-                      🔍 Añadir Cliente Fijo:
-                    </label>
-                    <input
-                      type="text"
-                      placeholder={estaBuscando ? 'Buscando...' : 'Buscar por nombre o calle...'}
-                      value={busquedaActual}
-                      onChange={e => buscarClientes(rb.id, e.target.value)}
-                      className="w-full border border-gray-300 rounded p-1 text-[11px] font-medium"
-                    />
+                  {/* Buscador Derecha */}
+                  <div className="relative w-full lg:w-72">
+                    <div className="flex items-center gap-2 bg-white border border-slate-300 rounded-lg px-3 py-2 focus-within:ring-2 focus-within:ring-[#1e40af]/20 focus-within:border-[#1e40af] transition-colors">
+                      <Search className="h-3.5 w-3.5 text-slate-400 shrink-0" />
+                      <input
+                        type="text"
+                        placeholder={estaBuscando ? 'Buscando...' : 'Añadir cliente fijo...'}
+                        value={busquedaActual}
+                        onChange={e => buscarClientes(rb.id, e.target.value)}
+                        className="text-xs font-medium text-slate-800 placeholder:text-slate-400 outline-none w-full bg-transparent"
+                      />
+                    </div>
 
                     {resultados.length > 0 && (
-                      <div className="mt-1 bg-white border border-blue-200 rounded shadow-lg divide-y divide-gray-100 max-h-40 overflow-y-auto">
+                      <div className="absolute left-0 right-0 top-full mt-1 bg-white border border-slate-200 rounded-lg shadow-xl max-h-56 overflow-y-auto divide-y divide-slate-100 z-50">
                         {resultados.map((c: any) => (
                           <button
                             key={c.id}
                             type="button"
-                            onClick={() => vincularClientefijo(rb.id, c.id)}
-                            className="w-full text-left p-1.5 hover:bg-blue-50 transition-colors text-[11px] font-medium flex flex-col"
+                            onClick={() => seleccionarClienteParaAlta(rb.id, c)}
+                            className="w-full text-left p-3 hover:bg-blue-50 transition-colors block"
                           >
-                            <span className="font-bold text-gray-800">{c.nombre}</span>
-                            <span className="text-[9px] text-gray-400 truncate">📍 {c.direccion}</span>
+                            <span className="block font-bold text-slate-800 text-xs">{c.nombre}</span>
+                            <span className="block text-[10px] text-slate-500 truncate mt-0.5">📍 {c.direccion}</span>
                           </button>
                         ))}
                       </div>
                     )}
 
                     {!estaBuscando && busquedaActual.trim().length >= 2 && resultados.length === 0 && (
-                      <div className="mt-1 bg-white border border-gray-200 rounded p-2 text-[10px] text-gray-400 text-center">
+                      <div className="absolute left-0 right-0 top-full mt-1 bg-white border border-slate-200 rounded-lg p-3 text-xs text-slate-500 text-center shadow-lg z-50">
                         Sin resultados para "{busquedaActual}"
                       </div>
                     )}
                   </div>
                 </div>
 
-                {/* Bloque 2: Tabla de clientes */}
-                <div className="p-2 md:col-span-2 overflow-x-auto">
-                  <table className="w-full text-left text-[11px] divide-y divide-gray-200">
-                    <thead className="bg-slate-100 text-[9px] font-bold text-gray-500 uppercase">
+                {/* TABLA INFERIOR */}
+                <div className="overflow-x-auto relative z-10">
+                  <table className="w-full text-left text-xs min-w-[760px]">
+                    <thead className="bg-white border-b border-slate-200 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
                       <tr>
-                        <th className="p-1 w-[60px] text-center">Orden</th>
-                        <th className="p-1">Cliente Fijo</th>
-                        <th className="p-1">Dirección</th>
-                        <th className="p-1 w-[60px] text-center">Sector</th>
-                        <th className="p-1 w-[70px] text-center">Acción</th>
+                        <th className="px-5 py-3 w-[200px]">Cliente Fijo</th>
+                        <th className="px-3 py-3 w-[90px]">Tipo</th>
+                        <th className="px-4 py-3 min-w-[180px]">Dirección y Contacto</th>
+                        <th className="px-4 py-3 min-w-[140px]">Comuna / Sector</th>
+                        <th className="px-3 py-3 w-[160px] text-center">B.20 / B.10 / Soda</th>
+                        <th className="px-4 py-3 w-[130px] text-center">Acción</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-100">
+                    <tbody className="divide-y divide-slate-100 bg-white">
                       {rb.clientes.length === 0 ? (
                         <tr>
-                          <td colSpan={5} className="p-4 text-center text-gray-400 italic text-[10px]">
-                            Sin clientes fijos asignados a este recorrido.
+                          <td colSpan={6} className="px-5 py-12 text-center text-slate-400 italic">
+                            Sin clientes fijos asignados a esta plantilla.
                           </td>
                         </tr>
                       ) : (
-                        rb.clientes.map((c: any, idx: number) => (
-                          <tr key={c.id} className="hover:bg-slate-50/50">
+                        rb.clientes.map((c: any) => {
+                          const enEdicion = editando === c.id;
+                          return (
+                            <tr key={c.id} className="hover:bg-slate-50 transition-colors">
 
-                            {/* Orden + flechas */}
-                            <td className="p-1 text-center">
-                              <div className="flex items-center justify-center gap-0.5">
-                                <button
-                                  type="button"
-                                  onClick={() => moverCliente(c.id, rb.id, 'subir')}
-                                  disabled={idx === 0 || cargando}
-                                  className="text-gray-400 hover:text-blue-600 disabled:opacity-20 disabled:cursor-not-allowed text-[12px] leading-none px-0.5"
-                                  title="Subir"
-                                >
-                                  ▲
-                                </button>
-                                <span className="font-black text-gray-500 text-[11px] w-4 text-center">{c.orden}</span>
-                                <button
-                                  type="button"
-                                  onClick={() => moverCliente(c.id, rb.id, 'bajar')}
-                                  disabled={idx === totalClientes - 1 || cargando}
-                                  className="text-gray-400 hover:text-blue-600 disabled:opacity-20 disabled:cursor-not-allowed text-[12px] leading-none px-0.5"
-                                  title="Bajar"
-                                >
-                                  ▼
-                                </button>
-                              </div>
-                            </td>
+                              <td className="px-5 py-3 font-bold text-slate-800 align-middle">
+                                {c.cliente?.nombre}
+                              </td>
 
-                            <td className="p-1 font-bold text-gray-900">{c.cliente?.nombre}</td>
-                            <td
-                              className="p-1 text-gray-600 font-medium truncate max-w-[130px]"
-                              title={c.cliente?.direccion}
-                            >
-                              📍 {c.cliente?.direccion}
-                            </td>
+                              <td className="px-3 py-3 align-middle">
+                                <span className={`text-[9px] font-black px-2.5 py-1 rounded tracking-wide ${
+                                  c.cliente?.tipo === 'EMPRESA'
+                                    ? 'bg-purple-100 text-purple-700'
+                                    : 'bg-emerald-100 text-emerald-700'
+                                }`}>
+                                  {c.cliente?.tipo}
+                                </span>
+                              </td>
 
-                            <td className="p-1 text-center">
-                              <span className="bg-amber-100 text-amber-800 text-[9px] font-black px-1 rounded uppercase">
-                                {c.cliente?.sector || 'GENERAL'}
-                              </span>
-                            </td>
+                              <td className="px-4 py-3 align-middle text-[11px] leading-relaxed">
+                                <span className="block text-slate-700 font-medium truncate max-w-[200px]" title={c.cliente?.direccion}>
+                                  📍 {c.cliente?.direccion}
+                                </span>
+                                <span className="block text-slate-500 mt-0.5 font-medium">
+                                  📞 {c.cliente?.telefono || 'Sin teléfono'}
+                                </span>
+                              </td>
 
-                            <td className="p-1 text-center">
-                              <button
-                                type="button"
-                                onClick={() => eliminarCliente(c.id, rb.id)}
-                                disabled={cargando}
-                                className="text-red-400 hover:text-red-600 disabled:opacity-40 text-[10px] font-bold px-1.5 py-0.5 rounded hover:bg-red-50 transition-colors"
-                                title="Quitar de la ruta"
-                              >
-                                ✕ Quitar
-                              </button>
-                            </td>
+                              <td className="px-4 py-3 align-middle text-[11px]">
+                                <span className="block font-bold text-slate-700">
+                                  {c.cliente?.sector?.comuna?.nombre || '-'}
+                                </span>
+                                <span className="block text-slate-500 mt-0.5 truncate max-w-[140px]">
+                                  {c.cliente?.sector?.nombre || 'General'}
+                                </span>
+                              </td>
 
-                          </tr>
-                        ))
+                              {/* Cantidades por defecto */}
+                              <td className="px-3 py-3 align-middle">
+                                {enEdicion ? (
+                                  <div className="flex items-center justify-center gap-1">
+                                    <input
+                                      type="number"
+                                      min={0}
+                                      value={cantidadesEdicion.bot20_default}
+                                      onChange={e => setCantidadesEdicion(prev => ({ ...prev, bot20_default: Math.max(0, Number(e.target.value)) }))}
+                                      className="w-11 border border-slate-300 rounded p-1 text-center text-[11px] font-bold focus:ring-2 focus:ring-[#1e40af]/20 focus:border-[#1e40af] outline-none"
+                                      title="Bidones 20L"
+                                    />
+                                    <input
+                                      type="number"
+                                      min={0}
+                                      value={cantidadesEdicion.bot10_default}
+                                      onChange={e => setCantidadesEdicion(prev => ({ ...prev, bot10_default: Math.max(0, Number(e.target.value)) }))}
+                                      className="w-11 border border-slate-300 rounded p-1 text-center text-[11px] font-bold focus:ring-2 focus:ring-[#1e40af]/20 focus:border-[#1e40af] outline-none"
+                                      title="Bidones 10L"
+                                    />
+                                    <input
+                                      type="number"
+                                      min={0}
+                                      value={cantidadesEdicion.soda_default}
+                                      onChange={e => setCantidadesEdicion(prev => ({ ...prev, soda_default: Math.max(0, Number(e.target.value)) }))}
+                                      className="w-11 border border-slate-300 rounded p-1 text-center text-[11px] font-bold focus:ring-2 focus:ring-[#1e40af]/20 focus:border-[#1e40af] outline-none"
+                                      title="Sodas"
+                                    />
+                                  </div>
+                                ) : (
+                                  <button
+                                    type="button"
+                                    onClick={() => iniciarEdicion(c)}
+                                    className="w-full flex items-center justify-center gap-2 text-[11px] font-bold text-slate-700 hover:text-[#1e40af] transition-colors"
+                                    title="Click para editar cantidades"
+                                  >
+                                    <span className="flex items-center gap-1">
+                                      <Droplet className="h-3 w-3 text-blue-500" />{c.bot20_default ?? 0}
+                                    </span>
+                                    <span className="flex items-center gap-1">
+                                      <Droplet className="h-3 w-3 text-sky-400" />{c.bot10_default ?? 0}
+                                    </span>
+                                    <span className="flex items-center gap-1">
+                                      <GlassWater className="h-3 w-3 text-slate-400" />{c.soda_default ?? 0}
+                                    </span>
+                                  </button>
+                                )}
+                              </td>
+
+                              {/* Acción */}
+                              <td className="px-4 py-3 text-center align-middle">
+                                {enEdicion ? (
+                                  <div className="flex items-center justify-center gap-2">
+                                    <button
+                                      type="button"
+                                      onClick={() => guardarEdicion(c.id)}
+                                      disabled={cargando}
+                                      className="text-emerald-600 hover:text-emerald-800 disabled:opacity-40 font-bold px-2 py-1 rounded hover:bg-emerald-50 transition-colors text-[11px]"
+                                    >
+                                      Guardar
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={cancelarEdicion}
+                                      className="text-slate-400 hover:text-slate-600 font-bold px-2 py-1 rounded hover:bg-slate-100 transition-colors text-[11px]"
+                                    >
+                                      Cancelar
+                                    </button>
+                                  </div>
+                                ) : (
+                                  <button
+                                    type="button"
+                                    onClick={() => eliminarCliente(c.id, rb.id)}
+                                    disabled={cargando}
+                                    className="text-red-500 hover:text-red-700 disabled:opacity-40 font-bold px-3 py-1.5 rounded hover:bg-red-50 transition-colors text-[11px]"
+                                    title="Quitar de la ruta"
+                                  >
+                                    Quitar
+                                  </button>
+                                )}
+                              </td>
+
+                            </tr>
+                          );
+                        })
                       )}
                     </tbody>
                   </table>
                 </div>
-
               </div>
             );
           })
         )}
       </div>
+
+      {/* MODAL: Fijar cantidades al agregar cliente */}
+      {pendiente && (
+        <div className="fixed inset-0 bg-slate-900/50 flex items-center justify-center z-[100] p-4">
+          <div className="bg-white rounded-xl shadow-2xl w-full max-w-sm p-6">
+            <h3 className="text-xs font-black text-slate-700 uppercase tracking-wider mb-1">
+              Cantidades por Defecto
+            </h3>
+            <p className="text-xs text-slate-500 mb-5">
+              Para <span className="font-bold text-slate-800">{pendiente.cliente.nombre}</span>, definí lo que se le carga cada vez que sale esta ruta.
+            </p>
+
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-bold text-slate-600 flex items-center gap-2">
+                  <Droplet className="h-3.5 w-3.5 text-blue-500" /> Bidón 20L
+                </label>
+                <input
+                  type="number"
+                  min={0}
+                  value={cantidadesModal.bot20_default}
+                  onChange={e => setCantidadesModal(prev => ({ ...prev, bot20_default: Math.max(0, Number(e.target.value)) }))}
+                  className="border border-slate-300 rounded-lg p-2 w-20 text-center font-bold focus:ring-2 focus:ring-[#1e40af]/20 focus:border-[#1e40af] outline-none"
+                  autoFocus
+                />
+              </div>
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-bold text-slate-600 flex items-center gap-2">
+                  <Droplet className="h-3.5 w-3.5 text-sky-400" /> Bidón 10L
+                </label>
+                <input
+                  type="number"
+                  min={0}
+                  value={cantidadesModal.bot10_default}
+                  onChange={e => setCantidadesModal(prev => ({ ...prev, bot10_default: Math.max(0, Number(e.target.value)) }))}
+                  className="border border-slate-300 rounded-lg p-2 w-20 text-center font-bold focus:ring-2 focus:ring-[#1e40af]/20 focus:border-[#1e40af] outline-none"
+                />
+              </div>
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-bold text-slate-600 flex items-center gap-2">
+                  <GlassWater className="h-3.5 w-3.5 text-slate-400" /> Soda
+                </label>
+                <input
+                  type="number"
+                  min={0}
+                  value={cantidadesModal.soda_default}
+                  onChange={e => setCantidadesModal(prev => ({ ...prev, soda_default: Math.max(0, Number(e.target.value)) }))}
+                  className="border border-slate-300 rounded-lg p-2 w-20 text-center font-bold focus:ring-2 focus:ring-[#1e40af]/20 focus:border-[#1e40af] outline-none"
+                />
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 mt-6">
+              <button
+                type="button"
+                onClick={cancelarAlta}
+                disabled={cargando}
+                className="flex-1 border border-slate-300 text-slate-600 font-bold p-2.5 rounded-lg hover:bg-slate-50 transition-colors text-xs uppercase tracking-wider"
+              >
+                Cancelar
+              </button>
+              <button
+                type="button"
+                onClick={confirmarAlta}
+                disabled={cargando}
+                className="flex-1 bg-[#1e40af] hover:bg-blue-800 text-white font-bold p-2.5 rounded-lg transition-colors text-xs uppercase tracking-wider"
+              >
+                {cargando ? 'Guardando...' : 'Confirmar'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   );

@@ -215,8 +215,14 @@ model ClienteRutaBase {
   orden          Int
   frecuencia     Frecuencia     @default(SEMANAL)
   semana_alterna SemanaAlterna?
-  cliente        Cliente        @relation(fields: [cliente_id], references: [id])
-  ruta_base      RutaBase       @relation(fields: [ruta_base_id], references: [id])
+
+  // Lo que se espera que compre habitualmente
+  bot20_default Int @default(0)
+  bot10_default Int @default(0)
+  soda_default  Int @default(0)
+
+  cliente   Cliente  @relation(fields: [cliente_id], references: [id])
+  ruta_base RutaBase @relation(fields: [ruta_base_id], references: [id])
 }
 
 model RutaDia {
@@ -240,11 +246,26 @@ model ParadaDia {
   orden               Int
   estado              EstadoParada @default(PENDIENTE)
   motivo_postergacion String?
-  cliente             Cliente      @relation(fields: [cliente_id], references: [id])
-  pedido              Pedido?      @relation(fields: [pedido_id], references: [id])
-  ruta_dia            RutaDia      @relation(fields: [ruta_dia_id], references: [id])
-  incidencias         Incidencia[]
+  motivo_fallo        String?
   orden_ajustado      Boolean      @default(false)
+  observaciones       String?      @db.LongText
+  foto_url            String?      @db.LongText //ya no la uso
+
+  // EXPECTATIVA (Copiado de la Ruta Base)
+  bot20_esperado Int @default(0)
+  bot10_esperado Int @default(0)
+  soda_esperada  Int @default(0)
+
+  // REALIDAD (Lo que digita el repartidor al confirmar)
+  bot20_entregado Int @default(0)
+  bot10_entregado Int @default(0)
+  soda_entregada  Int @default(0)
+
+  cliente      Cliente      @relation(fields: [cliente_id], references: [id])
+  pedido       Pedido?      @relation(fields: [pedido_id], references: [id])
+  ruta_dia     RutaDia      @relation(fields: [ruta_dia_id], references: [id])
+  incidencias  Incidencia[]
+  reprogramada Boolean      @default(false)
 }
 
 model Pedido {
@@ -467,7 +488,7 @@ model Dispensador {
   marca           String
   modelo          String
   numero_serie    String?                 @unique
-  foto_url        String?
+  foto_url        String?                 @db.LongText
   estado          EstadoDispensador       @default(EN_CLIENTE)
   precio_arriendo Int                     @default(0)
   cliente         Cliente                 @relation(fields: [cliente_id], references: [id])
@@ -702,6 +723,7 @@ enum EstadoParada {
   PENDIENTE
   ENTREGADO
   POSTERGADO
+  FALLIDO
 }
 
 enum CanalOrigen {

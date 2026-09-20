@@ -26,7 +26,7 @@ export default function Sidebar({ rol }: { rol: string }) {
     { name: 'Clientes',           href: '/admin/clientes',    icon: Users           },
     { name: 'Flota',              href: '/admin/flota',       icon: Truck           },
     { name: 'Rutas y Despacho',   href: '/admin/rutas',       icon: MapPin          },
-    { name: 'Rutas Base',         href: '/admin/rutas-base',  icon: Map             },
+    { name: 'Rutas Base',         href: '/admin/rutas-base',  icon: Map               },
     { name: 'Guías de Despacho',  href: '/admin/guias',       icon: FileText        },
     { name: 'Catálogo Productos', href: '/admin/productos',   icon: Package         },
     { name: 'Producción y CO2',   href: '/admin/produccion',  icon: FlaskConical    },
@@ -62,10 +62,12 @@ export default function Sidebar({ rol }: { rol: string }) {
       <nav className="flex-1 overflow-y-auto py-3 px-3 space-y-0.5">
         {menuItems.map((item) => {
           const Icon = item.icon;
+          
+          // Lógica corregida para evitar colisión de rutas
           const isActive =
             item.href === '/admin'
               ? pathname === '/admin'
-              : pathname.startsWith(item.href);
+              : pathname === item.href || pathname.startsWith(`${item.href}/`);
 
           return (
             <Link
@@ -74,7 +76,7 @@ export default function Sidebar({ rol }: { rol: string }) {
               className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl transition-colors"
               style={{
                 backgroundColor: isActive ? 'white' : 'transparent',
-                color: isActive ? '#013299' : 'rgba(219, 234, 254, 0.9)', // blue-100 tono
+                color: isActive ? '#013299' : 'rgba(219, 234, 254, 0.9)', 
               }}
               onMouseEnter={e => {
                 if (!isActive) {
@@ -107,7 +109,7 @@ export default function Sidebar({ rol }: { rol: string }) {
           color: 'rgba(147, 197, 253, 0.7)',
         }}
       >
-        SIGO v1.0
+        SIGO v1.2.9
       </div>
     </aside>
   );

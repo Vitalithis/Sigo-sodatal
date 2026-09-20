@@ -352,7 +352,8 @@ export type EstadoRuta = (typeof EstadoRuta)[keyof typeof EstadoRuta]
 export const EstadoParada: {
   PENDIENTE: 'PENDIENTE',
   ENTREGADO: 'ENTREGADO',
-  POSTERGADO: 'POSTERGADO'
+  POSTERGADO: 'POSTERGADO',
+  FALLIDO: 'FALLIDO'
 };
 
 export type EstadoParada = (typeof EstadoParada)[keyof typeof EstadoParada]
@@ -19749,10 +19750,16 @@ export namespace Prisma {
 
   export type ClienteRutaBaseAvgAggregateOutputType = {
     orden: number | null
+    bot20_default: number | null
+    bot10_default: number | null
+    soda_default: number | null
   }
 
   export type ClienteRutaBaseSumAggregateOutputType = {
     orden: number | null
+    bot20_default: number | null
+    bot10_default: number | null
+    soda_default: number | null
   }
 
   export type ClienteRutaBaseMinAggregateOutputType = {
@@ -19762,6 +19769,9 @@ export namespace Prisma {
     orden: number | null
     frecuencia: $Enums.Frecuencia | null
     semana_alterna: $Enums.SemanaAlterna | null
+    bot20_default: number | null
+    bot10_default: number | null
+    soda_default: number | null
   }
 
   export type ClienteRutaBaseMaxAggregateOutputType = {
@@ -19771,6 +19781,9 @@ export namespace Prisma {
     orden: number | null
     frecuencia: $Enums.Frecuencia | null
     semana_alterna: $Enums.SemanaAlterna | null
+    bot20_default: number | null
+    bot10_default: number | null
+    soda_default: number | null
   }
 
   export type ClienteRutaBaseCountAggregateOutputType = {
@@ -19780,16 +19793,25 @@ export namespace Prisma {
     orden: number
     frecuencia: number
     semana_alterna: number
+    bot20_default: number
+    bot10_default: number
+    soda_default: number
     _all: number
   }
 
 
   export type ClienteRutaBaseAvgAggregateInputType = {
     orden?: true
+    bot20_default?: true
+    bot10_default?: true
+    soda_default?: true
   }
 
   export type ClienteRutaBaseSumAggregateInputType = {
     orden?: true
+    bot20_default?: true
+    bot10_default?: true
+    soda_default?: true
   }
 
   export type ClienteRutaBaseMinAggregateInputType = {
@@ -19799,6 +19821,9 @@ export namespace Prisma {
     orden?: true
     frecuencia?: true
     semana_alterna?: true
+    bot20_default?: true
+    bot10_default?: true
+    soda_default?: true
   }
 
   export type ClienteRutaBaseMaxAggregateInputType = {
@@ -19808,6 +19833,9 @@ export namespace Prisma {
     orden?: true
     frecuencia?: true
     semana_alterna?: true
+    bot20_default?: true
+    bot10_default?: true
+    soda_default?: true
   }
 
   export type ClienteRutaBaseCountAggregateInputType = {
@@ -19817,6 +19845,9 @@ export namespace Prisma {
     orden?: true
     frecuencia?: true
     semana_alterna?: true
+    bot20_default?: true
+    bot10_default?: true
+    soda_default?: true
     _all?: true
   }
 
@@ -19913,6 +19944,9 @@ export namespace Prisma {
     orden: number
     frecuencia: $Enums.Frecuencia
     semana_alterna: $Enums.SemanaAlterna | null
+    bot20_default: number
+    bot10_default: number
+    soda_default: number
     _count: ClienteRutaBaseCountAggregateOutputType | null
     _avg: ClienteRutaBaseAvgAggregateOutputType | null
     _sum: ClienteRutaBaseSumAggregateOutputType | null
@@ -19941,6 +19975,9 @@ export namespace Prisma {
     orden?: boolean
     frecuencia?: boolean
     semana_alterna?: boolean
+    bot20_default?: boolean
+    bot10_default?: boolean
+    soda_default?: boolean
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
     ruta_base?: boolean | RutaBaseDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["clienteRutaBase"]>
@@ -19954,9 +19991,12 @@ export namespace Prisma {
     orden?: boolean
     frecuencia?: boolean
     semana_alterna?: boolean
+    bot20_default?: boolean
+    bot10_default?: boolean
+    soda_default?: boolean
   }
 
-  export type ClienteRutaBaseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "ruta_base_id" | "cliente_id" | "orden" | "frecuencia" | "semana_alterna", ExtArgs["result"]["clienteRutaBase"]>
+  export type ClienteRutaBaseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "ruta_base_id" | "cliente_id" | "orden" | "frecuencia" | "semana_alterna" | "bot20_default" | "bot10_default" | "soda_default", ExtArgs["result"]["clienteRutaBase"]>
   export type ClienteRutaBaseInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
     ruta_base?: boolean | RutaBaseDefaultArgs<ExtArgs>
@@ -19975,6 +20015,9 @@ export namespace Prisma {
       orden: number
       frecuencia: $Enums.Frecuencia
       semana_alterna: $Enums.SemanaAlterna | null
+      bot20_default: number
+      bot10_default: number
+      soda_default: number
     }, ExtArgs["result"]["clienteRutaBase"]>
     composites: {}
   }
@@ -20352,6 +20395,9 @@ export namespace Prisma {
     readonly orden: FieldRef<"ClienteRutaBase", 'Int'>
     readonly frecuencia: FieldRef<"ClienteRutaBase", 'Frecuencia'>
     readonly semana_alterna: FieldRef<"ClienteRutaBase", 'SemanaAlterna'>
+    readonly bot20_default: FieldRef<"ClienteRutaBase", 'Int'>
+    readonly bot10_default: FieldRef<"ClienteRutaBase", 'Int'>
+    readonly soda_default: FieldRef<"ClienteRutaBase", 'Int'>
   }
     
 
@@ -21705,10 +21751,22 @@ export namespace Prisma {
 
   export type ParadaDiaAvgAggregateOutputType = {
     orden: number | null
+    bot20_esperado: number | null
+    bot10_esperado: number | null
+    soda_esperada: number | null
+    bot20_entregado: number | null
+    bot10_entregado: number | null
+    soda_entregada: number | null
   }
 
   export type ParadaDiaSumAggregateOutputType = {
     orden: number | null
+    bot20_esperado: number | null
+    bot10_esperado: number | null
+    soda_esperada: number | null
+    bot20_entregado: number | null
+    bot10_entregado: number | null
+    soda_entregada: number | null
   }
 
   export type ParadaDiaMinAggregateOutputType = {
@@ -21719,7 +21777,17 @@ export namespace Prisma {
     orden: number | null
     estado: $Enums.EstadoParada | null
     motivo_postergacion: string | null
+    motivo_fallo: string | null
     orden_ajustado: boolean | null
+    observaciones: string | null
+    foto_url: string | null
+    bot20_esperado: number | null
+    bot10_esperado: number | null
+    soda_esperada: number | null
+    bot20_entregado: number | null
+    bot10_entregado: number | null
+    soda_entregada: number | null
+    reprogramada: boolean | null
   }
 
   export type ParadaDiaMaxAggregateOutputType = {
@@ -21730,7 +21798,17 @@ export namespace Prisma {
     orden: number | null
     estado: $Enums.EstadoParada | null
     motivo_postergacion: string | null
+    motivo_fallo: string | null
     orden_ajustado: boolean | null
+    observaciones: string | null
+    foto_url: string | null
+    bot20_esperado: number | null
+    bot10_esperado: number | null
+    soda_esperada: number | null
+    bot20_entregado: number | null
+    bot10_entregado: number | null
+    soda_entregada: number | null
+    reprogramada: boolean | null
   }
 
   export type ParadaDiaCountAggregateOutputType = {
@@ -21741,17 +21819,39 @@ export namespace Prisma {
     orden: number
     estado: number
     motivo_postergacion: number
+    motivo_fallo: number
     orden_ajustado: number
+    observaciones: number
+    foto_url: number
+    bot20_esperado: number
+    bot10_esperado: number
+    soda_esperada: number
+    bot20_entregado: number
+    bot10_entregado: number
+    soda_entregada: number
+    reprogramada: number
     _all: number
   }
 
 
   export type ParadaDiaAvgAggregateInputType = {
     orden?: true
+    bot20_esperado?: true
+    bot10_esperado?: true
+    soda_esperada?: true
+    bot20_entregado?: true
+    bot10_entregado?: true
+    soda_entregada?: true
   }
 
   export type ParadaDiaSumAggregateInputType = {
     orden?: true
+    bot20_esperado?: true
+    bot10_esperado?: true
+    soda_esperada?: true
+    bot20_entregado?: true
+    bot10_entregado?: true
+    soda_entregada?: true
   }
 
   export type ParadaDiaMinAggregateInputType = {
@@ -21762,7 +21862,17 @@ export namespace Prisma {
     orden?: true
     estado?: true
     motivo_postergacion?: true
+    motivo_fallo?: true
     orden_ajustado?: true
+    observaciones?: true
+    foto_url?: true
+    bot20_esperado?: true
+    bot10_esperado?: true
+    soda_esperada?: true
+    bot20_entregado?: true
+    bot10_entregado?: true
+    soda_entregada?: true
+    reprogramada?: true
   }
 
   export type ParadaDiaMaxAggregateInputType = {
@@ -21773,7 +21883,17 @@ export namespace Prisma {
     orden?: true
     estado?: true
     motivo_postergacion?: true
+    motivo_fallo?: true
     orden_ajustado?: true
+    observaciones?: true
+    foto_url?: true
+    bot20_esperado?: true
+    bot10_esperado?: true
+    soda_esperada?: true
+    bot20_entregado?: true
+    bot10_entregado?: true
+    soda_entregada?: true
+    reprogramada?: true
   }
 
   export type ParadaDiaCountAggregateInputType = {
@@ -21784,7 +21904,17 @@ export namespace Prisma {
     orden?: true
     estado?: true
     motivo_postergacion?: true
+    motivo_fallo?: true
     orden_ajustado?: true
+    observaciones?: true
+    foto_url?: true
+    bot20_esperado?: true
+    bot10_esperado?: true
+    soda_esperada?: true
+    bot20_entregado?: true
+    bot10_entregado?: true
+    soda_entregada?: true
+    reprogramada?: true
     _all?: true
   }
 
@@ -21882,7 +22012,17 @@ export namespace Prisma {
     orden: number
     estado: $Enums.EstadoParada
     motivo_postergacion: string | null
+    motivo_fallo: string | null
     orden_ajustado: boolean
+    observaciones: string | null
+    foto_url: string | null
+    bot20_esperado: number
+    bot10_esperado: number
+    soda_esperada: number
+    bot20_entregado: number
+    bot10_entregado: number
+    soda_entregada: number
+    reprogramada: boolean
     _count: ParadaDiaCountAggregateOutputType | null
     _avg: ParadaDiaAvgAggregateOutputType | null
     _sum: ParadaDiaSumAggregateOutputType | null
@@ -21912,7 +22052,17 @@ export namespace Prisma {
     orden?: boolean
     estado?: boolean
     motivo_postergacion?: boolean
+    motivo_fallo?: boolean
     orden_ajustado?: boolean
+    observaciones?: boolean
+    foto_url?: boolean
+    bot20_esperado?: boolean
+    bot10_esperado?: boolean
+    soda_esperada?: boolean
+    bot20_entregado?: boolean
+    bot10_entregado?: boolean
+    soda_entregada?: boolean
+    reprogramada?: boolean
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
     pedido?: boolean | ParadaDia$pedidoArgs<ExtArgs>
     ruta_dia?: boolean | RutaDiaDefaultArgs<ExtArgs>
@@ -21930,10 +22080,20 @@ export namespace Prisma {
     orden?: boolean
     estado?: boolean
     motivo_postergacion?: boolean
+    motivo_fallo?: boolean
     orden_ajustado?: boolean
+    observaciones?: boolean
+    foto_url?: boolean
+    bot20_esperado?: boolean
+    bot10_esperado?: boolean
+    soda_esperada?: boolean
+    bot20_entregado?: boolean
+    bot10_entregado?: boolean
+    soda_entregada?: boolean
+    reprogramada?: boolean
   }
 
-  export type ParadaDiaOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "ruta_dia_id" | "cliente_id" | "pedido_id" | "orden" | "estado" | "motivo_postergacion" | "orden_ajustado", ExtArgs["result"]["paradaDia"]>
+  export type ParadaDiaOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "ruta_dia_id" | "cliente_id" | "pedido_id" | "orden" | "estado" | "motivo_postergacion" | "motivo_fallo" | "orden_ajustado" | "observaciones" | "foto_url" | "bot20_esperado" | "bot10_esperado" | "soda_esperada" | "bot20_entregado" | "bot10_entregado" | "soda_entregada" | "reprogramada", ExtArgs["result"]["paradaDia"]>
   export type ParadaDiaInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
     pedido?: boolean | ParadaDia$pedidoArgs<ExtArgs>
@@ -21958,7 +22118,17 @@ export namespace Prisma {
       orden: number
       estado: $Enums.EstadoParada
       motivo_postergacion: string | null
+      motivo_fallo: string | null
       orden_ajustado: boolean
+      observaciones: string | null
+      foto_url: string | null
+      bot20_esperado: number
+      bot10_esperado: number
+      soda_esperada: number
+      bot20_entregado: number
+      bot10_entregado: number
+      soda_entregada: number
+      reprogramada: boolean
     }, ExtArgs["result"]["paradaDia"]>
     composites: {}
   }
@@ -22339,7 +22509,17 @@ export namespace Prisma {
     readonly orden: FieldRef<"ParadaDia", 'Int'>
     readonly estado: FieldRef<"ParadaDia", 'EstadoParada'>
     readonly motivo_postergacion: FieldRef<"ParadaDia", 'String'>
+    readonly motivo_fallo: FieldRef<"ParadaDia", 'String'>
     readonly orden_ajustado: FieldRef<"ParadaDia", 'Boolean'>
+    readonly observaciones: FieldRef<"ParadaDia", 'String'>
+    readonly foto_url: FieldRef<"ParadaDia", 'String'>
+    readonly bot20_esperado: FieldRef<"ParadaDia", 'Int'>
+    readonly bot10_esperado: FieldRef<"ParadaDia", 'Int'>
+    readonly soda_esperada: FieldRef<"ParadaDia", 'Int'>
+    readonly bot20_entregado: FieldRef<"ParadaDia", 'Int'>
+    readonly bot10_entregado: FieldRef<"ParadaDia", 'Int'>
+    readonly soda_entregada: FieldRef<"ParadaDia", 'Int'>
+    readonly reprogramada: FieldRef<"ParadaDia", 'Boolean'>
   }
     
 
@@ -51929,7 +52109,10 @@ export namespace Prisma {
     cliente_id: 'cliente_id',
     orden: 'orden',
     frecuencia: 'frecuencia',
-    semana_alterna: 'semana_alterna'
+    semana_alterna: 'semana_alterna',
+    bot20_default: 'bot20_default',
+    bot10_default: 'bot10_default',
+    soda_default: 'soda_default'
   };
 
   export type ClienteRutaBaseScalarFieldEnum = (typeof ClienteRutaBaseScalarFieldEnum)[keyof typeof ClienteRutaBaseScalarFieldEnum]
@@ -51955,7 +52138,17 @@ export namespace Prisma {
     orden: 'orden',
     estado: 'estado',
     motivo_postergacion: 'motivo_postergacion',
-    orden_ajustado: 'orden_ajustado'
+    motivo_fallo: 'motivo_fallo',
+    orden_ajustado: 'orden_ajustado',
+    observaciones: 'observaciones',
+    foto_url: 'foto_url',
+    bot20_esperado: 'bot20_esperado',
+    bot10_esperado: 'bot10_esperado',
+    soda_esperada: 'soda_esperada',
+    bot20_entregado: 'bot20_entregado',
+    bot10_entregado: 'bot10_entregado',
+    soda_entregada: 'soda_entregada',
+    reprogramada: 'reprogramada'
   };
 
   export type ParadaDiaScalarFieldEnum = (typeof ParadaDiaScalarFieldEnum)[keyof typeof ParadaDiaScalarFieldEnum]
@@ -52538,7 +52731,10 @@ export namespace Prisma {
     ruta_dia_id: 'ruta_dia_id',
     cliente_id: 'cliente_id',
     pedido_id: 'pedido_id',
-    motivo_postergacion: 'motivo_postergacion'
+    motivo_postergacion: 'motivo_postergacion',
+    motivo_fallo: 'motivo_fallo',
+    observaciones: 'observaciones',
+    foto_url: 'foto_url'
   };
 
   export type ParadaDiaOrderByRelevanceFieldEnum = (typeof ParadaDiaOrderByRelevanceFieldEnum)[keyof typeof ParadaDiaOrderByRelevanceFieldEnum]
@@ -54133,6 +54329,9 @@ export namespace Prisma {
     orden?: IntFilter<"ClienteRutaBase"> | number
     frecuencia?: EnumFrecuenciaFilter<"ClienteRutaBase"> | $Enums.Frecuencia
     semana_alterna?: EnumSemanaAlternaNullableFilter<"ClienteRutaBase"> | $Enums.SemanaAlterna | null
+    bot20_default?: IntFilter<"ClienteRutaBase"> | number
+    bot10_default?: IntFilter<"ClienteRutaBase"> | number
+    soda_default?: IntFilter<"ClienteRutaBase"> | number
     cliente?: XOR<ClienteScalarRelationFilter, ClienteWhereInput>
     ruta_base?: XOR<RutaBaseScalarRelationFilter, RutaBaseWhereInput>
   }
@@ -54144,6 +54343,9 @@ export namespace Prisma {
     orden?: SortOrder
     frecuencia?: SortOrder
     semana_alterna?: SortOrderInput | SortOrder
+    bot20_default?: SortOrder
+    bot10_default?: SortOrder
+    soda_default?: SortOrder
     cliente?: ClienteOrderByWithRelationInput
     ruta_base?: RutaBaseOrderByWithRelationInput
     _relevance?: ClienteRutaBaseOrderByRelevanceInput
@@ -54159,6 +54361,9 @@ export namespace Prisma {
     orden?: IntFilter<"ClienteRutaBase"> | number
     frecuencia?: EnumFrecuenciaFilter<"ClienteRutaBase"> | $Enums.Frecuencia
     semana_alterna?: EnumSemanaAlternaNullableFilter<"ClienteRutaBase"> | $Enums.SemanaAlterna | null
+    bot20_default?: IntFilter<"ClienteRutaBase"> | number
+    bot10_default?: IntFilter<"ClienteRutaBase"> | number
+    soda_default?: IntFilter<"ClienteRutaBase"> | number
     cliente?: XOR<ClienteScalarRelationFilter, ClienteWhereInput>
     ruta_base?: XOR<RutaBaseScalarRelationFilter, RutaBaseWhereInput>
   }, "id">
@@ -54170,6 +54375,9 @@ export namespace Prisma {
     orden?: SortOrder
     frecuencia?: SortOrder
     semana_alterna?: SortOrderInput | SortOrder
+    bot20_default?: SortOrder
+    bot10_default?: SortOrder
+    soda_default?: SortOrder
     _count?: ClienteRutaBaseCountOrderByAggregateInput
     _avg?: ClienteRutaBaseAvgOrderByAggregateInput
     _max?: ClienteRutaBaseMaxOrderByAggregateInput
@@ -54187,6 +54395,9 @@ export namespace Prisma {
     orden?: IntWithAggregatesFilter<"ClienteRutaBase"> | number
     frecuencia?: EnumFrecuenciaWithAggregatesFilter<"ClienteRutaBase"> | $Enums.Frecuencia
     semana_alterna?: EnumSemanaAlternaNullableWithAggregatesFilter<"ClienteRutaBase"> | $Enums.SemanaAlterna | null
+    bot20_default?: IntWithAggregatesFilter<"ClienteRutaBase"> | number
+    bot10_default?: IntWithAggregatesFilter<"ClienteRutaBase"> | number
+    soda_default?: IntWithAggregatesFilter<"ClienteRutaBase"> | number
   }
 
   export type RutaDiaWhereInput = {
@@ -54270,7 +54481,17 @@ export namespace Prisma {
     orden?: IntFilter<"ParadaDia"> | number
     estado?: EnumEstadoParadaFilter<"ParadaDia"> | $Enums.EstadoParada
     motivo_postergacion?: StringNullableFilter<"ParadaDia"> | string | null
+    motivo_fallo?: StringNullableFilter<"ParadaDia"> | string | null
     orden_ajustado?: BoolFilter<"ParadaDia"> | boolean
+    observaciones?: StringNullableFilter<"ParadaDia"> | string | null
+    foto_url?: StringNullableFilter<"ParadaDia"> | string | null
+    bot20_esperado?: IntFilter<"ParadaDia"> | number
+    bot10_esperado?: IntFilter<"ParadaDia"> | number
+    soda_esperada?: IntFilter<"ParadaDia"> | number
+    bot20_entregado?: IntFilter<"ParadaDia"> | number
+    bot10_entregado?: IntFilter<"ParadaDia"> | number
+    soda_entregada?: IntFilter<"ParadaDia"> | number
+    reprogramada?: BoolFilter<"ParadaDia"> | boolean
     cliente?: XOR<ClienteScalarRelationFilter, ClienteWhereInput>
     pedido?: XOR<PedidoNullableScalarRelationFilter, PedidoWhereInput> | null
     ruta_dia?: XOR<RutaDiaScalarRelationFilter, RutaDiaWhereInput>
@@ -54285,7 +54506,17 @@ export namespace Prisma {
     orden?: SortOrder
     estado?: SortOrder
     motivo_postergacion?: SortOrderInput | SortOrder
+    motivo_fallo?: SortOrderInput | SortOrder
     orden_ajustado?: SortOrder
+    observaciones?: SortOrderInput | SortOrder
+    foto_url?: SortOrderInput | SortOrder
+    bot20_esperado?: SortOrder
+    bot10_esperado?: SortOrder
+    soda_esperada?: SortOrder
+    bot20_entregado?: SortOrder
+    bot10_entregado?: SortOrder
+    soda_entregada?: SortOrder
+    reprogramada?: SortOrder
     cliente?: ClienteOrderByWithRelationInput
     pedido?: PedidoOrderByWithRelationInput
     ruta_dia?: RutaDiaOrderByWithRelationInput
@@ -54304,7 +54535,17 @@ export namespace Prisma {
     orden?: IntFilter<"ParadaDia"> | number
     estado?: EnumEstadoParadaFilter<"ParadaDia"> | $Enums.EstadoParada
     motivo_postergacion?: StringNullableFilter<"ParadaDia"> | string | null
+    motivo_fallo?: StringNullableFilter<"ParadaDia"> | string | null
     orden_ajustado?: BoolFilter<"ParadaDia"> | boolean
+    observaciones?: StringNullableFilter<"ParadaDia"> | string | null
+    foto_url?: StringNullableFilter<"ParadaDia"> | string | null
+    bot20_esperado?: IntFilter<"ParadaDia"> | number
+    bot10_esperado?: IntFilter<"ParadaDia"> | number
+    soda_esperada?: IntFilter<"ParadaDia"> | number
+    bot20_entregado?: IntFilter<"ParadaDia"> | number
+    bot10_entregado?: IntFilter<"ParadaDia"> | number
+    soda_entregada?: IntFilter<"ParadaDia"> | number
+    reprogramada?: BoolFilter<"ParadaDia"> | boolean
     cliente?: XOR<ClienteScalarRelationFilter, ClienteWhereInput>
     pedido?: XOR<PedidoNullableScalarRelationFilter, PedidoWhereInput> | null
     ruta_dia?: XOR<RutaDiaScalarRelationFilter, RutaDiaWhereInput>
@@ -54319,7 +54560,17 @@ export namespace Prisma {
     orden?: SortOrder
     estado?: SortOrder
     motivo_postergacion?: SortOrderInput | SortOrder
+    motivo_fallo?: SortOrderInput | SortOrder
     orden_ajustado?: SortOrder
+    observaciones?: SortOrderInput | SortOrder
+    foto_url?: SortOrderInput | SortOrder
+    bot20_esperado?: SortOrder
+    bot10_esperado?: SortOrder
+    soda_esperada?: SortOrder
+    bot20_entregado?: SortOrder
+    bot10_entregado?: SortOrder
+    soda_entregada?: SortOrder
+    reprogramada?: SortOrder
     _count?: ParadaDiaCountOrderByAggregateInput
     _avg?: ParadaDiaAvgOrderByAggregateInput
     _max?: ParadaDiaMaxOrderByAggregateInput
@@ -54338,7 +54589,17 @@ export namespace Prisma {
     orden?: IntWithAggregatesFilter<"ParadaDia"> | number
     estado?: EnumEstadoParadaWithAggregatesFilter<"ParadaDia"> | $Enums.EstadoParada
     motivo_postergacion?: StringNullableWithAggregatesFilter<"ParadaDia"> | string | null
+    motivo_fallo?: StringNullableWithAggregatesFilter<"ParadaDia"> | string | null
     orden_ajustado?: BoolWithAggregatesFilter<"ParadaDia"> | boolean
+    observaciones?: StringNullableWithAggregatesFilter<"ParadaDia"> | string | null
+    foto_url?: StringNullableWithAggregatesFilter<"ParadaDia"> | string | null
+    bot20_esperado?: IntWithAggregatesFilter<"ParadaDia"> | number
+    bot10_esperado?: IntWithAggregatesFilter<"ParadaDia"> | number
+    soda_esperada?: IntWithAggregatesFilter<"ParadaDia"> | number
+    bot20_entregado?: IntWithAggregatesFilter<"ParadaDia"> | number
+    bot10_entregado?: IntWithAggregatesFilter<"ParadaDia"> | number
+    soda_entregada?: IntWithAggregatesFilter<"ParadaDia"> | number
+    reprogramada?: BoolWithAggregatesFilter<"ParadaDia"> | boolean
   }
 
   export type PedidoWhereInput = {
@@ -57601,6 +57862,9 @@ export namespace Prisma {
     orden: number
     frecuencia?: $Enums.Frecuencia
     semana_alterna?: $Enums.SemanaAlterna | null
+    bot20_default?: number
+    bot10_default?: number
+    soda_default?: number
     cliente: ClienteCreateNestedOneWithoutClientes_rutaInput
     ruta_base: RutaBaseCreateNestedOneWithoutClientesInput
   }
@@ -57612,6 +57876,9 @@ export namespace Prisma {
     orden: number
     frecuencia?: $Enums.Frecuencia
     semana_alterna?: $Enums.SemanaAlterna | null
+    bot20_default?: number
+    bot10_default?: number
+    soda_default?: number
   }
 
   export type ClienteRutaBaseUpdateInput = {
@@ -57619,6 +57886,9 @@ export namespace Prisma {
     orden?: IntFieldUpdateOperationsInput | number
     frecuencia?: EnumFrecuenciaFieldUpdateOperationsInput | $Enums.Frecuencia
     semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
+    bot20_default?: IntFieldUpdateOperationsInput | number
+    bot10_default?: IntFieldUpdateOperationsInput | number
+    soda_default?: IntFieldUpdateOperationsInput | number
     cliente?: ClienteUpdateOneRequiredWithoutClientes_rutaNestedInput
     ruta_base?: RutaBaseUpdateOneRequiredWithoutClientesNestedInput
   }
@@ -57630,6 +57900,9 @@ export namespace Prisma {
     orden?: IntFieldUpdateOperationsInput | number
     frecuencia?: EnumFrecuenciaFieldUpdateOperationsInput | $Enums.Frecuencia
     semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
+    bot20_default?: IntFieldUpdateOperationsInput | number
+    bot10_default?: IntFieldUpdateOperationsInput | number
+    soda_default?: IntFieldUpdateOperationsInput | number
   }
 
   export type ClienteRutaBaseCreateManyInput = {
@@ -57639,6 +57912,9 @@ export namespace Prisma {
     orden: number
     frecuencia?: $Enums.Frecuencia
     semana_alterna?: $Enums.SemanaAlterna | null
+    bot20_default?: number
+    bot10_default?: number
+    soda_default?: number
   }
 
   export type ClienteRutaBaseUpdateManyMutationInput = {
@@ -57646,6 +57922,9 @@ export namespace Prisma {
     orden?: IntFieldUpdateOperationsInput | number
     frecuencia?: EnumFrecuenciaFieldUpdateOperationsInput | $Enums.Frecuencia
     semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
+    bot20_default?: IntFieldUpdateOperationsInput | number
+    bot10_default?: IntFieldUpdateOperationsInput | number
+    soda_default?: IntFieldUpdateOperationsInput | number
   }
 
   export type ClienteRutaBaseUncheckedUpdateManyInput = {
@@ -57655,6 +57934,9 @@ export namespace Prisma {
     orden?: IntFieldUpdateOperationsInput | number
     frecuencia?: EnumFrecuenciaFieldUpdateOperationsInput | $Enums.Frecuencia
     semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
+    bot20_default?: IntFieldUpdateOperationsInput | number
+    bot10_default?: IntFieldUpdateOperationsInput | number
+    soda_default?: IntFieldUpdateOperationsInput | number
   }
 
   export type RutaDiaCreateInput = {
@@ -57726,7 +58008,17 @@ export namespace Prisma {
     orden: number
     estado?: $Enums.EstadoParada
     motivo_postergacion?: string | null
+    motivo_fallo?: string | null
     orden_ajustado?: boolean
+    observaciones?: string | null
+    foto_url?: string | null
+    bot20_esperado?: number
+    bot10_esperado?: number
+    soda_esperada?: number
+    bot20_entregado?: number
+    bot10_entregado?: number
+    soda_entregada?: number
+    reprogramada?: boolean
     cliente: ClienteCreateNestedOneWithoutParadasInput
     pedido?: PedidoCreateNestedOneWithoutParadasInput
     ruta_dia: RutaDiaCreateNestedOneWithoutParadasInput
@@ -57741,7 +58033,17 @@ export namespace Prisma {
     orden: number
     estado?: $Enums.EstadoParada
     motivo_postergacion?: string | null
+    motivo_fallo?: string | null
     orden_ajustado?: boolean
+    observaciones?: string | null
+    foto_url?: string | null
+    bot20_esperado?: number
+    bot10_esperado?: number
+    soda_esperada?: number
+    bot20_entregado?: number
+    bot10_entregado?: number
+    soda_entregada?: number
+    reprogramada?: boolean
     incidencias?: IncidenciaUncheckedCreateNestedManyWithoutParadaInput
   }
 
@@ -57750,7 +58052,17 @@ export namespace Prisma {
     orden?: IntFieldUpdateOperationsInput | number
     estado?: EnumEstadoParadaFieldUpdateOperationsInput | $Enums.EstadoParada
     motivo_postergacion?: NullableStringFieldUpdateOperationsInput | string | null
+    motivo_fallo?: NullableStringFieldUpdateOperationsInput | string | null
     orden_ajustado?: BoolFieldUpdateOperationsInput | boolean
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    foto_url?: NullableStringFieldUpdateOperationsInput | string | null
+    bot20_esperado?: IntFieldUpdateOperationsInput | number
+    bot10_esperado?: IntFieldUpdateOperationsInput | number
+    soda_esperada?: IntFieldUpdateOperationsInput | number
+    bot20_entregado?: IntFieldUpdateOperationsInput | number
+    bot10_entregado?: IntFieldUpdateOperationsInput | number
+    soda_entregada?: IntFieldUpdateOperationsInput | number
+    reprogramada?: BoolFieldUpdateOperationsInput | boolean
     cliente?: ClienteUpdateOneRequiredWithoutParadasNestedInput
     pedido?: PedidoUpdateOneWithoutParadasNestedInput
     ruta_dia?: RutaDiaUpdateOneRequiredWithoutParadasNestedInput
@@ -57765,7 +58077,17 @@ export namespace Prisma {
     orden?: IntFieldUpdateOperationsInput | number
     estado?: EnumEstadoParadaFieldUpdateOperationsInput | $Enums.EstadoParada
     motivo_postergacion?: NullableStringFieldUpdateOperationsInput | string | null
+    motivo_fallo?: NullableStringFieldUpdateOperationsInput | string | null
     orden_ajustado?: BoolFieldUpdateOperationsInput | boolean
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    foto_url?: NullableStringFieldUpdateOperationsInput | string | null
+    bot20_esperado?: IntFieldUpdateOperationsInput | number
+    bot10_esperado?: IntFieldUpdateOperationsInput | number
+    soda_esperada?: IntFieldUpdateOperationsInput | number
+    bot20_entregado?: IntFieldUpdateOperationsInput | number
+    bot10_entregado?: IntFieldUpdateOperationsInput | number
+    soda_entregada?: IntFieldUpdateOperationsInput | number
+    reprogramada?: BoolFieldUpdateOperationsInput | boolean
     incidencias?: IncidenciaUncheckedUpdateManyWithoutParadaNestedInput
   }
 
@@ -57777,7 +58099,17 @@ export namespace Prisma {
     orden: number
     estado?: $Enums.EstadoParada
     motivo_postergacion?: string | null
+    motivo_fallo?: string | null
     orden_ajustado?: boolean
+    observaciones?: string | null
+    foto_url?: string | null
+    bot20_esperado?: number
+    bot10_esperado?: number
+    soda_esperada?: number
+    bot20_entregado?: number
+    bot10_entregado?: number
+    soda_entregada?: number
+    reprogramada?: boolean
   }
 
   export type ParadaDiaUpdateManyMutationInput = {
@@ -57785,7 +58117,17 @@ export namespace Prisma {
     orden?: IntFieldUpdateOperationsInput | number
     estado?: EnumEstadoParadaFieldUpdateOperationsInput | $Enums.EstadoParada
     motivo_postergacion?: NullableStringFieldUpdateOperationsInput | string | null
+    motivo_fallo?: NullableStringFieldUpdateOperationsInput | string | null
     orden_ajustado?: BoolFieldUpdateOperationsInput | boolean
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    foto_url?: NullableStringFieldUpdateOperationsInput | string | null
+    bot20_esperado?: IntFieldUpdateOperationsInput | number
+    bot10_esperado?: IntFieldUpdateOperationsInput | number
+    soda_esperada?: IntFieldUpdateOperationsInput | number
+    bot20_entregado?: IntFieldUpdateOperationsInput | number
+    bot10_entregado?: IntFieldUpdateOperationsInput | number
+    soda_entregada?: IntFieldUpdateOperationsInput | number
+    reprogramada?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type ParadaDiaUncheckedUpdateManyInput = {
@@ -57796,7 +58138,17 @@ export namespace Prisma {
     orden?: IntFieldUpdateOperationsInput | number
     estado?: EnumEstadoParadaFieldUpdateOperationsInput | $Enums.EstadoParada
     motivo_postergacion?: NullableStringFieldUpdateOperationsInput | string | null
+    motivo_fallo?: NullableStringFieldUpdateOperationsInput | string | null
     orden_ajustado?: BoolFieldUpdateOperationsInput | boolean
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    foto_url?: NullableStringFieldUpdateOperationsInput | string | null
+    bot20_esperado?: IntFieldUpdateOperationsInput | number
+    bot10_esperado?: IntFieldUpdateOperationsInput | number
+    soda_esperada?: IntFieldUpdateOperationsInput | number
+    bot20_entregado?: IntFieldUpdateOperationsInput | number
+    bot10_entregado?: IntFieldUpdateOperationsInput | number
+    soda_entregada?: IntFieldUpdateOperationsInput | number
+    reprogramada?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type PedidoCreateInput = {
@@ -61400,10 +61752,16 @@ export namespace Prisma {
     orden?: SortOrder
     frecuencia?: SortOrder
     semana_alterna?: SortOrder
+    bot20_default?: SortOrder
+    bot10_default?: SortOrder
+    soda_default?: SortOrder
   }
 
   export type ClienteRutaBaseAvgOrderByAggregateInput = {
     orden?: SortOrder
+    bot20_default?: SortOrder
+    bot10_default?: SortOrder
+    soda_default?: SortOrder
   }
 
   export type ClienteRutaBaseMaxOrderByAggregateInput = {
@@ -61413,6 +61771,9 @@ export namespace Prisma {
     orden?: SortOrder
     frecuencia?: SortOrder
     semana_alterna?: SortOrder
+    bot20_default?: SortOrder
+    bot10_default?: SortOrder
+    soda_default?: SortOrder
   }
 
   export type ClienteRutaBaseMinOrderByAggregateInput = {
@@ -61422,10 +61783,16 @@ export namespace Prisma {
     orden?: SortOrder
     frecuencia?: SortOrder
     semana_alterna?: SortOrder
+    bot20_default?: SortOrder
+    bot10_default?: SortOrder
+    soda_default?: SortOrder
   }
 
   export type ClienteRutaBaseSumOrderByAggregateInput = {
     orden?: SortOrder
+    bot20_default?: SortOrder
+    bot10_default?: SortOrder
+    soda_default?: SortOrder
   }
 
   export type EnumEstadoRutaFilter<$PrismaModel = never> = {
@@ -61509,11 +61876,27 @@ export namespace Prisma {
     orden?: SortOrder
     estado?: SortOrder
     motivo_postergacion?: SortOrder
+    motivo_fallo?: SortOrder
     orden_ajustado?: SortOrder
+    observaciones?: SortOrder
+    foto_url?: SortOrder
+    bot20_esperado?: SortOrder
+    bot10_esperado?: SortOrder
+    soda_esperada?: SortOrder
+    bot20_entregado?: SortOrder
+    bot10_entregado?: SortOrder
+    soda_entregada?: SortOrder
+    reprogramada?: SortOrder
   }
 
   export type ParadaDiaAvgOrderByAggregateInput = {
     orden?: SortOrder
+    bot20_esperado?: SortOrder
+    bot10_esperado?: SortOrder
+    soda_esperada?: SortOrder
+    bot20_entregado?: SortOrder
+    bot10_entregado?: SortOrder
+    soda_entregada?: SortOrder
   }
 
   export type ParadaDiaMaxOrderByAggregateInput = {
@@ -61524,7 +61907,17 @@ export namespace Prisma {
     orden?: SortOrder
     estado?: SortOrder
     motivo_postergacion?: SortOrder
+    motivo_fallo?: SortOrder
     orden_ajustado?: SortOrder
+    observaciones?: SortOrder
+    foto_url?: SortOrder
+    bot20_esperado?: SortOrder
+    bot10_esperado?: SortOrder
+    soda_esperada?: SortOrder
+    bot20_entregado?: SortOrder
+    bot10_entregado?: SortOrder
+    soda_entregada?: SortOrder
+    reprogramada?: SortOrder
   }
 
   export type ParadaDiaMinOrderByAggregateInput = {
@@ -61535,11 +61928,27 @@ export namespace Prisma {
     orden?: SortOrder
     estado?: SortOrder
     motivo_postergacion?: SortOrder
+    motivo_fallo?: SortOrder
     orden_ajustado?: SortOrder
+    observaciones?: SortOrder
+    foto_url?: SortOrder
+    bot20_esperado?: SortOrder
+    bot10_esperado?: SortOrder
+    soda_esperada?: SortOrder
+    bot20_entregado?: SortOrder
+    bot10_entregado?: SortOrder
+    soda_entregada?: SortOrder
+    reprogramada?: SortOrder
   }
 
   export type ParadaDiaSumOrderByAggregateInput = {
     orden?: SortOrder
+    bot20_esperado?: SortOrder
+    bot10_esperado?: SortOrder
+    soda_esperada?: SortOrder
+    bot20_entregado?: SortOrder
+    bot10_entregado?: SortOrder
+    soda_entregada?: SortOrder
   }
 
   export type EnumEstadoParadaWithAggregatesFilter<$PrismaModel = never> = {
@@ -69936,6 +70345,9 @@ export namespace Prisma {
     orden: number
     frecuencia?: $Enums.Frecuencia
     semana_alterna?: $Enums.SemanaAlterna | null
+    bot20_default?: number
+    bot10_default?: number
+    soda_default?: number
     ruta_base: RutaBaseCreateNestedOneWithoutClientesInput
   }
 
@@ -69945,6 +70357,9 @@ export namespace Prisma {
     orden: number
     frecuencia?: $Enums.Frecuencia
     semana_alterna?: $Enums.SemanaAlterna | null
+    bot20_default?: number
+    bot10_default?: number
+    soda_default?: number
   }
 
   export type ClienteRutaBaseCreateOrConnectWithoutClienteInput = {
@@ -70076,7 +70491,17 @@ export namespace Prisma {
     orden: number
     estado?: $Enums.EstadoParada
     motivo_postergacion?: string | null
+    motivo_fallo?: string | null
     orden_ajustado?: boolean
+    observaciones?: string | null
+    foto_url?: string | null
+    bot20_esperado?: number
+    bot10_esperado?: number
+    soda_esperada?: number
+    bot20_entregado?: number
+    bot10_entregado?: number
+    soda_entregada?: number
+    reprogramada?: boolean
     pedido?: PedidoCreateNestedOneWithoutParadasInput
     ruta_dia: RutaDiaCreateNestedOneWithoutParadasInput
     incidencias?: IncidenciaCreateNestedManyWithoutParadaInput
@@ -70089,7 +70514,17 @@ export namespace Prisma {
     orden: number
     estado?: $Enums.EstadoParada
     motivo_postergacion?: string | null
+    motivo_fallo?: string | null
     orden_ajustado?: boolean
+    observaciones?: string | null
+    foto_url?: string | null
+    bot20_esperado?: number
+    bot10_esperado?: number
+    soda_esperada?: number
+    bot20_entregado?: number
+    bot10_entregado?: number
+    soda_entregada?: number
+    reprogramada?: boolean
     incidencias?: IncidenciaUncheckedCreateNestedManyWithoutParadaInput
   }
 
@@ -70246,6 +70681,9 @@ export namespace Prisma {
     orden?: IntFilter<"ClienteRutaBase"> | number
     frecuencia?: EnumFrecuenciaFilter<"ClienteRutaBase"> | $Enums.Frecuencia
     semana_alterna?: EnumSemanaAlternaNullableFilter<"ClienteRutaBase"> | $Enums.SemanaAlterna | null
+    bot20_default?: IntFilter<"ClienteRutaBase"> | number
+    bot10_default?: IntFilter<"ClienteRutaBase"> | number
+    soda_default?: IntFilter<"ClienteRutaBase"> | number
   }
 
   export type DispensadorUpsertWithWhereUniqueWithoutClienteInput = {
@@ -70351,7 +70789,17 @@ export namespace Prisma {
     orden?: IntFilter<"ParadaDia"> | number
     estado?: EnumEstadoParadaFilter<"ParadaDia"> | $Enums.EstadoParada
     motivo_postergacion?: StringNullableFilter<"ParadaDia"> | string | null
+    motivo_fallo?: StringNullableFilter<"ParadaDia"> | string | null
     orden_ajustado?: BoolFilter<"ParadaDia"> | boolean
+    observaciones?: StringNullableFilter<"ParadaDia"> | string | null
+    foto_url?: StringNullableFilter<"ParadaDia"> | string | null
+    bot20_esperado?: IntFilter<"ParadaDia"> | number
+    bot10_esperado?: IntFilter<"ParadaDia"> | number
+    soda_esperada?: IntFilter<"ParadaDia"> | number
+    bot20_entregado?: IntFilter<"ParadaDia"> | number
+    bot10_entregado?: IntFilter<"ParadaDia"> | number
+    soda_entregada?: IntFilter<"ParadaDia"> | number
+    reprogramada?: BoolFilter<"ParadaDia"> | boolean
   }
 
   export type PedidoUpsertWithWhereUniqueWithoutClienteInput = {
@@ -70408,6 +70856,9 @@ export namespace Prisma {
     orden: number
     frecuencia?: $Enums.Frecuencia
     semana_alterna?: $Enums.SemanaAlterna | null
+    bot20_default?: number
+    bot10_default?: number
+    soda_default?: number
     cliente: ClienteCreateNestedOneWithoutClientes_rutaInput
   }
 
@@ -70417,6 +70868,9 @@ export namespace Prisma {
     orden: number
     frecuencia?: $Enums.Frecuencia
     semana_alterna?: $Enums.SemanaAlterna | null
+    bot20_default?: number
+    bot10_default?: number
+    soda_default?: number
   }
 
   export type ClienteRutaBaseCreateOrConnectWithoutRuta_baseInput = {
@@ -71282,7 +71736,17 @@ export namespace Prisma {
     orden: number
     estado?: $Enums.EstadoParada
     motivo_postergacion?: string | null
+    motivo_fallo?: string | null
     orden_ajustado?: boolean
+    observaciones?: string | null
+    foto_url?: string | null
+    bot20_esperado?: number
+    bot10_esperado?: number
+    soda_esperada?: number
+    bot20_entregado?: number
+    bot10_entregado?: number
+    soda_entregada?: number
+    reprogramada?: boolean
     cliente: ClienteCreateNestedOneWithoutParadasInput
     pedido?: PedidoCreateNestedOneWithoutParadasInput
     incidencias?: IncidenciaCreateNestedManyWithoutParadaInput
@@ -71295,7 +71759,17 @@ export namespace Prisma {
     orden: number
     estado?: $Enums.EstadoParada
     motivo_postergacion?: string | null
+    motivo_fallo?: string | null
     orden_ajustado?: boolean
+    observaciones?: string | null
+    foto_url?: string | null
+    bot20_esperado?: number
+    bot10_esperado?: number
+    soda_esperada?: number
+    bot20_entregado?: number
+    bot10_entregado?: number
+    soda_entregada?: number
+    reprogramada?: boolean
     incidencias?: IncidenciaUncheckedCreateNestedManyWithoutParadaInput
   }
 
@@ -71910,7 +72384,17 @@ export namespace Prisma {
     orden: number
     estado?: $Enums.EstadoParada
     motivo_postergacion?: string | null
+    motivo_fallo?: string | null
     orden_ajustado?: boolean
+    observaciones?: string | null
+    foto_url?: string | null
+    bot20_esperado?: number
+    bot10_esperado?: number
+    soda_esperada?: number
+    bot20_entregado?: number
+    bot10_entregado?: number
+    soda_entregada?: number
+    reprogramada?: boolean
     cliente: ClienteCreateNestedOneWithoutParadasInput
     ruta_dia: RutaDiaCreateNestedOneWithoutParadasInput
     incidencias?: IncidenciaCreateNestedManyWithoutParadaInput
@@ -71923,7 +72407,17 @@ export namespace Prisma {
     orden: number
     estado?: $Enums.EstadoParada
     motivo_postergacion?: string | null
+    motivo_fallo?: string | null
     orden_ajustado?: boolean
+    observaciones?: string | null
+    foto_url?: string | null
+    bot20_esperado?: number
+    bot10_esperado?: number
+    soda_esperada?: number
+    bot20_entregado?: number
+    bot10_entregado?: number
+    soda_entregada?: number
+    reprogramada?: boolean
     incidencias?: IncidenciaUncheckedCreateNestedManyWithoutParadaInput
   }
 
@@ -76019,7 +76513,17 @@ export namespace Prisma {
     orden: number
     estado?: $Enums.EstadoParada
     motivo_postergacion?: string | null
+    motivo_fallo?: string | null
     orden_ajustado?: boolean
+    observaciones?: string | null
+    foto_url?: string | null
+    bot20_esperado?: number
+    bot10_esperado?: number
+    soda_esperada?: number
+    bot20_entregado?: number
+    bot10_entregado?: number
+    soda_entregada?: number
+    reprogramada?: boolean
     cliente: ClienteCreateNestedOneWithoutParadasInput
     pedido?: PedidoCreateNestedOneWithoutParadasInput
     ruta_dia: RutaDiaCreateNestedOneWithoutParadasInput
@@ -76033,7 +76537,17 @@ export namespace Prisma {
     orden: number
     estado?: $Enums.EstadoParada
     motivo_postergacion?: string | null
+    motivo_fallo?: string | null
     orden_ajustado?: boolean
+    observaciones?: string | null
+    foto_url?: string | null
+    bot20_esperado?: number
+    bot10_esperado?: number
+    soda_esperada?: number
+    bot20_entregado?: number
+    bot10_entregado?: number
+    soda_entregada?: number
+    reprogramada?: boolean
   }
 
   export type ParadaDiaCreateOrConnectWithoutIncidenciasInput = {
@@ -76234,7 +76748,17 @@ export namespace Prisma {
     orden?: IntFieldUpdateOperationsInput | number
     estado?: EnumEstadoParadaFieldUpdateOperationsInput | $Enums.EstadoParada
     motivo_postergacion?: NullableStringFieldUpdateOperationsInput | string | null
+    motivo_fallo?: NullableStringFieldUpdateOperationsInput | string | null
     orden_ajustado?: BoolFieldUpdateOperationsInput | boolean
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    foto_url?: NullableStringFieldUpdateOperationsInput | string | null
+    bot20_esperado?: IntFieldUpdateOperationsInput | number
+    bot10_esperado?: IntFieldUpdateOperationsInput | number
+    soda_esperada?: IntFieldUpdateOperationsInput | number
+    bot20_entregado?: IntFieldUpdateOperationsInput | number
+    bot10_entregado?: IntFieldUpdateOperationsInput | number
+    soda_entregada?: IntFieldUpdateOperationsInput | number
+    reprogramada?: BoolFieldUpdateOperationsInput | boolean
     cliente?: ClienteUpdateOneRequiredWithoutParadasNestedInput
     pedido?: PedidoUpdateOneWithoutParadasNestedInput
     ruta_dia?: RutaDiaUpdateOneRequiredWithoutParadasNestedInput
@@ -76248,7 +76772,17 @@ export namespace Prisma {
     orden?: IntFieldUpdateOperationsInput | number
     estado?: EnumEstadoParadaFieldUpdateOperationsInput | $Enums.EstadoParada
     motivo_postergacion?: NullableStringFieldUpdateOperationsInput | string | null
+    motivo_fallo?: NullableStringFieldUpdateOperationsInput | string | null
     orden_ajustado?: BoolFieldUpdateOperationsInput | boolean
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    foto_url?: NullableStringFieldUpdateOperationsInput | string | null
+    bot20_esperado?: IntFieldUpdateOperationsInput | number
+    bot10_esperado?: IntFieldUpdateOperationsInput | number
+    soda_esperada?: IntFieldUpdateOperationsInput | number
+    bot20_entregado?: IntFieldUpdateOperationsInput | number
+    bot10_entregado?: IntFieldUpdateOperationsInput | number
+    soda_entregada?: IntFieldUpdateOperationsInput | number
+    reprogramada?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type UsuarioUpsertWithoutIncidenciasInput = {
@@ -77935,6 +78469,9 @@ export namespace Prisma {
     orden: number
     frecuencia?: $Enums.Frecuencia
     semana_alterna?: $Enums.SemanaAlterna | null
+    bot20_default?: number
+    bot10_default?: number
+    soda_default?: number
   }
 
   export type DispensadorCreateManyClienteInput = {
@@ -77983,7 +78520,17 @@ export namespace Prisma {
     orden: number
     estado?: $Enums.EstadoParada
     motivo_postergacion?: string | null
+    motivo_fallo?: string | null
     orden_ajustado?: boolean
+    observaciones?: string | null
+    foto_url?: string | null
+    bot20_esperado?: number
+    bot10_esperado?: number
+    soda_esperada?: number
+    bot20_entregado?: number
+    bot10_entregado?: number
+    soda_entregada?: number
+    reprogramada?: boolean
   }
 
   export type PedidoCreateManyClienteInput = {
@@ -78042,6 +78589,9 @@ export namespace Prisma {
     orden?: IntFieldUpdateOperationsInput | number
     frecuencia?: EnumFrecuenciaFieldUpdateOperationsInput | $Enums.Frecuencia
     semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
+    bot20_default?: IntFieldUpdateOperationsInput | number
+    bot10_default?: IntFieldUpdateOperationsInput | number
+    soda_default?: IntFieldUpdateOperationsInput | number
     ruta_base?: RutaBaseUpdateOneRequiredWithoutClientesNestedInput
   }
 
@@ -78051,6 +78601,9 @@ export namespace Prisma {
     orden?: IntFieldUpdateOperationsInput | number
     frecuencia?: EnumFrecuenciaFieldUpdateOperationsInput | $Enums.Frecuencia
     semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
+    bot20_default?: IntFieldUpdateOperationsInput | number
+    bot10_default?: IntFieldUpdateOperationsInput | number
+    soda_default?: IntFieldUpdateOperationsInput | number
   }
 
   export type ClienteRutaBaseUncheckedUpdateManyWithoutClienteInput = {
@@ -78059,6 +78612,9 @@ export namespace Prisma {
     orden?: IntFieldUpdateOperationsInput | number
     frecuencia?: EnumFrecuenciaFieldUpdateOperationsInput | $Enums.Frecuencia
     semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
+    bot20_default?: IntFieldUpdateOperationsInput | number
+    bot10_default?: IntFieldUpdateOperationsInput | number
+    soda_default?: IntFieldUpdateOperationsInput | number
   }
 
   export type DispensadorUpdateWithoutClienteInput = {
@@ -78188,7 +78744,17 @@ export namespace Prisma {
     orden?: IntFieldUpdateOperationsInput | number
     estado?: EnumEstadoParadaFieldUpdateOperationsInput | $Enums.EstadoParada
     motivo_postergacion?: NullableStringFieldUpdateOperationsInput | string | null
+    motivo_fallo?: NullableStringFieldUpdateOperationsInput | string | null
     orden_ajustado?: BoolFieldUpdateOperationsInput | boolean
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    foto_url?: NullableStringFieldUpdateOperationsInput | string | null
+    bot20_esperado?: IntFieldUpdateOperationsInput | number
+    bot10_esperado?: IntFieldUpdateOperationsInput | number
+    soda_esperada?: IntFieldUpdateOperationsInput | number
+    bot20_entregado?: IntFieldUpdateOperationsInput | number
+    bot10_entregado?: IntFieldUpdateOperationsInput | number
+    soda_entregada?: IntFieldUpdateOperationsInput | number
+    reprogramada?: BoolFieldUpdateOperationsInput | boolean
     pedido?: PedidoUpdateOneWithoutParadasNestedInput
     ruta_dia?: RutaDiaUpdateOneRequiredWithoutParadasNestedInput
     incidencias?: IncidenciaUpdateManyWithoutParadaNestedInput
@@ -78201,7 +78767,17 @@ export namespace Prisma {
     orden?: IntFieldUpdateOperationsInput | number
     estado?: EnumEstadoParadaFieldUpdateOperationsInput | $Enums.EstadoParada
     motivo_postergacion?: NullableStringFieldUpdateOperationsInput | string | null
+    motivo_fallo?: NullableStringFieldUpdateOperationsInput | string | null
     orden_ajustado?: BoolFieldUpdateOperationsInput | boolean
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    foto_url?: NullableStringFieldUpdateOperationsInput | string | null
+    bot20_esperado?: IntFieldUpdateOperationsInput | number
+    bot10_esperado?: IntFieldUpdateOperationsInput | number
+    soda_esperada?: IntFieldUpdateOperationsInput | number
+    bot20_entregado?: IntFieldUpdateOperationsInput | number
+    bot10_entregado?: IntFieldUpdateOperationsInput | number
+    soda_entregada?: IntFieldUpdateOperationsInput | number
+    reprogramada?: BoolFieldUpdateOperationsInput | boolean
     incidencias?: IncidenciaUncheckedUpdateManyWithoutParadaNestedInput
   }
 
@@ -78212,7 +78788,17 @@ export namespace Prisma {
     orden?: IntFieldUpdateOperationsInput | number
     estado?: EnumEstadoParadaFieldUpdateOperationsInput | $Enums.EstadoParada
     motivo_postergacion?: NullableStringFieldUpdateOperationsInput | string | null
+    motivo_fallo?: NullableStringFieldUpdateOperationsInput | string | null
     orden_ajustado?: BoolFieldUpdateOperationsInput | boolean
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    foto_url?: NullableStringFieldUpdateOperationsInput | string | null
+    bot20_esperado?: IntFieldUpdateOperationsInput | number
+    bot10_esperado?: IntFieldUpdateOperationsInput | number
+    soda_esperada?: IntFieldUpdateOperationsInput | number
+    bot20_entregado?: IntFieldUpdateOperationsInput | number
+    bot10_entregado?: IntFieldUpdateOperationsInput | number
+    soda_entregada?: IntFieldUpdateOperationsInput | number
+    reprogramada?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type PedidoUpdateWithoutClienteInput = {
@@ -78299,6 +78885,9 @@ export namespace Prisma {
     orden: number
     frecuencia?: $Enums.Frecuencia
     semana_alterna?: $Enums.SemanaAlterna | null
+    bot20_default?: number
+    bot10_default?: number
+    soda_default?: number
   }
 
   export type RutaBaseSectorCreateManyRuta_baseInput = {
@@ -78319,6 +78908,9 @@ export namespace Prisma {
     orden?: IntFieldUpdateOperationsInput | number
     frecuencia?: EnumFrecuenciaFieldUpdateOperationsInput | $Enums.Frecuencia
     semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
+    bot20_default?: IntFieldUpdateOperationsInput | number
+    bot10_default?: IntFieldUpdateOperationsInput | number
+    soda_default?: IntFieldUpdateOperationsInput | number
     cliente?: ClienteUpdateOneRequiredWithoutClientes_rutaNestedInput
   }
 
@@ -78328,6 +78920,9 @@ export namespace Prisma {
     orden?: IntFieldUpdateOperationsInput | number
     frecuencia?: EnumFrecuenciaFieldUpdateOperationsInput | $Enums.Frecuencia
     semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
+    bot20_default?: IntFieldUpdateOperationsInput | number
+    bot10_default?: IntFieldUpdateOperationsInput | number
+    soda_default?: IntFieldUpdateOperationsInput | number
   }
 
   export type ClienteRutaBaseUncheckedUpdateManyWithoutRuta_baseInput = {
@@ -78336,6 +78931,9 @@ export namespace Prisma {
     orden?: IntFieldUpdateOperationsInput | number
     frecuencia?: EnumFrecuenciaFieldUpdateOperationsInput | $Enums.Frecuencia
     semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
+    bot20_default?: IntFieldUpdateOperationsInput | number
+    bot10_default?: IntFieldUpdateOperationsInput | number
+    soda_default?: IntFieldUpdateOperationsInput | number
   }
 
   export type RutaBaseSectorUpdateWithoutRuta_baseInput = {
@@ -78526,7 +79124,17 @@ export namespace Prisma {
     orden: number
     estado?: $Enums.EstadoParada
     motivo_postergacion?: string | null
+    motivo_fallo?: string | null
     orden_ajustado?: boolean
+    observaciones?: string | null
+    foto_url?: string | null
+    bot20_esperado?: number
+    bot10_esperado?: number
+    soda_esperada?: number
+    bot20_entregado?: number
+    bot10_entregado?: number
+    soda_entregada?: number
+    reprogramada?: boolean
   }
 
   export type ParadaDiaUpdateWithoutRuta_diaInput = {
@@ -78534,7 +79142,17 @@ export namespace Prisma {
     orden?: IntFieldUpdateOperationsInput | number
     estado?: EnumEstadoParadaFieldUpdateOperationsInput | $Enums.EstadoParada
     motivo_postergacion?: NullableStringFieldUpdateOperationsInput | string | null
+    motivo_fallo?: NullableStringFieldUpdateOperationsInput | string | null
     orden_ajustado?: BoolFieldUpdateOperationsInput | boolean
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    foto_url?: NullableStringFieldUpdateOperationsInput | string | null
+    bot20_esperado?: IntFieldUpdateOperationsInput | number
+    bot10_esperado?: IntFieldUpdateOperationsInput | number
+    soda_esperada?: IntFieldUpdateOperationsInput | number
+    bot20_entregado?: IntFieldUpdateOperationsInput | number
+    bot10_entregado?: IntFieldUpdateOperationsInput | number
+    soda_entregada?: IntFieldUpdateOperationsInput | number
+    reprogramada?: BoolFieldUpdateOperationsInput | boolean
     cliente?: ClienteUpdateOneRequiredWithoutParadasNestedInput
     pedido?: PedidoUpdateOneWithoutParadasNestedInput
     incidencias?: IncidenciaUpdateManyWithoutParadaNestedInput
@@ -78547,7 +79165,17 @@ export namespace Prisma {
     orden?: IntFieldUpdateOperationsInput | number
     estado?: EnumEstadoParadaFieldUpdateOperationsInput | $Enums.EstadoParada
     motivo_postergacion?: NullableStringFieldUpdateOperationsInput | string | null
+    motivo_fallo?: NullableStringFieldUpdateOperationsInput | string | null
     orden_ajustado?: BoolFieldUpdateOperationsInput | boolean
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    foto_url?: NullableStringFieldUpdateOperationsInput | string | null
+    bot20_esperado?: IntFieldUpdateOperationsInput | number
+    bot10_esperado?: IntFieldUpdateOperationsInput | number
+    soda_esperada?: IntFieldUpdateOperationsInput | number
+    bot20_entregado?: IntFieldUpdateOperationsInput | number
+    bot10_entregado?: IntFieldUpdateOperationsInput | number
+    soda_entregada?: IntFieldUpdateOperationsInput | number
+    reprogramada?: BoolFieldUpdateOperationsInput | boolean
     incidencias?: IncidenciaUncheckedUpdateManyWithoutParadaNestedInput
   }
 
@@ -78558,7 +79186,17 @@ export namespace Prisma {
     orden?: IntFieldUpdateOperationsInput | number
     estado?: EnumEstadoParadaFieldUpdateOperationsInput | $Enums.EstadoParada
     motivo_postergacion?: NullableStringFieldUpdateOperationsInput | string | null
+    motivo_fallo?: NullableStringFieldUpdateOperationsInput | string | null
     orden_ajustado?: BoolFieldUpdateOperationsInput | boolean
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    foto_url?: NullableStringFieldUpdateOperationsInput | string | null
+    bot20_esperado?: IntFieldUpdateOperationsInput | number
+    bot10_esperado?: IntFieldUpdateOperationsInput | number
+    soda_esperada?: IntFieldUpdateOperationsInput | number
+    bot20_entregado?: IntFieldUpdateOperationsInput | number
+    bot10_entregado?: IntFieldUpdateOperationsInput | number
+    soda_entregada?: IntFieldUpdateOperationsInput | number
+    reprogramada?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type IncidenciaCreateManyParadaInput = {
@@ -78612,7 +79250,17 @@ export namespace Prisma {
     orden: number
     estado?: $Enums.EstadoParada
     motivo_postergacion?: string | null
+    motivo_fallo?: string | null
     orden_ajustado?: boolean
+    observaciones?: string | null
+    foto_url?: string | null
+    bot20_esperado?: number
+    bot10_esperado?: number
+    soda_esperada?: number
+    bot20_entregado?: number
+    bot10_entregado?: number
+    soda_entregada?: number
+    reprogramada?: boolean
   }
 
   export type PedidoItemCreateManyPedidoInput = {
@@ -78629,7 +79277,17 @@ export namespace Prisma {
     orden?: IntFieldUpdateOperationsInput | number
     estado?: EnumEstadoParadaFieldUpdateOperationsInput | $Enums.EstadoParada
     motivo_postergacion?: NullableStringFieldUpdateOperationsInput | string | null
+    motivo_fallo?: NullableStringFieldUpdateOperationsInput | string | null
     orden_ajustado?: BoolFieldUpdateOperationsInput | boolean
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    foto_url?: NullableStringFieldUpdateOperationsInput | string | null
+    bot20_esperado?: IntFieldUpdateOperationsInput | number
+    bot10_esperado?: IntFieldUpdateOperationsInput | number
+    soda_esperada?: IntFieldUpdateOperationsInput | number
+    bot20_entregado?: IntFieldUpdateOperationsInput | number
+    bot10_entregado?: IntFieldUpdateOperationsInput | number
+    soda_entregada?: IntFieldUpdateOperationsInput | number
+    reprogramada?: BoolFieldUpdateOperationsInput | boolean
     cliente?: ClienteUpdateOneRequiredWithoutParadasNestedInput
     ruta_dia?: RutaDiaUpdateOneRequiredWithoutParadasNestedInput
     incidencias?: IncidenciaUpdateManyWithoutParadaNestedInput
@@ -78642,7 +79300,17 @@ export namespace Prisma {
     orden?: IntFieldUpdateOperationsInput | number
     estado?: EnumEstadoParadaFieldUpdateOperationsInput | $Enums.EstadoParada
     motivo_postergacion?: NullableStringFieldUpdateOperationsInput | string | null
+    motivo_fallo?: NullableStringFieldUpdateOperationsInput | string | null
     orden_ajustado?: BoolFieldUpdateOperationsInput | boolean
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    foto_url?: NullableStringFieldUpdateOperationsInput | string | null
+    bot20_esperado?: IntFieldUpdateOperationsInput | number
+    bot10_esperado?: IntFieldUpdateOperationsInput | number
+    soda_esperada?: IntFieldUpdateOperationsInput | number
+    bot20_entregado?: IntFieldUpdateOperationsInput | number
+    bot10_entregado?: IntFieldUpdateOperationsInput | number
+    soda_entregada?: IntFieldUpdateOperationsInput | number
+    reprogramada?: BoolFieldUpdateOperationsInput | boolean
     incidencias?: IncidenciaUncheckedUpdateManyWithoutParadaNestedInput
   }
 
@@ -78653,7 +79321,17 @@ export namespace Prisma {
     orden?: IntFieldUpdateOperationsInput | number
     estado?: EnumEstadoParadaFieldUpdateOperationsInput | $Enums.EstadoParada
     motivo_postergacion?: NullableStringFieldUpdateOperationsInput | string | null
+    motivo_fallo?: NullableStringFieldUpdateOperationsInput | string | null
     orden_ajustado?: BoolFieldUpdateOperationsInput | boolean
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    foto_url?: NullableStringFieldUpdateOperationsInput | string | null
+    bot20_esperado?: IntFieldUpdateOperationsInput | number
+    bot10_esperado?: IntFieldUpdateOperationsInput | number
+    soda_esperada?: IntFieldUpdateOperationsInput | number
+    bot20_entregado?: IntFieldUpdateOperationsInput | number
+    bot10_entregado?: IntFieldUpdateOperationsInput | number
+    soda_entregada?: IntFieldUpdateOperationsInput | number
+    reprogramada?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type PedidoItemUpdateWithoutPedidoInput = {
