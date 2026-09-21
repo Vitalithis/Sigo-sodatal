@@ -214,6 +214,7 @@ export async function eliminarClienteDeRutaBaseAction(clienteRutaBaseId: string,
   }
 }
 
+
 /**
  * Mueve un cliente hacia arriba o abajo en el orden de la ruta
  */

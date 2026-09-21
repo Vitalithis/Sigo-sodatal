@@ -10,7 +10,8 @@ import {
   asignarPedidoARutaAction,
   actualizarParadaCompletaAction,
   actualizarOrdenParadasAction,
-  actualizarEsperadoParadaAction
+  actualizarEsperadoParadaAction,
+  eliminarRutaDiaAction
 } from '../actions';
 
 export default function RutasManager() {
@@ -68,6 +69,15 @@ export default function RutasManager() {
     if (res.success) await cargarDatos();
     return res;
   };
+  const handleEliminarRuta = async (rutaDiaId: string) => {
+  if (!confirm('¿Eliminar esta hoja de ruta completa? Se perderán todas sus paradas y no se puede deshacer.')) return;
+  const res = await eliminarRutaDiaAction(rutaDiaId);
+  if (res.success) {
+    await cargarDatos();
+  } else {
+    alert('Error al eliminar: ' + res.message);
+  }
+};
 
   const handleReorder = async (rutaId: string, nuevasParadas: any[]) => {
     const rutasClonadas = [...rutas];
@@ -147,7 +157,6 @@ export default function RutasManager() {
         <div className="flex flex-col gap-6">
           {rutas.map((ruta) =>
             ruta.paradas.length === 0 ? (
-              /* Ruta vacía: mini card con el mismo header que TablaSortable */
               <div key={ruta.id} className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
                 <div className="bg-slate-800 px-3 py-2 flex items-center justify-between">
                   <div className="flex items-center gap-2 flex-wrap">
@@ -161,9 +170,15 @@ export default function RutasManager() {
                       {ruta.usuario?.nombre} {ruta.usuario?.apellido}
                     </span>
                   </div>
-                  <span className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-black text-[10px] px-2 py-1 rounded">
-                    {ruta.estado}
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-black text-[10px] px-2 py-1 rounded">
+                      {ruta.estado}
+                    </span>
+                    <button onClick={() => handleEliminarRuta(ruta.id)}
+                      className="bg-red-500/20 hover:bg-red-500/30 text-red-200 hover:text-red-100 text-[10px] font-bold px-2.5 py-1.5 rounded border border-red-400/30 transition-colors">
+                      🗑️ Eliminar
+                    </button>
+                  </div>
                 </div>
                 <p className="text-xs text-gray-400 italic py-6 text-center">
                   Ruta vacía. No tiene clientes ni paradas asignadas todavía.

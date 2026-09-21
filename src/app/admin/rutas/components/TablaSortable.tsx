@@ -14,7 +14,7 @@ import { MessageSquare } from 'lucide-react';
 
 type EstadoParada = 'PENDIENTE' | 'ENTREGADO' | 'FALLIDO' | 'POSTERGADO';
 
-const NUM_COLUMNAS = 9; // drag | nombre | telefono | direccion | b20 | b10 | soda | obs+estado(agrupadas en 1) -> ver nota abajo
+const NUM_COLUMNAS = 9; // drag | nombre | telefono | direccion | b20 | b10 | soda | observaciones | estado
 
 // sector puede llegar como string, objeto {nombre}, o null
 function getSectorNombre(p: any): string {
@@ -40,7 +40,6 @@ function SortableRow({ parada, index, onActualizarParada, onActualizarEsperado }
   const [confirmado, setConfirmado] = useState(parada.estado === 'ENTREGADO');
   const [mensaje, setMensaje] = useState<{ tipo: 'ok' | 'error', texto: string } | null>(null);
 
-  // ── Cantidad ESPERADA del día (editable solo mientras está PENDIENTE) ──
   const [espB20, setEspB20] = useState(String(parada.bot20_esperado ?? 0));
   const [espB10, setEspB10] = useState(String(parada.bot10_esperado ?? 0));
   const [espSoda, setEspSoda] = useState(String(parada.soda_esperada ?? 0));
@@ -79,7 +78,7 @@ function SortableRow({ parada, index, onActualizarParada, onActualizarEsperado }
       setEspB20(String(parada.bot20_esperado ?? 0));
       setEspB10(String(parada.bot10_esperado ?? 0));
       setEspSoda(String(parada.soda_esperada ?? 0));
-      setMensaje({ tipo: 'error', texto: res?.message || ' No se pudo actualizar lo esperado' });
+      setMensaje({ tipo: 'error', texto: res?.message || 'No se pudo actualizar lo esperado' });
     }
     setGuardandoEsperado(false);
   };
@@ -94,7 +93,6 @@ function SortableRow({ parada, index, onActualizarParada, onActualizarEsperado }
       setExpandido(false);
       if (nuevoEstado === 'ENTREGADO') {
         setConfirmado(false);
-        // Pre-cargar con lo esperado: en el caso común, se entrega justo eso.
         setB20(String(parada.bot20_esperado ?? 0));
         setB10(String(parada.bot10_esperado ?? 0));
         setSoda(String(parada.soda_esperada ?? 0));
@@ -122,36 +120,36 @@ function SortableRow({ parada, index, onActualizarParada, onActualizarEsperado }
       cantidades: { bot20: Number(b20), bot10: Number(b10), soda: Number(soda) },
       observaciones: obs,
     });
-    if (res?.success) { setMensaje({ tipo: 'ok', texto: ' Guardado' }); setConfirmado(true); }
-    else { setMensaje({ tipo: 'error', texto: res?.message || ' Error' }); setEstado('PENDIENTE'); }
+    if (res?.success) { setMensaje({ tipo: 'ok', texto: 'Guardado' }); setConfirmado(true); }
+    else { setMensaje({ tipo: 'error', texto: res?.message || 'Error' }); setEstado('PENDIENTE'); }
     setGuardando(false);
   };
 
   const confirmarFallido = async () => {
     setMensaje(null);
-    if (!motivo.trim()) { setMensaje({ tipo: 'error', texto: ' Ingresa el motivo' }); return; }
+    if (!motivo.trim()) { setMensaje({ tipo: 'error', texto: 'Ingresa el motivo' }); return; }
     setGuardando(true);
     const fechaHora = new Date().toLocaleString('es-CL');
     const res = await onActualizarParada(parada.id, {
       estado: 'FALLIDO',
       observacion: `${motivo.trim()} \n[Registrado: ${fechaHora}]`,
     });
-    if (res?.success) { setMensaje({ tipo: 'ok', texto: ' Registrado' }); setExpandido(false); setMotivo(''); }
-    else setMensaje({ tipo: 'error', texto: res?.message || ' Error' });
+    if (res?.success) { setMensaje({ tipo: 'ok', texto: 'Registrado' }); setExpandido(false); setMotivo(''); }
+    else setMensaje({ tipo: 'error', texto: res?.message || 'Error' });
     setGuardando(false);
   };
 
   const confirmarPostergado = async () => {
     setMensaje(null);
-    if (!motivo.trim()) { setMensaje({ tipo: 'error', texto: ' Ingresa el motivo' }); return; }
+    if (!motivo.trim()) { setMensaje({ tipo: 'error', texto: 'Ingresa el motivo' }); return; }
     setGuardando(true);
     const fechaHora = new Date().toLocaleString('es-CL');
     const res = await onActualizarParada(parada.id, {
       estado: 'POSTERGADO',
       observacion: `${motivo.trim()} \n[Registrado: ${fechaHora}]`,
     });
-    if (res?.success) { setMensaje({ tipo: 'ok', texto: ' Postergado' }); setExpandido(false); setMotivo(''); }
-    else setMensaje({ tipo: 'error', texto: res?.message || ' Error' });
+    if (res?.success) { setMensaje({ tipo: 'ok', texto: 'Postergado' }); setExpandido(false); setMotivo(''); }
+    else setMensaje({ tipo: 'error', texto: res?.message || 'Error' });
     setGuardando(false);
   };
 
@@ -163,13 +161,12 @@ function SortableRow({ parada, index, onActualizarParada, onActualizarEsperado }
     : { bg: 'bg-red-50/60', border: 'border-red-100', label: 'text-red-800', ring: 'focus:ring-red-400', borderInput: 'border-red-200', btn: 'bg-red-600 hover:bg-red-700' };
 
   const estadoBadge = {
-    ENTREGADO:  { text: 'text-emerald-700', bg: 'bg-emerald-50', border: 'border-emerald-200', label: ' ENTREGADO' },
-    FALLIDO:    { text: 'text-red-700',     bg: 'bg-red-50',     border: 'border-red-200',     label: ' FALLIDO'   },
-    POSTERGADO: { text: 'text-amber-700',   bg: 'bg-amber-50',   border: 'border-amber-200',   label: ' POSTERGADO'   },
-    PENDIENTE:  { text: 'text-slate-600',   bg: 'bg-slate-50',   border: 'border-slate-200',   label: ' PENDIENTE'     },
-  }[estado] ?? { text: 'text-slate-600', bg: 'bg-slate-50', border: 'border-slate-200', label: ' PENDIENTE' };
+    ENTREGADO:  { text: 'text-emerald-700', bg: 'bg-emerald-50', border: 'border-emerald-200', label: 'ENTREGADO' },
+    FALLIDO:    { text: 'text-red-700',     bg: 'bg-red-50',     border: 'border-red-200',     label: 'FALLIDO'   },
+    POSTERGADO: { text: 'text-amber-700',   bg: 'bg-amber-50',   border: 'border-amber-200',   label: 'POSTERGADO'   },
+    PENDIENTE:  { text: 'text-slate-600',   bg: 'bg-slate-50',   border: 'border-slate-200',   label: 'PENDIENTE'     },
+  }[estado] ?? { text: 'text-slate-600', bg: 'bg-slate-50', border: 'border-slate-200', label: 'PENDIENTE' };
 
-  // Definición única de las 3 columnas de cantidades (evita repetir 3 bloques casi iguales)
   const columnasCantidad = [
     { key: 'b20', label: 'B.20', esperado: parada.bot20_esperado, val: estado === 'PENDIENTE' ? espB20 : b20, setEsp: setEspB20, setEnt: setB20 },
     { key: 'b10', label: 'B.10', esperado: parada.bot10_esperado, val: estado === 'PENDIENTE' ? espB10 : b10, setEsp: setEspB10, setEnt: setB10 },
@@ -185,32 +182,27 @@ function SortableRow({ parada, index, onActualizarParada, onActualizarEsperado }
           isDragging ? 'bg-blue-50 shadow-xl relative z-50' : 'bg-white'
         }`}
       >
-        {/* Drag handle */}
         <td {...attributes} {...listeners}
           className="pl-2 pr-1 text-center cursor-grab active:cursor-grabbing w-8 align-middle shrink-0">
           <span className="text-[13px] leading-none text-slate-300 group-hover:text-blue-400 transition-colors">⋮⋮</span>
         </td>
 
-        {/* Nombre */}
         <td className="py-1.5 px-2 align-middle w-48">
           <p className="font-semibold text-slate-800 text-[11px] leading-tight">{parada.cliente?.nombre}</p>
         </td>
 
-        {/* Teléfono */}
         <td className="py-1.5 px-2 align-middle w-32">
           <p className="text-[10px] text-slate-500 leading-tight whitespace-nowrap">
-            {parada.cliente?.telefono ? ` ${parada.cliente.telefono}` : '—'}
+            {parada.cliente?.telefono ? `📞 ${parada.cliente.telefono}` : '—'}
           </p>
         </td>
 
-        {/* Dirección */}
         <td className="py-1.5 px-2 align-middle">
           <p className="text-[10px] text-slate-500 leading-tight truncate max-w-[260px]" title={parada.cliente?.direccion}>
             {parada.cliente?.direccion}
           </p>
         </td>
 
-        {/* B.20 / B.10 / Soda: cada una su propia columna */}
         {columnasCantidad.map(c => (
           <td key={c.key} className="py-1.5 px-1 align-middle w-16 text-center">
             <input
@@ -230,7 +222,6 @@ function SortableRow({ parada, index, onActualizarParada, onActualizarEsperado }
           </td>
         ))}
 
-        {/* Observaciones */}
         <td className="py-1.5 px-2 align-middle w-56">
           {esExpandible && !expandido ? (
             <button onClick={() => setExpandido(true)}
@@ -254,11 +245,10 @@ function SortableRow({ parada, index, onActualizarParada, onActualizarEsperado }
           ) : <span className="text-slate-200 text-[9px]">—</span>}
         </td>
 
-        {/* Estado */}
         <td className="py-1.5 px-2 align-middle w-32">
           <select value={estado} onChange={e => manejarCambioEstado(e.target.value as EstadoParada)}
             className={`w-full text-[9px] font-extrabold px-1.5 py-1.5 rounded border cursor-pointer focus:outline-none focus:ring-1 tracking-wide transition-colors ${estadoBadge.bg} ${estadoBadge.text} ${estadoBadge.border} focus:ring-blue-200`}>
-            <option value="PENDIENTE">PENDIENTE.</option>
+            <option value="PENDIENTE">PENDIENTE</option>
             <option value="ENTREGADO">ENTREGADO</option>
             <option value="FALLIDO">FALLIDO</option>
             <option value="POSTERGADO">POSTERGADO</option>
@@ -277,7 +267,6 @@ function SortableRow({ parada, index, onActualizarParada, onActualizarEsperado }
         </td>
       </tr>
 
-      {/* Formulario desplegable Fallido / Postergado */}
       {esExpandible && expandido && (
         <tr className={`${colorExpandido.bg} border-b ${colorExpandido.border}`}>
           <td colSpan={NUM_COLUMNAS} className="px-3 py-2.5">
@@ -321,13 +310,6 @@ function SectorGroup({
 
   const itemsIds = useMemo(() => sparadas.map((p: any) => p.id), [sparadas]);
 
-  const totalSector = sparadas.reduce((acc, p) => {
-    acc.b20 += p.bot20_esperado || 0;
-    acc.b10 += p.bot10_esperado || 0;
-    acc.soda += p.soda_esperada || 0;
-    return acc;
-  }, { b20: 0, b10: 0, soda: 0 });
-
   return (
     <tbody ref={setNodeRef} style={style} className={isDragging ? 'relative z-40 shadow-lg' : ''}>
       <tr className="bg-slate-100 border-y border-slate-200">
@@ -340,7 +322,7 @@ function SectorGroup({
         <td colSpan={NUM_COLUMNAS - 1} className="px-2 py-1">
           <div className="flex items-center justify-between">
             <span className="text-[9px] font-black text-slate-600 uppercase tracking-wider">
-               {sector}
+              📍 {sector}
             </span>
             <span className="text-[9px] text-slate-400">
               {sparadas.length} parada{sparadas.length !== 1 ? 's' : ''}
@@ -375,9 +357,10 @@ interface TablaSortableProps {
     paradaId: string,
     cantidades: { bot20_esperado: number; bot10_esperado: number; soda_esperada: number }
   ) => Promise<{ success: boolean; message?: string }>;
+  onEliminarRuta: (rutaDiaId: string) => void;
 }
 
-export default function TablaSortable({ rutaId, ruta, paradas, onReorder, onActualizarParada, onActualizarEsperado }: TablaSortableProps) {
+export default function TablaSortable({ rutaId, ruta, paradas, onReorder, onActualizarParada, onActualizarEsperado, onEliminarRuta }: TablaSortableProps) {
   const sectores = useMemo(() => {
     const map: Record<string, any[]> = {};
     paradas.forEach(p => {
@@ -453,7 +436,7 @@ export default function TablaSortable({ rutaId, ruta, paradas, onReorder, onActu
       ENTREGADO:  { label: '✔ Entregado',  color: '#059669' },
       FALLIDO:    { label: '✘ Fallido',    color: '#dc2626' },
       POSTERGADO: { label: '↻ Postergado', color: '#d97706' },
-      PENDIENTE:  { label: '… PENDIENTE',  color: '#64748b' },
+      PENDIENTE:  { label: '… Pendiente',  color: '#64748b' },
     };
 
     const cantidadesParada = (p: any) => {
@@ -473,7 +456,7 @@ export default function TablaSortable({ rutaId, ruta, paradas, onReorder, onActu
     };
 
     const filasSectores = Object.entries(porSector).map(([sector, sparadas]) => `
-      <tr><td colspan="8" class="sector-row" style="padding-left:4px;"> ${sector} (${sparadas.length} parada${sparadas.length !== 1 ? 's' : ''})</td></tr>
+      <tr><td colspan="8" class="sector-row" style="padding-left:4px;">📍 ${sector} (${sparadas.length} parada${sparadas.length !== 1 ? 's' : ''})</td></tr>
       ${sparadas.map((p, i) => {
         const cant = cantidadesParada(p);
         const info = estadoInfo[p.estado] || estadoInfo.PENDIENTE;
@@ -518,7 +501,7 @@ export default function TablaSortable({ rutaId, ruta, paradas, onReorder, onActu
         <body>
           <div class="header">
             <div>
-              <h2> ${ruta?.vehiculo?.marca || ''} ${ruta?.vehiculo?.modelo || ''} — ${ruta?.vehiculo?.patente || ''}</h2>
+              <h2>🚚 ${ruta?.vehiculo?.marca || ''} ${ruta?.vehiculo?.modelo || ''} — ${ruta?.vehiculo?.patente || ''}</h2>
               <p>Repartidor: ${ruta?.usuario?.nombre || ''} ${ruta?.usuario?.apellido || ''}</p>
             </div>
             <div class="totales">
@@ -565,7 +548,7 @@ export default function TablaSortable({ rutaId, ruta, paradas, onReorder, onActu
       <div className="bg-blue-800 px-3 py-2 flex items-center justify-between">
         <div className="flex items-center gap-2 flex-wrap">
           <span className="text-white font-bold text-xs">
-             {ruta?.vehiculo?.marca} {ruta?.vehiculo?.modelo}
+            🚚 {ruta?.vehiculo?.marca} {ruta?.vehiculo?.modelo}
           </span>
           <span className="bg-blue-800 text-white text-[10px] px-1.5 py-0.5 rounded font-mono tracking-wide">
             {ruta?.vehiculo?.patente}
@@ -584,7 +567,11 @@ export default function TablaSortable({ rutaId, ruta, paradas, onReorder, onActu
           </span>
           <button onClick={handlePrint}
             className="bg-white/10 hover:bg-white/20 text-white text-[10px] font-bold px-2.5 py-1.5 rounded border border-white/20 transition-colors flex items-center gap-1.5">
-             Imprimir
+            🖨️ Imprimir
+          </button>
+          <button onClick={() => onEliminarRuta(rutaId)}
+            className="bg-red-500/20 hover:bg-red-500/30 text-red-200 hover:text-red-100 text-[10px] font-bold px-2.5 py-1.5 rounded border border-red-400/30 transition-colors flex items-center gap-1.5">
+            🗑️ Eliminar
           </button>
         </div>
       </div>
@@ -594,15 +581,15 @@ export default function TablaSortable({ rutaId, ruta, paradas, onReorder, onActu
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs border-collapse table-fixed min-w-[900px]">
             <colgroup>
-              <col className="w-8" />   {/* drag handle */}
-              <col className="w-48" /> {/* nombre */}
-              <col className="w-32" /> {/* telefono */}
-              <col />                   {/* direccion (flexible) */}
-              <col className="w-16" /> {/* b20 */}
-              <col className="w-16" /> {/* b10 */}
-              <col className="w-16" /> {/* soda */}
-              <col className="w-56" /> {/* observaciones */}
-              <col className="w-32" /> {/* estado */}
+              <col className="w-8" />
+              <col className="w-48" />
+              <col className="w-32" />
+              <col />
+              <col className="w-16" />
+              <col className="w-16" />
+              <col className="w-16" />
+              <col className="w-56" />
+              <col className="w-32" />
             </colgroup>
             <thead>
               <tr className="bg-slate-50 border-b border-slate-200 text-slate-500 text-[9px] font-black tracking-wider uppercase">
@@ -633,11 +620,11 @@ export default function TablaSortable({ rutaId, ruta, paradas, onReorder, onActu
               <tr className="bg-blue-800 text-white text-[9px] font-black">
                 <td colSpan={NUM_COLUMNAS} className="p-2 pr-4">
                   <div className="flex items-center justify-end gap-6">
-                    <span className="uppercase tracking-wider text-white-400">Total del día</span>
-                    <span>B.20: <b className="text-white-300">{totales.b20}</b></span>
-                    <span>B.10: <b className="text-white-300">{totales.b10}</b></span>
-                    <span>Soda: <b className="text-white-300">{totales.soda}</b></span>
-                    <span className="text-white-400">{paradas.length} paradas</span>
+                    <span className="uppercase tracking-wider text-white/60">Total del día</span>
+                    <span>B.20: <b className="text-white">{totales.b20}</b></span>
+                    <span>B.10: <b className="text-white">{totales.b10}</b></span>
+                    <span>Soda: <b className="text-white">{totales.soda}</b></span>
+                    <span className="text-white/60">{paradas.length} paradas</span>
                   </div>
                 </td>
               </tr>

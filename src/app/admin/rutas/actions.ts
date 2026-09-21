@@ -625,6 +625,23 @@ export async function registrarIncidenciaAction(data: RegistrarIncidenciaInput) 
     return { success: false, message: error.message || "Error al registrar la incidencia" };
   }
 }
+/**
+ * Elimina completamente una RutaDia y todas sus paradas asociadas.
+ * Uso: limpiar hojas de ruta de prueba, o rutas mal generadas.
+ */
+export async function eliminarRutaDiaAction(rutaDiaId: string) {
+  try {
+    await prisma.$transaction([
+      prisma.paradaDia.deleteMany({ where: { ruta_dia_id: rutaDiaId } }),
+      prisma.rutaDia.delete({ where: { id: rutaDiaId } })
+    ]);
+    revalidatePath('/admin/rutas');
+    return { success: true };
+  } catch (error: any) {
+    console.error('Error en eliminarRutaDiaAction:', error);
+    return { success: false, message: error.message || 'Error al eliminar la hoja de ruta.' };
+  }
+}
 
 export async function actualizarOrdenParadasAction(paradasReordenadas: { id: string; orden_nuevo: number }[]) {
   try {

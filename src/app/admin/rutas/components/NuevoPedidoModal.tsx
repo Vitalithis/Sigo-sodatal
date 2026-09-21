@@ -429,7 +429,6 @@ export default function NuevoPedidoModal({
                       value={item.busqueda}
                       onChange={(e) => actualizarItem(item.uid, { busqueda: e.target.value, productoId: '', mostrarDrop: true })}
                       onFocus={() => actualizarItem(item.uid, { mostrarDrop: true })}
-                      onBlur={() => setTimeout(() => actualizarItem(item.uid, { mostrarDrop: false }), 150)}
                       className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm outline-none font-medium focus:ring-2 focus:ring-[#1e40af]/20 focus:border-[#1e40af] transition-colors bg-white"
                       required={!item.productoId}
                     />
@@ -440,7 +439,10 @@ export default function NuevoPedidoModal({
                         ) : (
                           filtrados.map(p => (
                             <li key={p.id}
-                              onClick={() => actualizarItem(item.uid, { productoId: p.id, busqueda: p.nombre, mostrarDrop: false })}
+                              onMouseDown={(e) => {
+                                e.preventDefault(); // evita que el input pierda foco antes del click
+                                actualizarItem(item.uid, { productoId: p.id, busqueda: p.nombre, mostrarDrop: false });
+                              }}
                               className="p-2.5 hover:bg-blue-50 cursor-pointer transition-colors">
                               <span className="text-slate-800 font-medium">{p.nombre}</span>
                             </li>
