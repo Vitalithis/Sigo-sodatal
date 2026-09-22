@@ -194,6 +194,7 @@ export default function RutasManager() {
                 onReorder={handleReorder}
                 onActualizarParada={handleActualizarParada}
                 onActualizarEsperado={handleActualizarEsperado}
+                onEliminarRuta={handleEliminarRuta}
               />
             )
           )}
