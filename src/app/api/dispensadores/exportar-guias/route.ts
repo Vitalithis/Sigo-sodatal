@@ -39,7 +39,7 @@ export async function GET(request: Request) {
         total: true,
         fecha_emision: true,
         nombre_receptor: true,
-        cliente: { select: { nombre: true, rut: true } },
+        cliente: { select: { nombre: true, rut_empresa: true } },
         items: { 
           select: { 
             cantidad: true, 

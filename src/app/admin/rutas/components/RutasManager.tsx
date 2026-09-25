@@ -14,7 +14,11 @@ import {
   eliminarRutaDiaAction
 } from '../actions';
 
+import VistaCalendarioRutas from './VistaCalendarioRutas';
+import { Calendar, ListFilter } from 'lucide-react';
+
 export default function RutasManager() {
+  const [vistaModo, setVistaModo] = useState<'despacho' | 'calendario'>('despacho');
   const [fechaSeleccionada, setFechaSeleccionada] = useState(new Date().toISOString().split('T')[0]);
   const [rutas, setRutas] = useState<any[]>([]);
   const [pedidosFlotantes, setPedidosFlotantes] = useState<any[]>([]);
@@ -99,35 +103,65 @@ export default function RutasManager() {
   return (
     <div className="space-y-6">
 
-      {/* ── Barra superior ── */}
-      <div className="bg-white p-4 rounded-lg border border-gray-200 flex flex-wrap items-center justify-between gap-4 shadow-sm">
-        <div className="flex items-center space-x-3">
-          <div>
-            <label className="block text-xs font-semibold text-gray-500 mb-1">Día de despacho</label>
-            <input
-              type="date"
-              value={fechaSeleccionada}
-              onChange={(e) => setFechaSeleccionada(e.target.value)}
-              className="border border-gray-300 rounded px-3 py-1.5 text-sm font-bold text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-          <div className="pt-5">
-            <span className="bg-blue-50 text-blue-700 px-3 py-1.5 rounded-md font-black text-xs border border-blue-100">
-               {nombreDiaSemana}
-            </span>
-          </div>
-        </div>
-        <div className="flex items-center space-x-2">
-          <button onClick={handleIniciarHojasDelDia} disabled={cargando}
-            className="bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white text-xs font-bold px-4 py-2.5 rounded shadow-sm transition-colors uppercase tracking-wider">
-            {cargando ? 'Procesando...' : 'cargar Ruta fijos'}
-          </button>
-          <button onClick={() => setModalAbierto(true)}
-            className="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-4 py-2.5 rounded shadow-sm transition-colors uppercase tracking-wider">
-            Agendar Pedido
-          </button>
-        </div>
+      {/* ── Tabs de Modo de Vista ── */}
+      <div className="flex border-b border-slate-200 bg-white p-1 rounded-2xl shadow-sm gap-1">
+        <button
+          onClick={() => setVistaModo('despacho')}
+          className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs transition-all ${
+            vistaModo === 'despacho'
+              ? 'bg-[#013299] text-white shadow-sm'
+              : 'text-slate-600 hover:bg-slate-100'
+          }`}
+        >
+          <ListFilter className="h-4 w-4" />
+          Hojas de Ruta del Día
+        </button>
+        <button
+          onClick={() => setVistaModo('calendario')}
+          className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs transition-all ${
+            vistaModo === 'calendario'
+              ? 'bg-[#013299] text-white shadow-sm'
+              : 'text-slate-600 hover:bg-slate-100'
+          }`}
+        >
+          <Calendar className="h-4 w-4" />
+          Vista Calendario y Frecuencia de Visita
+        </button>
       </div>
+
+      {vistaModo === 'calendario' ? (
+        <VistaCalendarioRutas />
+      ) : (
+        <>
+          {/* ── Barra superior ── */}
+          <div className="bg-white p-4 rounded-lg border border-gray-200 flex flex-wrap items-center justify-between gap-4 shadow-sm">
+            <div className="flex items-center space-x-3">
+              <div>
+                <label className="block text-xs font-semibold text-gray-500 mb-1">Día de despacho</label>
+                <input
+                  type="date"
+                  value={fechaSeleccionada}
+                  onChange={(e) => setFechaSeleccionada(e.target.value)}
+                  className="border border-gray-300 rounded px-3 py-1.5 text-sm font-bold text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              <div className="pt-5">
+                <span className="bg-blue-50 text-blue-700 px-3 py-1.5 rounded-md font-black text-xs border border-blue-100">
+                   {nombreDiaSemana}
+                </span>
+              </div>
+            </div>
+            <div className="flex items-center space-x-2">
+              <button onClick={handleIniciarHojasDelDia} disabled={cargando}
+                className="bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white text-xs font-bold px-4 py-2.5 rounded shadow-sm transition-colors uppercase tracking-wider">
+                {cargando ? 'Procesando...' : 'cargar Ruta fijos'}
+              </button>
+              <button onClick={() => setModalAbierto(true)}
+                className="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-4 py-2.5 rounded shadow-sm transition-colors uppercase tracking-wider">
+                Agendar Pedido
+              </button>
+            </div>
+          </div>
 
       {/* ── Alertas de feedback ── */}
       {mensajeEstado && (
@@ -209,6 +243,8 @@ export default function RutasManager() {
         onClose={() => setModalAbierto(false)}
         onSuccess={() => { setModalAbierto(false); cargarDatos(); }}
       />
+        </>
+      )}
     </div>
   );
 }

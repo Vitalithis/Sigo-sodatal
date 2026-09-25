@@ -173,13 +173,20 @@ function SortableRow({ parada, index, onActualizarParada, onActualizarEsperado }
     { key: 'soda', label: 'Soda', esperado: parada.soda_esperada, val: estado === 'PENDIENTE' ? espSoda : soda, setEsp: setEspSoda, setEnt: setSoda },
   ] as const;
 
+  const rowStyleByEstado = {
+    ENTREGADO: 'bg-emerald-50/90 hover:bg-emerald-100/90 border-l-4 border-l-emerald-500',
+    FALLIDO: 'bg-rose-50/90 hover:bg-rose-100/90 border-l-4 border-l-rose-500',
+    POSTERGADO: 'bg-amber-50/90 hover:bg-amber-100/90 border-l-4 border-l-amber-500',
+    PENDIENTE: 'bg-white hover:bg-blue-50/40 border-l-4 border-l-blue-400',
+  }[estado] || 'bg-white border-l-4 border-l-slate-300';
+
   return (
     <>
       <tr
         ref={setNodeRef}
         style={style}
-        className={`border-b border-slate-100 hover:bg-slate-50/70 group transition-colors ${
-          isDragging ? 'bg-blue-50 shadow-xl relative z-50' : 'bg-white'
+        className={`border-b border-slate-200 group transition-all duration-300 ${
+          isDragging ? 'bg-blue-100 shadow-xl relative z-50' : rowStyleByEstado
         }`}
       >
         <td {...attributes} {...listeners}

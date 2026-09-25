@@ -17,7 +17,8 @@ export async function obtenerMetricasDashboardAction() {
       alertasActivas,
       productosParaEvaluar,
       ingresosHoyAgg,
-      tuboActivo
+      tuboActivo,
+      choferesRutas
     ] = await Promise.all([
       // Total Pedidos solicitados para hoy
       prisma.pedido.count({
@@ -59,6 +60,20 @@ export async function obtenerMetricasDashboardAction() {
       // Estado del tubo de CO2
       prisma.tuboCO2.findFirst({
         where: { activo: true }
+      }),
+      // Choferes y sectores en operación hoy
+      prisma.rutaDia.findMany({
+        where: { fecha: { gte: hoy, lt: mañana } },
+        include: {
+          usuario: { select: { nombre: true, apellido: true } },
+          vehiculo: { select: { marca: true, modelo: true, patente: true } },
+          paradas: {
+            orderBy: { orden: 'asc' },
+            include: {
+              cliente: { include: { sector: { include: { comuna: true } } } }
+            }
+          }
+        }
       })
     ]);
 
@@ -88,6 +103,35 @@ export async function obtenerMetricasDashboardAction() {
       };
     }
 
+    // Procesar estado y sector de operación de los choferes
+    const choferesOperando = choferesRutas.map((r: any) => {
+      const sectoresNombres = Array.from(
+        new Set(
+          r.paradas
+            .map((p: any) => p.cliente?.sector?.nombre)
+            .filter((s: any): s is string => Boolean(s))
+        )
+      );
+
+      const paradasEntregadas = r.paradas.filter((p: any) => p.estado === 'ENTREGADO').length;
+      const paradaActual = r.paradas.find((p: any) => p.estado === 'PENDIENTE') || r.paradas[r.paradas.length - 1];
+      const sectorActual = paradaActual?.cliente?.sector?.nombre || (sectoresNombres[0] ?? 'Sin Sector asignado');
+      const comunaActual = paradaActual?.cliente?.sector?.comuna?.nombre || '';
+
+      return {
+        rutaId: r.id,
+        choferNombre: `${r.usuario.nombre} ${r.usuario.apellido || ''}`.trim(),
+        vehiculoPatente: r.vehiculo.patente,
+        vehiculoModelo: `${r.vehiculo.marca} ${r.vehiculo.modelo}`,
+        sectorActual,
+        comunaActual,
+        sectoresTotales: sectoresNombres,
+        paradasTotal: r.paradas.length,
+        paradasEntregadas,
+        estadoRuta: r.estado,
+      };
+    });
+
     return {
       success: true,
       data: {
@@ -103,7 +147,8 @@ export async function obtenerMetricasDashboardAction() {
         alertas: alertasActivas,
         ingresos: ingresosHoy,
         productosCriticos: productosBajoStockCount,
-        co2
+        co2,
+        choferesOperando
       }
     };
   } catch (error) {

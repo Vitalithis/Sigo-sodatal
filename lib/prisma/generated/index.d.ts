@@ -327,6 +327,9 @@ export type DiaSemana = (typeof DiaSemana)[keyof typeof DiaSemana]
 
 export const Frecuencia: {
   SEMANAL: 'SEMANAL',
+  QUINCENAL: 'QUINCENAL',
+  MENSUAL: 'MENSUAL',
+  A_PEDIDO: 'A_PEDIDO',
   ALTERNA: 'ALTERNA'
 };
 
@@ -389,9 +392,12 @@ export type EstadoCuadratura = (typeof EstadoCuadratura)[keyof typeof EstadoCuad
 
 
 export const EstadoDispensador: {
+  DISPONIBLE: 'DISPONIBLE',
   EN_CLIENTE: 'EN_CLIENTE',
   EN_TALLER: 'EN_TALLER',
-  REEMPLAZADO_TEMPORALMENTE: 'REEMPLAZADO_TEMPORALMENTE'
+  REEMPLAZADO_TEMPORALMENTE: 'REEMPLAZADO_TEMPORALMENTE',
+  RETIRADO: 'RETIRADO',
+  BAJA: 'BAJA'
 };
 
 export type EstadoDispensador = (typeof EstadoDispensador)[keyof typeof EstadoDispensador]
@@ -14549,10 +14555,12 @@ export namespace Prisma {
 
   export type ClienteAvgAggregateOutputType = {
     botellones_prestados: number | null
+    deuda: number | null
   }
 
   export type ClienteSumAggregateOutputType = {
     botellones_prestados: number | null
+    deuda: number | null
   }
 
   export type ClienteMinAggregateOutputType = {
@@ -14573,6 +14581,7 @@ export namespace Prisma {
     sector_id: string | null
     frecuencia: $Enums.Frecuencia | null
     semana_alterna: $Enums.SemanaAlterna | null
+    deuda: number | null
   }
 
   export type ClienteMaxAggregateOutputType = {
@@ -14593,6 +14602,7 @@ export namespace Prisma {
     sector_id: string | null
     frecuencia: $Enums.Frecuencia | null
     semana_alterna: $Enums.SemanaAlterna | null
+    deuda: number | null
   }
 
   export type ClienteCountAggregateOutputType = {
@@ -14613,16 +14623,19 @@ export namespace Prisma {
     sector_id: number
     frecuencia: number
     semana_alterna: number
+    deuda: number
     _all: number
   }
 
 
   export type ClienteAvgAggregateInputType = {
     botellones_prestados?: true
+    deuda?: true
   }
 
   export type ClienteSumAggregateInputType = {
     botellones_prestados?: true
+    deuda?: true
   }
 
   export type ClienteMinAggregateInputType = {
@@ -14643,6 +14656,7 @@ export namespace Prisma {
     sector_id?: true
     frecuencia?: true
     semana_alterna?: true
+    deuda?: true
   }
 
   export type ClienteMaxAggregateInputType = {
@@ -14663,6 +14677,7 @@ export namespace Prisma {
     sector_id?: true
     frecuencia?: true
     semana_alterna?: true
+    deuda?: true
   }
 
   export type ClienteCountAggregateInputType = {
@@ -14683,6 +14698,7 @@ export namespace Prisma {
     sector_id?: true
     frecuencia?: true
     semana_alterna?: true
+    deuda?: true
     _all?: true
   }
 
@@ -14790,6 +14806,7 @@ export namespace Prisma {
     sector_id: string | null
     frecuencia: $Enums.Frecuencia
     semana_alterna: $Enums.SemanaAlterna | null
+    deuda: number
     _count: ClienteCountAggregateOutputType | null
     _avg: ClienteAvgAggregateOutputType | null
     _sum: ClienteSumAggregateOutputType | null
@@ -14829,6 +14846,7 @@ export namespace Prisma {
     sector_id?: boolean
     frecuencia?: boolean
     semana_alterna?: boolean
+    deuda?: boolean
     sector?: boolean | Cliente$sectorArgs<ExtArgs>
     botellones_danados?: boolean | Cliente$botellones_danadosArgs<ExtArgs>
     clientes_ruta?: boolean | Cliente$clientes_rutaArgs<ExtArgs>
@@ -14861,9 +14879,10 @@ export namespace Prisma {
     sector_id?: boolean
     frecuencia?: boolean
     semana_alterna?: boolean
+    deuda?: boolean
   }
 
-  export type ClienteOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nombre" | "tipo" | "direccion" | "telefono" | "email" | "rut_empresa" | "giro" | "modalidad_pago" | "tipo_ruta" | "notas" | "activo" | "botellones_prestados" | "preferencia_factura" | "sector_id" | "frecuencia" | "semana_alterna", ExtArgs["result"]["cliente"]>
+  export type ClienteOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nombre" | "tipo" | "direccion" | "telefono" | "email" | "rut_empresa" | "giro" | "modalidad_pago" | "tipo_ruta" | "notas" | "activo" | "botellones_prestados" | "preferencia_factura" | "sector_id" | "frecuencia" | "semana_alterna" | "deuda", ExtArgs["result"]["cliente"]>
   export type ClienteInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     sector?: boolean | Cliente$sectorArgs<ExtArgs>
     botellones_danados?: boolean | Cliente$botellones_danadosArgs<ExtArgs>
@@ -14908,6 +14927,7 @@ export namespace Prisma {
       sector_id: string | null
       frecuencia: $Enums.Frecuencia
       semana_alterna: $Enums.SemanaAlterna | null
+      deuda: number
     }, ExtArgs["result"]["cliente"]>
     composites: {}
   }
@@ -15303,6 +15323,7 @@ export namespace Prisma {
     readonly sector_id: FieldRef<"Cliente", 'String'>
     readonly frecuencia: FieldRef<"Cliente", 'Frecuencia'>
     readonly semana_alterna: FieldRef<"Cliente", 'SemanaAlterna'>
+    readonly deuda: FieldRef<"Cliente", 'Float'>
   }
     
 
@@ -40132,7 +40153,7 @@ export namespace Prisma {
 
   export type DispensadorGroupByOutputType = {
     id: string
-    cliente_id: string
+    cliente_id: string | null
     marca: string
     modelo: string
     numero_serie: string | null
@@ -40169,7 +40190,7 @@ export namespace Prisma {
     foto_url?: boolean
     estado?: boolean
     precio_arriendo?: boolean
-    cliente?: boolean | ClienteDefaultArgs<ExtArgs>
+    cliente?: boolean | Dispensador$clienteArgs<ExtArgs>
     mantenciones?: boolean | Dispensador$mantencionesArgs<ExtArgs>
     _count?: boolean | DispensadorCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["dispensador"]>
@@ -40189,7 +40210,7 @@ export namespace Prisma {
 
   export type DispensadorOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "cliente_id" | "marca" | "modelo" | "numero_serie" | "foto_url" | "estado" | "precio_arriendo", ExtArgs["result"]["dispensador"]>
   export type DispensadorInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    cliente?: boolean | ClienteDefaultArgs<ExtArgs>
+    cliente?: boolean | Dispensador$clienteArgs<ExtArgs>
     mantenciones?: boolean | Dispensador$mantencionesArgs<ExtArgs>
     _count?: boolean | DispensadorCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -40197,12 +40218,12 @@ export namespace Prisma {
   export type $DispensadorPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Dispensador"
     objects: {
-      cliente: Prisma.$ClientePayload<ExtArgs>
+      cliente: Prisma.$ClientePayload<ExtArgs> | null
       mantenciones: Prisma.$MantencionDispensadorPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      cliente_id: string
+      cliente_id: string | null
       marca: string
       modelo: string
       numero_serie: string | null
@@ -40549,7 +40570,7 @@ export namespace Prisma {
    */
   export interface Prisma__DispensadorClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    cliente<T extends ClienteDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ClienteDefaultArgs<ExtArgs>>): Prisma__ClienteClient<$Result.GetResult<Prisma.$ClientePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    cliente<T extends Dispensador$clienteArgs<ExtArgs> = {}>(args?: Subset<T, Dispensador$clienteArgs<ExtArgs>>): Prisma__ClienteClient<$Result.GetResult<Prisma.$ClientePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     mantenciones<T extends Dispensador$mantencionesArgs<ExtArgs> = {}>(args?: Subset<T, Dispensador$mantencionesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MantencionDispensadorPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -40928,6 +40949,25 @@ export namespace Prisma {
      * Limit how many Dispensadors to delete.
      */
     limit?: number
+  }
+
+  /**
+   * Dispensador.cliente
+   */
+  export type Dispensador$clienteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Cliente
+     */
+    select?: ClienteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Cliente
+     */
+    omit?: ClienteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ClienteInclude<ExtArgs> | null
+    where?: ClienteWhereInput
   }
 
   /**
@@ -52056,7 +52096,8 @@ export namespace Prisma {
     preferencia_factura: 'preferencia_factura',
     sector_id: 'sector_id',
     frecuencia: 'frecuencia',
-    semana_alterna: 'semana_alterna'
+    semana_alterna: 'semana_alterna',
+    deuda: 'deuda'
   };
 
   export type ClienteScalarFieldEnum = (typeof ClienteScalarFieldEnum)[keyof typeof ClienteScalarFieldEnum]
@@ -53966,6 +54007,7 @@ export namespace Prisma {
     sector_id?: StringNullableFilter<"Cliente"> | string | null
     frecuencia?: EnumFrecuenciaFilter<"Cliente"> | $Enums.Frecuencia
     semana_alterna?: EnumSemanaAlternaNullableFilter<"Cliente"> | $Enums.SemanaAlterna | null
+    deuda?: FloatFilter<"Cliente"> | number
     sector?: XOR<SectorNullableScalarRelationFilter, SectorWhereInput> | null
     botellones_danados?: BotellonDanadoListRelationFilter
     clientes_ruta?: ClienteRutaBaseListRelationFilter
@@ -53995,6 +54037,7 @@ export namespace Prisma {
     sector_id?: SortOrderInput | SortOrder
     frecuencia?: SortOrder
     semana_alterna?: SortOrderInput | SortOrder
+    deuda?: SortOrder
     sector?: SectorOrderByWithRelationInput
     botellones_danados?: BotellonDanadoOrderByRelationAggregateInput
     clientes_ruta?: ClienteRutaBaseOrderByRelationAggregateInput
@@ -54028,6 +54071,7 @@ export namespace Prisma {
     sector_id?: StringNullableFilter<"Cliente"> | string | null
     frecuencia?: EnumFrecuenciaFilter<"Cliente"> | $Enums.Frecuencia
     semana_alterna?: EnumSemanaAlternaNullableFilter<"Cliente"> | $Enums.SemanaAlterna | null
+    deuda?: FloatFilter<"Cliente"> | number
     sector?: XOR<SectorNullableScalarRelationFilter, SectorWhereInput> | null
     botellones_danados?: BotellonDanadoListRelationFilter
     clientes_ruta?: ClienteRutaBaseListRelationFilter
@@ -54057,6 +54101,7 @@ export namespace Prisma {
     sector_id?: SortOrderInput | SortOrder
     frecuencia?: SortOrder
     semana_alterna?: SortOrderInput | SortOrder
+    deuda?: SortOrder
     _count?: ClienteCountOrderByAggregateInput
     _avg?: ClienteAvgOrderByAggregateInput
     _max?: ClienteMaxOrderByAggregateInput
@@ -54085,6 +54130,7 @@ export namespace Prisma {
     sector_id?: StringNullableWithAggregatesFilter<"Cliente"> | string | null
     frecuencia?: EnumFrecuenciaWithAggregatesFilter<"Cliente"> | $Enums.Frecuencia
     semana_alterna?: EnumSemanaAlternaNullableWithAggregatesFilter<"Cliente"> | $Enums.SemanaAlterna | null
+    deuda?: FloatWithAggregatesFilter<"Cliente"> | number
   }
 
   export type RutaBaseWhereInput = {
@@ -55829,20 +55875,20 @@ export namespace Prisma {
     OR?: DispensadorWhereInput[]
     NOT?: DispensadorWhereInput | DispensadorWhereInput[]
     id?: StringFilter<"Dispensador"> | string
-    cliente_id?: StringFilter<"Dispensador"> | string
+    cliente_id?: StringNullableFilter<"Dispensador"> | string | null
     marca?: StringFilter<"Dispensador"> | string
     modelo?: StringFilter<"Dispensador"> | string
     numero_serie?: StringNullableFilter<"Dispensador"> | string | null
     foto_url?: StringNullableFilter<"Dispensador"> | string | null
     estado?: EnumEstadoDispensadorFilter<"Dispensador"> | $Enums.EstadoDispensador
     precio_arriendo?: IntFilter<"Dispensador"> | number
-    cliente?: XOR<ClienteScalarRelationFilter, ClienteWhereInput>
+    cliente?: XOR<ClienteNullableScalarRelationFilter, ClienteWhereInput> | null
     mantenciones?: MantencionDispensadorListRelationFilter
   }
 
   export type DispensadorOrderByWithRelationInput = {
     id?: SortOrder
-    cliente_id?: SortOrder
+    cliente_id?: SortOrderInput | SortOrder
     marca?: SortOrder
     modelo?: SortOrder
     numero_serie?: SortOrderInput | SortOrder
@@ -55860,19 +55906,19 @@ export namespace Prisma {
     AND?: DispensadorWhereInput | DispensadorWhereInput[]
     OR?: DispensadorWhereInput[]
     NOT?: DispensadorWhereInput | DispensadorWhereInput[]
-    cliente_id?: StringFilter<"Dispensador"> | string
+    cliente_id?: StringNullableFilter<"Dispensador"> | string | null
     marca?: StringFilter<"Dispensador"> | string
     modelo?: StringFilter<"Dispensador"> | string
     foto_url?: StringNullableFilter<"Dispensador"> | string | null
     estado?: EnumEstadoDispensadorFilter<"Dispensador"> | $Enums.EstadoDispensador
     precio_arriendo?: IntFilter<"Dispensador"> | number
-    cliente?: XOR<ClienteScalarRelationFilter, ClienteWhereInput>
+    cliente?: XOR<ClienteNullableScalarRelationFilter, ClienteWhereInput> | null
     mantenciones?: MantencionDispensadorListRelationFilter
   }, "id" | "numero_serie">
 
   export type DispensadorOrderByWithAggregationInput = {
     id?: SortOrder
-    cliente_id?: SortOrder
+    cliente_id?: SortOrderInput | SortOrder
     marca?: SortOrder
     modelo?: SortOrder
     numero_serie?: SortOrderInput | SortOrder
@@ -55891,7 +55937,7 @@ export namespace Prisma {
     OR?: DispensadorScalarWhereWithAggregatesInput[]
     NOT?: DispensadorScalarWhereWithAggregatesInput | DispensadorScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Dispensador"> | string
-    cliente_id?: StringWithAggregatesFilter<"Dispensador"> | string
+    cliente_id?: StringNullableWithAggregatesFilter<"Dispensador"> | string | null
     marca?: StringWithAggregatesFilter<"Dispensador"> | string
     modelo?: StringWithAggregatesFilter<"Dispensador"> | string
     numero_serie?: StringNullableWithAggregatesFilter<"Dispensador"> | string | null
@@ -57481,6 +57527,7 @@ export namespace Prisma {
     preferencia_factura?: $Enums.PreferenciaFacturacion
     frecuencia?: $Enums.Frecuencia
     semana_alterna?: $Enums.SemanaAlterna | null
+    deuda?: number
     sector?: SectorCreateNestedOneWithoutClientesInput
     botellones_danados?: BotellonDanadoCreateNestedManyWithoutClienteInput
     clientes_ruta?: ClienteRutaBaseCreateNestedManyWithoutClienteInput
@@ -57510,6 +57557,7 @@ export namespace Prisma {
     sector_id?: string | null
     frecuencia?: $Enums.Frecuencia
     semana_alterna?: $Enums.SemanaAlterna | null
+    deuda?: number
     botellones_danados?: BotellonDanadoUncheckedCreateNestedManyWithoutClienteInput
     clientes_ruta?: ClienteRutaBaseUncheckedCreateNestedManyWithoutClienteInput
     dispensadores?: DispensadorUncheckedCreateNestedManyWithoutClienteInput
@@ -57537,6 +57585,7 @@ export namespace Prisma {
     preferencia_factura?: EnumPreferenciaFacturacionFieldUpdateOperationsInput | $Enums.PreferenciaFacturacion
     frecuencia?: EnumFrecuenciaFieldUpdateOperationsInput | $Enums.Frecuencia
     semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
+    deuda?: FloatFieldUpdateOperationsInput | number
     sector?: SectorUpdateOneWithoutClientesNestedInput
     botellones_danados?: BotellonDanadoUpdateManyWithoutClienteNestedInput
     clientes_ruta?: ClienteRutaBaseUpdateManyWithoutClienteNestedInput
@@ -57566,6 +57615,7 @@ export namespace Prisma {
     sector_id?: NullableStringFieldUpdateOperationsInput | string | null
     frecuencia?: EnumFrecuenciaFieldUpdateOperationsInput | $Enums.Frecuencia
     semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
+    deuda?: FloatFieldUpdateOperationsInput | number
     botellones_danados?: BotellonDanadoUncheckedUpdateManyWithoutClienteNestedInput
     clientes_ruta?: ClienteRutaBaseUncheckedUpdateManyWithoutClienteNestedInput
     dispensadores?: DispensadorUncheckedUpdateManyWithoutClienteNestedInput
@@ -57594,6 +57644,7 @@ export namespace Prisma {
     sector_id?: string | null
     frecuencia?: $Enums.Frecuencia
     semana_alterna?: $Enums.SemanaAlterna | null
+    deuda?: number
   }
 
   export type ClienteUpdateManyMutationInput = {
@@ -57613,6 +57664,7 @@ export namespace Prisma {
     preferencia_factura?: EnumPreferenciaFacturacionFieldUpdateOperationsInput | $Enums.PreferenciaFacturacion
     frecuencia?: EnumFrecuenciaFieldUpdateOperationsInput | $Enums.Frecuencia
     semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
+    deuda?: FloatFieldUpdateOperationsInput | number
   }
 
   export type ClienteUncheckedUpdateManyInput = {
@@ -57633,6 +57685,7 @@ export namespace Prisma {
     sector_id?: NullableStringFieldUpdateOperationsInput | string | null
     frecuencia?: EnumFrecuenciaFieldUpdateOperationsInput | $Enums.Frecuencia
     semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
+    deuda?: FloatFieldUpdateOperationsInput | number
   }
 
   export type RutaBaseCreateInput = {
@@ -59387,13 +59440,13 @@ export namespace Prisma {
     foto_url?: string | null
     estado?: $Enums.EstadoDispensador
     precio_arriendo?: number
-    cliente: ClienteCreateNestedOneWithoutDispensadoresInput
+    cliente?: ClienteCreateNestedOneWithoutDispensadoresInput
     mantenciones?: MantencionDispensadorCreateNestedManyWithoutDispensadorInput
   }
 
   export type DispensadorUncheckedCreateInput = {
     id?: string
-    cliente_id: string
+    cliente_id?: string | null
     marca: string
     modelo: string
     numero_serie?: string | null
@@ -59411,13 +59464,13 @@ export namespace Prisma {
     foto_url?: NullableStringFieldUpdateOperationsInput | string | null
     estado?: EnumEstadoDispensadorFieldUpdateOperationsInput | $Enums.EstadoDispensador
     precio_arriendo?: IntFieldUpdateOperationsInput | number
-    cliente?: ClienteUpdateOneRequiredWithoutDispensadoresNestedInput
+    cliente?: ClienteUpdateOneWithoutDispensadoresNestedInput
     mantenciones?: MantencionDispensadorUpdateManyWithoutDispensadorNestedInput
   }
 
   export type DispensadorUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    cliente_id?: StringFieldUpdateOperationsInput | string
+    cliente_id?: NullableStringFieldUpdateOperationsInput | string | null
     marca?: StringFieldUpdateOperationsInput | string
     modelo?: StringFieldUpdateOperationsInput | string
     numero_serie?: NullableStringFieldUpdateOperationsInput | string | null
@@ -59429,7 +59482,7 @@ export namespace Prisma {
 
   export type DispensadorCreateManyInput = {
     id?: string
-    cliente_id: string
+    cliente_id?: string | null
     marca: string
     modelo: string
     numero_serie?: string | null
@@ -59450,7 +59503,7 @@ export namespace Prisma {
 
   export type DispensadorUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    cliente_id?: StringFieldUpdateOperationsInput | string
+    cliente_id?: NullableStringFieldUpdateOperationsInput | string | null
     marca?: StringFieldUpdateOperationsInput | string
     modelo?: StringFieldUpdateOperationsInput | string
     numero_serie?: NullableStringFieldUpdateOperationsInput | string | null
@@ -61451,10 +61504,12 @@ export namespace Prisma {
     sector_id?: SortOrder
     frecuencia?: SortOrder
     semana_alterna?: SortOrder
+    deuda?: SortOrder
   }
 
   export type ClienteAvgOrderByAggregateInput = {
     botellones_prestados?: SortOrder
+    deuda?: SortOrder
   }
 
   export type ClienteMaxOrderByAggregateInput = {
@@ -61475,6 +61530,7 @@ export namespace Prisma {
     sector_id?: SortOrder
     frecuencia?: SortOrder
     semana_alterna?: SortOrder
+    deuda?: SortOrder
   }
 
   export type ClienteMinOrderByAggregateInput = {
@@ -61495,10 +61551,12 @@ export namespace Prisma {
     sector_id?: SortOrder
     frecuencia?: SortOrder
     semana_alterna?: SortOrder
+    deuda?: SortOrder
   }
 
   export type ClienteSumOrderByAggregateInput = {
     botellones_prestados?: SortOrder
+    deuda?: SortOrder
   }
 
   export type EnumModalidadPagoWithAggregatesFilter<$PrismaModel = never> = {
@@ -62887,6 +62945,11 @@ export namespace Prisma {
     in?: $Enums.EstadoDispensador[]
     notIn?: $Enums.EstadoDispensador[]
     not?: NestedEnumEstadoDispensadorFilter<$PrismaModel> | $Enums.EstadoDispensador
+  }
+
+  export type ClienteNullableScalarRelationFilter = {
+    is?: ClienteWhereInput | null
+    isNot?: ClienteWhereInput | null
   }
 
   export type MantencionDispensadorListRelationFilter = {
@@ -66742,10 +66805,12 @@ export namespace Prisma {
     set?: $Enums.EstadoDispensador
   }
 
-  export type ClienteUpdateOneRequiredWithoutDispensadoresNestedInput = {
+  export type ClienteUpdateOneWithoutDispensadoresNestedInput = {
     create?: XOR<ClienteCreateWithoutDispensadoresInput, ClienteUncheckedCreateWithoutDispensadoresInput>
     connectOrCreate?: ClienteCreateOrConnectWithoutDispensadoresInput
     upsert?: ClienteUpsertWithoutDispensadoresInput
+    disconnect?: ClienteWhereInput | boolean
+    delete?: ClienteWhereInput | boolean
     connect?: ClienteWhereUniqueInput
     update?: XOR<XOR<ClienteUpdateToOneWithWhereWithoutDispensadoresInput, ClienteUpdateWithoutDispensadoresInput>, ClienteUncheckedUpdateWithoutDispensadoresInput>
   }
@@ -70707,7 +70772,7 @@ export namespace Prisma {
     OR?: DispensadorScalarWhereInput[]
     NOT?: DispensadorScalarWhereInput | DispensadorScalarWhereInput[]
     id?: StringFilter<"Dispensador"> | string
-    cliente_id?: StringFilter<"Dispensador"> | string
+    cliente_id?: StringNullableFilter<"Dispensador"> | string | null
     marca?: StringFilter<"Dispensador"> | string
     modelo?: StringFilter<"Dispensador"> | string
     numero_serie?: StringNullableFilter<"Dispensador"> | string | null
@@ -71398,6 +71463,7 @@ export namespace Prisma {
     preferencia_factura?: $Enums.PreferenciaFacturacion
     frecuencia?: $Enums.Frecuencia
     semana_alterna?: $Enums.SemanaAlterna | null
+    deuda?: number
     botellones_danados?: BotellonDanadoCreateNestedManyWithoutClienteInput
     clientes_ruta?: ClienteRutaBaseCreateNestedManyWithoutClienteInput
     dispensadores?: DispensadorCreateNestedManyWithoutClienteInput
@@ -71425,6 +71491,7 @@ export namespace Prisma {
     preferencia_factura?: $Enums.PreferenciaFacturacion
     frecuencia?: $Enums.Frecuencia
     semana_alterna?: $Enums.SemanaAlterna | null
+    deuda?: number
     botellones_danados?: BotellonDanadoUncheckedCreateNestedManyWithoutClienteInput
     clientes_ruta?: ClienteRutaBaseUncheckedCreateNestedManyWithoutClienteInput
     dispensadores?: DispensadorUncheckedCreateNestedManyWithoutClienteInput
@@ -71525,6 +71592,7 @@ export namespace Prisma {
     sector_id?: StringNullableFilter<"Cliente"> | string | null
     frecuencia?: EnumFrecuenciaFilter<"Cliente"> | $Enums.Frecuencia
     semana_alterna?: EnumSemanaAlternaNullableFilter<"Cliente"> | $Enums.SemanaAlterna | null
+    deuda?: FloatFilter<"Cliente"> | number
   }
 
   export type RutaBaseSectorUpsertWithWhereUniqueWithoutSectorInput = {
@@ -71560,6 +71628,7 @@ export namespace Prisma {
     preferencia_factura?: $Enums.PreferenciaFacturacion
     frecuencia?: $Enums.Frecuencia
     semana_alterna?: $Enums.SemanaAlterna | null
+    deuda?: number
     sector?: SectorCreateNestedOneWithoutClientesInput
     botellones_danados?: BotellonDanadoCreateNestedManyWithoutClienteInput
     dispensadores?: DispensadorCreateNestedManyWithoutClienteInput
@@ -71588,6 +71657,7 @@ export namespace Prisma {
     sector_id?: string | null
     frecuencia?: $Enums.Frecuencia
     semana_alterna?: $Enums.SemanaAlterna | null
+    deuda?: number
     botellones_danados?: BotellonDanadoUncheckedCreateNestedManyWithoutClienteInput
     dispensadores?: DispensadorUncheckedCreateNestedManyWithoutClienteInput
     guias?: GuiaDespachoUncheckedCreateNestedManyWithoutClienteInput
@@ -71659,6 +71729,7 @@ export namespace Prisma {
     preferencia_factura?: EnumPreferenciaFacturacionFieldUpdateOperationsInput | $Enums.PreferenciaFacturacion
     frecuencia?: EnumFrecuenciaFieldUpdateOperationsInput | $Enums.Frecuencia
     semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
+    deuda?: FloatFieldUpdateOperationsInput | number
     sector?: SectorUpdateOneWithoutClientesNestedInput
     botellones_danados?: BotellonDanadoUpdateManyWithoutClienteNestedInput
     dispensadores?: DispensadorUpdateManyWithoutClienteNestedInput
@@ -71687,6 +71758,7 @@ export namespace Prisma {
     sector_id?: NullableStringFieldUpdateOperationsInput | string | null
     frecuencia?: EnumFrecuenciaFieldUpdateOperationsInput | $Enums.Frecuencia
     semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
+    deuda?: FloatFieldUpdateOperationsInput | number
     botellones_danados?: BotellonDanadoUncheckedUpdateManyWithoutClienteNestedInput
     dispensadores?: DispensadorUncheckedUpdateManyWithoutClienteNestedInput
     guias?: GuiaDespachoUncheckedUpdateManyWithoutClienteNestedInput
@@ -72092,6 +72164,7 @@ export namespace Prisma {
     preferencia_factura?: $Enums.PreferenciaFacturacion
     frecuencia?: $Enums.Frecuencia
     semana_alterna?: $Enums.SemanaAlterna | null
+    deuda?: number
     sector?: SectorCreateNestedOneWithoutClientesInput
     botellones_danados?: BotellonDanadoCreateNestedManyWithoutClienteInput
     clientes_ruta?: ClienteRutaBaseCreateNestedManyWithoutClienteInput
@@ -72120,6 +72193,7 @@ export namespace Prisma {
     sector_id?: string | null
     frecuencia?: $Enums.Frecuencia
     semana_alterna?: $Enums.SemanaAlterna | null
+    deuda?: number
     botellones_danados?: BotellonDanadoUncheckedCreateNestedManyWithoutClienteInput
     clientes_ruta?: ClienteRutaBaseUncheckedCreateNestedManyWithoutClienteInput
     dispensadores?: DispensadorUncheckedCreateNestedManyWithoutClienteInput
@@ -72254,6 +72328,7 @@ export namespace Prisma {
     preferencia_factura?: EnumPreferenciaFacturacionFieldUpdateOperationsInput | $Enums.PreferenciaFacturacion
     frecuencia?: EnumFrecuenciaFieldUpdateOperationsInput | $Enums.Frecuencia
     semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
+    deuda?: FloatFieldUpdateOperationsInput | number
     sector?: SectorUpdateOneWithoutClientesNestedInput
     botellones_danados?: BotellonDanadoUpdateManyWithoutClienteNestedInput
     clientes_ruta?: ClienteRutaBaseUpdateManyWithoutClienteNestedInput
@@ -72282,6 +72357,7 @@ export namespace Prisma {
     sector_id?: NullableStringFieldUpdateOperationsInput | string | null
     frecuencia?: EnumFrecuenciaFieldUpdateOperationsInput | $Enums.Frecuencia
     semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
+    deuda?: FloatFieldUpdateOperationsInput | number
     botellones_danados?: BotellonDanadoUncheckedUpdateManyWithoutClienteNestedInput
     clientes_ruta?: ClienteRutaBaseUncheckedUpdateManyWithoutClienteNestedInput
     dispensadores?: DispensadorUncheckedUpdateManyWithoutClienteNestedInput
@@ -72448,6 +72524,7 @@ export namespace Prisma {
     preferencia_factura?: $Enums.PreferenciaFacturacion
     frecuencia?: $Enums.Frecuencia
     semana_alterna?: $Enums.SemanaAlterna | null
+    deuda?: number
     sector?: SectorCreateNestedOneWithoutClientesInput
     botellones_danados?: BotellonDanadoCreateNestedManyWithoutClienteInput
     clientes_ruta?: ClienteRutaBaseCreateNestedManyWithoutClienteInput
@@ -72476,6 +72553,7 @@ export namespace Prisma {
     sector_id?: string | null
     frecuencia?: $Enums.Frecuencia
     semana_alterna?: $Enums.SemanaAlterna | null
+    deuda?: number
     botellones_danados?: BotellonDanadoUncheckedCreateNestedManyWithoutClienteInput
     clientes_ruta?: ClienteRutaBaseUncheckedCreateNestedManyWithoutClienteInput
     dispensadores?: DispensadorUncheckedCreateNestedManyWithoutClienteInput
@@ -72609,6 +72687,7 @@ export namespace Prisma {
     preferencia_factura?: EnumPreferenciaFacturacionFieldUpdateOperationsInput | $Enums.PreferenciaFacturacion
     frecuencia?: EnumFrecuenciaFieldUpdateOperationsInput | $Enums.Frecuencia
     semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
+    deuda?: FloatFieldUpdateOperationsInput | number
     sector?: SectorUpdateOneWithoutClientesNestedInput
     botellones_danados?: BotellonDanadoUpdateManyWithoutClienteNestedInput
     clientes_ruta?: ClienteRutaBaseUpdateManyWithoutClienteNestedInput
@@ -72637,6 +72716,7 @@ export namespace Prisma {
     sector_id?: NullableStringFieldUpdateOperationsInput | string | null
     frecuencia?: EnumFrecuenciaFieldUpdateOperationsInput | $Enums.Frecuencia
     semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
+    deuda?: FloatFieldUpdateOperationsInput | number
     botellones_danados?: BotellonDanadoUncheckedUpdateManyWithoutClienteNestedInput
     clientes_ruta?: ClienteRutaBaseUncheckedUpdateManyWithoutClienteNestedInput
     dispensadores?: DispensadorUncheckedUpdateManyWithoutClienteNestedInput
@@ -72931,6 +73011,7 @@ export namespace Prisma {
     preferencia_factura?: $Enums.PreferenciaFacturacion
     frecuencia?: $Enums.Frecuencia
     semana_alterna?: $Enums.SemanaAlterna | null
+    deuda?: number
     sector?: SectorCreateNestedOneWithoutClientesInput
     botellones_danados?: BotellonDanadoCreateNestedManyWithoutClienteInput
     clientes_ruta?: ClienteRutaBaseCreateNestedManyWithoutClienteInput
@@ -72959,6 +73040,7 @@ export namespace Prisma {
     sector_id?: string | null
     frecuencia?: $Enums.Frecuencia
     semana_alterna?: $Enums.SemanaAlterna | null
+    deuda?: number
     botellones_danados?: BotellonDanadoUncheckedCreateNestedManyWithoutClienteInput
     clientes_ruta?: ClienteRutaBaseUncheckedCreateNestedManyWithoutClienteInput
     dispensadores?: DispensadorUncheckedCreateNestedManyWithoutClienteInput
@@ -73145,6 +73227,7 @@ export namespace Prisma {
     preferencia_factura?: EnumPreferenciaFacturacionFieldUpdateOperationsInput | $Enums.PreferenciaFacturacion
     frecuencia?: EnumFrecuenciaFieldUpdateOperationsInput | $Enums.Frecuencia
     semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
+    deuda?: FloatFieldUpdateOperationsInput | number
     sector?: SectorUpdateOneWithoutClientesNestedInput
     botellones_danados?: BotellonDanadoUpdateManyWithoutClienteNestedInput
     clientes_ruta?: ClienteRutaBaseUpdateManyWithoutClienteNestedInput
@@ -73173,6 +73256,7 @@ export namespace Prisma {
     sector_id?: NullableStringFieldUpdateOperationsInput | string | null
     frecuencia?: EnumFrecuenciaFieldUpdateOperationsInput | $Enums.Frecuencia
     semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
+    deuda?: FloatFieldUpdateOperationsInput | number
     botellones_danados?: BotellonDanadoUncheckedUpdateManyWithoutClienteNestedInput
     clientes_ruta?: ClienteRutaBaseUncheckedUpdateManyWithoutClienteNestedInput
     dispensadores?: DispensadorUncheckedUpdateManyWithoutClienteNestedInput
@@ -74800,6 +74884,7 @@ export namespace Prisma {
     preferencia_factura?: $Enums.PreferenciaFacturacion
     frecuencia?: $Enums.Frecuencia
     semana_alterna?: $Enums.SemanaAlterna | null
+    deuda?: number
     sector?: SectorCreateNestedOneWithoutClientesInput
     clientes_ruta?: ClienteRutaBaseCreateNestedManyWithoutClienteInput
     dispensadores?: DispensadorCreateNestedManyWithoutClienteInput
@@ -74828,6 +74913,7 @@ export namespace Prisma {
     sector_id?: string | null
     frecuencia?: $Enums.Frecuencia
     semana_alterna?: $Enums.SemanaAlterna | null
+    deuda?: number
     clientes_ruta?: ClienteRutaBaseUncheckedCreateNestedManyWithoutClienteInput
     dispensadores?: DispensadorUncheckedCreateNestedManyWithoutClienteInput
     guias?: GuiaDespachoUncheckedCreateNestedManyWithoutClienteInput
@@ -74933,6 +75019,7 @@ export namespace Prisma {
     preferencia_factura?: EnumPreferenciaFacturacionFieldUpdateOperationsInput | $Enums.PreferenciaFacturacion
     frecuencia?: EnumFrecuenciaFieldUpdateOperationsInput | $Enums.Frecuencia
     semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
+    deuda?: FloatFieldUpdateOperationsInput | number
     sector?: SectorUpdateOneWithoutClientesNestedInput
     clientes_ruta?: ClienteRutaBaseUpdateManyWithoutClienteNestedInput
     dispensadores?: DispensadorUpdateManyWithoutClienteNestedInput
@@ -74961,6 +75048,7 @@ export namespace Prisma {
     sector_id?: NullableStringFieldUpdateOperationsInput | string | null
     frecuencia?: EnumFrecuenciaFieldUpdateOperationsInput | $Enums.Frecuencia
     semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
+    deuda?: FloatFieldUpdateOperationsInput | number
     clientes_ruta?: ClienteRutaBaseUncheckedUpdateManyWithoutClienteNestedInput
     dispensadores?: DispensadorUncheckedUpdateManyWithoutClienteNestedInput
     guias?: GuiaDespachoUncheckedUpdateManyWithoutClienteNestedInput
@@ -75628,6 +75716,7 @@ export namespace Prisma {
     preferencia_factura?: $Enums.PreferenciaFacturacion
     frecuencia?: $Enums.Frecuencia
     semana_alterna?: $Enums.SemanaAlterna | null
+    deuda?: number
     sector?: SectorCreateNestedOneWithoutClientesInput
     botellones_danados?: BotellonDanadoCreateNestedManyWithoutClienteInput
     clientes_ruta?: ClienteRutaBaseCreateNestedManyWithoutClienteInput
@@ -75656,6 +75745,7 @@ export namespace Prisma {
     sector_id?: string | null
     frecuencia?: $Enums.Frecuencia
     semana_alterna?: $Enums.SemanaAlterna | null
+    deuda?: number
     botellones_danados?: BotellonDanadoUncheckedCreateNestedManyWithoutClienteInput
     clientes_ruta?: ClienteRutaBaseUncheckedCreateNestedManyWithoutClienteInput
     guias?: GuiaDespachoUncheckedCreateNestedManyWithoutClienteInput
@@ -75740,6 +75830,7 @@ export namespace Prisma {
     preferencia_factura?: EnumPreferenciaFacturacionFieldUpdateOperationsInput | $Enums.PreferenciaFacturacion
     frecuencia?: EnumFrecuenciaFieldUpdateOperationsInput | $Enums.Frecuencia
     semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
+    deuda?: FloatFieldUpdateOperationsInput | number
     sector?: SectorUpdateOneWithoutClientesNestedInput
     botellones_danados?: BotellonDanadoUpdateManyWithoutClienteNestedInput
     clientes_ruta?: ClienteRutaBaseUpdateManyWithoutClienteNestedInput
@@ -75768,6 +75859,7 @@ export namespace Prisma {
     sector_id?: NullableStringFieldUpdateOperationsInput | string | null
     frecuencia?: EnumFrecuenciaFieldUpdateOperationsInput | $Enums.Frecuencia
     semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
+    deuda?: FloatFieldUpdateOperationsInput | number
     botellones_danados?: BotellonDanadoUncheckedUpdateManyWithoutClienteNestedInput
     clientes_ruta?: ClienteRutaBaseUncheckedUpdateManyWithoutClienteNestedInput
     guias?: GuiaDespachoUncheckedUpdateManyWithoutClienteNestedInput
@@ -75820,12 +75912,12 @@ export namespace Prisma {
     foto_url?: string | null
     estado?: $Enums.EstadoDispensador
     precio_arriendo?: number
-    cliente: ClienteCreateNestedOneWithoutDispensadoresInput
+    cliente?: ClienteCreateNestedOneWithoutDispensadoresInput
   }
 
   export type DispensadorUncheckedCreateWithoutMantencionesInput = {
     id?: string
-    cliente_id: string
+    cliente_id?: string | null
     marca: string
     modelo: string
     numero_serie?: string | null
@@ -75905,12 +75997,12 @@ export namespace Prisma {
     foto_url?: NullableStringFieldUpdateOperationsInput | string | null
     estado?: EnumEstadoDispensadorFieldUpdateOperationsInput | $Enums.EstadoDispensador
     precio_arriendo?: IntFieldUpdateOperationsInput | number
-    cliente?: ClienteUpdateOneRequiredWithoutDispensadoresNestedInput
+    cliente?: ClienteUpdateOneWithoutDispensadoresNestedInput
   }
 
   export type DispensadorUncheckedUpdateWithoutMantencionesInput = {
     id?: StringFieldUpdateOperationsInput | string
-    cliente_id?: StringFieldUpdateOperationsInput | string
+    cliente_id?: NullableStringFieldUpdateOperationsInput | string | null
     marca?: StringFieldUpdateOperationsInput | string
     modelo?: StringFieldUpdateOperationsInput | string
     numero_serie?: NullableStringFieldUpdateOperationsInput | string | null
@@ -76130,6 +76222,7 @@ export namespace Prisma {
     preferencia_factura?: $Enums.PreferenciaFacturacion
     frecuencia?: $Enums.Frecuencia
     semana_alterna?: $Enums.SemanaAlterna | null
+    deuda?: number
     sector?: SectorCreateNestedOneWithoutClientesInput
     botellones_danados?: BotellonDanadoCreateNestedManyWithoutClienteInput
     clientes_ruta?: ClienteRutaBaseCreateNestedManyWithoutClienteInput
@@ -76158,6 +76251,7 @@ export namespace Prisma {
     sector_id?: string | null
     frecuencia?: $Enums.Frecuencia
     semana_alterna?: $Enums.SemanaAlterna | null
+    deuda?: number
     botellones_danados?: BotellonDanadoUncheckedCreateNestedManyWithoutClienteInput
     clientes_ruta?: ClienteRutaBaseUncheckedCreateNestedManyWithoutClienteInput
     dispensadores?: DispensadorUncheckedCreateNestedManyWithoutClienteInput
@@ -76200,6 +76294,7 @@ export namespace Prisma {
     preferencia_factura?: EnumPreferenciaFacturacionFieldUpdateOperationsInput | $Enums.PreferenciaFacturacion
     frecuencia?: EnumFrecuenciaFieldUpdateOperationsInput | $Enums.Frecuencia
     semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
+    deuda?: FloatFieldUpdateOperationsInput | number
     sector?: SectorUpdateOneWithoutClientesNestedInput
     botellones_danados?: BotellonDanadoUpdateManyWithoutClienteNestedInput
     clientes_ruta?: ClienteRutaBaseUpdateManyWithoutClienteNestedInput
@@ -76228,6 +76323,7 @@ export namespace Prisma {
     sector_id?: NullableStringFieldUpdateOperationsInput | string | null
     frecuencia?: EnumFrecuenciaFieldUpdateOperationsInput | $Enums.Frecuencia
     semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
+    deuda?: FloatFieldUpdateOperationsInput | number
     botellones_danados?: BotellonDanadoUncheckedUpdateManyWithoutClienteNestedInput
     clientes_ruta?: ClienteRutaBaseUncheckedUpdateManyWithoutClienteNestedInput
     dispensadores?: DispensadorUncheckedUpdateManyWithoutClienteNestedInput
@@ -76466,6 +76562,7 @@ export namespace Prisma {
     preferencia_factura?: $Enums.PreferenciaFacturacion
     frecuencia?: $Enums.Frecuencia
     semana_alterna?: $Enums.SemanaAlterna | null
+    deuda?: number
     sector?: SectorCreateNestedOneWithoutClientesInput
     botellones_danados?: BotellonDanadoCreateNestedManyWithoutClienteInput
     clientes_ruta?: ClienteRutaBaseCreateNestedManyWithoutClienteInput
@@ -76494,6 +76591,7 @@ export namespace Prisma {
     sector_id?: string | null
     frecuencia?: $Enums.Frecuencia
     semana_alterna?: $Enums.SemanaAlterna | null
+    deuda?: number
     botellones_danados?: BotellonDanadoUncheckedCreateNestedManyWithoutClienteInput
     clientes_ruta?: ClienteRutaBaseUncheckedCreateNestedManyWithoutClienteInput
     dispensadores?: DispensadorUncheckedCreateNestedManyWithoutClienteInput
@@ -76695,6 +76793,7 @@ export namespace Prisma {
     preferencia_factura?: EnumPreferenciaFacturacionFieldUpdateOperationsInput | $Enums.PreferenciaFacturacion
     frecuencia?: EnumFrecuenciaFieldUpdateOperationsInput | $Enums.Frecuencia
     semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
+    deuda?: FloatFieldUpdateOperationsInput | number
     sector?: SectorUpdateOneWithoutClientesNestedInput
     botellones_danados?: BotellonDanadoUpdateManyWithoutClienteNestedInput
     clientes_ruta?: ClienteRutaBaseUpdateManyWithoutClienteNestedInput
@@ -76723,6 +76822,7 @@ export namespace Prisma {
     sector_id?: NullableStringFieldUpdateOperationsInput | string | null
     frecuencia?: EnumFrecuenciaFieldUpdateOperationsInput | $Enums.Frecuencia
     semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
+    deuda?: FloatFieldUpdateOperationsInput | number
     botellones_danados?: BotellonDanadoUncheckedUpdateManyWithoutClienteNestedInput
     clientes_ruta?: ClienteRutaBaseUncheckedUpdateManyWithoutClienteNestedInput
     dispensadores?: DispensadorUncheckedUpdateManyWithoutClienteNestedInput
@@ -79022,6 +79122,7 @@ export namespace Prisma {
     preferencia_factura?: $Enums.PreferenciaFacturacion
     frecuencia?: $Enums.Frecuencia
     semana_alterna?: $Enums.SemanaAlterna | null
+    deuda?: number
   }
 
   export type RutaBaseSectorCreateManySectorInput = {
@@ -79046,6 +79147,7 @@ export namespace Prisma {
     preferencia_factura?: EnumPreferenciaFacturacionFieldUpdateOperationsInput | $Enums.PreferenciaFacturacion
     frecuencia?: EnumFrecuenciaFieldUpdateOperationsInput | $Enums.Frecuencia
     semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
+    deuda?: FloatFieldUpdateOperationsInput | number
     botellones_danados?: BotellonDanadoUpdateManyWithoutClienteNestedInput
     clientes_ruta?: ClienteRutaBaseUpdateManyWithoutClienteNestedInput
     dispensadores?: DispensadorUpdateManyWithoutClienteNestedInput
@@ -79073,6 +79175,7 @@ export namespace Prisma {
     preferencia_factura?: EnumPreferenciaFacturacionFieldUpdateOperationsInput | $Enums.PreferenciaFacturacion
     frecuencia?: EnumFrecuenciaFieldUpdateOperationsInput | $Enums.Frecuencia
     semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
+    deuda?: FloatFieldUpdateOperationsInput | number
     botellones_danados?: BotellonDanadoUncheckedUpdateManyWithoutClienteNestedInput
     clientes_ruta?: ClienteRutaBaseUncheckedUpdateManyWithoutClienteNestedInput
     dispensadores?: DispensadorUncheckedUpdateManyWithoutClienteNestedInput
@@ -79100,6 +79203,7 @@ export namespace Prisma {
     preferencia_factura?: EnumPreferenciaFacturacionFieldUpdateOperationsInput | $Enums.PreferenciaFacturacion
     frecuencia?: EnumFrecuenciaFieldUpdateOperationsInput | $Enums.Frecuencia
     semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
+    deuda?: FloatFieldUpdateOperationsInput | number
   }
 
   export type RutaBaseSectorUpdateWithoutSectorInput = {

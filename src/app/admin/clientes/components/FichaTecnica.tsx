@@ -1,10 +1,10 @@
 'use client';
 import { useState } from 'react';
 import { X } from 'lucide-react';
-import TabDispensadores from './tabs/TabDispensadores';
-import TabTaller        from './tabs/TabTaller';
-import TabFinanzas      from './tabs/TabFinanzas';
-import TabIncidencias   from './tabs/TabIncidencias';
+import TabDispensadores from '@/app/admin/dispensadores/components/tabs/TabDispensadores';
+import TabTaller        from '@/app/admin/dispensadores/components/tabs/TabTaller';
+import TabFinanzas      from '@/app/admin/dispensadores/components/tabs/TabFinanzas';
+import TabIncidencias   from '@/app/admin/dispensadores/components/tabs/TabIncidencias';
 
 type Tab = 'equipos' | 'taller' | 'finanzas' | 'incidencias';
 

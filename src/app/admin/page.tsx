@@ -12,7 +12,9 @@ import {
   WifiOff,
   Box,
   Wrench,
-  ClipboardList
+  ClipboardList,
+  MapPin,
+  Navigation
 } from 'lucide-react';
 
 export const metadata = {
@@ -29,7 +31,8 @@ export default async function AdminDashboardPage() {
     alertas: 0,
     ingresos: 0,
     productosCriticos: 0,
-    co2: { porcentaje: 0, kg_restantes: 0, rendimiento_estimado: 0 }
+    co2: { porcentaje: 0, kg_restantes: 0, rendimiento_estimado: 0 },
+    choferesOperando: []
   };
 
   return (
@@ -157,6 +160,73 @@ export default async function AdminDashboardPage() {
           </div>
         </Link>
 
+      </div>
+
+      {/* PANEL CHOFERES Y SECTORES EN OPERACIÓN */}
+      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-4">
+        <div className="flex items-center justify-between border-b border-gray-100 pb-4">
+          <div className="flex items-center gap-2">
+            <div className="bg-blue-100 p-2 rounded-xl text-[#013299]">
+              <MapPin className="h-5 w-5" />
+            </div>
+            <div>
+              <h2 className="font-bold text-gray-800 text-base">Sectores de Operación por Chofer</h2>
+              <p className="text-xs text-slate-500">Ubicación y sector activo de la flota de reparto en tiempo real</p>
+            </div>
+          </div>
+          <Link
+            href="/admin/rutas"
+            className="text-xs font-bold text-[#013299] hover:text-blue-800 bg-blue-50 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1"
+          >
+            Ver Hojas de Ruta <ArrowRight className="h-3.5 w-3.5" />
+          </Link>
+        </div>
+
+        {metricas.choferesOperando && metricas.choferesOperando.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {metricas.choferesOperando.map((c: any) => (
+              <div key={c.rutaId} className="border border-slate-200 rounded-xl p-4 bg-slate-50 flex flex-col justify-between space-y-3 hover:border-blue-300 transition-colors">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <span className="text-xs font-black text-slate-900 block">{c.choferNombre}</span>
+                    <span className="text-[11px] font-semibold text-slate-500">{c.vehiculoModelo}</span>
+                  </div>
+                  <span className="bg-blue-600 text-white text-[10px] font-mono font-bold px-2 py-0.5 rounded">
+                    {c.vehiculoPatente}
+                  </span>
+                </div>
+
+                <div className="bg-white border border-slate-200 p-3 rounded-lg space-y-1.5">
+                  <div className="flex items-center gap-1.5 text-xs text-[#013299] font-extrabold">
+                    <Navigation className="h-4 w-4 animate-pulse" />
+                    <span>Sector Actual: {c.sectorActual}</span>
+                  </div>
+                  {c.comunaActual && (
+                    <p className="text-[11px] text-slate-400 font-medium pl-5">Comuna: {c.comunaActual}</p>
+                  )}
+                  {c.sectoresTotales?.length > 1 && (
+                    <div className="text-[10px] text-slate-500 pt-1 border-t border-slate-100">
+                      Sectores de la ruta: <span className="font-semibold text-slate-700">{c.sectoresTotales.join(', ')}</span>
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex justify-between items-center text-xs pt-1">
+                  <span className="text-slate-500 text-[11px] font-medium">Progreso del día:</span>
+                  <span className="font-bold text-slate-800 bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded-md text-[11px]">
+                    {c.paradasEntregadas} / {c.paradasTotal} paradas ({c.paradasTotal > 0 ? Math.round((c.paradasEntregadas / c.paradasTotal) * 100) : 0}%)
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="p-8 text-center bg-slate-50 border border-dashed border-slate-200 rounded-xl space-y-1">
+            <MapPin className="h-6 w-6 text-slate-400 mx-auto" />
+            <p className="text-xs font-bold text-slate-600">No hay choferes operando en rutas activas en este momento.</p>
+            <p className="text-[11px] text-slate-400">Inicia las hojas de ruta del día para comenzar el seguimiento de sectores.</p>
+          </div>
+        )}
       </div>
 
       {/* BLOQUE INFERIOR */}

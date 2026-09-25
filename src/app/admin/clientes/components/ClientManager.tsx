@@ -7,8 +7,8 @@ import {
   ClienteInput, obtenerComunasConSectoresAction,
 } from '../actions';
 import { Search, Plus, Edit2, Settings, AlertTriangle, X } from 'lucide-react';
-import { usePopup } from './hooks/usePopup';
-import PopupGlobal from './PopupGlobal';
+import { usePopup } from '@/hooks/usePopup';
+import PopupGlobal from '@/components/ui/PopupGlobal';
 import FichaTecnica from './FichaTecnica';
 
 const inputCls = 'w-full border border-slate-200 p-2 rounded-lg text-sm text-slate-800 bg-white outline-none focus:ring-2 focus:ring-[#013299]/30 focus:border-[#013299] transition-colors placeholder:text-slate-400';
@@ -45,6 +45,8 @@ export default function ClientManager({ initialClientes }: { initialClientes: an
     preferencia_factura: PreferenciaFacturacion.BOLETA,
     notas: '', activo: true, botellones_prestados: 0,
     sector_id: null,
+    frecuencia: 'SEMANAL' as any,
+    deuda: 0,
   });
 
   // Sincronización inteligente con el servidor
@@ -102,6 +104,8 @@ export default function ClientManager({ initialClientes }: { initialClientes: an
       preferencia_factura: PreferenciaFacturacion.BOLETA,
       notas: '', activo: true, botellones_prestados: 0,
       sector_id: null,
+      frecuencia: 'SEMANAL' as any,
+      deuda: 0,
     });
     setComunaSeleccionada('');
     await cargarComunas();
@@ -119,6 +123,8 @@ export default function ClientManager({ initialClientes }: { initialClientes: an
       notas: c.notas || '', activo: c.activo,
       botellones_prestados: c.botellones_prestados,
       sector_id: c.sector_id || null,
+      frecuencia: c.frecuencia || 'SEMANAL',
+      deuda: c.deuda || 0,
     });
 
     let lista = comunas;
@@ -241,28 +247,28 @@ export default function ClientManager({ initialClientes }: { initialClientes: an
           <table className="w-full text-left border-collapse text-sm">
             <thead>
               <tr style={{ backgroundColor: '#013299' }}>
-                {['Cliente', 'Tipo', 'Dirección y Contacto', 'Comuna / Sector', 'Preferencia Factura', 'Envases Prestados', 'Estado', 'Acciones'].map(h => (
-                  <th key={h} className="py-3 px-5 text-left text-xs font-bold text-white uppercase tracking-wider">{h}</th>
+                {['Cliente', 'Tipo', 'Dirección y Contacto', 'Comuna / Sector', 'Frecuencia Visita', 'Deuda Total', 'Envases', 'Estado', 'Acciones'].map(h => (
+                  <th key={h} className="py-3 px-4 text-left text-xs font-bold text-white uppercase tracking-wider">{h}</th>
                 ))}
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
               {clientesFiltrados.length === 0 ? (
-                <tr><td colSpan={8} className="text-center py-12 text-slate-400 text-sm">No se encontraron registros.</td></tr>
+                <tr><td colSpan={9} className="text-center py-12 text-slate-400 text-sm">No se encontraron registros.</td></tr>
               ) : clientesFiltrados.map(c => (
                 <tr key={c.id} className="hover:bg-blue-50/30 transition-colors">
-                  <td className="py-3.5 px-5">
+                  <td className="py-3.5 px-4">
                     <div className="font-semibold text-slate-900">{c.nombre}</div>
                     {c.rut_empresa && <div className="text-xs text-slate-400 mt-0.5">RUT: {c.rut_empresa}</div>}
                   </td>
-                  <td className="py-3.5 px-5">
+                  <td className="py-3.5 px-4">
                     <span className={`px-2.5 py-1 rounded-lg text-xs font-bold ${c.tipo === 'EMPRESA' ? 'bg-purple-100 text-purple-700' : 'bg-emerald-100 text-emerald-700'}`}>{c.tipo}</span>
                   </td>
-                  <td className="py-3.5 px-5">
+                  <td className="py-3.5 px-4">
                     <div className="text-slate-700 max-w-xs truncate text-sm">{c.direccion}</div>
                     <div className="text-xs text-slate-400 mt-0.5">{c.telefono}</div>
                   </td>
-                  <td className="py-3.5 px-5">
+                  <td className="py-3.5 px-4">
                     {c.sector ? (
                       <>
                         <div className="text-sm text-slate-700 font-medium">{c.sector.comuna?.nombre}</div>
@@ -272,14 +278,25 @@ export default function ClientManager({ initialClientes }: { initialClientes: an
                       <span className="text-xs text-slate-300 italic">Sin asignar</span>
                     )}
                   </td>
-                  <td className="py-3.5 px-5">
-                    <span className="bg-slate-100 text-slate-600 px-2.5 py-1 rounded-lg text-xs font-medium">{c.preferencia_factura}</span>
+                  <td className="py-3.5 px-4">
+                    <span className="bg-blue-50 text-blue-700 border border-blue-200 px-2.5 py-1 rounded-lg text-xs font-extrabold uppercase">
+                      {c.frecuencia === 'QUINCENAL' ? 'Quincenal' : c.frecuencia === 'MENSUAL' ? 'Mensual' : c.frecuencia === 'A_PEDIDO' ? 'A pedido' : 'Semanal'}
+                    </span>
                   </td>
-                  <td className="py-3.5 px-5 text-center font-bold text-slate-800">{c.botellones_prestados || 0}</td>
-                  <td className="py-3.5 px-5 text-center">
+                  <td className="py-3.5 px-4 font-extrabold text-sm">
+                    {(c.deuda || 0) > 0 ? (
+                      <span className="bg-rose-50 text-rose-700 border border-rose-200 px-2 py-1 rounded-lg text-xs font-black">
+                        ${Number(c.deuda).toLocaleString('es-CL')}
+                      </span>
+                    ) : (
+                      <span className="text-emerald-600 font-bold text-xs">Al día ($0)</span>
+                    )}
+                  </td>
+                  <td className="py-3.5 px-4 text-center font-bold text-slate-800">{c.botellones_prestados || 0}</td>
+                  <td className="py-3.5 px-4 text-center">
                     <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${c.activo ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700'}`}>{c.activo ? 'Activo' : 'Inactivo'}</span>
                   </td>
-                  <td className="py-3.5 px-5 text-right">
+                  <td className="py-3.5 px-4 text-right">
                     <div className="flex items-center justify-end gap-1.5">
                       <button onClick={() => setClienteSeleccionado(c)} className="flex items-center gap-1.5 text-white text-xs font-bold px-3 py-1.5 rounded-lg" style={{ backgroundColor: '#013299' }}>
                         <Settings className="h-3.5 w-3.5" /> Gestionar
@@ -398,6 +415,22 @@ export default function ClientManager({ initialClientes }: { initialClientes: an
                     <option value={PreferenciaFacturacion.BOLETA}>Boleta</option>
                     <option value={PreferenciaFacturacion.FACTURA}>Factura</option>
                   </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="flex flex-col gap-1.5">
+                  <label className={labelCls}>Frecuencia de Visita *</label>
+                  <select name="frecuencia" value={formData.frecuencia || 'SEMANAL'} onChange={handleChange} className={inputCls}>
+                    <option value="SEMANAL">Semanal (7 días)</option>
+                    <option value="QUINCENAL">Quincenal (14 días)</option>
+                    <option value="MENSUAL">Mensual (30 días)</option>
+                    <option value="A_PEDIDO">A Pedido (Bajo demanda)</option>
+                  </select>
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <label className={labelCls}>Saldo / Deuda Inicial ($)</label>
+                  <input type="number" name="deuda" value={formData.deuda ?? 0} onChange={handleChange} placeholder="0" className={inputCls} />
                 </div>
               </div>
 

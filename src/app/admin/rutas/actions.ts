@@ -512,6 +512,10 @@ async function reprogramarParadaSemanaSiguiente(paradaId: string) {
   ]);
 }
 
+export async function actualizarEstadoParadaAction(paradaId: string, estado: string) {
+  return actualizarParadaCompletaAction(paradaId, { estado });
+}
+
 export async function actualizarParadaCompletaAction(paradaId: string, datos: any) {
   try {
     if (!paradaId || !datos.estado) return { success: false, message: 'Parámetros inválidos.' };

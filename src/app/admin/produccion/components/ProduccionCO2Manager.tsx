@@ -7,9 +7,8 @@ import { TabProduccion } from './tabs/TabProduccion';
 import { TabCO2 } from './tabs/TabCO2';
 import { TabReportes } from './tabs/TabReportes'; 
 
-// Importaciones del PopupGlobal 
-import { usePopup } from '../../clientes/components/hooks/usePopup';
-import PopupGlobal from '../../clientes/components/PopupGlobal';
+import { usePopup } from '@/hooks/usePopup';
+import PopupGlobal from '@/components/ui/PopupGlobal';
 
 interface Props {
   produccionInicial: ProduccionRow[];

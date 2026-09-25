@@ -47,7 +47,7 @@ const escapeSQL = (v: any): string => {
 export async function buscarClientesGuiaAction(criterio: string) {
   if (!criterio || criterio.length < 2) return { success: true, clientes: [] };
   const clientes = await prisma.cliente.findMany({
-    where: { activo: true, OR: [{ nombre: { contains: criterio, mode: 'insensitive' } }] },
+    where: { activo: true, OR: [{ nombre: { contains: criterio } }] },
     take: 8,
     select: { id: true, nombre: true, direccion: true, modalidad_pago: true }
   });

@@ -1,7 +1,7 @@
 'use server';
 
 import { prisma } from '../../../../lib/prisma';
-import { TipoCliente, PreferenciaFacturacion } from '../../../../lib/prisma/generated';
+import { TipoCliente, PreferenciaFacturacion, Frecuencia } from '../../../../lib/prisma/generated';
 import { revalidatePath } from 'next/cache';
 
 export interface ClienteInput {
@@ -17,12 +17,20 @@ export interface ClienteInput {
   activo: boolean;
   botellones_prestados: number;
   sector_id?: string | null;
+  frecuencia?: Frecuencia;
+  deuda?: number;
 }
 
 // 1. Crear Cliente
 export async function crearClienteAction(data: ClienteInput) {
   try {
-    await prisma.cliente.create({ data });
+    await prisma.cliente.create({
+      data: {
+        ...data,
+        frecuencia: data.frecuencia || 'SEMANAL',
+        deuda: data.deuda ?? 0,
+      }
+    });
     revalidatePath('/admin/clientes');
     return { success: true };
   } catch (error: any) {
@@ -48,6 +56,8 @@ export async function editarClienteAction(id: string, data: ClienteInput) {
         activo: data.activo,
         botellones_prestados: data.botellones_prestados ?? 0,
         sector_id: data.sector_id || null,
+        frecuencia: data.frecuencia || 'SEMANAL',
+        deuda: data.deuda !== undefined ? Number(data.deuda) : undefined,
       },
     });
     revalidatePath('/admin/clientes');
@@ -155,17 +165,32 @@ export async function registrarMantencionAction(clienteId: string, payload: any)
   }
 }
 
-// 7. Registrar Movimiento Financiero
+// 7. Registrar Movimiento Financiero (Recalcula Deuda Automáticamente)
 export async function registrarMovimientoFinancieroAction(clienteId: string, payload: any) {
   try {
-    await prisma.historialFinanciero.create({
-      data: {
-        cliente_id: clienteId,
-        tipo: payload.tipo,
-        descripcion: payload.descripcion || 'Movimiento de caja',
-        monto: parseFloat(payload.monto) || 0,
-        sincronizado_facturacion: false
-      }
+    const montoNum = parseFloat(payload.monto) || 0;
+    const esPago = payload.tipo === 'PAGO_RECIBIDO' || payload.tipo === 'AJUSTE_CREDITO';
+
+    await prisma.$transaction(async (tx) => {
+      await tx.historialFinanciero.create({
+        data: {
+          cliente_id: clienteId,
+          tipo: payload.tipo,
+          descripcion: payload.descripcion || 'Movimiento de caja',
+          monto: montoNum,
+          documento_ref: payload.documentoRef || payload.documento_ref || null,
+          sincronizado_facturacion: false
+        }
+      });
+
+      const cliente = await tx.cliente.findUnique({ where: { id: clienteId } });
+      const deudaActual = cliente?.deuda ?? 0;
+      const nuevaDeuda = esPago ? Math.max(0, deudaActual - montoNum) : deudaActual + montoNum;
+
+      await tx.cliente.update({
+        where: { id: clienteId },
+        data: { deuda: nuevaDeuda }
+      });
     });
 
     revalidatePath('/admin/clientes');
@@ -173,6 +198,42 @@ export async function registrarMovimientoFinancieroAction(clienteId: string, pay
   } catch (error: any) {
     console.error('Error en finanzas:', error);
     return { success: false, message: 'Error al procesar el registro de caja.' };
+  }
+}
+
+// 7b. Registrar Pago o Transferencia de Cliente (Recalcula Deuda Automáticamente)
+export async function registrarPagoOTransferenciaAction(clienteId: string, payload: { monto: number; descripcion: string; documento_ref?: string; esTransferencia?: boolean }) {
+  try {
+    const montoNum = parseFloat(String(payload.monto)) || 0;
+    if (montoNum <= 0) return { success: false, message: 'El monto ingresado debe ser mayor a 0.' };
+
+    await prisma.$transaction(async (tx) => {
+      await tx.historialFinanciero.create({
+        data: {
+          cliente_id: clienteId,
+          tipo: 'PAGO_RECIBIDO',
+          descripcion: payload.descripcion || (payload.esTransferencia ? 'Pago mediante Transferencia Bancaria' : 'Pago de cliente'),
+          monto: montoNum,
+          documento_ref: payload.documento_ref || null,
+          sincronizado_facturacion: false
+        }
+      });
+
+      const cliente = await tx.cliente.findUnique({ where: { id: clienteId } });
+      const deudaActual = cliente?.deuda ?? 0;
+      const nuevaDeuda = Math.max(0, deudaActual - montoNum);
+
+      await tx.cliente.update({
+        where: { id: clienteId },
+        data: { deuda: nuevaDeuda }
+      });
+    });
+
+    revalidatePath('/admin/clientes');
+    return { success: true };
+  } catch (error: any) {
+    console.error('Error al registrar pago:', error);
+    return { success: false, message: error.message || 'Error al registrar el pago.' };
   }
 }
 

@@ -162,6 +162,7 @@ model Cliente {
   incidencias          Incidencia[]
   frecuencia           Frecuencia             @default(SEMANAL)
   semana_alterna       SemanaAlterna?
+  deuda                Float                  @default(0)
 }
 
 model RutaBase {
@@ -484,14 +485,14 @@ model LogAcceso {
 
 model Dispensador {
   id              String                  @id @default(uuid())
-  cliente_id      String
+  cliente_id      String?
   marca           String
   modelo          String
   numero_serie    String?                 @unique
   foto_url        String?                 @db.LongText
-  estado          EstadoDispensador       @default(EN_CLIENTE)
+  estado          EstadoDispensador       @default(DISPONIBLE)
   precio_arriendo Int                     @default(0)
-  cliente         Cliente                 @relation(fields: [cliente_id], references: [id])
+  cliente         Cliente?                @relation(fields: [cliente_id], references: [id])
   mantenciones    MantencionDispensador[]
 }
 
@@ -706,6 +707,9 @@ enum DiaSemana {
 
 enum Frecuencia {
   SEMANAL
+  QUINCENAL
+  MENSUAL
+  A_PEDIDO
   ALTERNA
 }
 
@@ -747,9 +751,12 @@ enum EstadoCuadratura {
 }
 
 enum EstadoDispensador {
+  DISPONIBLE
   EN_CLIENTE
   EN_TALLER
   REEMPLAZADO_TEMPORALMENTE
+  RETIRADO
+  BAJA
 }
 
 enum EstadoMaquina {
