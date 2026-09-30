@@ -11,7 +11,12 @@ import {
   actualizarCantidadesClienteRutaBaseAction
 } from './actions';
 import { DiaSemana } from '@lib/prisma/generated/edge';
-import { Search, Droplet, GlassWater } from 'lucide-react';
+import { 
+  Search, Droplet, GlassWater, Calendar, Plus, User, Truck, 
+  MapPin, Phone, Trash2, Edit3, Save, X, ArrowUp, ArrowDown, Layers, Users
+} from 'lucide-react';
+import { usePopup } from '@/hooks/usePopup';
+import PopupGlobal from '@/components/ui/PopupGlobal';
 
 interface Props {
   rutasBaseIniciales: any[];
@@ -26,27 +31,31 @@ interface Cantidades {
 }
 
 const CANTIDADES_VACIAS: Cantidades = { bot20_default: 0, bot10_default: 0, soda_default: 0 };
+const inputCls = 'w-full border border-slate-200 p-2.5 rounded-xl text-xs text-slate-800 bg-white outline-none focus:ring-2 focus:ring-[#013299]/20 focus:border-[#013299] transition-colors placeholder:text-slate-400';
+const labelCls = 'block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1';
 
 export default function RutasBaseManager({ rutasBaseIniciales, choferes, vehiculos }: Props) {
   const [rutasBase, setRutasBase] = useState(rutasBaseIniciales);
   const [cargando, setCargando] = useState(false);
+  const [diaFiltro, setDiaFiltro] = useState<DiaSemana | 'TODOS'>('LUNES');
+  const [isCrearModalOpen, setIsCrearModalOpen] = useState(false);
+  const { popup, showSuccess, showError, showConfirm, close } = usePopup();
 
-  // Estados para el buscador
+  // Buscador por ruta
   const [buscando, setBuscando] = useState<{ [key: string]: boolean }>({});
   const [busquedas, setBusquedas] = useState<{ [key: string]: string }>({});
   const [resultadosCli, setResultadosCli] = useState<{ [key: string]: any[] }>({});
-
-  // Ref para manejar el debounce y no saturar la base de datos
   const timerBuscador = useRef<{ [key: string]: NodeJS.Timeout }>({});
 
-  // Estado del modal de alta (cliente seleccionado pendiente de confirmar cantidades)
+  // Modal para confirmar cantidades por defecto de nuevo cliente en la ruta
   const [pendiente, setPendiente] = useState<{ rutaId: string; cliente: any } | null>(null);
   const [cantidadesModal, setCantidadesModal] = useState<Cantidades>(CANTIDADES_VACIAS);
 
-  // Estado de edición inline en la tabla
-  const [editando, setEditando] = useState<string | null>(null); // id de ClienteRutaBase
+  // Edición inline de cantidades
+  const [editando, setEditando] = useState<string | null>(null);
   const [cantidadesEdicion, setCantidadesEdicion] = useState<Cantidades>(CANTIDADES_VACIAS);
 
+  // Formulario nueva ruta base
   const [form, setForm] = useState<{
     nombre: string;
     dia_semana: DiaSemana;
@@ -54,7 +63,7 @@ export default function RutasBaseManager({ rutasBaseIniciales, choferes, vehicul
     vehiculo_id: string;
   }>({
     nombre: '',
-    dia_semana: 'LUNES' as DiaSemana,
+    dia_semana: 'LUNES',
     usuario_id: '',
     vehiculo_id: ''
   });
@@ -70,24 +79,26 @@ export default function RutasBaseManager({ rutasBaseIniciales, choferes, vehicul
 
   const manejarCrearRuta = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.usuario_id || !form.vehiculo_id) return alert('Debes seleccionar Chofer y Camión.');
+    if (!form.usuario_id || !form.vehiculo_id) {
+      showError('Datos incompletos', 'Debes seleccionar Chofer y Camión.');
+      return;
+    }
     setCargando(true);
     const res = await crearRutaBaseAction(form);
     if (res.success) {
-      setForm({ nombre: '', dia_semana: 'LUNES', usuario_id: '', vehiculo_id: '' });
+      setForm({ nombre: '', dia_semana: diaFiltro !== 'TODOS' ? diaFiltro : 'LUNES', usuario_id: '', vehiculo_id: '' });
+      setIsCrearModalOpen(false);
       await refrescar();
+      showSuccess('Ruta Base Creada', 'La plantilla de ruta ha sido agregada exitosamente.');
     } else {
-      alert(res.message);
+      showError('Error', res.message || 'No se pudo crear la plantilla.');
     }
     setCargando(false);
   };
 
   const buscarClientes = (rutaId: string, valor: string) => {
     setBusquedas(prev => ({ ...prev, [rutaId]: valor }));
-
-    if (timerBuscador.current[rutaId]) {
-      clearTimeout(timerBuscador.current[rutaId]);
-    }
+    if (timerBuscador.current[rutaId]) clearTimeout(timerBuscador.current[rutaId]);
 
     if (valor.trim().length < 2) {
       setResultadosCli(prev => ({ ...prev, [rutaId]: [] }));
@@ -96,7 +107,6 @@ export default function RutasBaseManager({ rutasBaseIniciales, choferes, vehicul
     }
 
     setBuscando(prev => ({ ...prev, [rutaId]: true }));
-
     timerBuscador.current[rutaId] = setTimeout(async () => {
       try {
         const res = await buscarClientesBaseAction(valor, rutaId);
@@ -111,11 +121,9 @@ export default function RutasBaseManager({ rutasBaseIniciales, choferes, vehicul
     }, 350);
   };
 
-  // Al elegir un resultado del buscador, no se agrega directo: se abre el modal de cantidades
   const seleccionarClienteParaAlta = (rutaId: string, cliente: any) => {
     setPendiente({ rutaId, cliente });
     setCantidadesModal(CANTIDADES_VACIAS);
-    // Limpiar buscador y dropdown de esa ruta
     setBusquedas(prev => ({ ...prev, [rutaId]: '' }));
     setResultadosCli(prev => ({ ...prev, [rutaId]: [] }));
   };
@@ -133,22 +141,25 @@ export default function RutasBaseManager({ rutasBaseIniciales, choferes, vehicul
       setPendiente(null);
       setCantidadesModal(CANTIDADES_VACIAS);
       await refrescar();
+      showSuccess('Cliente Asignado', 'El cliente fue agregado exitosamente a esta ruta base.');
     } else {
-      alert(res.message);
+      showError('Error', res.message || 'No se pudo asignar el cliente.');
     }
     setCargando(false);
   };
 
-  const eliminarCliente = async (clienteRutaBaseId: string, rutaBaseId: string) => {
-    if (!confirm('¿Eliminar este cliente de la ruta?')) return;
-    setCargando(true);
-    const res = await eliminarClienteDeRutaBaseAction(clienteRutaBaseId, rutaBaseId);
-    if (res.success) {
-      await refrescar();
-    } else {
-      alert(res.message);
-    }
-    setCargando(false);
+  const eliminarCliente = async (clienteRutaBaseId: string, rutaBaseId: string, clienteNombre: string) => {
+    showConfirm('¿Quitar Cliente?', `¿Deseas remover a "${clienteNombre}" de esta plantilla de ruta?`, async () => {
+      setCargando(true);
+      const res = await eliminarClienteDeRutaBaseAction(clienteRutaBaseId, rutaBaseId);
+      if (res.success) {
+        await refrescar();
+        showSuccess('Removido', 'Cliente retirado de la plantilla.');
+      } else {
+        showError('Error', res.message || 'No se pudo retirar el cliente.');
+      }
+      setCargando(false);
+    });
   };
 
   const moverCliente = async (clienteRutaBaseId: string, rutaBaseId: string, direccion: 'subir' | 'bajar') => {
@@ -157,12 +168,11 @@ export default function RutasBaseManager({ rutasBaseIniciales, choferes, vehicul
     if (res.success) {
       await refrescar();
     } else {
-      alert(res.message);
+      showError('Error', res.message || 'No se pudo reordenar.');
     }
     setCargando(false);
   };
 
-  // --- Edición inline de cantidades en la tabla ---
   const iniciarEdicion = (c: any) => {
     setEditando(c.id);
     setCantidadesEdicion({
@@ -183,120 +193,151 @@ export default function RutasBaseManager({ rutasBaseIniciales, choferes, vehicul
     if (res.success) {
       setEditando(null);
       await refrescar();
+      showSuccess('Cantidades Actualizadas', 'Se han modificado las cargas por defecto.');
     } else {
-      alert(res.message);
+      showError('Error', res.message || 'No se pudieron actualizar las cantidades.');
     }
     setCargando(false);
   };
 
-  return (
-    <div className="grid grid-cols-1 xl:grid-cols-4 gap-6 font-sans text-slate-800">
+  const rutasFiltradas = diaFiltro === 'TODOS' 
+    ? rutasBase 
+    : rutasBase.filter((r: any) => r.dia_semana === diaFiltro);
 
-      {/* PANEL IZQUIERDO: Formulario de Creación */}
-      <div className="xl:col-span-1 bg-white p-5 rounded-xl border border-slate-200 shadow-sm h-fit">
-        <h2 className="text-xs font-black text-slate-700 uppercase tracking-wider mb-4 pb-3 border-b border-slate-100 flex items-center gap-2">
-          🛠️ Nueva Plantilla de Ruta
-        </h2>
-        <form onSubmit={manejarCrearRuta} className="space-y-4 text-xs">
-          <div>
-            <label className="block font-bold text-slate-600 mb-1.5">Nombre Descriptivo</label>
-            <input
-              type="text"
-              placeholder="Ej: Ruta Centro - Sur"
-              value={form.nombre}
-              onChange={e => setForm({ ...form, nombre: e.target.value })}
-              className="border border-slate-300 rounded-lg p-2.5 w-full font-medium focus:ring-2 focus:ring-[#1e40af]/20 focus:border-[#1e40af] outline-none transition-colors"
-              required
-            />
-          </div>
-          <div>
-            <label className="block font-bold text-slate-600 mb-1.5">Día Fijo de Operación</label>
-            <select
-              value={form.dia_semana}
-              onChange={e => setForm({ ...form, dia_semana: e.target.value as DiaSemana })}
-              className="border border-slate-300 rounded-lg p-2.5 w-full font-bold bg-white text-slate-800 focus:ring-2 focus:ring-[#1e40af]/20 focus:border-[#1e40af] outline-none transition-colors"
-            >
-              {dias.map(d => <option key={d} value={d}>{d}</option>)}
-            </select>
-          </div>
-          <div>
-            <label className="block font-bold text-slate-600 mb-1.5">Repartidor Encargado</label>
-            <select
-              value={form.usuario_id}
-              onChange={e => setForm({ ...form, usuario_id: e.target.value })}
-              className="border border-slate-300 rounded-lg p-2.5 w-full font-medium bg-white focus:ring-2 focus:ring-[#1e40af]/20 focus:border-[#1e40af] outline-none transition-colors"
-              required
-            >
-              <option value="">-- Seleccionar Chofer --</option>
-              {choferes.map(c => <option key={c.id} value={c.id}>{c.nombre} {c.apellido}</option>)}
-            </select>
-          </div>
-          <div>
-            <label className="block font-bold text-slate-600 mb-1.5">Camión Habitual</label>
-            <select
-              value={form.vehiculo_id}
-              onChange={e => setForm({ ...form, vehiculo_id: e.target.value })}
-              className="border border-slate-300 rounded-lg p-2.5 w-full font-medium bg-white focus:ring-2 focus:ring-[#1e40af]/20 focus:border-[#1e40af] outline-none transition-colors"
-              required
-            >
-              <option value="">-- Seleccionar Vehículo --</option>
-              {vehiculos.map(v => <option key={v.id} value={v.id}>[{v.patente}] {v.marca}</option>)}
-            </select>
-          </div>
+  return (
+    <div className="space-y-6 font-sans text-slate-800">
+      <PopupGlobal popup={popup} onClose={close} />
+
+      {/* BARRA SUPERIOR DE SELECTOR DE DÍA + BOTÓN NUEVA RUTA BASE */}
+      <div className="bg-white p-3 rounded-2xl border border-slate-100 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-3">
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0">
           <button
-            type="submit"
-            disabled={cargando}
-            className="w-full bg-[#1e40af] hover:bg-blue-800 text-white font-bold p-3 rounded-lg transition-colors uppercase tracking-wider mt-4"
+            onClick={() => setDiaFiltro('TODOS')}
+            className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 whitespace-nowrap ${
+              diaFiltro === 'TODOS'
+                ? 'bg-[#013299] text-white shadow-xs'
+                : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+            }`}
           >
-            {cargando ? 'Guardando...' : '⚡ Crear Estructura'}
+            <Layers className="w-3.5 h-3.5" />
+            <span>Todos los Días</span>
+            <span className={`px-1.5 py-0.5 rounded-full text-[10px] font-black ${
+              diaFiltro === 'TODOS' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-700'
+            }`}>
+              {rutasBase.length}
+            </span>
           </button>
-        </form>
+
+          {dias.map((dia) => {
+            const count = rutasBase.filter((r: any) => r.dia_semana === dia).length;
+            const isSelected = diaFiltro === dia;
+            return (
+              <button
+                key={dia}
+                onClick={() => setDiaFiltro(dia)}
+                className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 whitespace-nowrap ${
+                  isSelected
+                    ? 'bg-[#013299] text-white shadow-xs'
+                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                }`}
+              >
+                <Calendar className="w-3.5 h-3.5" />
+                <span>{dia}</span>
+                <span className={`px-1.5 py-0.5 rounded-full text-[10px] font-black ${
+                  isSelected ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-700'
+                }`}>
+                  {count}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
+        <button
+          onClick={() => {
+            setForm(f => ({ ...f, dia_semana: diaFiltro !== 'TODOS' ? diaFiltro : 'LUNES' }));
+            setIsCrearModalOpen(true);
+          }}
+          className="text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-all shadow-sm flex items-center justify-center gap-2 shrink-0"
+          style={{ backgroundColor: '#013299' }}
+        >
+          <Plus className="w-4 h-4" />
+          <span>Nueva Ruta Base</span>
+        </button>
       </div>
 
-      {/* PANEL DERECHO: Tarjetas de Rutas Base (Estilo Apilado) */}
-      <div className="xl:col-span-3 space-y-6">
-        {rutasBase.length === 0 ? (
-          <div className="bg-white p-12 text-center text-xs text-slate-400 font-medium border border-dashed border-slate-300 rounded-xl">
-            No hay plantillas base definidas todavía. Crea una a la izquierda para empezar.
+      {/* LISTADO DE TARJETAS DE RUTAS BASE PARA EL DÍA FILTRADO */}
+      <div className="space-y-6">
+        {rutasFiltradas.length === 0 ? (
+          <div className="bg-white p-12 text-center text-xs text-slate-400 font-medium border border-dashed border-slate-200 rounded-2xl space-y-2">
+            <Calendar className="w-8 h-8 text-slate-300 mx-auto" />
+            <p className="font-bold text-slate-600">No hay plantillas base definidas para {diaFiltro === 'TODOS' ? 'el sistema' : diaFiltro}.</p>
+            <p className="text-[11px] text-slate-400">Haz clic en "+ Nueva Ruta Base" para agregar un circuito de reparto fijo.</p>
           </div>
         ) : (
-          rutasBase.map((rb: any) => {
+          rutasFiltradas.map((rb: any) => {
             const resultados = resultadosCli[rb.id] ?? [];
             const busquedaActual = busquedas[rb.id] ?? '';
             const estaBuscando = buscando[rb.id] ?? false;
 
+            const totalBot20 = rb.clientes?.reduce((acc: number, c: any) => acc + (c.bot20_default || 0), 0) || 0;
+            const totalBot10 = rb.clientes?.reduce((acc: number, c: any) => acc + (c.bot10_default || 0), 0) || 0;
+            const totalSoda = rb.clientes?.reduce((acc: number, c: any) => acc + (c.soda_default || 0), 0) || 0;
+
             return (
-              <div key={rb.id} className="bg-white border border-slate-200 rounded-xl shadow-sm flex flex-col">
+              <div key={rb.id} className="bg-white border border-slate-100 rounded-2xl shadow-sm overflow-hidden flex flex-col transition-all hover:border-slate-200">
 
-                {/* CABECERA (Info + Buscador) */}
-                <div className="bg-slate-50/80 p-4 border-b border-slate-200 rounded-t-xl flex flex-col lg:flex-row justify-between lg:items-center gap-4 relative z-20">
-
+                {/* CABECERA DE RUTA BASE */}
+                <div className="bg-slate-50/90 p-5 border-b border-slate-100 flex flex-col lg:flex-row justify-between lg:items-center gap-4 relative z-20">
                   <div className="flex flex-col sm:flex-row sm:items-center gap-4">
                     <div>
-                      <div className="flex items-center gap-2 mb-1.5">
-                        <span className="bg-[#0f172a] text-white text-[10px] font-black px-2 py-0.5 rounded tracking-widest uppercase">
+                      <div className="flex items-center gap-2.5 mb-1.5">
+                        <span className="bg-[#013299] text-white text-[10px] font-black px-2.5 py-0.5 rounded-md tracking-wider uppercase">
                           {rb.dia_semana}
                         </span>
-                        <h3 className="text-sm font-black text-slate-800">{rb.nombre}</h3>
+                        <h3 className="text-base font-black text-slate-900">{rb.nombre}</h3>
+                        <span className="bg-blue-50 text-[#013299] border border-blue-100 px-2.5 py-0.5 rounded-full text-[11px] font-bold">
+                          {rb.clientes?.length || 0} Clientes fijos
+                        </span>
                       </div>
-                      <div className="flex items-center gap-4 text-xs font-medium text-slate-600">
+
+                      <div className="flex flex-wrap items-center gap-4 text-xs font-medium text-slate-600 mt-2">
                         <span className="flex items-center gap-1.5">
-                          👤 <span className="font-bold text-slate-800">{rb.usuario?.nombre} {rb.usuario?.apellido}</span>
+                          <User className="w-3.5 h-3.5 text-[#013299]" />
+                          <span className="font-bold text-slate-800">{rb.usuario?.nombre} {rb.usuario?.apellido}</span>
                         </span>
-                        <span className="flex items-center gap-1.5 border-l border-slate-300 pl-4">
-                          🚚 <span className="font-bold text-slate-800">{rb.vehiculo?.marca} ({rb.vehiculo?.patente})</span>
+                        <span className="flex items-center gap-1.5 border-l border-slate-200 pl-4">
+                          <Truck className="w-3.5 h-3.5 text-slate-500" />
+                          <span className="font-mono font-bold text-slate-800">[{rb.vehiculo?.patente}]</span>
+                          <span className="text-slate-500">{rb.vehiculo?.marca}</span>
                         </span>
+
+                        {/* RESUMEN DE CARGAS ESPERADAS */}
+                        <div className="flex items-center gap-3 border-l border-slate-200 pl-4 text-[11px] font-bold">
+                          <span className="flex items-center gap-1 text-slate-700" title="Bidones 20L programados">
+                            <Droplet className="w-3.5 h-3.5 text-blue-600" />
+                            <span>{totalBot20} u (20L)</span>
+                          </span>
+                          <span className="flex items-center gap-1 text-slate-700" title="Bidones 10L programados">
+                            <Droplet className="w-3.5 h-3.5 text-sky-500" />
+                            <span>{totalBot10} u (10L)</span>
+                          </span>
+                          <span className="flex items-center gap-1 text-slate-700" title="Sodas programadas">
+                            <GlassWater className="w-3.5 h-3.5 text-slate-400" />
+                            <span>{totalSoda} u (Soda)</span>
+                          </span>
+                        </div>
                       </div>
                     </div>
                   </div>
 
-                  {/* Buscador Derecha */}
-                  <div className="relative w-full lg:w-72">
-                    <div className="flex items-center gap-2 bg-white border border-slate-300 rounded-lg px-3 py-2 focus-within:ring-2 focus-within:ring-[#1e40af]/20 focus-within:border-[#1e40af] transition-colors">
-                      <Search className="h-3.5 w-3.5 text-slate-400 shrink-0" />
+                  {/* BUSCADOR PARA AGREGAR CLIENTE FIJO */}
+                  <div className="relative w-full lg:w-80">
+                    <div className="flex items-center gap-2 bg-white border border-slate-200 rounded-xl px-3 py-2 focus-within:ring-2 focus-within:ring-[#013299]/20 focus-within:border-[#013299] transition-colors shadow-xs">
+                      <Search className="h-4 w-4 text-slate-400 shrink-0" />
                       <input
                         type="text"
-                        placeholder={estaBuscando ? 'Buscando...' : 'Añadir cliente fijo...'}
+                        placeholder={estaBuscando ? 'Buscando...' : 'Añadir cliente a esta ruta...'}
                         value={busquedaActual}
                         onChange={e => buscarClientes(rb.id, e.target.value)}
                         className="text-xs font-medium text-slate-800 placeholder:text-slate-400 outline-none w-full bg-transparent"
@@ -304,61 +345,90 @@ export default function RutasBaseManager({ rutasBaseIniciales, choferes, vehicul
                     </div>
 
                     {resultados.length > 0 && (
-                      <div className="absolute left-0 right-0 top-full mt-1 bg-white border border-slate-200 rounded-lg shadow-xl max-h-56 overflow-y-auto divide-y divide-slate-100 z-50">
+                      <div className="absolute left-0 right-0 top-full mt-1 bg-white border border-slate-200 rounded-2xl shadow-xl max-h-60 overflow-y-auto divide-y divide-slate-100 z-50 p-1">
                         {resultados.map((c: any) => (
                           <button
                             key={c.id}
                             type="button"
                             onClick={() => seleccionarClienteParaAlta(rb.id, c)}
-                            className="w-full text-left p-3 hover:bg-blue-50 transition-colors block"
+                            className="w-full text-left p-2.5 hover:bg-blue-50 rounded-xl transition-colors block"
                           >
-                            <span className="block font-bold text-slate-800 text-xs">{c.nombre}</span>
-                            <span className="block text-[10px] text-slate-500 truncate mt-0.5">📍 {c.direccion}</span>
+                            <span className="block font-bold text-slate-900 text-xs">{c.nombre}</span>
+                            <span className="block text-[11px] text-slate-500 truncate mt-0.5">📍 {c.direccion}</span>
                           </button>
                         ))}
                       </div>
                     )}
 
                     {!estaBuscando && busquedaActual.trim().length >= 2 && resultados.length === 0 && (
-                      <div className="absolute left-0 right-0 top-full mt-1 bg-white border border-slate-200 rounded-lg p-3 text-xs text-slate-500 text-center shadow-lg z-50">
+                      <div className="absolute left-0 right-0 top-full mt-1 bg-white border border-slate-200 rounded-2xl p-3 text-xs text-slate-500 text-center shadow-lg z-50">
                         Sin resultados para "{busquedaActual}"
                       </div>
                     )}
                   </div>
                 </div>
 
-                {/* TABLA INFERIOR */}
+                {/* TABLA DE CLIENTES FIJOS */}
                 <div className="overflow-x-auto relative z-10">
                   <table className="w-full text-left text-xs min-w-[760px]">
-                    <thead className="bg-white border-b border-slate-200 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                    <thead className="bg-slate-50/50 border-b border-slate-100 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
                       <tr>
-                        <th className="px-5 py-3 w-[200px]">Cliente Fijo</th>
+                        <th className="px-5 py-3 w-[50px] text-center">Orden</th>
+                        <th className="px-4 py-3 min-w-[180px]">Cliente Fijo</th>
                         <th className="px-3 py-3 w-[90px]">Tipo</th>
                         <th className="px-4 py-3 min-w-[180px]">Dirección y Contacto</th>
                         <th className="px-4 py-3 min-w-[140px]">Comuna / Sector</th>
-                        <th className="px-3 py-3 w-[160px] text-center">B.20 / B.10 / Soda</th>
-                        <th className="px-4 py-3 w-[130px] text-center">Acción</th>
+                        <th className="px-3 py-3 w-[160px] text-center">Bot 20L / Bot 10L / Soda</th>
+                        <th className="px-4 py-3 w-[120px] text-center">Acciones</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100 bg-white">
                       {rb.clientes.length === 0 ? (
                         <tr>
-                          <td colSpan={6} className="px-5 py-12 text-center text-slate-400 italic">
-                            Sin clientes fijos asignados a esta plantilla.
+                          <td colSpan={7} className="px-5 py-10 text-center text-slate-400 italic">
+                            Sin clientes fijos asignados a esta plantilla. Utiliza el buscador para añadir clientes.
                           </td>
                         </tr>
                       ) : (
-                        rb.clientes.map((c: any) => {
+                        rb.clientes.map((c: any, index: number) => {
                           const enEdicion = editando === c.id;
                           return (
-                            <tr key={c.id} className="hover:bg-slate-50 transition-colors">
+                            <tr key={c.id} className="hover:bg-slate-50/80 transition-colors">
+                              {/* Reordenamiento */}
+                              <td className="px-3 py-3 text-center align-middle">
+                                <div className="flex flex-col items-center justify-center gap-0.5">
+                                  <span className="font-mono text-xs font-bold text-slate-400">{index + 1}</span>
+                                  <div className="flex items-center gap-0.5">
+                                    {index > 0 && (
+                                      <button
+                                        onClick={() => moverCliente(c.id, rb.id, 'subir')}
+                                        disabled={cargando}
+                                        title="Subir posición"
+                                        className="p-1 hover:bg-slate-200 rounded text-slate-500"
+                                      >
+                                        <ArrowUp className="w-3 h-3" />
+                                      </button>
+                                    )}
+                                    {index < rb.clientes.length - 1 && (
+                                      <button
+                                        onClick={() => moverCliente(c.id, rb.id, 'bajar')}
+                                        disabled={cargando}
+                                        title="Bajar posición"
+                                        className="p-1 hover:bg-slate-200 rounded text-slate-500"
+                                      >
+                                        <ArrowDown className="w-3 h-3" />
+                                      </button>
+                                    )}
+                                  </div>
+                                </div>
+                              </td>
 
-                              <td className="px-5 py-3 font-bold text-slate-800 align-middle">
+                              <td className="px-4 py-3 font-bold text-slate-900 align-middle">
                                 {c.cliente?.nombre}
                               </td>
 
                               <td className="px-3 py-3 align-middle">
-                                <span className={`text-[9px] font-black px-2.5 py-1 rounded tracking-wide ${
+                                <span className={`text-[9px] font-black px-2.5 py-1 rounded-full tracking-wide ${
                                   c.cliente?.tipo === 'EMPRESA'
                                     ? 'bg-purple-100 text-purple-700'
                                     : 'bg-emerald-100 text-emerald-700'
@@ -368,16 +438,18 @@ export default function RutasBaseManager({ rutasBaseIniciales, choferes, vehicul
                               </td>
 
                               <td className="px-4 py-3 align-middle text-[11px] leading-relaxed">
-                                <span className="block text-slate-700 font-medium truncate max-w-[200px]" title={c.cliente?.direccion}>
-                                  📍 {c.cliente?.direccion}
+                                <span className="flex items-center gap-1 text-slate-700 font-medium truncate max-w-[200px]" title={c.cliente?.direccion}>
+                                  <MapPin className="w-3 h-3 text-slate-400 shrink-0" />
+                                  <span className="truncate">{c.cliente?.direccion}</span>
                                 </span>
-                                <span className="block text-slate-500 mt-0.5 font-medium">
-                                  📞 {c.cliente?.telefono || 'Sin teléfono'}
+                                <span className="flex items-center gap-1 text-slate-500 mt-0.5 font-medium">
+                                  <Phone className="w-3 h-3 text-slate-400 shrink-0" />
+                                  <span>{c.cliente?.telefono || 'Sin teléfono'}</span>
                                 </span>
                               </td>
 
                               <td className="px-4 py-3 align-middle text-[11px]">
-                                <span className="block font-bold text-slate-700">
+                                <span className="block font-bold text-slate-800">
                                   {c.cliente?.sector?.comuna?.nombre || '-'}
                                 </span>
                                 <span className="block text-slate-500 mt-0.5 truncate max-w-[140px]">
@@ -394,7 +466,7 @@ export default function RutasBaseManager({ rutasBaseIniciales, choferes, vehicul
                                       min={0}
                                       value={cantidadesEdicion.bot20_default}
                                       onChange={e => setCantidadesEdicion(prev => ({ ...prev, bot20_default: Math.max(0, Number(e.target.value)) }))}
-                                      className="w-11 border border-slate-300 rounded p-1 text-center text-[11px] font-bold focus:ring-2 focus:ring-[#1e40af]/20 focus:border-[#1e40af] outline-none"
+                                      className="w-12 border border-slate-300 rounded-lg p-1.5 text-center text-xs font-bold focus:ring-2 focus:ring-[#013299]/20 outline-none"
                                       title="Bidones 20L"
                                     />
                                     <input
@@ -402,7 +474,7 @@ export default function RutasBaseManager({ rutasBaseIniciales, choferes, vehicul
                                       min={0}
                                       value={cantidadesEdicion.bot10_default}
                                       onChange={e => setCantidadesEdicion(prev => ({ ...prev, bot10_default: Math.max(0, Number(e.target.value)) }))}
-                                      className="w-11 border border-slate-300 rounded p-1 text-center text-[11px] font-bold focus:ring-2 focus:ring-[#1e40af]/20 focus:border-[#1e40af] outline-none"
+                                      className="w-12 border border-slate-300 rounded-lg p-1.5 text-center text-xs font-bold focus:ring-2 focus:ring-[#013299]/20 outline-none"
                                       title="Bidones 10L"
                                     />
                                     <input
@@ -410,7 +482,7 @@ export default function RutasBaseManager({ rutasBaseIniciales, choferes, vehicul
                                       min={0}
                                       value={cantidadesEdicion.soda_default}
                                       onChange={e => setCantidadesEdicion(prev => ({ ...prev, soda_default: Math.max(0, Number(e.target.value)) }))}
-                                      className="w-11 border border-slate-300 rounded p-1 text-center text-[11px] font-bold focus:ring-2 focus:ring-[#1e40af]/20 focus:border-[#1e40af] outline-none"
+                                      className="w-12 border border-slate-300 rounded-lg p-1.5 text-center text-xs font-bold focus:ring-2 focus:ring-[#013299]/20 outline-none"
                                       title="Sodas"
                                     />
                                   </div>
@@ -418,23 +490,26 @@ export default function RutasBaseManager({ rutasBaseIniciales, choferes, vehicul
                                   <button
                                     type="button"
                                     onClick={() => iniciarEdicion(c)}
-                                    className="w-full flex items-center justify-center gap-2 text-[11px] font-bold text-slate-700 hover:text-[#1e40af] transition-colors"
-                                    title="Click para editar cantidades"
+                                    className="w-full flex items-center justify-center gap-3 text-xs font-bold text-slate-700 hover:text-[#013299] transition-colors py-1 px-2 rounded-lg hover:bg-slate-100"
+                                    title="Haz clic para editar las cargas programadas"
                                   >
-                                    <span className="flex items-center gap-1">
-                                      <Droplet className="h-3 w-3 text-blue-500" />{c.bot20_default ?? 0}
+                                    <span className="flex items-center gap-1" title="20 Litros">
+                                      <Droplet className="h-3.5 w-3.5 text-blue-600" />
+                                      <span>{c.bot20_default ?? 0}</span>
                                     </span>
-                                    <span className="flex items-center gap-1">
-                                      <Droplet className="h-3 w-3 text-sky-400" />{c.bot10_default ?? 0}
+                                    <span className="flex items-center gap-1" title="10 Litros">
+                                      <Droplet className="h-3.5 w-3.5 text-sky-500" />
+                                      <span>{c.bot10_default ?? 0}</span>
                                     </span>
-                                    <span className="flex items-center gap-1">
-                                      <GlassWater className="h-3 w-3 text-slate-400" />{c.soda_default ?? 0}
+                                    <span className="flex items-center gap-1" title="Soda">
+                                      <GlassWater className="h-3.5 w-3.5 text-slate-400" />
+                                      <span>{c.soda_default ?? 0}</span>
                                     </span>
                                   </button>
                                 )}
                               </td>
 
-                              {/* Acción */}
+                              {/* Acciones */}
                               <td className="px-4 py-3 text-center align-middle">
                                 {enEdicion ? (
                                   <div className="flex items-center justify-center gap-2">
@@ -442,14 +517,15 @@ export default function RutasBaseManager({ rutasBaseIniciales, choferes, vehicul
                                       type="button"
                                       onClick={() => guardarEdicion(c.id)}
                                       disabled={cargando}
-                                      className="text-emerald-600 hover:text-emerald-800 disabled:opacity-40 font-bold px-2 py-1 rounded hover:bg-emerald-50 transition-colors text-[11px]"
+                                      className="text-emerald-600 hover:text-emerald-800 disabled:opacity-40 font-bold px-2 py-1 rounded-lg hover:bg-emerald-50 transition-colors text-xs flex items-center gap-1"
                                     >
-                                      Guardar
+                                      <Save className="w-3.5 h-3.5" />
+                                      <span>Guardar</span>
                                     </button>
                                     <button
                                       type="button"
                                       onClick={cancelarEdicion}
-                                      className="text-slate-400 hover:text-slate-600 font-bold px-2 py-1 rounded hover:bg-slate-100 transition-colors text-[11px]"
+                                      className="text-slate-400 hover:text-slate-600 font-bold px-2 py-1 rounded-lg hover:bg-slate-100 transition-colors text-xs"
                                     >
                                       Cancelar
                                     </button>
@@ -457,16 +533,16 @@ export default function RutasBaseManager({ rutasBaseIniciales, choferes, vehicul
                                 ) : (
                                   <button
                                     type="button"
-                                    onClick={() => eliminarCliente(c.id, rb.id)}
+                                    onClick={() => eliminarCliente(c.id, rb.id, c.cliente?.nombre || 'este cliente')}
                                     disabled={cargando}
-                                    className="text-red-500 hover:text-red-700 disabled:opacity-40 font-bold px-3 py-1.5 rounded hover:bg-red-50 transition-colors text-[11px]"
-                                    title="Quitar de la ruta"
+                                    className="text-rose-500 hover:text-rose-700 disabled:opacity-40 font-bold px-2.5 py-1 rounded-lg hover:bg-rose-50 transition-colors text-xs flex items-center justify-center gap-1 mx-auto"
+                                    title="Quitar cliente de la plantilla"
                                   >
-                                    Quitar
+                                    <Trash2 className="w-3.5 h-3.5" />
+                                    <span>Quitar</span>
                                   </button>
                                 )}
                               </td>
-
                             </tr>
                           );
                         })
@@ -480,63 +556,148 @@ export default function RutasBaseManager({ rutasBaseIniciales, choferes, vehicul
         )}
       </div>
 
-      {/* MODAL: Fijar cantidades al agregar cliente */}
-      {pendiente && (
-        <div className="fixed inset-0 bg-slate-900/50 flex items-center justify-center z-[100] p-4">
-          <div className="bg-white rounded-xl shadow-2xl w-full max-w-sm p-6">
-            <h3 className="text-xs font-black text-slate-700 uppercase tracking-wider mb-1">
-              Cantidades por Defecto
-            </h3>
-            <p className="text-xs text-slate-500 mb-5">
-              Para <span className="font-bold text-slate-800">{pendiente.cliente.nombre}</span>, definí lo que se le carga cada vez que sale esta ruta.
-            </p>
+      {/* MODAL: Crear Nueva Plantilla de Ruta Base */}
+      {isCrearModalOpen && (
+        <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <form onSubmit={manejarCrearRuta} className="bg-white rounded-2xl shadow-2xl border border-slate-100 w-full max-w-md p-6 space-y-4">
+            <div className="flex justify-between items-center border-b border-slate-100 pb-3">
+              <h3 className="text-base font-bold text-slate-900">
+                Nueva Plantilla de Ruta Base
+              </h3>
+              <button type="button" onClick={() => setIsCrearModalOpen(false)} className="text-slate-400 hover:text-slate-600">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
 
-            <div className="space-y-4">
+            <div className="space-y-3 text-xs">
+              <div>
+                <label className={labelCls}>Nombre Descriptivo de la Ruta *</label>
+                <input
+                  type="text"
+                  placeholder="Ej: Ruta 1 - Centro / Sur"
+                  value={form.nombre}
+                  onChange={e => setForm({ ...form, nombre: e.target.value })}
+                  className={inputCls}
+                  required
+                />
+              </div>
+              <div>
+                <label className={labelCls}>Día Fijo de Operación *</label>
+                <select
+                  value={form.dia_semana}
+                  onChange={e => setForm({ ...form, dia_semana: e.target.value as DiaSemana })}
+                  className={`${inputCls} font-bold`}
+                >
+                  {dias.map(d => <option key={d} value={d}>{d}</option>)}
+                </select>
+              </div>
+              <div>
+                <label className={labelCls}>Repartidor Encargado *</label>
+                <select
+                  value={form.usuario_id}
+                  onChange={e => setForm({ ...form, usuario_id: e.target.value })}
+                  className={inputCls}
+                  required
+                >
+                  <option value="">-- Seleccionar Chofer --</option>
+                  {choferes.map(c => <option key={c.id} value={c.id}>{c.nombre} {c.apellido}</option>)}
+                </select>
+              </div>
+              <div>
+                <label className={labelCls}>Camión Habitual *</label>
+                <select
+                  value={form.vehiculo_id}
+                  onChange={e => setForm({ ...form, vehiculo_id: e.target.value })}
+                  className={inputCls}
+                  required
+                >
+                  <option value="">-- Seleccionar Vehículo --</option>
+                  {vehiculos.map(v => <option key={v.id} value={v.id}>[{v.patente}] {v.marca}</option>)}
+                </select>
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-2 pt-2">
+              <button
+                type="button"
+                onClick={() => setIsCrearModalOpen(false)}
+                className="text-xs font-bold text-slate-600 hover:bg-slate-100 px-4 py-2.5 rounded-xl transition-colors"
+              >
+                Cancelar
+              </button>
+              <button
+                type="submit"
+                disabled={cargando}
+                className="text-white font-bold text-xs px-5 py-2.5 rounded-xl transition-all shadow-sm flex items-center gap-1.5"
+                style={{ backgroundColor: '#013299' }}
+              >
+                <Save className="w-4 h-4" />
+                <span>{cargando ? 'Guardando...' : 'Crear Plantilla'}</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+
+      {/* MODAL: Fijar cantidades por defecto al agregar cliente */}
+      {pendiente && (
+        <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center z-[100] p-4">
+          <div className="bg-white rounded-2xl shadow-2xl border border-slate-100 w-full max-w-sm p-6 space-y-4">
+            <div>
+              <h3 className="text-sm font-bold text-slate-900">
+                Cantidades Programadas
+              </h3>
+              <p className="text-xs text-slate-500 mt-1">
+                Define la carga habitual para <strong className="text-slate-800">{pendiente.cliente.nombre}</strong> cuando opere esta ruta.
+              </p>
+            </div>
+
+            <div className="space-y-3 bg-slate-50 p-4 rounded-2xl border border-slate-100">
               <div className="flex items-center justify-between">
-                <label className="text-xs font-bold text-slate-600 flex items-center gap-2">
-                  <Droplet className="h-3.5 w-3.5 text-blue-500" /> Bidón 20L
+                <label className="text-xs font-bold text-slate-700 flex items-center gap-2">
+                  <Droplet className="h-4 w-4 text-blue-600" /> Bidón 20L
                 </label>
                 <input
                   type="number"
                   min={0}
                   value={cantidadesModal.bot20_default}
                   onChange={e => setCantidadesModal(prev => ({ ...prev, bot20_default: Math.max(0, Number(e.target.value)) }))}
-                  className="border border-slate-300 rounded-lg p-2 w-20 text-center font-bold focus:ring-2 focus:ring-[#1e40af]/20 focus:border-[#1e40af] outline-none"
+                  className="border border-slate-200 rounded-xl p-2 w-20 text-center font-bold text-sm bg-white focus:ring-2 focus:ring-[#013299]/20 outline-none"
                   autoFocus
                 />
               </div>
               <div className="flex items-center justify-between">
-                <label className="text-xs font-bold text-slate-600 flex items-center gap-2">
-                  <Droplet className="h-3.5 w-3.5 text-sky-400" /> Bidón 10L
+                <label className="text-xs font-bold text-slate-700 flex items-center gap-2">
+                  <Droplet className="h-4 w-4 text-sky-500" /> Bidón 10L
                 </label>
                 <input
                   type="number"
                   min={0}
                   value={cantidadesModal.bot10_default}
                   onChange={e => setCantidadesModal(prev => ({ ...prev, bot10_default: Math.max(0, Number(e.target.value)) }))}
-                  className="border border-slate-300 rounded-lg p-2 w-20 text-center font-bold focus:ring-2 focus:ring-[#1e40af]/20 focus:border-[#1e40af] outline-none"
+                  className="border border-slate-200 rounded-xl p-2 w-20 text-center font-bold text-sm bg-white focus:ring-2 focus:ring-[#013299]/20 outline-none"
                 />
               </div>
               <div className="flex items-center justify-between">
-                <label className="text-xs font-bold text-slate-600 flex items-center gap-2">
-                  <GlassWater className="h-3.5 w-3.5 text-slate-400" /> Soda
+                <label className="text-xs font-bold text-slate-700 flex items-center gap-2">
+                  <GlassWater className="h-4 w-4 text-slate-400" /> Soda
                 </label>
                 <input
                   type="number"
                   min={0}
                   value={cantidadesModal.soda_default}
                   onChange={e => setCantidadesModal(prev => ({ ...prev, soda_default: Math.max(0, Number(e.target.value)) }))}
-                  className="border border-slate-300 rounded-lg p-2 w-20 text-center font-bold focus:ring-2 focus:ring-[#1e40af]/20 focus:border-[#1e40af] outline-none"
+                  className="border border-slate-200 rounded-xl p-2 w-20 text-center font-bold text-sm bg-white focus:ring-2 focus:ring-[#013299]/20 outline-none"
                 />
               </div>
             </div>
 
-            <div className="flex items-center gap-2 mt-6">
+            <div className="flex items-center gap-2 pt-2">
               <button
                 type="button"
                 onClick={cancelarAlta}
                 disabled={cargando}
-                className="flex-1 border border-slate-300 text-slate-600 font-bold p-2.5 rounded-lg hover:bg-slate-50 transition-colors text-xs uppercase tracking-wider"
+                className="flex-1 border border-slate-200 text-slate-600 font-bold p-2.5 rounded-xl hover:bg-slate-50 transition-colors text-xs"
               >
                 Cancelar
               </button>
@@ -544,15 +705,15 @@ export default function RutasBaseManager({ rutasBaseIniciales, choferes, vehicul
                 type="button"
                 onClick={confirmarAlta}
                 disabled={cargando}
-                className="flex-1 bg-[#1e40af] hover:bg-blue-800 text-white font-bold p-2.5 rounded-lg transition-colors text-xs uppercase tracking-wider"
+                className="flex-1 text-white font-bold p-2.5 rounded-xl transition-all text-xs shadow-sm flex items-center justify-center gap-1"
+                style={{ backgroundColor: '#013299' }}
               >
-                {cargando ? 'Guardando...' : 'Confirmar'}
+                <span>{cargando ? 'Guardando...' : 'Confirmar'}</span>
               </button>
             </div>
           </div>
         </div>
       )}
-
     </div>
   );
 }

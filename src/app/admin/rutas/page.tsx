@@ -8,15 +8,7 @@ export const metadata = {
 
 export default function AdminRutasPage() {
   return (
-    <div className="space-y-4">
-      <div>
-        <h1 className="text-2xl font-black text-[#1e293b] tracking-tight">
-          Despacho y Hojas de Ruta
-        </h1>
-        <div className="h-1 w-12 bg-[#1e40af] rounded-full mt-1.5"></div>
-      </div>
-      
-      {/* Componente reactivo encargado de la navegación por calendario */}
+    <div className="space-y-6 pb-12">
       <RutasManager />
     </div>
   );

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { Users, Truck } from 'lucide-react';
 import ChoferesManager from './ChoferesManager';
 import VehicleManager from './VehicleManager';
 
@@ -13,27 +14,29 @@ export default function FlotaTabs({ choferesIniciales, vehiculosIniciales }: Pro
   const [pestana, setPestana] = useState<'choferes' | 'vehiculos'>('choferes');
 
   return (
-    <div className="space-y-4">
-      <div className="flex border-b border-gray-200 bg-white rounded-t-lg">
+    <div className="space-y-6">
+      <div className="flex border-b border-slate-200 bg-white rounded-2xl p-1 shadow-sm gap-1">
         <button
           onClick={() => setPestana('choferes')}
-          className={`px-4 py-2.5 text-xs font-bold uppercase border-b-2 transition-all ${
+          className={`flex-1 py-3 px-4 text-xs font-bold rounded-xl flex items-center justify-center gap-2 transition-all ${
             pestana === 'choferes'
-              ? 'border-blue-600 text-blue-600 bg-blue-50/50'
-              : 'border-transparent text-gray-500 hover:text-gray-700'
+              ? 'bg-slate-100 text-[#013299] shadow-xs'
+              : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'
           }`}
         >
-          👤 Choferes / Repartidores ({choferesIniciales.length})
+          <Users className="w-4 h-4" />
+          <span>Choferes / Repartidores ({choferesIniciales.length})</span>
         </button>
         <button
           onClick={() => setPestana('vehiculos')}
-          className={`px-4 py-2.5 text-xs font-bold uppercase border-b-2 transition-all ${
+          className={`flex-1 py-3 px-4 text-xs font-bold rounded-xl flex items-center justify-center gap-2 transition-all ${
             pestana === 'vehiculos'
-              ? 'border-blue-600 text-blue-600 bg-blue-50/50'
-              : 'border-transparent text-gray-500 hover:text-gray-700'
+              ? 'bg-slate-100 text-[#013299] shadow-xs'
+              : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'
           }`}
         >
-          🚚 Vehículos / Flota ({vehiculosIniciales.length})
+          <Truck className="w-4 h-4" />
+          <span>Vehículos / Flota ({vehiculosIniciales.length})</span>
         </button>
       </div>
 

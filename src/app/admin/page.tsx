@@ -2,9 +2,6 @@ import React from 'react';
 import Link from 'next/link';
 import { obtenerMetricasDashboardAction } from './actions';
 import { 
-  TrendingUp, 
-  Package, 
-  Truck, 
   AlertTriangle, 
   Activity, 
   ArrowRight,
@@ -12,7 +9,6 @@ import {
   WifiOff,
   Box,
   Wrench,
-  ClipboardList,
   MapPin,
   Navigation
 } from 'lucide-react';
@@ -36,147 +32,43 @@ export default async function AdminDashboardPage() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+    <div className="space-y-6 pb-12">
 
-      {/* Alerta de conexión fallida */}
-      {!respuesta.success && (
-        <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-md shadow-sm flex items-start gap-3">
-          <WifiOff className="h-5 w-5 text-red-600 shrink-0 mt-0.5" />
+      {/* Alerta de conexión fallida o estado de sincronización */}
+      {!respuesta.success ? (
+        <div className="bg-rose-50 border border-rose-200 p-4 rounded-2xl shadow-sm flex items-start gap-3">
+          <WifiOff className="h-5 w-5 text-rose-600 shrink-0 mt-0.5" />
           <div>
-            <h3 className="text-sm font-bold text-red-800">Error de Sincronización</h3>
-            <p className="text-xs text-red-600 mt-1">
-              No pudimos conectar con la base de datos. Los datos mostrados a continuación son valores por defecto o están desactualizados.
+            <h3 className="text-sm font-bold text-rose-800">Error de Sincronización</h3>
+            <p className="text-xs text-rose-600 mt-1">
+              No pudimos conectar con la base de datos. Los datos mostrados a continuación son valores por defecto.
             </p>
           </div>
         </div>
+      ) : (
+        <div className="flex justify-end">
+          <span className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-[11px] font-bold border bg-emerald-50 text-emerald-700 border-emerald-200">
+            <Wifi className="h-3.5 w-3.5 text-emerald-600 animate-pulse" />
+            Sistema Sincronizado
+          </span>
+        </div>
       )}
 
-      {/* HEADER */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-4 border-b border-gray-200 gap-4">
-
-        <span className={`inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-bold shadow-sm border self-start sm:self-center ${
-          respuesta.success ? 'bg-green-50 text-green-700 border-green-200' : 'bg-gray-50 text-gray-600 border-gray-200'
-        }`}>
-          {respuesta.success ? (
-            <><Wifi className="h-3.5 w-3.5 text-green-600 animate-pulse" />Sistema Sincronizado</>
-          ) : (
-            <><WifiOff className="h-3.5 w-3.5 text-gray-500" />Sin Conexión</>
-          )}
-        </span>
-      </div>
-
-      {/* TARJETAS DE MÉTRICAS — colores sólidos al estilo de la imagen */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-
-        {/* INGRESOS — verde */}
-        <Link
-          href="/admin/cuadratura"
-          className="bg-green-500 rounded-2xl shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 flex flex-col justify-between overflow-hidden group"
-        >
-          <div className="p-5 text-white">
-            <div className="flex items-start justify-between">
-              <p className="text-xs font-semibold uppercase tracking-wider opacity-90">INGRESOS</p>
-              <div className="bg-white/20 p-2 rounded-xl">
-                <TrendingUp className="h-5 w-5 text-white" />
-              </div>
-            </div>
-            <p className="text-4xl font-black mt-2 tracking-tight">
-              ${metricas.ingresos.toLocaleString('es-CL')}
-            </p>
-            <p className="text-xs font-medium opacity-80 mt-1">Resumen de ingresos</p>
-          </div>
-          <div className="bg-green-600 text-white text-xs font-bold py-2.5 px-5 flex items-center justify-between group-hover:bg-green-700 transition-colors">
-            <span>Ver Detalles</span>
-            <ArrowRight className="h-4 w-4" />
-          </div>
-        </Link>
-
-        {/* PEDIDOS — amarillo/ámbar */}
-        <Link
-          href="/admin/rutas"
-          className="bg-amber-400 rounded-2xl shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 flex flex-col justify-between overflow-hidden group"
-        >
-          <div className="p-5 text-white">
-            <div className="flex items-start justify-between">
-              <p className="text-xs font-semibold uppercase tracking-wider opacity-90">PEDIDOS</p>
-              <div className="bg-white/20 p-2 rounded-xl">
-                <ClipboardList className="h-5 w-5 text-white" />
-              </div>
-            </div>
-            <p className="text-4xl font-black mt-2 tracking-tight">
-              {metricas.pedidos.entregados}/{metricas.pedidos.total}
-            </p>
-            <p className="text-xs font-medium opacity-80 mt-1">Pendientes de pedidos</p>
-          </div>
-          <div className="bg-amber-500 text-white text-xs font-bold py-2.5 px-5 flex items-center justify-between group-hover:bg-amber-600 transition-colors">
-            <span>Gestionar</span>
-            <ArrowRight className="h-4 w-4" />
-          </div>
-        </Link>
-
-        {/* CAMIONES — teal */}
-        <Link
-          href="/admin/flota"
-          className="bg-teal-500 rounded-2xl shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 flex flex-col justify-between overflow-hidden group"
-        >
-          <div className="p-5 text-white">
-            <div className="flex items-start justify-between">
-              <p className="text-xs font-semibold uppercase tracking-wider opacity-90">CAMIONES</p>
-              <div className="bg-white/20 p-2 rounded-xl">
-                <Truck className="h-5 w-5 text-white" />
-              </div>
-            </div>
-            <p className="text-4xl font-black mt-2 tracking-tight">
-              {metricas.flota.activos}/{metricas.flota.totales}
-            </p>
-            <p className="text-xs font-medium opacity-80 mt-1">Camiones operativos</p>
-          </div>
-          <div className="bg-teal-600 text-white text-xs font-bold py-2.5 px-5 flex items-center justify-between group-hover:bg-teal-700 transition-colors">
-            <span>Gestionar</span>
-            <ArrowRight className="h-4 w-4" />
-          </div>
-        </Link>
-
-        {/* ALERTAS — rojo */}
-        <Link
-          href="/admin/flota"
-          className="bg-red-500 rounded-2xl shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 flex flex-col justify-between overflow-hidden group"
-        >
-          <div className="p-5 text-white">
-            <div className="flex items-start justify-between">
-              <p className="text-xs font-semibold uppercase tracking-wider opacity-90">ALERTAS</p>
-              <div className="bg-white/20 p-2 rounded-xl">
-                <AlertTriangle className="h-5 w-5 text-white" />
-              </div>
-            </div>
-            <p className="text-4xl font-black mt-2 tracking-tight">
-              {metricas.alertas + metricas.productosCriticos}
-            </p>
-            <p className="text-xs font-medium opacity-80 mt-1">Alertas crítica</p>
-          </div>
-          <div className="bg-red-600 text-white text-xs font-bold py-2.5 px-5 flex items-center justify-between group-hover:bg-red-700 transition-colors">
-            <span>Gestionar</span>
-            <ArrowRight className="h-4 w-4" />
-          </div>
-        </Link>
-
-      </div>
-
       {/* PANEL CHOFERES Y SECTORES EN OPERACIÓN */}
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-4">
-        <div className="flex items-center justify-between border-b border-gray-100 pb-4">
-          <div className="flex items-center gap-2">
-            <div className="bg-blue-100 p-2 rounded-xl text-[#013299]">
+      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 space-y-4">
+        <div className="flex items-center justify-between border-b border-slate-100 pb-4 flex-wrap gap-2">
+          <div className="flex items-center gap-3">
+            <div className="bg-blue-50 p-2.5 rounded-xl text-[#013299]">
               <MapPin className="h-5 w-5" />
             </div>
             <div>
-              <h2 className="font-bold text-gray-800 text-base">Sectores de Operación por Chofer</h2>
+              <h2 className="font-bold text-slate-900 text-base">Sectores de Operación por Chofer</h2>
               <p className="text-xs text-slate-500">Ubicación y sector activo de la flota de reparto en tiempo real</p>
             </div>
           </div>
           <Link
             href="/admin/rutas"
-            className="text-xs font-bold text-[#013299] hover:text-blue-800 bg-blue-50 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1"
+            className="text-xs font-bold text-[#013299] hover:text-blue-900 bg-blue-50 px-3.5 py-2 rounded-xl transition-colors flex items-center gap-1.5"
           >
             Ver Hojas de Ruta <ArrowRight className="h-3.5 w-3.5" />
           </Link>
@@ -185,27 +77,27 @@ export default async function AdminDashboardPage() {
         {metricas.choferesOperando && metricas.choferesOperando.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {metricas.choferesOperando.map((c: any) => (
-              <div key={c.rutaId} className="border border-slate-200 rounded-xl p-4 bg-slate-50 flex flex-col justify-between space-y-3 hover:border-blue-300 transition-colors">
+              <div key={c.rutaId} className="border border-slate-200/80 rounded-2xl p-4 bg-slate-50/60 flex flex-col justify-between space-y-3 hover:border-blue-300 transition-all">
                 <div className="flex justify-between items-start">
                   <div>
                     <span className="text-xs font-black text-slate-900 block">{c.choferNombre}</span>
                     <span className="text-[11px] font-semibold text-slate-500">{c.vehiculoModelo}</span>
                   </div>
-                  <span className="bg-blue-600 text-white text-[10px] font-mono font-bold px-2 py-0.5 rounded">
+                  <span className="bg-[#013299] text-white text-[10px] font-mono font-bold px-2 py-0.5 rounded-lg shadow-sm">
                     {c.vehiculoPatente}
                   </span>
                 </div>
 
-                <div className="bg-white border border-slate-200 p-3 rounded-lg space-y-1.5">
+                <div className="bg-white border border-slate-200/80 p-3 rounded-xl space-y-1.5 shadow-xs">
                   <div className="flex items-center gap-1.5 text-xs text-[#013299] font-extrabold">
                     <Navigation className="h-4 w-4 animate-pulse" />
                     <span>Sector Actual: {c.sectorActual}</span>
                   </div>
                   {c.comunaActual && (
-                    <p className="text-[11px] text-slate-400 font-medium pl-5">Comuna: {c.comunaActual}</p>
+                    <p className="text-[11px] text-slate-500 font-medium pl-5.5">Comuna: {c.comunaActual}</p>
                   )}
                   {c.sectoresTotales?.length > 1 && (
-                    <div className="text-[10px] text-slate-500 pt-1 border-t border-slate-100">
+                    <div className="text-[10px] text-slate-500 pt-1.5 border-t border-slate-100">
                       Sectores de la ruta: <span className="font-semibold text-slate-700">{c.sectoresTotales.join(', ')}</span>
                     </div>
                   )}
@@ -213,7 +105,7 @@ export default async function AdminDashboardPage() {
 
                 <div className="flex justify-between items-center text-xs pt-1">
                   <span className="text-slate-500 text-[11px] font-medium">Progreso del día:</span>
-                  <span className="font-bold text-slate-800 bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded-md text-[11px]">
+                  <span className="font-bold text-slate-800 bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded-lg text-[11px]">
                     {c.paradasEntregadas} / {c.paradasTotal} paradas ({c.paradasTotal > 0 ? Math.round((c.paradasEntregadas / c.paradasTotal) * 100) : 0}%)
                   </span>
                 </div>
@@ -221,9 +113,9 @@ export default async function AdminDashboardPage() {
             ))}
           </div>
         ) : (
-          <div className="p-8 text-center bg-slate-50 border border-dashed border-slate-200 rounded-xl space-y-1">
+          <div className="p-8 text-center bg-slate-50/60 border border-dashed border-slate-200 rounded-2xl space-y-1">
             <MapPin className="h-6 w-6 text-slate-400 mx-auto" />
-            <p className="text-xs font-bold text-slate-600">No hay choferes operando en rutas activas en este momento.</p>
+            <p className="text-xs font-bold text-slate-700">No hay choferes operando en rutas activas en este momento.</p>
             <p className="text-[11px] text-slate-400">Inicia las hojas de ruta del día para comenzar el seguimiento de sectores.</p>
           </div>
         )}
@@ -233,15 +125,15 @@ export default async function AdminDashboardPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
         {/* PANEL IZQUIERDO: ESTADO DE PRODUCCIÓN CO2 */}
-        <div className="lg:col-span-2 bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden flex flex-col">
-          <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-            <h2 className="font-bold text-gray-800 flex items-center gap-2 text-base">
-              <Activity className="h-5 w-5 text-[#283289]" />
+        <div className="lg:col-span-2 bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden flex flex-col">
+          <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+            <h2 className="font-bold text-slate-900 flex items-center gap-2 text-base">
+              <Activity className="h-5 w-5 text-[#013299]" />
               Estado de Producción
             </h2>
             <Link
               href="/admin/produccion"
-              className="text-xs font-bold text-[#283289] hover:text-blue-800 bg-blue-50 px-3 py-1.5 rounded-lg transition-colors"
+              className="text-xs font-bold text-[#013299] hover:text-blue-900 bg-blue-50 px-3 py-1.5 rounded-xl transition-colors"
             >
               Ver Módulo
             </Link>
@@ -254,8 +146,8 @@ export default async function AdminDashboardPage() {
               <div
                 className={`w-full transition-all duration-1000 ease-out relative ${
                   metricas.co2.porcentaje < 20
-                    ? 'bg-gradient-to-t from-red-600 to-red-400'
-                    : 'bg-gradient-to-t from-slate-400 to-slate-300'
+                    ? 'bg-gradient-to-t from-rose-600 to-rose-400'
+                    : 'bg-gradient-to-t from-[#013299] to-blue-400'
                 }`}
                 style={{ height: `${metricas.co2.porcentaje}%` }}
               >
@@ -265,7 +157,7 @@ export default async function AdminDashboardPage() {
 
             <div className="flex-1 space-y-3">
               <div>
-                <h3 className="text-4xl font-black text-slate-800 tracking-tight">
+                <h3 className="text-4xl font-black text-slate-900 tracking-tight">
                   {metricas.co2.kg_restantes.toFixed(2)} kg
                 </h3>
                 <p className="text-sm font-semibold text-slate-500 uppercase tracking-wider mt-1">
@@ -274,13 +166,13 @@ export default async function AdminDashboardPage() {
               </div>
 
               {metricas.co2.porcentaje < 20 ? (
-                <div className="text-sm font-bold text-white bg-red-500 p-4 rounded-xl flex items-start gap-2 shadow-sm">
+                <div className="text-sm font-bold text-white bg-rose-600 p-4 rounded-xl flex items-start gap-2 shadow-sm">
                   <AlertTriangle className="h-5 w-5 shrink-0 mt-0.5" />
                   <p>¡Nivel de CO₂ Bajo!</p>
                 </div>
               ) : (
                 <div className="text-sm font-semibold text-slate-600 bg-slate-50 p-3 rounded-xl border border-slate-200">
-                  El suministro actual es estable.
+                  El suministro de CO₂ actual es estable.
                 </div>
               )}
             </div>
@@ -288,56 +180,56 @@ export default async function AdminDashboardPage() {
         </div>
 
         {/* PANEL DERECHO: STOCK Y MANTENIMIENTO */}
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden flex flex-col">
-          <div className="px-6 py-4 border-b border-gray-100">
-            <h2 className="font-bold text-gray-800 text-base">Stock y Mantenimiento</h2>
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden flex flex-col">
+          <div className="px-6 py-4 border-b border-slate-100">
+            <h2 className="font-bold text-slate-900 text-base">Stock y Mantenimiento</h2>
           </div>
 
           <div className="p-5 space-y-4 flex-1">
 
             {/* Quiebres de Stock */}
-            <div className="flex items-center gap-3 p-4 rounded-xl border border-slate-100 bg-slate-50 hover:bg-slate-100 transition-colors">
-              <div className={`p-2.5 rounded-full shrink-0 ${
-                metricas.productosCriticos > 0 ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'
+            <div className="flex items-center gap-3 p-4 rounded-2xl border border-slate-100 bg-slate-50/70 hover:bg-slate-100/70 transition-colors">
+              <div className={`p-2.5 rounded-xl shrink-0 ${
+                metricas.productosCriticos > 0 ? 'bg-rose-100 text-rose-600' : 'bg-emerald-100 text-emerald-600'
               }`}>
                 <Box className="h-5 w-5" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-bold text-slate-700">Quiebres de Stock</p>
+                <p className="text-sm font-bold text-slate-800">Quiebres de Stock</p>
                 <p className="text-xs text-slate-500 font-medium mt-0.5 truncate">
                   {metricas.productosCriticos > 0
-                    ? 'Descripción de quiebres de stock en esta sección.'
-                    : 'Sin quiebres registrados.'}
+                    ? 'Productos bajo stock mínimo'
+                    : 'Sin quiebres registrados'}
                 </p>
               </div>
               <span className={`px-2.5 py-1 rounded-lg font-black text-sm shrink-0 ${
                 metricas.productosCriticos > 0
-                  ? 'bg-red-500 text-white'
-                  : 'bg-green-500 text-white'
+                  ? 'bg-rose-600 text-white'
+                  : 'bg-emerald-600 text-white'
               }`}>
                 {metricas.productosCriticos}
               </span>
             </div>
 
             {/* Flota Mantenimiento */}
-            <div className="flex items-center gap-3 p-4 rounded-xl border border-slate-100 bg-slate-50 hover:bg-slate-100 transition-colors">
-              <div className={`p-2.5 rounded-full shrink-0 ${
-                metricas.alertas > 0 ? 'bg-amber-100 text-amber-600' : 'bg-green-100 text-green-600'
+            <div className="flex items-center gap-3 p-4 rounded-2xl border border-slate-100 bg-slate-50/70 hover:bg-slate-100/70 transition-colors">
+              <div className={`p-2.5 rounded-xl shrink-0 ${
+                metricas.alertas > 0 ? 'bg-amber-100 text-amber-600' : 'bg-emerald-100 text-emerald-600'
               }`}>
                 <Wrench className="h-5 w-5" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-bold text-slate-700">Flota Mantenimiento</p>
+                <p className="text-sm font-bold text-slate-800">Flota Mantenimiento</p>
                 <p className="text-xs text-slate-500 font-medium mt-0.5 truncate">
                   {metricas.alertas > 0
-                    ? 'Pendientes de mantenimiento issues.'
-                    : 'Flota en óptimas condiciones.'}
+                    ? 'Vehículos en mantenimiento'
+                    : 'Flota en óptimas condiciones'}
                 </p>
               </div>
               <span className={`px-2.5 py-1 rounded-lg font-black text-sm shrink-0 ${
                 metricas.alertas > 0
-                  ? 'bg-amber-400 text-white'
-                  : 'bg-green-500 text-white'
+                  ? 'bg-amber-500 text-white'
+                  : 'bg-emerald-600 text-white'
               }`}>
                 {metricas.alertas}
               </span>

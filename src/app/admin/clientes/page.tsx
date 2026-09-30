@@ -4,6 +4,11 @@ import ClientManager from './components/ClientManager';
 
 export const dynamic = 'force-dynamic';
 
+export const metadata = {
+  title: 'Gestión de Clientes - SIGO Sodatal',
+  description: 'Administración de ficha de clientes, dispensadores asignados e historial.',
+};
+
 export default async function ClientesPage() {
   const clientes = await prisma.cliente.findMany({
     include: {
@@ -13,9 +18,9 @@ export default async function ClientesPage() {
         }
       },
       historial_financiero: true,
-      sector: {              // ← NUEVO
+      sector: {
         include: {
-          comuna: true,      // ← NUEVO
+          comuna: true,
         },
       },
     },
@@ -25,7 +30,7 @@ export default async function ClientesPage() {
   });
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-12">
       <ClientManager initialClientes={clientes} />
     </div>
   );

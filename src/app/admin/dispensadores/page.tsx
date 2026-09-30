@@ -11,14 +11,7 @@ export default async function AdminDispensadoresPage() {
   const res = await obtenerDispensadoresAction();
 
   return (
-    <div className="space-y-4">
-      <div>
-        <h1 className="text-2xl font-black text-[#1e293b] tracking-tight">
-          Mantenedor de Dispensadores
-        </h1>
-        <div className="h-1 w-12 bg-[#013299] rounded-full mt-1.5" />
-      </div>
-
+    <div className="space-y-6 pb-12">
       <DispensadoresManager
         initialDispensadores={res.dispensadores || []}
         initialClientes={res.clientes || []}

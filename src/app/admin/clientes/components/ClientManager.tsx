@@ -1,18 +1,39 @@
 'use client';
-import React, { useState, useTransition, useEffect } from 'react';
+
+import React, { useState, useTransition, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
-import { TipoCliente, PreferenciaFacturacion, Cliente } from '@lib/prisma/generated';
+import { TipoCliente, PreferenciaFacturacion } from '@lib/prisma/generated';
 import {
-  crearClienteAction, editarClienteAction,
-  ClienteInput, obtenerComunasConSectoresAction,
+  crearClienteAction, 
+  editarClienteAction,
+  ClienteInput, 
+  obtenerComunasConSectoresAction,
 } from '../actions';
-import { Search, Plus, Edit2, Settings, AlertTriangle, X } from 'lucide-react';
+import { 
+  Search, 
+  Plus, 
+  Edit2, 
+  Settings, 
+  AlertTriangle, 
+  X, 
+  Users, 
+  DollarSign, 
+  MapPin, 
+  Building2, 
+  Calendar, 
+  ChevronLeft, 
+  ChevronRight, 
+  Filter, 
+  CheckCircle2,
+  FolderTree,
+  List
+} from 'lucide-react';
 import { usePopup } from '@/hooks/usePopup';
 import PopupGlobal from '@/components/ui/PopupGlobal';
 import FichaTecnica from './FichaTecnica';
 
-const inputCls = 'w-full border border-slate-200 p-2 rounded-lg text-sm text-slate-800 bg-white outline-none focus:ring-2 focus:ring-[#013299]/30 focus:border-[#013299] transition-colors placeholder:text-slate-400';
-const labelCls  = 'text-xs font-bold text-slate-600 uppercase tracking-wide';
+const inputCls = 'w-full border border-slate-200 p-2.5 rounded-xl text-xs text-slate-800 bg-white outline-none focus:ring-2 focus:ring-[#013299]/20 focus:border-[#013299] transition-colors placeholder:text-slate-400 font-medium';
+const labelCls = 'text-xs font-bold text-slate-700 uppercase tracking-wider mb-1 block';
 
 type ComunaConSectores = {
   id: string;
@@ -25,18 +46,32 @@ export default function ClientManager({ initialClientes }: { initialClientes: an
   const { popup, showSuccess, showError, showConfirm, close } = usePopup();
 
   const [clientes, setClientes] = useState<any[]>(initialClientes);
-  const [busqueda, setBusqueda]         = useState('');
-  const [filtroTipo, setFiltroTipo]     = useState('TODOS');
-  const [filtroEstado, setFiltroEstado] = useState('TODOS');
   const [clienteSeleccionado, setClienteSeleccionado] = useState<any | null>(null);
 
+  // Filtros
+  const [busqueda, setBusqueda]                 = useState('');
+  const [filtroTipo, setFiltroTipo]             = useState('TODOS');
+  const [filtroEstado, setFiltroEstado]         = useState('ACTIVOS');
+  const [filtroFrecuencia, setFiltroFrecuencia] = useState('TODAS');
+  const [filtroDeuda, setFiltroDeuda]           = useState('TODOS');
+  const [filtroComuna, setFiltroComuna]         = useState('TODAS');
+  const [filtroSector, setFiltroSector]         = useState('TODOS');
+
+  // Modo de visualización: 'PLANA' (lista) o 'SECTOR' (agrupada)
+  const [modoVista, setModoVista] = useState<'PLANA' | 'SECTOR'>('PLANA');
+
+  // Paginación para vista plana
+  const [paginaActual, setPaginaActual] = useState(1);
+  const [itemsPorPagina, setItemsPorPagina] = useState(25);
+
+  // Modales y formularios
   const [isModalOpen, setIsModalOpen]           = useState(false);
   const [isPending, startTransition]            = useTransition();
   const [editingClienteId, setEditingClienteId] = useState<string | null>(null);
   const [errorForm, setErrorForm]               = useState<string | null>(null);
 
   // Estado comunas/sectores
-  const [comunas, setComunas]                   = useState<ComunaConSectores[]>([]);
+  const [comunas, setComunas]                       = useState<ComunaConSectores[]>([]);
   const [comunaSeleccionada, setComunaSeleccionada] = useState<string>('');
 
   const [formData, setFormData] = useState<ClienteInput>({
@@ -48,6 +83,13 @@ export default function ClientManager({ initialClientes }: { initialClientes: an
     frecuencia: 'SEMANAL' as any,
     deuda: 0,
   });
+
+  // Cargar comunas y sectores al iniciar
+  useEffect(() => {
+    obtenerComunasConSectoresAction().then(res => {
+      if (res.success) setComunas(res.comunas || []);
+    });
+  }, []);
 
   // Sincronización inteligente con el servidor
   useEffect(() => {
@@ -69,6 +111,11 @@ export default function ClientManager({ initialClientes }: { initialClientes: an
     }));
   }, [initialClientes]);
 
+  // Resetear página al cambiar filtros
+  useEffect(() => {
+    setPaginaActual(1);
+  }, [busqueda, filtroTipo, filtroEstado, filtroFrecuencia, filtroDeuda, filtroComuna, filtroSector, itemsPorPagina]);
+
   // Mantiene clienteSeleccionado sincronizado
   useEffect(() => {
     if (clienteSeleccionado) {
@@ -79,21 +126,77 @@ export default function ClientManager({ initialClientes }: { initialClientes: an
 
   const handleClienteUpdate = (updater: (prev: any[]) => any[]) => setClientes(updater);
 
-  // Búsqueda actualizada por Dirección, RUT empresa o Teléfono
-  const clientesFiltrados = clientes.filter(c => {
-    const q = busqueda.toLowerCase();
-    const matchBusqueda = (c.direccion || '').toLowerCase().includes(q) || (c.rut_empresa || '').toLowerCase().includes(q) || (c.telefono || '').includes(q);
-    const matchTipo   = filtroTipo   === 'TODOS' || c.tipo === filtroTipo;
-    const matchEstado = filtroEstado === 'TODOS' || (filtroEstado === 'ACTIVOS' && c.activo) || (filtroEstado === 'INACTIVOS' && !c.activo);
-    return matchBusqueda && matchTipo && matchEstado;
-  });
+  // Lista filtrada global
+  const clientesFiltrados = useMemo(() => {
+    return clientes.filter(c => {
+      const q = busqueda.toLowerCase().trim();
+      const matchBusqueda = !q || 
+        (c.nombre || '').toLowerCase().includes(q) ||
+        (c.direccion || '').toLowerCase().includes(q) || 
+        (c.rut_empresa || '').toLowerCase().includes(q) || 
+        (c.telefono || '').includes(q);
 
-  // Carga comunas una sola vez
-  const cargarComunas = async () => {
-    if (comunas.length > 0) return;
-    const res = await obtenerComunasConSectoresAction();
-    if (res.success) setComunas(res.comunas);
-  };
+      const matchTipo       = filtroTipo === 'TODOS' || c.tipo === filtroTipo;
+      const matchEstado     = filtroEstado === 'TODOS' || (filtroEstado === 'ACTIVOS' && c.activo) || (filtroEstado === 'INACTIVOS' && !c.activo);
+      const matchFrecuencia = filtroFrecuencia === 'TODAS' || c.frecuencia === filtroFrecuencia;
+      
+      const matchDeuda = filtroDeuda === 'TODOS' ? true :
+        filtroDeuda === 'CON_DEUDA' ? (c.deuda || 0) > 0 :
+        (c.deuda || 0) <= 0;
+
+      const matchComuna = filtroComuna === 'TODAS' ? true :
+        filtroComuna === 'SIN_COMUNA' ? !c.sector?.comuna?.id :
+        c.sector?.comuna?.id === filtroComuna;
+
+      const matchSector = filtroSector === 'TODOS' ? true :
+        filtroSector === 'SIN_SECTOR' ? !c.sector_id :
+        c.sector_id === filtroSector;
+
+      return matchBusqueda && matchTipo && matchEstado && matchFrecuencia && matchDeuda && matchComuna && matchSector;
+    });
+  }, [clientes, busqueda, filtroTipo, filtroEstado, filtroFrecuencia, filtroDeuda, filtroComuna, filtroSector]);
+
+  // Clientes paginados para vista plana
+  const totalPaginas = Math.ceil(clientesFiltrados.length / itemsPorPagina) || 1;
+  const clientesPaginados = useMemo(() => {
+    const inicio = (paginaActual - 1) * itemsPorPagina;
+    return clientesFiltrados.slice(inicio, inicio + itemsPorPagina);
+  }, [clientesFiltrados, paginaActual, itemsPorPagina]);
+
+  // Agrupación por Sector para la vista 'SECTOR'
+  const clientesAgrupadosPorSector = useMemo(() => {
+    const grupos: Record<string, { sectorNombre: string; comunaNombre: string; lista: any[] }> = {};
+    
+    clientesFiltrados.forEach(c => {
+      const sectorKey = c.sector_id || 'SIN_SECTOR';
+      const sectorNombre = c.sector?.nombre || 'Sin Sector Asignado';
+      const comunaNombre = c.sector?.comuna?.nombre || 'Sin Comuna';
+
+      if (!grupos[sectorKey]) {
+        grupos[sectorKey] = { sectorNombre, comunaNombre, lista: [] };
+      }
+      grupos[sectorKey].lista.push(c);
+    });
+
+    return Object.values(grupos).sort((a, b) => a.comunaNombre.localeCompare(b.comunaNombre) || a.sectorNombre.localeCompare(b.sectorNombre));
+  }, [clientesFiltrados]);
+
+  // Métricas rápidas
+  const totalClientesCount = clientes.length;
+  const activosCount = useMemo(() => clientes.filter(c => c.activo).length, [clientes]);
+  const clientesConDeudaCount = useMemo(() => clientes.filter(c => (c.deuda || 0) > 0).length, [clientes]);
+  const montoDeudaTotal = useMemo(() => clientes.reduce((acc, c) => acc + (c.deuda || 0), 0), [clientes]);
+
+  // Sectores disponibles según la comuna filtrada en el formulario
+  const sectoresFormulario = comunas.find(c => c.id === comunaSeleccionada)?.sectores ?? [];
+  
+  // Sectores disponibles para el filtro superior
+  const sectoresFiltroSuperior = useMemo(() => {
+    if (filtroComuna === 'TODAS' || filtroComuna === 'SIN_COMUNA') {
+      return comunas.flatMap(c => c.sectores);
+    }
+    return comunas.find(c => c.id === filtroComuna)?.sectores ?? [];
+  }, [comunas, filtroComuna]);
 
   const handleOpenCreate = async () => {
     setEditingClienteId(null);
@@ -108,7 +211,6 @@ export default function ClientManager({ initialClientes }: { initialClientes: an
       deuda: 0,
     });
     setComunaSeleccionada('');
-    await cargarComunas();
     setIsModalOpen(true);
   };
 
@@ -127,13 +229,8 @@ export default function ClientManager({ initialClientes }: { initialClientes: an
       deuda: c.deuda || 0,
     });
 
-    let lista = comunas;
-    if (lista.length === 0) {
-      const res = await obtenerComunasConSectoresAction();
-      if (res.success) { setComunas(res.comunas); lista = res.comunas; }
-    }
     if (c.sector_id) {
-      const comunaDelSector = lista.find(com => com.sectores.some(s => s.id === c.sector_id));
+      const comunaDelSector = comunas.find(com => com.sectores.some(s => s.id === c.sector_id));
       setComunaSeleccionada(comunaDelSector?.id || '');
     } else {
       setComunaSeleccionada('');
@@ -206,128 +303,480 @@ export default function ClientManager({ initialClientes }: { initialClientes: an
     });
   };
 
-  const sectoresFiltrados = comunas.find(c => c.id === comunaSeleccionada)?.sectores ?? [];
+  const limpiarFiltros = () => {
+    setBusqueda('');
+    setFiltroTipo('TODOS');
+    setFiltroEstado('TODOS');
+    setFiltroFrecuencia('TODAS');
+    setFiltroDeuda('TODOS');
+    setFiltroComuna('TODAS');
+    setFiltroSector('TODOS');
+  };
+
+  const hayFiltrosActivos = busqueda !== '' || filtroTipo !== 'TODOS' || filtroEstado !== 'TODOS' || filtroFrecuencia !== 'TODAS' || filtroDeuda !== 'TODOS' || filtroComuna !== 'TODAS' || filtroSector !== 'TODOS';
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-6">
       <PopupGlobal popup={popup} onClose={close} />
 
-      {/* Barra de filtros + botón crear */}
-      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between">
-        <div className="flex items-center gap-2 flex-1 border border-slate-200 rounded-xl px-3 py-2 focus-within:ring-2 focus-within:ring-[#013299]/20 focus-within:border-[#013299] transition-colors">
-          <Search className="h-4 w-4 text-slate-400 shrink-0" />
-          <input 
-            type="text" 
-            placeholder="Buscar por dirección, RUT empresa o teléfono..." 
-            value={busqueda} 
-            onChange={e => setBusqueda(e.target.value)} 
-            className="text-sm text-slate-800 placeholder:text-slate-400 outline-none w-full bg-transparent" 
-          />
+      {/* Tarjetas de Métricas de Resumen */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
+          <div>
+            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Clientes</p>
+            <p className="text-2xl font-black text-slate-900 mt-1">{totalClientesCount.toLocaleString('es-CL')}</p>
+          </div>
+          <div className="p-3 bg-blue-50 rounded-xl text-[#013299]">
+            <Users className="w-5 h-5" />
+          </div>
         </div>
-        <div className="flex gap-2 flex-wrap">
-          <select value={filtroTipo} onChange={e => setFiltroTipo(e.target.value)} className="px-3 py-2 border border-slate-200 rounded-xl text-sm text-slate-700 font-medium bg-white outline-none">
+
+        <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
+          <div>
+            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Clientes Activos</p>
+            <p className="text-2xl font-black text-slate-900 mt-1">{activosCount.toLocaleString('es-CL')}</p>
+          </div>
+          <div className="p-3 bg-emerald-50 rounded-xl text-emerald-600">
+            <CheckCircle2 className="w-5 h-5" />
+          </div>
+        </div>
+
+        <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
+          <div>
+            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Con Deuda (#)</p>
+            <p className="text-2xl font-black text-slate-900 mt-1">{clientesConDeudaCount.toLocaleString('es-CL')}</p>
+          </div>
+          <div className="p-3 bg-amber-50 rounded-xl text-amber-600">
+            <AlertTriangle className="w-5 h-5" />
+          </div>
+        </div>
+
+        <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
+          <div>
+            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Deuda Acumulada</p>
+            <p className="text-2xl font-black text-slate-900 mt-1">${montoDeudaTotal.toLocaleString('es-CL')}</p>
+          </div>
+          <div className="p-3 bg-rose-50 rounded-xl text-rose-600">
+            <DollarSign className="w-5 h-5" />
+          </div>
+        </div>
+      </div>
+
+      {/* Barra de Búsqueda y Filtros de Multicriterio */}
+      <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm space-y-4">
+        
+        {/* Fila 1: Búsqueda y Botones de Acción */}
+        <div className="flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between">
+          
+          <div className="flex items-center gap-2 flex-1 border border-slate-200 rounded-xl px-3.5 py-2.5 bg-slate-50 focus-within:bg-white focus-within:ring-2 focus-within:ring-[#013299]/20 focus-within:border-[#013299] transition-all">
+            <Search className="h-4 w-4 text-slate-400 shrink-0" />
+            <input 
+              type="text" 
+              placeholder="Buscar por nombre, dirección, RUT o teléfono..." 
+              value={busqueda} 
+              onChange={e => setBusqueda(e.target.value)} 
+              className="text-xs text-slate-800 placeholder:text-slate-400 outline-none w-full bg-transparent font-medium" 
+            />
+            {busqueda && (
+              <button onClick={() => setBusqueda('')} className="text-slate-400 hover:text-slate-600">
+                <X className="w-4 h-4" />
+              </button>
+            )}
+          </div>
+
+          <div className="flex items-center gap-2">
+            {/* Toggle de Modo de Vista */}
+            <div className="bg-slate-100 p-1 rounded-xl flex items-center gap-1 border border-slate-200">
+              <button
+                onClick={() => setModoVista('PLANA')}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                  modoVista === 'PLANA' ? 'bg-white text-[#013299] shadow-sm' : 'text-slate-500 hover:text-slate-800'
+                }`}
+                title="Vista en lista plana"
+              >
+                <List className="w-3.5 h-3.5" />
+                Lista
+              </button>
+              <button
+                onClick={() => setModoVista('SECTOR')}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                  modoVista === 'SECTOR' ? 'bg-white text-[#013299] shadow-sm' : 'text-slate-500 hover:text-slate-800'
+                }`}
+                title="Agrupar por Sector Geográfico"
+              >
+                <FolderTree className="w-3.5 h-3.5" />
+                Por Sector
+              </button>
+            </div>
+
+            <button 
+              onClick={handleOpenCreate} 
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold text-white shadow-md shadow-[#013299]/20 hover:bg-blue-900 transition-all shrink-0" 
+              style={{ backgroundColor: '#013299' }}
+            >
+              <Plus className="h-4 w-4" /> Nuevo Cliente
+            </button>
+          </div>
+        </div>
+
+        {/* Fila 2: Selectores de Filtro por Comuna, Sector, Frecuencia, Deuda, Tipo y Estado */}
+        <div className="flex flex-wrap items-center gap-2.5 pt-1 border-t border-slate-100">
+          <div className="flex items-center gap-1.5 text-xs text-slate-500 font-bold uppercase tracking-wider mr-1">
+            <Filter className="w-3.5 h-3.5 text-[#013299]" />
+            Filtros:
+          </div>
+
+          {/* Comuna */}
+          <select 
+            value={filtroComuna} 
+            onChange={e => {
+              setFiltroComuna(e.target.value);
+              setFiltroSector('TODOS');
+            }} 
+            className="px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 font-semibold focus:outline-none focus:border-[#013299]"
+          >
+            <option value="TODAS">Todas las Comunas</option>
+            {comunas.map(c => <option key={c.id} value={c.id}>{c.nombre}</option>)}
+            <option value="SIN_COMUNA">Sin Comuna</option>
+          </select>
+
+          {/* Sector */}
+          <select 
+            value={filtroSector} 
+            onChange={e => setFiltroSector(e.target.value)} 
+            className="px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 font-semibold focus:outline-none focus:border-[#013299]"
+          >
+            <option value="TODOS">Todos los Sectores</option>
+            {sectoresFiltroSuperior.map(s => <option key={s.id} value={s.id}>{s.nombre}</option>)}
+            <option value="SIN_SECTOR">Sin Sector</option>
+          </select>
+
+          {/* Frecuencia */}
+          <select 
+            value={filtroFrecuencia} 
+            onChange={e => setFiltroFrecuencia(e.target.value)} 
+            className="px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 font-semibold focus:outline-none focus:border-[#013299]"
+          >
+            <option value="TODAS">Todas las Frecuencias</option>
+            <option value="SEMANAL">Semanal</option>
+            <option value="QUINCENAL">Quincenal</option>
+            <option value="MENSUAL">Mensual</option>
+            <option value="A_PEDIDO">A Pedido</option>
+          </select>
+
+          {/* Deuda */}
+          <select 
+            value={filtroDeuda} 
+            onChange={e => setFiltroDeuda(e.target.value)} 
+            className="px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 font-semibold focus:outline-none focus:border-[#013299]"
+          >
+            <option value="TODOS">Todas las deudas</option>
+            <option value="CON_DEUDA">Con Deuda Pendiente</option>
+            <option value="AL_DIA">Al Día ($0)</option>
+          </select>
+
+          {/* Tipo */}
+          <select 
+            value={filtroTipo} 
+            onChange={e => setFiltroTipo(e.target.value)} 
+            className="px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 font-semibold focus:outline-none focus:border-[#013299]"
+          >
             <option value="TODOS">Todos los Tipos</option>
             <option value="DOMICILIO">Domicilio</option>
             <option value="EMPRESA">Empresa</option>
           </select>
-          <select value={filtroEstado} onChange={e => setFiltroEstado(e.target.value)} className="px-3 py-2 border border-slate-200 rounded-xl text-sm text-slate-700 font-medium bg-white outline-none">
+
+          {/* Estado */}
+          <select 
+            value={filtroEstado} 
+            onChange={e => setFiltroEstado(e.target.value)} 
+            className="px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 font-semibold focus:outline-none focus:border-[#013299]"
+          >
             <option value="TODOS">Todos los Estados</option>
             <option value="ACTIVOS">Solo Activos</option>
             <option value="INACTIVOS">Solo Inactivos</option>
           </select>
-          <button onClick={handleOpenCreate} className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold text-white" style={{ backgroundColor: '#013299' }}>
-            <Plus className="h-4 w-4" /> Registrar Nuevo Cliente
-          </button>
+
+          {hayFiltrosActivos && (
+            <button
+              onClick={limpiarFiltros}
+              className="px-2.5 py-1 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1"
+            >
+              <X className="w-3.5 h-3.5" /> Limpiar
+            </button>
+          )}
         </div>
+
       </div>
 
-      {/* Tabla */}
-      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse text-sm">
-            <thead>
-              <tr style={{ backgroundColor: '#013299' }}>
-                {['Cliente', 'Tipo', 'Dirección y Contacto', 'Comuna / Sector', 'Frecuencia Visita', 'Deuda Total', 'Envases', 'Estado', 'Acciones'].map(h => (
-                  <th key={h} className="py-3 px-4 text-left text-xs font-bold text-white uppercase tracking-wider">{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {clientesFiltrados.length === 0 ? (
-                <tr><td colSpan={9} className="text-center py-12 text-slate-400 text-sm">No se encontraron registros.</td></tr>
-              ) : clientesFiltrados.map(c => (
-                <tr key={c.id} className="hover:bg-blue-50/30 transition-colors">
-                  <td className="py-3.5 px-4">
-                    <div className="font-semibold text-slate-900">{c.nombre}</div>
-                    {c.rut_empresa && <div className="text-xs text-slate-400 mt-0.5">RUT: {c.rut_empresa}</div>}
-                  </td>
-                  <td className="py-3.5 px-4">
-                    <span className={`px-2.5 py-1 rounded-lg text-xs font-bold ${c.tipo === 'EMPRESA' ? 'bg-purple-100 text-purple-700' : 'bg-emerald-100 text-emerald-700'}`}>{c.tipo}</span>
-                  </td>
-                  <td className="py-3.5 px-4">
-                    <div className="text-slate-700 max-w-xs truncate text-sm">{c.direccion}</div>
-                    <div className="text-xs text-slate-400 mt-0.5">{c.telefono}</div>
-                  </td>
-                  <td className="py-3.5 px-4">
-                    {c.sector ? (
-                      <>
-                        <div className="text-sm text-slate-700 font-medium">{c.sector.comuna?.nombre}</div>
-                        <div className="text-xs text-slate-400 mt-0.5">{c.sector.nombre}</div>
-                      </>
-                    ) : (
-                      <span className="text-xs text-slate-300 italic">Sin asignar</span>
-                    )}
-                  </td>
-                  <td className="py-3.5 px-4">
-                    <span className="bg-blue-50 text-blue-700 border border-blue-200 px-2.5 py-1 rounded-lg text-xs font-extrabold uppercase">
-                      {c.frecuencia === 'QUINCENAL' ? 'Quincenal' : c.frecuencia === 'MENSUAL' ? 'Mensual' : c.frecuencia === 'A_PEDIDO' ? 'A pedido' : 'Semanal'}
-                    </span>
-                  </td>
-                  <td className="py-3.5 px-4 font-extrabold text-sm">
-                    {(c.deuda || 0) > 0 ? (
-                      <span className="bg-rose-50 text-rose-700 border border-rose-200 px-2 py-1 rounded-lg text-xs font-black">
-                        ${Number(c.deuda).toLocaleString('es-CL')}
-                      </span>
-                    ) : (
-                      <span className="text-emerald-600 font-bold text-xs">Al día ($0)</span>
-                    )}
-                  </td>
-                  <td className="py-3.5 px-4 text-center font-bold text-slate-800">{c.botellones_prestados || 0}</td>
-                  <td className="py-3.5 px-4 text-center">
-                    <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${c.activo ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700'}`}>{c.activo ? 'Activo' : 'Inactivo'}</span>
-                  </td>
-                  <td className="py-3.5 px-4 text-right">
-                    <div className="flex items-center justify-end gap-1.5">
-                      <button onClick={() => setClienteSeleccionado(c)} className="flex items-center gap-1.5 text-white text-xs font-bold px-3 py-1.5 rounded-lg" style={{ backgroundColor: '#013299' }}>
-                        <Settings className="h-3.5 w-3.5" /> Gestionar
-                      </button>
-                      <button onClick={() => handleOpenEdit(c)} className="text-slate-500 hover:text-[#013299] p-1.5 rounded-lg hover:bg-blue-50 transition-colors">
-                        <Edit2 className="h-4 w-4" />
-                      </button>
-                      <button 
-                        onClick={() => handleDeshabilitar(c)} 
-                        title={c.activo ? 'Deshabilitar cliente' : 'Activar cliente'}
-                        className={`p-1.5 rounded-lg transition-colors ${c.activo ? 'text-slate-500 hover:text-amber-600 hover:bg-amber-50' : 'text-slate-400 hover:text-emerald-600 hover:bg-emerald-50'}`}
-                      >
-                        <AlertTriangle className="h-4 w-4" />
-                      </button>
-                    </div>
-                  </td>
+      {/* VISTA 1: LISTA PLANA (CON PAGINACIÓN) */}
+      {modoVista === 'PLANA' && (
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+          
+          {/* Controls bar table header */}
+          <div className="px-5 py-3.5 border-b border-slate-100 flex items-center justify-between text-xs text-slate-500">
+            <span>
+              Mostrando <strong className="text-slate-900">{clientesFiltrados.length > 0 ? (paginaActual - 1) * itemsPorPagina + 1 : 0}</strong> a <strong className="text-slate-900">{Math.min(paginaActual * itemsPorPagina, clientesFiltrados.length)}</strong> de <strong className="text-slate-900">{clientesFiltrados.length}</strong> clientes
+            </span>
+
+            <div className="flex items-center gap-2">
+              <span className="font-semibold text-slate-400">Por página:</span>
+              <select
+                value={itemsPorPagina}
+                onChange={e => setItemsPorPagina(Number(e.target.value))}
+                className="px-2 py-1 bg-slate-50 border border-slate-200 rounded-lg font-bold text-slate-700 focus:outline-none"
+              >
+                <option value={25}>25</option>
+                <option value={50}>50</option>
+                <option value={100}>100</option>
+                <option value={250}>250</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr className="bg-slate-50/70 border-b border-slate-100 text-slate-500 font-bold uppercase tracking-wider text-[10px]">
+                  <th className="py-3.5 px-4">Cliente</th>
+                  <th className="py-3.5 px-4">Tipo</th>
+                  <th className="py-3.5 px-4">Dirección y Teléfono</th>
+                  <th className="py-3.5 px-4">Comuna / Sector</th>
+                  <th className="py-3.5 px-4">Frecuencia Visita</th>
+                  <th className="py-3.5 px-4 text-right">Deuda Total</th>
+                  <th className="py-3.5 px-4 text-center">Envases</th>
+                  <th className="py-3.5 px-4 text-center">Estado</th>
+                  <th className="py-3.5 px-4 text-right">Acciones</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-slate-100 text-slate-700">
+                {clientesPaginados.length === 0 ? (
+                  <tr>
+                    <td colSpan={9} className="text-center py-12 text-slate-400">
+                      <Users className="w-10 h-10 mx-auto mb-2 text-slate-300" />
+                      <p className="font-bold text-sm">No se encontraron clientes</p>
+                      <p className="text-xs text-slate-400 mt-0.5">Prueba ajustando los criterios de búsqueda</p>
+                    </td>
+                  </tr>
+                ) : (
+                  clientesPaginados.map(c => (
+                    <tr key={c.id} className="hover:bg-slate-50/70 transition-colors">
+                      <td className="py-3.5 px-4">
+                        <div className="font-bold text-slate-900">{c.nombre}</div>
+                        {c.rut_empresa && <div className="text-[11px] text-slate-400">RUT: {c.rut_empresa}</div>}
+                      </td>
+                      <td className="py-3.5 px-4">
+                        <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold ${
+                          c.tipo === 'EMPRESA' 
+                            ? 'bg-purple-50 text-purple-700 border border-purple-100' 
+                            : 'bg-emerald-50 text-emerald-700 border border-emerald-100'
+                        }`}>
+                          {c.tipo}
+                        </span>
+                      </td>
+                      <td className="py-3.5 px-4">
+                        <div className="text-slate-800 font-medium max-w-xs truncate">{c.direccion}</div>
+                        <div className="text-[11px] text-slate-400">{c.telefono}</div>
+                      </td>
+                      <td className="py-3.5 px-4">
+                        {c.sector ? (
+                          <div>
+                            <div className="text-xs text-slate-800 font-semibold">{c.sector.comuna?.nombre}</div>
+                            <div className="text-[11px] text-slate-400">{c.sector.nombre}</div>
+                          </div>
+                        ) : (
+                          <span className="text-[11px] text-slate-300 italic">Sin sector</span>
+                        )}
+                      </td>
+                      <td className="py-3.5 px-4">
+                        <span className="bg-blue-50 text-[#013299] border border-blue-100 px-2 py-0.5 rounded-md text-[10px] font-extrabold uppercase">
+                          {c.frecuencia === 'QUINCENAL' ? 'Quincenal' : c.frecuencia === 'MENSUAL' ? 'Mensual' : c.frecuencia === 'A_PEDIDO' ? 'A pedido' : 'Semanal'}
+                        </span>
+                      </td>
+                      <td className="py-3.5 px-4 text-right">
+                        {(c.deuda || 0) > 0 ? (
+                          <span className="bg-rose-50 text-rose-700 border border-rose-200 px-2 py-0.5 rounded-md text-xs font-black">
+                            ${Number(c.deuda).toLocaleString('es-CL')}
+                          </span>
+                        ) : (
+                          <span className="text-emerald-600 font-bold text-xs">Al día ($0)</span>
+                        )}
+                      </td>
+                      <td className="py-3.5 px-4 text-center font-bold text-slate-800">
+                        {c.botellones_prestados || 0}
+                      </td>
+                      <td className="py-3.5 px-4 text-center">
+                        <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${
+                          c.activo 
+                            ? 'bg-emerald-50 text-emerald-700 border-emerald-200' 
+                            : 'bg-rose-50 text-rose-700 border-rose-200'
+                        }`}>
+                          {c.activo ? 'Activo' : 'Inactivo'}
+                        </span>
+                      </td>
+                      <td className="py-3.5 px-4 text-right">
+                        <div className="flex items-center justify-end gap-1">
+                          <button 
+                            onClick={() => setClienteSeleccionado(c)} 
+                            className="flex items-center gap-1 text-white text-[11px] font-bold px-2.5 py-1.5 rounded-lg shadow-sm" 
+                            style={{ backgroundColor: '#013299' }}
+                          >
+                            <Settings className="h-3.5 w-3.5" /> Ficha
+                          </button>
+                          <button 
+                            onClick={() => handleOpenEdit(c)} 
+                            className="text-slate-400 hover:text-[#013299] p-1.5 rounded-lg hover:bg-slate-100 transition-colors"
+                            title="Editar cliente"
+                          >
+                            <Edit2 className="h-3.5 w-3.5" />
+                          </button>
+                          <button 
+                            onClick={() => handleDeshabilitar(c)} 
+                            title={c.activo ? 'Deshabilitar cliente' : 'Activar cliente'}
+                            className={`p-1.5 rounded-lg transition-colors ${
+                              c.activo 
+                                ? 'text-slate-400 hover:text-amber-600 hover:bg-amber-50' 
+                                : 'text-slate-400 hover:text-emerald-600 hover:bg-emerald-50'
+                            }`}
+                          >
+                            <AlertTriangle className="h-3.5 w-3.5" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Paginador */}
+          {totalPaginas > 1 && (
+            <div className="px-5 py-3.5 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+              <span>Página <strong className="text-slate-800">{paginaActual}</strong> de <strong className="text-slate-800">{totalPaginas}</strong></span>
+              <div className="flex items-center gap-2">
+                <button
+                  disabled={paginaActual === 1}
+                  onClick={() => setPaginaActual(p => Math.max(1, p - 1))}
+                  className="p-1.5 bg-slate-50 border border-slate-200 rounded-lg disabled:opacity-40 text-slate-700 hover:bg-slate-100 transition-colors"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                </button>
+                <button
+                  disabled={paginaActual === totalPaginas}
+                  onClick={() => setPaginaActual(p => Math.min(totalPaginas, p + 1))}
+                  className="p-1.5 bg-slate-50 border border-slate-200 rounded-lg disabled:opacity-40 text-slate-700 hover:bg-slate-100 transition-colors"
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          )}
+
         </div>
-      </div>
+      )}
+
+      {/* VISTA 2: AGRUPADA POR SECTOR Y COMUNA */}
+      {modoVista === 'SECTOR' && (
+        <div className="space-y-4">
+          {clientesAgrupadosPorSector.length === 0 ? (
+            <div className="bg-white rounded-2xl border border-slate-100 p-12 text-center text-slate-400">
+              <FolderTree className="w-10 h-10 mx-auto mb-2 text-slate-300" />
+              <p className="font-bold text-sm">No hay clientes para agrupar por sector</p>
+            </div>
+          ) : (
+            clientesAgrupadosPorSector.map(grupo => {
+              const deudaGrupo = grupo.lista.reduce((acc, c) => acc + (c.deuda || 0), 0);
+              return (
+                <div key={`${grupo.comunaNombre}-${grupo.sectorNombre}`} className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden space-y-0">
+                  
+                  {/* Sector Group Header */}
+                  <div className="bg-slate-50/90 px-5 py-3.5 border-b border-slate-100 flex justify-between items-center flex-wrap gap-2">
+                    <div className="flex items-center gap-2.5">
+                      <div className="p-1.5 bg-blue-50 text-[#013299] rounded-lg">
+                        <MapPin className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <h3 className="font-bold text-slate-900 text-sm">{grupo.sectorNombre}</h3>
+                        <p className="text-[11px] text-slate-400 font-medium">Comuna: {grupo.comunaNombre}</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-3 text-xs">
+                      <span className="bg-white border border-slate-200 px-2.5 py-1 rounded-lg font-bold text-slate-700">
+                        {grupo.lista.length} clientes
+                      </span>
+                      {deudaGrupo > 0 && (
+                        <span className="bg-rose-50 border border-rose-200 text-rose-700 px-2.5 py-1 rounded-lg font-bold">
+                          Deuda total: ${deudaGrupo.toLocaleString('es-CL')}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Tabla del grupo */}
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left border-collapse text-xs">
+                      <tbody className="divide-y divide-slate-100 text-slate-700">
+                        {grupo.lista.map(c => (
+                          <tr key={c.id} className="hover:bg-slate-50/70 transition-colors">
+                            <td className="py-3 px-4 font-bold text-slate-900 w-1/4">
+                              {c.nombre}
+                              {c.rut_empresa && <div className="text-[10px] text-slate-400 font-normal">RUT: {c.rut_empresa}</div>}
+                            </td>
+                            <td className="py-3 px-4 text-slate-600 w-1/3">
+                              <div className="truncate font-medium">{c.direccion}</div>
+                              <div className="text-[10px] text-slate-400">{c.telefono}</div>
+                            </td>
+                            <td className="py-3 px-4 text-center">
+                              <span className="bg-blue-50 text-[#013299] px-2 py-0.5 rounded text-[10px] font-bold uppercase">
+                                {c.frecuencia || 'SEMANAL'}
+                              </span>
+                            </td>
+                            <td className="py-3 px-4 text-right">
+                              {(c.deuda || 0) > 0 ? (
+                                <span className="bg-rose-50 text-rose-700 border border-rose-200 px-2 py-0.5 rounded text-[10px] font-bold">
+                                  ${Number(c.deuda).toLocaleString('es-CL')}
+                                </span>
+                              ) : (
+                                <span className="text-emerald-600 font-bold text-[10px]">Al día</span>
+                              )}
+                            </td>
+                            <td className="py-3 px-4 text-right">
+                              <button
+                                onClick={() => setClienteSeleccionado(c)}
+                                className="px-2.5 py-1 bg-[#013299] text-white font-bold rounded-lg text-[10px] hover:bg-blue-900 transition-colors"
+                              >
+                                Ficha
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+
+                </div>
+              );
+            })
+          )}
+        </div>
+      )}
 
       {/* Modal Crear/Editar */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-slate-900/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-          <div className="bg-white w-full max-w-lg rounded-2xl shadow-xl flex flex-col max-h-[90vh] overflow-hidden border border-slate-100">
-            <div className="p-5 border-b border-slate-100 flex justify-between items-center" style={{ backgroundColor: '#013299' }}>
-              <h2 className="text-base font-bold text-white">{editingClienteId ? 'Editar Cliente' : 'Nuevo Cliente'}</h2>
-              <button onClick={() => setIsModalOpen(false)} className="text-white/70 hover:text-white transition-colors"><X className="h-5 w-5" /></button>
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
+          <div className="bg-white w-full max-w-lg rounded-2xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden border border-slate-100">
+            <div className="p-5 border-b border-slate-100 flex justify-between items-center text-white" style={{ backgroundColor: '#013299' }}>
+              <div className="flex items-center gap-2.5">
+                <Users className="w-5 h-5" />
+                <h2 className="text-base font-bold">{editingClienteId ? 'Editar Cliente' : 'Nuevo Cliente'}</h2>
+              </div>
+              <button onClick={() => setIsModalOpen(false)} className="p-1 hover:bg-white/10 rounded-xl transition-colors text-white/80 hover:text-white">
+                <X className="h-5 w-5" />
+              </button>
             </div>
+
             <form onSubmit={handleSubmit} className="p-6 overflow-y-auto space-y-4">
               {errorForm && (
                 <div className="p-3 bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold rounded-xl flex items-center gap-2">
@@ -335,43 +784,43 @@ export default function ClientManager({ initialClientes }: { initialClientes: an
                 </div>
               )}
               <div className="grid grid-cols-2 gap-4">
-                <div className="flex flex-col gap-1.5 col-span-2">
+                <div className="flex flex-col gap-1 col-span-2">
                   <label className={labelCls}>Nombre / Razón Social *</label>
                   <input type="text" name="nombre" required value={formData.nombre} onChange={handleChange} className={inputCls} />
                 </div>
-                <div className="flex flex-col gap-1.5">
+                <div className="flex flex-col gap-1">
                   <label className={labelCls}>Tipo Cliente</label>
                   <select name="tipo" value={formData.tipo} onChange={handleChange} className={inputCls}>
                     <option value={TipoCliente.DOMICILIO}>Domicilio</option>
                     <option value={TipoCliente.EMPRESA}>Empresa</option>
                   </select>
                 </div>
-                <div className="flex flex-col gap-1.5">
+                <div className="flex flex-col gap-1">
                   <label className={labelCls}>Teléfono *</label>
                   <input type="text" name="telefono" required placeholder="+569..." value={formData.telefono} onChange={handleChange} className={inputCls} />
                 </div>
               </div>
 
               {formData.tipo === TipoCliente.EMPRESA && (
-                <div className="grid grid-cols-2 gap-4 p-4 bg-purple-50 rounded-xl border border-purple-100">
-                  <div className="flex flex-col gap-1.5">
+                <div className="grid grid-cols-2 gap-4 p-4 bg-purple-50/70 rounded-xl border border-purple-100">
+                  <div className="flex flex-col gap-1">
                     <label className="text-xs font-bold text-purple-800 uppercase tracking-wide">RUT Empresa *</label>
                     <input type="text" name="rut_empresa" value={formData.rut_empresa || ''} onChange={handleChange} className={inputCls} />
                   </div>
-                  <div className="flex flex-col gap-1.5">
+                  <div className="flex flex-col gap-1">
                     <label className="text-xs font-bold text-purple-800 uppercase tracking-wide">Giro Comercial</label>
                     <input type="text" name="giro" value={formData.giro || ''} onChange={handleChange} className={inputCls} />
                   </div>
                 </div>
               )}
 
-              <div className="flex flex-col gap-1.5">
+              <div className="flex flex-col gap-1">
                 <label className={labelCls}>Dirección de Despacho *</label>
                 <input type="text" name="direccion" required value={formData.direccion} onChange={handleChange} className={inputCls} />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
-                <div className="flex flex-col gap-1.5">
+                <div className="flex flex-col gap-1">
                   <label className={labelCls}>Comuna</label>
                   <select
                     value={comunaSeleccionada}
@@ -387,7 +836,7 @@ export default function ClientManager({ initialClientes }: { initialClientes: an
                     ))}
                   </select>
                 </div>
-                <div className="flex flex-col gap-1.5">
+                <div className="flex flex-col gap-1">
                   <label className={labelCls}>Sector</label>
                   <select
                     name="sector_id"
@@ -397,7 +846,7 @@ export default function ClientManager({ initialClientes }: { initialClientes: an
                     className={inputCls + (!comunaSeleccionada ? ' opacity-50 cursor-not-allowed' : '')}
                   >
                     <option value="">— Seleccionar sector —</option>
-                    {sectoresFiltrados.map(s => (
+                    {sectoresFormulario.map(s => (
                       <option key={s.id} value={s.id}>{s.nombre}</option>
                     ))}
                   </select>
@@ -405,11 +854,11 @@ export default function ClientManager({ initialClientes }: { initialClientes: an
               </div>
 
               <div className="grid grid-cols-2 gap-4">
-                <div className="flex flex-col gap-1.5">
+                <div className="flex flex-col gap-1">
                   <label className={labelCls}>Correo Electrónico</label>
                   <input type="email" name="email" value={formData.email || ''} onChange={handleChange} className={inputCls} />
                 </div>
-                <div className="flex flex-col gap-1.5">
+                <div className="flex flex-col gap-1">
                   <label className={labelCls}>Preferencia Tributaria</label>
                   <select name="preferencia_factura" value={formData.preferencia_factura} onChange={handleChange} className={inputCls}>
                     <option value={PreferenciaFacturacion.BOLETA}>Boleta</option>
@@ -419,7 +868,7 @@ export default function ClientManager({ initialClientes }: { initialClientes: an
               </div>
 
               <div className="grid grid-cols-2 gap-4">
-                <div className="flex flex-col gap-1.5">
+                <div className="flex flex-col gap-1">
                   <label className={labelCls}>Frecuencia de Visita *</label>
                   <select name="frecuencia" value={formData.frecuencia || 'SEMANAL'} onChange={handleChange} className={inputCls}>
                     <option value="SEMANAL">Semanal (7 días)</option>
@@ -428,15 +877,15 @@ export default function ClientManager({ initialClientes }: { initialClientes: an
                     <option value="A_PEDIDO">A Pedido (Bajo demanda)</option>
                   </select>
                 </div>
-                <div className="flex flex-col gap-1.5">
+                <div className="flex flex-col gap-1">
                   <label className={labelCls}>Saldo / Deuda Inicial ($)</label>
                   <input type="number" name="deuda" value={formData.deuda ?? 0} onChange={handleChange} placeholder="0" className={inputCls} />
                 </div>
               </div>
 
-              <div className="pt-4 border-t border-slate-100 flex justify-end gap-2">
-                <button type="button" onClick={() => setIsModalOpen(false)} className="px-4 py-2 text-sm text-slate-500 font-medium">Cancelar</button>
-                <button type="submit" disabled={isPending} className="text-white px-6 py-2 rounded-xl text-sm font-bold disabled:opacity-60" style={{ backgroundColor: '#013299' }}>
+              <div className="pt-4 border-t border-slate-100 flex justify-end gap-3">
+                <button type="button" onClick={() => setIsModalOpen(false)} className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs transition-colors">Cancelar</button>
+                <button type="submit" disabled={isPending} className="text-white px-5 py-2.5 rounded-xl text-xs font-bold shadow-md shadow-[#013299]/20 hover:shadow-none transition-all disabled:opacity-60" style={{ backgroundColor: '#013299' }}>
                   {isPending ? 'Guardando...' : 'Guardar Cliente'}
                 </button>
               </div>

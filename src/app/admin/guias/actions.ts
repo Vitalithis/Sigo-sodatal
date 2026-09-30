@@ -45,28 +45,37 @@ const escapeSQL = (v: any): string => {
 // Acciones de CRUD
 // ────────────────────────────────────────────────────────────────
 export async function buscarClientesGuiaAction(criterio: string) {
-  if (!criterio || criterio.length < 2) return { success: true, clientes: [] };
+  if (!criterio || criterio.trim().length < 2) return { success: true, clientes: [] };
+  const q = criterio.trim();
   const clientes = await prisma.cliente.findMany({
-    where: { activo: true, OR: [{ nombre: { contains: criterio } }] },
+    where: {
+      activo: true,
+      OR: [
+        { nombre: { contains: q } },
+        { direccion: { contains: q } },
+        { telefono: { contains: q } },
+      ],
+    },
     take: 8,
-    select: { id: true, nombre: true, direccion: true, modalidad_pago: true }
+    select: { id: true, nombre: true, direccion: true, telefono: true, modalidad_pago: true },
   });
   return { success: true, clientes };
 }
 
 export async function crearGuiaAction(data: NuevaGuiaInput) {
   try {
-    const cliente = await prisma.cliente.findUnique({ where: { id: data.cliente_id } });
+    const { metodo_pago, items, ...restData } = data;
+    const cliente = await prisma.cliente.findUnique({ where: { id: restData.cliente_id } });
     if (!cliente) throw new Error('Cliente no encontrado.');
 
-    const itemsData = data.items.map(it => ({ ...it, subtotal: Number((it.cantidad * it.precio_unitario).toFixed(2)) }));
+    const itemsData = items.map(it => ({ ...it, subtotal: Number((it.cantidad * it.precio_unitario).toFixed(2)) }));
     const total = itemsData.reduce((acc, i) => acc + i.subtotal, 0);
 
     const guia = await prisma.guiaDespacho.create({
       data: {
-        ...data,
+        ...restData,
         total,
-        estado: derivarEstadoEntrega(data.metodo_pago, cliente.modalidad_pago),
+        estado: derivarEstadoEntrega(metodo_pago, cliente.modalidad_pago),
         items: { create: itemsData }
       }
     });

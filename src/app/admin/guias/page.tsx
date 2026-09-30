@@ -1,6 +1,5 @@
 import React from 'react';
 import { prisma } from '@lib/prisma';
-import NuevaGuiaModal from './components/NuevaGuiaModal';
 import GuiasManager from './components/GuiasManager';
 
 export const dynamic = 'force-dynamic';
@@ -22,14 +21,7 @@ export default async function GuiasPage() {
   });
 
   return (
-    <div className="space-y-4">
-      <div>
-        <h1 className="text-2xl font-bold text-[#212529]">Guías de Despacho</h1>
-        <p className="text-xs text-gray-500 mt-0.5">
-          Emisión de guías, confirmación de entrega, anulación y cierre mensual de clientes a crédito.
-        </p>
-      </div>
-
+    <div className="space-y-6 pb-12">
       <GuiasManager initialGuias={guias} />
     </div>
   );

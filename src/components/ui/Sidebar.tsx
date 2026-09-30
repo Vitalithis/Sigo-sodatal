@@ -16,9 +16,6 @@ import {
   ShieldCheck,
   Building2,
   Droplets,
-  Search,
-  Bell,
-  MessageCircle,
   LogOut,
   ChevronLeft,
   ChevronRight,
@@ -89,40 +86,8 @@ export default function Sidebar({ rol, nombre }: SidebarProps) {
         )}
       </div>
 
-      {/* ELEMENTOS DE HEADER MIGRADOS: Búsqueda y Notificaciones */}
-      <div className="p-3 border-b border-white/10 space-y-2">
-        {!isCollapsed ? (
-          <div
-            className="flex items-center gap-2 rounded-xl px-3 py-2 w-full"
-            style={{ backgroundColor: 'rgba(255,255,255,0.12)' }}
-          >
-            <Search className="h-4 w-4 shrink-0 text-blue-200" />
-            <input
-              type="text"
-              placeholder="Buscar..."
-              className="bg-transparent text-xs outline-none w-full text-white placeholder:text-blue-200 font-medium"
-            />
-          </div>
-        ) : (
-          <button title="Buscar..." className="w-full flex justify-center p-2 rounded-xl text-blue-200 hover:bg-white/10">
-            <Search className="h-4 w-4" />
-          </button>
-        )}
-
-        <div className={`flex items-center ${isCollapsed ? 'flex-col justify-center gap-2' : 'justify-around px-2 py-1'}`}>
-          <button title="Mensajes" className="p-1.5 rounded-lg text-blue-200 hover:bg-white/10 transition-colors">
-            <MessageCircle className="h-4 w-4" />
-          </button>
-
-          <button title="Notificaciones" className="relative p-1.5 rounded-lg text-blue-200 hover:bg-white/10 transition-colors">
-            <Bell className="h-4 w-4" />
-            <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
-          </button>
-        </div>
-      </div>
-
       {/* NAV */}
-      <nav className="flex-1 overflow-y-auto py-3 px-3 space-y-1">
+      <nav className="flex-1 overflow-y-auto py-3 px-3 space-y-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
         {menuItems.map((item) => {
           const Icon = item.icon;
           const isActive =
@@ -134,6 +99,7 @@ export default function Sidebar({ rol, nombre }: SidebarProps) {
             <Link
               key={item.name}
               href={item.href}
+              prefetch={false}
               title={isCollapsed ? item.name : undefined}
               className={`flex items-center gap-3 px-3 py-2.5 text-sm font-semibold rounded-xl transition-colors ${
                 isCollapsed ? 'justify-center' : ''

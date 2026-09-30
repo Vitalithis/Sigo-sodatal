@@ -1,8 +1,22 @@
 'use client';
 
-import React, { useState, useTransition } from 'react';
+import React, { useState, useTransition, useMemo } from 'react';
 import { 
-  Plus, CheckCircle, Unlock, AlertCircle, X, Check, Search, Eye 
+  Plus, 
+  CheckCircle2, 
+  Unlock, 
+  AlertCircle, 
+  X, 
+  Check, 
+  Search, 
+  Eye, 
+  ClipboardList, 
+  DollarSign, 
+  Truck, 
+  Calendar,
+  Lock,
+  Fuel,
+  Package
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import {
@@ -185,21 +199,30 @@ export default function CuadraturaApp({ repartidores, productos, historial }: Cu
     });
   };
 
-  const cuadraturasFiltradas = historial.filter((c: any) => {
-    const term = busqueda.toLowerCase();
-    const fecha = new Date(c.fecha).toLocaleDateString();
-    return (
-      c.usuario?.nombre.toLowerCase().includes(term) ||
-      c.usuario?.apellido?.toLowerCase().includes(term) ||
-      fecha.includes(term)
-    );
-  });
+  const cuadraturasFiltradas = useMemo(() => {
+    return historial.filter((c: any) => {
+      const term = busqueda.toLowerCase();
+      const fecha = new Date(c.fecha).toLocaleDateString('es-CL');
+      return (
+        c.usuario?.nombre.toLowerCase().includes(term) ||
+        c.usuario?.apellido?.toLowerCase().includes(term) ||
+        fecha.includes(term)
+      );
+    });
+  }, [historial, busqueda]);
+
+  const abiertasCount = useMemo(() => historial.filter(c => c.estado === 'ABIERTA').length, [historial]);
+  const cerradasCount = useMemo(() => historial.filter(c => c.estado === 'CERRADA').length, [historial]);
+  const totalEfectivo = useMemo(() => {
+    return historial.reduce((acc, c) => acc + Number(c.total_efectivo || 0), 0);
+  }, [historial]);
 
   return (
-    <div className="min-h-screen bg-slate-50 p-6">
+    <div className="space-y-6">
       
+      {/* Toast Notification */}
       {notification && (
-        <div className={`fixed top-5 right-5 z-50 flex items-center gap-3 px-4 py-3 rounded-xl shadow-2xl border animate-in slide-in-from-top-4 ${
+        <div className={`fixed top-5 right-5 z-50 flex items-center gap-3 px-4 py-3 rounded-2xl shadow-2xl border animate-in slide-in-from-top-4 duration-300 ${
           notification.type === 'success' ? 'bg-emerald-50 text-emerald-800 border-emerald-200' : 'bg-rose-50 text-rose-800 border-rose-200'
         }`}>
           {notification.type === 'success' ? <Check className="h-5 w-5 text-emerald-600" /> : <AlertCircle className="h-5 w-5 text-rose-600" />}
@@ -208,95 +231,160 @@ export default function CuadraturaApp({ repartidores, productos, historial }: Cu
         </div>
       )}
 
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-800">Control de Cuadraturas</h1>
-          <p className="text-sm text-slate-500">Gestión de carga de camiones, kilometraje, retorno y cierre de caja.</p>
+      {/* Metrics Cards Row */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
+          <div>
+            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Rutas Activas</p>
+            <p className="text-2xl font-black text-slate-900 mt-1">{abiertasCount}</p>
+          </div>
+          <div className="p-3 bg-blue-50 rounded-xl text-[#013299]">
+            <Truck className="w-5 h-5" />
+          </div>
         </div>
-        <div className="flex gap-2">
-          <button onClick={() => { setPanel('salida'); setCuadraturaSeleccionada(null); }} className="bg-[#283289] hover:bg-[#1e266b] text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 shadow-sm transition-colors">
+
+        <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
+          <div>
+            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Cajas Cerradas</p>
+            <p className="text-2xl font-black text-slate-900 mt-1">{cerradasCount}</p>
+          </div>
+          <div className="p-3 bg-emerald-50 rounded-xl text-emerald-600">
+            <CheckCircle2 className="w-5 h-5" />
+          </div>
+        </div>
+
+        <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
+          <div>
+            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Efectivo</p>
+            <p className="text-2xl font-black text-slate-900 mt-1">${totalEfectivo.toLocaleString('es-CL')}</p>
+          </div>
+          <div className="p-3 bg-emerald-50 rounded-xl text-emerald-600">
+            <DollarSign className="w-5 h-5" />
+          </div>
+        </div>
+
+        <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
+          <div>
+            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Cuadraturas</p>
+            <p className="text-2xl font-black text-slate-900 mt-1">{historial.length}</p>
+          </div>
+          <div className="p-3 bg-purple-50 rounded-xl text-purple-600">
+            <ClipboardList className="w-5 h-5" />
+          </div>
+        </div>
+      </div>
+
+      {/* Control Bar & Search */}
+      <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="relative flex-1">
+          <Search className="h-4 w-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <input
+            type="text"
+            placeholder="Buscar por fecha o nombre del repartidor..."
+            value={busqueda}
+            onChange={(e) => setBusqueda(e.target.value)}
+            className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-[#013299] focus:ring-2 focus:ring-[#013299]/20 transition-all"
+          />
+        </div>
+
+        <div className="flex items-center gap-2 flex-wrap">
+          <button
+            onClick={() => { setPanel('salida'); setCuadraturaSeleccionada(null); }}
+            className="bg-[#013299] hover:bg-blue-900 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow-md shadow-[#013299]/20 transition-all flex items-center gap-2"
+          >
             <Plus className="h-4 w-4" /> Registrar Salida
           </button>
-          <button onClick={() => { setCuadraturaSeleccionada(null); setPanel('cierre'); }} className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 shadow-sm transition-colors">
-            <CheckCircle className="h-4 w-4" /> Cierre Diario
+
+          <button
+            onClick={() => { setCuadraturaSeleccionada(null); setPanel('cierre'); }}
+            className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow-md shadow-emerald-600/20 transition-all flex items-center gap-2"
+          >
+            <CheckCircle2 className="h-4 w-4" /> Cierre Diario
           </button>
-          <button onClick={() => { setCuadraturaSeleccionada(null); setPanel('reabrir'); }} className="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 shadow-sm transition-colors">
+
+          <button
+            onClick={() => { setCuadraturaSeleccionada(null); setPanel('reabrir'); }}
+            className="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow-md shadow-amber-500/20 transition-all flex items-center gap-2"
+          >
             <Unlock className="h-4 w-4" /> Reabrir
           </button>
         </div>
       </div>
 
-      <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm mb-6 flex gap-4">
-        <div className="flex-1 relative">
-          <Search className="h-5 w-5 text-slate-400 absolute left-3 top-2.5" />
-          <input
-            type="text"
-            placeholder="Buscar por fecha (ej: 11/8/2026) o nombre del repartidor..."
-            value={busqueda}
-            onChange={(e) => setBusqueda(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#283289]"
-          />
-        </div>
-      </div>
-
-      <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+      {/* Main Table Card */}
+      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse text-slate-600 text-sm">
-            <thead className="bg-slate-100 text-slate-700 uppercase text-xs font-semibold border-b border-slate-200">
-              <tr>
-                <th className="p-4">Fecha</th>
-                <th className="p-4">Repartidor</th>
-                <th className="p-4 text-center">Estado</th>
-                <th className="p-4 text-center">Km Recorrido</th>
-                <th className="p-4 text-right">Efectivo Recaudado</th>
-                <th className="p-4 text-center">Acciones</th>
+          <table className="w-full text-left border-collapse text-xs">
+            <thead>
+              <tr className="bg-slate-50/70 border-b border-slate-100 text-slate-500 font-bold uppercase tracking-wider text-[10px]">
+                <th className="py-3.5 px-4">Fecha</th>
+                <th className="py-3.5 px-4">Repartidor</th>
+                <th className="py-3.5 px-4 text-center">Estado</th>
+                <th className="py-3.5 px-4 text-center">Km Recorrido</th>
+                <th className="py-3.5 px-4 text-right">Efectivo Recaudado</th>
+                <th className="py-3.5 px-4 text-center">Acciones</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-slate-100 text-slate-700">
               {cuadraturasFiltradas.length === 0 ? (
-                <tr><td colSpan={6} className="text-center p-8 text-slate-400">No hay rutas que coincidan con la búsqueda.</td></tr>
+                <tr>
+                  <td colSpan={6} className="text-center py-12 text-slate-400">
+                    <ClipboardList className="w-10 h-10 mx-auto mb-2 text-slate-300" />
+                    <p className="font-bold text-sm">No hay cuadraturas registradas</p>
+                    <p className="text-xs text-slate-400 mt-0.5">Las cuadraturas generadas aparecerán aquí</p>
+                  </td>
+                </tr>
               ) : (
                 cuadraturasFiltradas.map((c: any) => (
-                  <tr key={c.id} className="hover:bg-slate-50 transition-colors">
-                    <td className="p-4 font-medium text-slate-900">{new Date(c.fecha).toLocaleDateString()}</td>
-                    <td className="p-4 font-bold">{c.usuario?.nombre} {c.usuario?.apellido}</td>
-                    <td className="p-4 text-center">
-                      <span className={`px-2 py-1 rounded-full text-xs font-bold ${
-                        c.estado === 'ABIERTA' ? 'bg-blue-100 text-blue-800' : 'bg-emerald-100 text-emerald-800'
+                  <tr key={c.id} className="hover:bg-slate-50/70 transition-colors">
+                    <td className="py-3.5 px-4 font-bold text-slate-900">
+                      {new Date(c.fecha).toLocaleDateString('es-CL')}
+                    </td>
+                    <td className="py-3.5 px-4 font-semibold text-slate-800">
+                      {c.usuario?.nombre} {c.usuario?.apellido || ''}
+                    </td>
+                    <td className="py-3.5 px-4 text-center">
+                      <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold border ${
+                        c.estado === 'ABIERTA' 
+                          ? 'bg-blue-50 text-[#013299] border-blue-200' 
+                          : 'bg-emerald-50 text-emerald-700 border-emerald-200'
                       }`}>
                         {c.estado}
                       </span>
                     </td>
-                    <td className="p-4 text-center font-mono text-slate-500">
+                    <td className="py-3.5 px-4 text-center font-mono font-semibold text-slate-600">
                       {c.km_inicial && c.km_final ? `${c.km_final - c.km_inicial} km` : 'En ruta'}
                     </td>
-                    <td className="p-4 text-right font-bold text-slate-900">
+                    <td className="py-3.5 px-4 text-right font-extrabold text-slate-900 text-sm">
                       ${Number(c.total_efectivo || 0).toLocaleString('es-CL')}
                     </td>
-                    <td className="p-4 text-center space-x-2">
-                      <button 
-                        onClick={() => { setCuadraturaSeleccionada(c); setPanel('detalle'); }}
-                        className="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-3 py-1.5 rounded-lg transition-colors shadow-sm inline-flex items-center gap-1"
-                      >
-                        <Eye className="h-3.5 w-3.5" /> Ver Detalle
-                      </button>
+                    <td className="py-3.5 px-4 text-center">
+                      <div className="flex items-center justify-center gap-1.5">
+                        <button 
+                          onClick={() => { setCuadraturaSeleccionada(c); setPanel('detalle'); }}
+                          className="px-2.5 py-1.5 bg-slate-50 border border-slate-200 hover:bg-slate-100 text-slate-700 font-bold rounded-lg transition-colors text-[11px] inline-flex items-center gap-1"
+                        >
+                          <Eye className="h-3.5 w-3.5" /> Detalle
+                        </button>
 
-                      {c.estado === 'ABIERTA' && (
-                        <button 
-                          onClick={() => { setCuadraturaSeleccionada(c); setPanel('cierre'); }}
-                          className="text-xs bg-emerald-100 hover:bg-emerald-200 text-emerald-800 font-bold px-3 py-1.5 rounded-lg transition-colors shadow-sm"
-                        >
-                          Cerrar Caja
-                        </button>
-                      )}
-                      {c.estado === 'CERRADA' && (
-                        <button 
-                          onClick={() => { setCuadraturaSeleccionada(c); setPanel('reabrir'); }}
-                          className="text-xs bg-amber-100 hover:bg-amber-200 text-amber-800 font-bold px-3 py-1.5 rounded-lg transition-colors shadow-sm"
-                        >
-                          🔓 Reabrir
-                        </button>
-                      )}
+                        {c.estado === 'ABIERTA' && (
+                          <button 
+                            onClick={() => { setCuadraturaSeleccionada(c); setPanel('cierre'); }}
+                            className="px-2.5 py-1.5 bg-emerald-50 border border-emerald-200 hover:bg-emerald-100 text-emerald-700 font-bold rounded-lg transition-colors text-[11px]"
+                          >
+                            Cerrar Caja
+                          </button>
+                        )}
+
+                        {c.estado === 'CERRADA' && (
+                          <button 
+                            onClick={() => { setCuadraturaSeleccionada(c); setPanel('reabrir'); }}
+                            className="px-2.5 py-1.5 bg-amber-50 border border-amber-200 hover:bg-amber-100 text-amber-700 font-bold rounded-lg transition-colors text-[11px]"
+                          >
+                            Reabrir
+                          </button>
+                        )}
+                      </div>
                     </td>
                   </tr>
                 ))
@@ -306,54 +394,69 @@ export default function CuadraturaApp({ repartidores, productos, historial }: Cu
         </div>
       </div>
 
+      {/* MODALS */}
       {panel && (
-        <div className="fixed inset-0 bg-slate-900/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-          <div className="bg-white w-full max-w-2xl rounded-2xl shadow-xl flex flex-col max-h-[90vh] overflow-hidden border border-slate-200">
+        <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white w-full max-w-2xl rounded-2xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden border border-slate-100">
             
-            <div className={`p-5 border-b flex justify-between items-center text-white ${
-              panel === 'salida' ? 'bg-[#283289]' : panel === 'cierre' ? 'bg-emerald-600' : panel === 'reabrir' ? 'bg-amber-600' : 'bg-slate-800'
+            {/* Header Modal */}
+            <div className={`px-6 py-4 flex justify-between items-center text-white ${
+              panel === 'salida' ? 'bg-[#013299]' : panel === 'cierre' ? 'bg-emerald-600' : panel === 'reabrir' ? 'bg-amber-600' : 'bg-slate-900'
             }`}>
-              <h2 className="text-lg font-bold">
+              <h2 className="text-base font-bold flex items-center gap-2">
                 {panel === 'salida' && '📤 Registrar Carga / Salida de Camión'}
                 {panel === 'cierre' && '✅ Registrar Retorno / Cierre de Cuadratura'}
                 {panel === 'reabrir' && '🔓 Reabrir Cuadratura'}
                 {panel === 'detalle' && '📦 Detalle de Carga y Gastos'}
               </h2>
-              <button onClick={() => { setPanel(null); setCuadraturaSeleccionada(null); }} className="text-white/80 hover:text-white text-2xl">&times;</button>
+              <button 
+                onClick={() => { setPanel(null); setCuadraturaSeleccionada(null); }} 
+                className="p-1 hover:bg-white/10 rounded-xl transition-colors text-white/80 hover:text-white"
+              >
+                <X className="w-5 h-5" />
+              </button>
             </div>
 
             {/* MODAL DETALLES */}
             {panel === 'detalle' && cuadraturaSeleccionada && (
               <div className="p-6 overflow-y-auto space-y-5">
-                <div className="bg-blue-50 border border-blue-200 p-4 rounded-xl flex justify-between items-center">
+                <div className="bg-blue-50/70 border border-blue-200 p-4 rounded-xl flex justify-between items-center">
                   <div>
-                    <p className="text-xs text-blue-600 font-bold uppercase">Repartidor</p>
-                    <p className="text-lg font-bold text-slate-800">{cuadraturaSeleccionada.usuario?.nombre} {cuadraturaSeleccionada.usuario?.apellido}</p>
+                    <p className="text-xs text-[#013299] font-bold uppercase tracking-wider">Repartidor</p>
+                    <p className="text-lg font-bold text-slate-900">{cuadraturaSeleccionada.usuario?.nombre} {cuadraturaSeleccionada.usuario?.apellido || ''}</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-xs text-blue-600 font-bold uppercase">Fecha de Ruta</p>
-                    <p className="text-lg font-bold text-slate-800">{new Date(cuadraturaSeleccionada.fecha).toLocaleDateString()}</p>
+                    <p className="text-xs text-[#013299] font-bold uppercase tracking-wider">Fecha de Ruta</p>
+                    <p className="text-lg font-bold text-slate-900">{new Date(cuadraturaSeleccionada.fecha).toLocaleDateString('es-CL')}</p>
                   </div>
                 </div>
 
                 <div>
-                  <h3 className="text-sm font-bold text-slate-700 uppercase border-b pb-2 mb-3">Inventario Cargado al Camión (Acumulado)</h3>
+                  <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wider border-b border-slate-100 pb-2 mb-3">
+                    Inventario Cargado al Camión (Acumulado)
+                  </h3>
                   {cuadraturaSeleccionada.salida && cuadraturaSeleccionada.salida.length > 0 ? (
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                       {cuadraturaSeleccionada.salida.map((s: any) => (
-                        <div key={s.id} className="bg-white border p-3 rounded-lg flex justify-between items-center shadow-sm">
+                        <div key={s.id} className="bg-slate-50 border border-slate-200/80 p-3 rounded-xl flex justify-between items-center">
                           <span className="text-xs font-semibold text-slate-800">{s.producto?.nombre}</span>
-                          <span className="text-lg font-black text-[#283289] bg-blue-50 px-2 py-0.5 rounded">{s.cantidad}</span>
+                          <span className="text-base font-black text-[#013299] bg-blue-100/60 px-2 py-0.5 rounded-lg">{s.cantidad}</span>
                         </div>
                       ))}
                     </div>
                   ) : (
-                    <p className="text-sm text-slate-500 italic">No hay productos registrados en la carga de este camión.</p>
+                    <p className="text-xs text-slate-400 italic">No hay productos registrados en la carga de este camión.</p>
                   )}
                 </div>
 
-                <div className="pt-4 border-t flex justify-end">
-                  <button type="button" onClick={() => { setPanel(null); setCuadraturaSeleccionada(null); }} className="px-5 py-2 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-lg text-sm font-bold">Cerrar Detalle</button>
+                <div className="pt-3 border-t border-slate-100 flex justify-end">
+                  <button 
+                    type="button" 
+                    onClick={() => { setPanel(null); setCuadraturaSeleccionada(null); }} 
+                    className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-colors"
+                  >
+                    Cerrar Detalle
+                  </button>
                 </div>
               </div>
             )}
@@ -361,76 +464,85 @@ export default function CuadraturaApp({ repartidores, productos, historial }: Cu
             {/* Formulario Salida */}
             {panel === 'salida' && (
               <form onSubmit={handleSalida} className="p-6 overflow-y-auto space-y-5">
-                <div className="bg-blue-50 border border-blue-200 p-3 rounded-xl text-xs text-blue-800 font-medium">
+                <div className="bg-blue-50/70 border border-blue-200 p-3.5 rounded-xl text-xs text-blue-900 font-medium">
                   💡 Si el repartidor ya tiene una ruta abierta en esta fecha, las nuevas cantidades se <strong>sumarán</strong> a su carga acumulada del día.
                 </div>
                 
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="flex flex-col gap-1">
-                    <label className="text-xs font-bold text-slate-700 uppercase">Repartidor *</label>
-                    <select value={salidaRep} onChange={e => setSalidaRep(e.target.value)} required className="border border-slate-300 p-2.5 rounded-lg text-sm bg-white outline-none font-semibold text-slate-800">
-                      <option value="">— Selecciona —</option>
-                      {repartidores.map(r => <option key={r.id} value={r.id}>{r.nombre} {r.apellido}</option>)}
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">Repartidor *</label>
+                    <select 
+                      value={salidaRep} 
+                      onChange={e => setSalidaRep(e.target.value)} 
+                      required 
+                      className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 outline-none focus:border-[#013299]"
+                    >
+                      <option value="">— Seleccionar repartidor —</option>
+                      {repartidores.map(r => <option key={r.id} value={r.id}>{r.nombre} {r.apellido || ''}</option>)}
                     </select>
                   </div>
-                  <div className="flex flex-col gap-1">
-                    <label className="text-xs font-bold text-slate-700 uppercase">Fecha *</label>
+
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">Fecha *</label>
                     <input 
                       type="date" 
                       value={salidaFecha} 
                       max={maxDate} 
                       onChange={e => setSalidaFecha(e.target.value)} 
                       required 
-                      className="border border-slate-300 p-2.5 rounded-lg text-sm bg-white outline-none font-semibold text-slate-800" 
+                      className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 outline-none focus:border-[#013299]" 
                     />
                   </div>
                 </div>
 
-                {/* KILOMETRAJE Y COMBUSTIBLE */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-slate-200 pt-4 mt-4">
-                  
-                  {/* Kilometraje solo si es la primera salida del día */}
+                {/* Kilometraje y Combustible */}
+                <div className="space-y-4 border-t border-slate-100 pt-4">
                   {salidaRep && esPrimeraSalida && (
-                    <div className="flex flex-col gap-1 md:col-span-2 bg-indigo-50 border border-indigo-200 p-4 rounded-xl">
-                      <label className="text-xs font-bold text-indigo-900 uppercase">Kilometraje Inicial del Vehículo *</label>
+                    <div className="flex flex-col gap-1.5 bg-blue-50/60 border border-blue-200 p-4 rounded-xl">
+                      <label className="text-xs font-bold text-[#013299] uppercase tracking-wider">Kilometraje Inicial del Vehículo *</label>
                       <input 
                         type="number" 
                         min="0"
                         required 
                         value={salidaKmInicial} 
                         onChange={e => setSalidaKmInicial(e.target.value)} 
-                        className="border border-indigo-300 p-2.5 rounded-lg text-sm font-mono font-bold focus:ring-2 focus:ring-indigo-600 outline-none w-full" 
+                        className="w-full px-3.5 py-2.5 bg-white border border-blue-300 rounded-xl text-xs font-mono font-bold focus:ring-2 focus:ring-[#013299]/20 outline-none" 
                         placeholder="Ej: 145000"
                       />
                     </div>
                   )}
 
-                  <div className="flex flex-col gap-2 md:col-span-2">
-                    <label className="flex items-center gap-2 cursor-pointer bg-slate-100 p-3 rounded-lg border border-slate-200 hover:bg-slate-200 transition-colors">
-                      <input type="checkbox" checked={incluirCombustible} onChange={e => setIncluirCombustible(e.target.checked)} className="w-4 h-4 text-[#283289]" />
-                      <span className="text-xs font-bold text-slate-700 uppercase">⛽ Registrar Carga de Combustible a la Salida</span>
+                  <div className="flex flex-col gap-2">
+                    <label className="flex items-center gap-2 cursor-pointer bg-slate-50 p-3 rounded-xl border border-slate-200/80 hover:bg-slate-100/70 transition-colors">
+                      <input 
+                        type="checkbox" 
+                        checked={incluirCombustible} 
+                        onChange={e => setIncluirCombustible(e.target.checked)} 
+                        className="w-4 h-4 text-[#013299] rounded" 
+                      />
+                      <span className="text-xs font-bold text-slate-700 uppercase tracking-wider">⛽ Registrar Carga de Combustible</span>
                     </label>
                     
                     {incluirCombustible && (
-                      <div className="grid grid-cols-2 gap-4 bg-slate-50 p-4 rounded-xl border border-slate-200 mt-1">
+                      <div className="grid grid-cols-2 gap-3 bg-slate-50 p-4 rounded-xl border border-slate-200 mt-1">
                         <div className="flex flex-col gap-1">
-                          <label className="text-xs font-bold text-slate-700 uppercase">Tipo *</label>
-                          <select value={combTipo} onChange={e => setCombTipo(e.target.value)} className="border border-slate-300 p-2 rounded-lg text-sm outline-none font-semibold">
+                          <label className="text-[10px] font-bold text-slate-500 uppercase">Tipo *</label>
+                          <select value={combTipo} onChange={e => setCombTipo(e.target.value)} className="w-full px-2.5 py-2 bg-white border border-slate-200 rounded-lg text-xs font-semibold">
                             <option value="DIESEL">Diesel</option>
                             <option value="BENCINA">Bencina</option>
                           </select>
                         </div>
                         <div className="flex flex-col gap-1">
-                          <label className="text-xs font-bold text-slate-700 uppercase">Monto ($) *</label>
-                          <input type="number" required min="1" value={combMonto} onChange={e => setCombMonto(e.target.value)} className="border border-slate-300 p-2 rounded-lg text-sm outline-none" placeholder="Ej: 25000" />
+                          <label className="text-[10px] font-bold text-slate-500 uppercase">Monto ($) *</label>
+                          <input type="number" required min="1" value={combMonto} onChange={e => setCombMonto(e.target.value)} className="w-full px-2.5 py-2 bg-white border border-slate-200 rounded-lg text-xs font-semibold" placeholder="Ej: 25000" />
                         </div>
                         <div className="flex flex-col gap-1">
-                          <label className="text-xs font-bold text-slate-700 uppercase">Nº Factura / Boleta</label>
-                          <input type="text" value={combNumFactura} onChange={e => setCombNumFactura(e.target.value)} className="border border-slate-300 p-2 rounded-lg text-sm outline-none" placeholder="Ej: 88512" />
+                          <label className="text-[10px] font-bold text-slate-500 uppercase">Nº Factura / Boleta</label>
+                          <input type="text" value={combNumFactura} onChange={e => setCombNumFactura(e.target.value)} className="w-full px-2.5 py-2 bg-white border border-slate-200 rounded-lg text-xs" placeholder="Ej: 88512" />
                         </div>
                         <div className="flex flex-col gap-1">
-                          <label className="text-xs font-bold text-slate-700 uppercase">RUT Empresa / Enlace Factura</label>
-                          <input type="text" value={combRutaFactura} onChange={e => setCombRutaFactura(e.target.value)} className="border border-slate-300 p-2 rounded-lg text-sm outline-none" placeholder="Ej: 76.123.456-7" />
+                          <label className="text-[10px] font-bold text-slate-500 uppercase">RUT Empresa / Enlace Factura</label>
+                          <input type="text" value={combRutaFactura} onChange={e => setCombRutaFactura(e.target.value)} className="w-full px-2.5 py-2 bg-white border border-slate-200 rounded-lg text-xs" placeholder="Ej: 76.123.456-7" />
                         </div>
                       </div>
                     )}
@@ -438,16 +550,16 @@ export default function CuadraturaApp({ repartidores, productos, historial }: Cu
                 </div>
 
                 <div>
-                  <label className="text-xs font-bold text-slate-700 uppercase block mb-2 border-b pb-1 mt-4">Cantidades a Cargar al Camión</label>
+                  <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-2">Cantidades a Cargar al Camión</label>
                   {productos.length === 0 ? (
-                    <div className="p-4 bg-amber-50 border border-amber-200 text-amber-800 rounded-lg text-sm font-medium">
-                      ⚠️ No hay productos activos en el catálogo. Ve a la sección de Productos para habilitarlos.
+                    <div className="p-4 bg-amber-50 border border-amber-200 text-amber-800 rounded-xl text-xs font-medium">
+                      ⚠️ No hay productos activos en el catálogo.
                     </div>
                   ) : (
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                       {productos.map(p => (
-                        <div key={p.id} className="bg-slate-50 border p-3 rounded-lg flex flex-col gap-2 shadow-sm">
-                          <span className="text-xs font-semibold text-slate-800 line-clamp-1" title={p.nombre}>{p.nombre}</span>
+                        <div key={p.id} className="bg-slate-50 border border-slate-200/80 p-3 rounded-xl flex flex-col gap-1.5">
+                          <span className="text-xs font-semibold text-slate-800 truncate" title={p.nombre}>{p.nombre}</span>
                           <input 
                             type="number" 
                             min="0" 
@@ -460,7 +572,7 @@ export default function CuadraturaApp({ repartidores, productos, historial }: Cu
                                 [p.id]: val === '' ? 0 : Number(val) 
                               }));
                             }} 
-                            className="border border-slate-300 p-2 rounded text-sm text-center font-mono font-bold focus:ring-2 focus:ring-[#283289] outline-none" 
+                            className="w-full px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg text-xs text-center font-mono font-bold focus:border-[#013299] outline-none" 
                           />
                         </div>
                       ))}
@@ -468,9 +580,9 @@ export default function CuadraturaApp({ repartidores, productos, historial }: Cu
                   )}
                 </div>
 
-                <div className="pt-4 border-t flex justify-end gap-2">
-                  <button type="button" onClick={() => setPanel(null)} className="px-4 py-2 text-sm text-slate-600 font-medium">Cancelar</button>
-                  <button type="submit" disabled={isPending} className="bg-[#283289] hover:bg-[#1e266b] text-white px-5 py-2.5 rounded-lg text-sm font-bold shadow-sm">{isPending ? 'Procesando...' : 'Confirmar Carga'}</button>
+                <div className="pt-3 border-t border-slate-100 flex justify-end gap-3">
+                  <button type="button" onClick={() => setPanel(null)} className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs transition-colors">Cancelar</button>
+                  <button type="submit" disabled={isPending} className="bg-[#013299] hover:bg-blue-900 text-white px-5 py-2.5 rounded-xl text-xs font-bold shadow-md transition-all">{isPending ? 'Procesando...' : 'Confirmar Carga'}</button>
                 </div>
               </form>
             )}
@@ -478,49 +590,48 @@ export default function CuadraturaApp({ repartidores, productos, historial }: Cu
             {/* Formulario Cierre */}
             {panel === 'cierre' && (
               <form onSubmit={handleCierre} className="p-6 overflow-y-auto space-y-5">
-                <div className="bg-emerald-50 border border-emerald-200 p-3 rounded-xl text-xs text-emerald-800 font-medium flex items-start gap-2">
-                  <span className="text-lg leading-none">💡</span> 
-                  <p>Las ventas y la recaudación se procesan automáticamente desde la App en terreno. Aquí solo debes registrar el retorno físico de envases a la planta.</p>
+                <div className="bg-emerald-50/70 border border-emerald-200 p-3.5 rounded-xl text-xs text-emerald-900 font-medium">
+                  💡 Las ventas y recaudación se procesan automáticamente desde la App. Aquí registras el retorno físico a la planta.
                 </div>
 
-                <div className="flex flex-col gap-1">
-                  <label className="text-xs font-bold text-slate-700 uppercase">Ruta / Repartidor a Cerrar *</label>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">Ruta / Repartidor a Cerrar *</label>
                   {cuadraturaSeleccionada ? (
-                    <div className="border border-emerald-300 bg-emerald-50 p-3 rounded-lg font-bold text-emerald-800 flex justify-between items-center">
-                      <span>{new Date(cuadraturaSeleccionada.fecha).toLocaleDateString()} - {cuadraturaSeleccionada.usuario?.nombre} {cuadraturaSeleccionada.usuario?.apellido}</span>
-                      <CheckCircle className="h-5 w-5" />
+                    <div className="border border-emerald-300 bg-emerald-50/70 p-3.5 rounded-xl font-bold text-emerald-900 flex justify-between items-center text-xs">
+                      <span>{new Date(cuadraturaSeleccionada.fecha).toLocaleDateString('es-CL')} - {cuadraturaSeleccionada.usuario?.nombre} {cuadraturaSeleccionada.usuario?.apellido || ''}</span>
+                      <CheckCircle2 className="h-5 w-5 text-emerald-600" />
                     </div>
                   ) : (
-                    <select required value={cuadraturaSeleccionada?.id || ''} onChange={e => setCuadraturaSeleccionada(historial.find(c => c.id === e.target.value))} className="border border-slate-300 p-2.5 rounded-lg text-sm bg-white outline-none font-bold text-slate-800">
+                    <select required value={cuadraturaSeleccionada?.id || ''} onChange={e => setCuadraturaSeleccionada(historial.find(c => c.id === e.target.value))} className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-800 outline-none">
                       <option value="">— Selecciona la ruta pendiente —</option>
                       {historial.filter(c => c.estado === 'ABIERTA').map(c => (
                         <option key={c.id} value={c.id}>
-                          {new Date(c.fecha).toLocaleDateString()} - {c.usuario?.nombre} {c.usuario?.apellido}
+                          {new Date(c.fecha).toLocaleDateString('es-CL')} - {c.usuario?.nombre} {c.usuario?.apellido || ''}
                         </option>
                       ))}
                     </select>
                   )}
                 </div>
 
-                <div className="flex flex-col gap-1 border-t border-b border-slate-200 py-4 my-2">
-                  <label className="text-xs font-bold text-indigo-700 uppercase">Kilometraje Final del Vehículo *</label>
+                <div className="flex flex-col gap-1.5 border-t border-b border-slate-100 py-4">
+                  <label className="text-xs font-bold text-emerald-800 uppercase tracking-wider">Kilometraje Final del Vehículo *</label>
                   <input 
                     type="number" 
                     min="0"
                     required 
                     value={cierreKmFinal} 
                     onChange={e => setCierreKmFinal(e.target.value)} 
-                    className="border border-indigo-300 p-3 rounded-lg text-lg font-mono font-bold text-indigo-900 bg-indigo-50 focus:ring-2 focus:ring-indigo-500 outline-none w-full" 
+                    className="w-full px-3.5 py-2.5 bg-emerald-50/60 border border-emerald-300 rounded-xl text-sm font-mono font-bold text-emerald-900 focus:outline-none" 
                     placeholder="Ej: 145120"
                   />
                 </div>
 
                 <div>
-                  <label className="text-xs font-bold text-slate-700 uppercase block mb-2 pb-1">Retorno de Productos (Vuelven llenos)</label>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                  <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-2">Retorno de Productos (Vuelven llenos)</label>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                     {productos.map(p => (
-                      <div key={p.id} className="bg-slate-50 border p-3 rounded-lg flex flex-col gap-2 shadow-sm">
-                        <span className="text-xs font-semibold text-slate-800 line-clamp-1">{p.nombre}</span>
+                      <div key={p.id} className="bg-slate-50 border border-slate-200/80 p-3 rounded-xl flex flex-col gap-1.5">
+                        <span className="text-xs font-semibold text-slate-800 truncate">{p.nombre}</span>
                         <input 
                           type="number" 
                           min="0" 
@@ -533,7 +644,7 @@ export default function CuadraturaApp({ repartidores, productos, historial }: Cu
                               [p.id]: val === '' ? 0 : Number(val) 
                             }));
                           }} 
-                          className="border border-emerald-200 p-2 rounded text-sm text-center font-mono font-bold text-emerald-700 focus:ring-2 focus:ring-emerald-500 outline-none" 
+                          className="w-full px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg text-xs text-center font-mono font-bold text-emerald-700 outline-none" 
                         />
                       </div>
                     ))}
@@ -541,33 +652,33 @@ export default function CuadraturaApp({ repartidores, productos, historial }: Cu
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="flex flex-col gap-1">
-                    <label className="text-xs font-bold text-slate-700 uppercase">Vacíos Entrantes</label>
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">Vacíos Entrantes</label>
                     <input 
                       type="number" 
                       min="0" 
                       value={cierreVaciosTot === 0 && cierreVaciosTot.toString() !== '0' ? '' : cierreVaciosTot} 
                       onChange={e => setCierreVaciosTot(e.target.value === '' ? 0 : Number(e.target.value))} 
-                      className="border border-blue-200 p-2 rounded-lg text-sm font-mono text-center font-bold text-blue-700 bg-blue-50 focus:ring-2 focus:ring-blue-500 outline-none" 
+                      className="w-full px-3 py-2 bg-blue-50/70 border border-blue-200 rounded-xl text-xs font-mono text-center font-bold text-blue-900 outline-none" 
                       placeholder="0" 
                     />
                   </div>
-                  <div className="flex flex-col gap-1">
-                    <label className="text-xs font-bold text-slate-700 uppercase">Vacíos Dañados</label>
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">Vacíos Dañados</label>
                     <input 
                       type="number" 
                       min="0" 
                       value={cierreVaciosDan === 0 && cierreVaciosDan.toString() !== '0' ? '' : cierreVaciosDan} 
                       onChange={e => setCierreVaciosDan(e.target.value === '' ? 0 : Number(e.target.value))} 
-                      className="border border-rose-200 p-2 rounded-lg text-sm font-mono text-center font-bold text-rose-700 bg-rose-50 focus:ring-2 focus:ring-rose-500 outline-none" 
+                      className="w-full px-3 py-2 bg-rose-50/70 border border-rose-200 rounded-xl text-xs font-mono text-center font-bold text-rose-900 outline-none" 
                       placeholder="0" 
                     />
                   </div>
                 </div>
 
-                <div className="pt-4 border-t flex justify-end gap-2">
-                  <button type="button" onClick={() => { setPanel(null); setCuadraturaSeleccionada(null); }} className="px-4 py-2 text-sm text-slate-600 font-medium">Cancelar</button>
-                  <button type="submit" disabled={isPending} className="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-lg text-sm font-bold shadow-sm">{isPending ? 'Procesando...' : 'Cerrar Cuadratura Definitiva'}</button>
+                <div className="pt-3 border-t border-slate-100 flex justify-end gap-3">
+                  <button type="button" onClick={() => { setPanel(null); setCuadraturaSeleccionada(null); }} className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs transition-colors">Cancelar</button>
+                  <button type="submit" disabled={isPending} className="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-xl text-xs font-bold shadow-md transition-all">{isPending ? 'Procesando...' : 'Cerrar Cuadratura Definitiva'}</button>
                 </div>
               </form>
             )}
@@ -575,32 +686,40 @@ export default function CuadraturaApp({ repartidores, productos, historial }: Cu
             {/* Formulario Reabrir */}
             {panel === 'reabrir' && (
               <form onSubmit={handleReabrir} className="p-6 overflow-y-auto space-y-5">
-                <div className="flex flex-col gap-1">
-                  <label className="text-xs font-bold text-slate-700 uppercase">Ruta / Repartidor a Reabrir *</label>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">Ruta / Repartidor a Reabrir *</label>
                   {cuadraturaSeleccionada ? (
-                    <div className="border border-amber-300 bg-amber-50 p-3 rounded-lg font-bold text-amber-800 flex justify-between items-center">
-                      <span>{new Date(cuadraturaSeleccionada.fecha).toLocaleDateString()} - {cuadraturaSeleccionada.usuario?.nombre} {cuadraturaSeleccionada.usuario?.apellido}</span>
-                      <Unlock className="h-5 w-5" />
+                    <div className="border border-amber-300 bg-amber-50/70 p-3.5 rounded-xl font-bold text-amber-900 flex justify-between items-center text-xs">
+                      <span>{new Date(cuadraturaSeleccionada.fecha).toLocaleDateString('es-CL')} - {cuadraturaSeleccionada.usuario?.nombre} {cuadraturaSeleccionada.usuario?.apellido || ''}</span>
+                      <Unlock className="h-5 w-5 text-amber-600" />
                     </div>
                   ) : (
-                    <select required value={cuadraturaSeleccionada?.id || ''} onChange={e => setCuadraturaSeleccionada(historial.find(c => c.id === e.target.value))} className="border border-slate-300 p-2.5 rounded-lg text-sm bg-white outline-none font-bold text-slate-800">
+                    <select required value={cuadraturaSeleccionada?.id || ''} onChange={e => setCuadraturaSeleccionada(historial.find(c => c.id === e.target.value))} className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-800 outline-none">
                       <option value="">— Selecciona la ruta a reabrir —</option>
                       {historial.filter(c => c.estado === 'CERRADA').map(c => (
                         <option key={c.id} value={c.id}>
-                          {new Date(c.fecha).toLocaleDateString()} - {c.usuario?.nombre} {c.usuario?.apellido}
+                          {new Date(c.fecha).toLocaleDateString('es-CL')} - {c.usuario?.nombre} {c.usuario?.apellido || ''}
                         </option>
                       ))}
                     </select>
                   )}
                 </div>
-                <div className="flex flex-col gap-1">
-                  <label className="text-xs font-bold text-slate-700 uppercase">Motivo (Obligatorio) *</label>
-                  <textarea required rows={3} placeholder="Ej: Faltó registrar pago de bencina, error en conteo de vacíos..." value={reabrirMotivo} onChange={e => setReobrirMotivo(e.target.value)} className="border border-slate-300 p-2.5 rounded-lg text-sm bg-white outline-none resize-none focus:ring-2 focus:ring-amber-500" />
+
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">Motivo (Obligatorio) *</label>
+                  <textarea 
+                    required 
+                    rows={3} 
+                    placeholder="Ej: Faltó registrar pago de bencina, error en conteo..." 
+                    value={reabrirMotivo} 
+                    onChange={e => setReobrirMotivo(e.target.value)} 
+                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 outline-none focus:border-amber-500 transition-all resize-none" 
+                  />
                 </div>
 
-                <div className="pt-4 border-t flex justify-end gap-2">
-                  <button type="button" onClick={() => { setPanel(null); setCuadraturaSeleccionada(null); }} className="px-4 py-2 text-sm text-slate-600 font-medium">Cancelar</button>
-                  <button type="submit" disabled={isPending} className="bg-amber-600 hover:bg-amber-700 text-white px-5 py-2.5 rounded-lg text-sm font-bold shadow-sm">{isPending ? 'Procesando...' : 'Reabrir para edición'}</button>
+                <div className="pt-3 border-t border-slate-100 flex justify-end gap-3">
+                  <button type="button" onClick={() => { setPanel(null); setCuadraturaSeleccionada(null); }} className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs transition-colors">Cancelar</button>
+                  <button type="submit" disabled={isPending} className="bg-amber-600 hover:bg-amber-700 text-white px-5 py-2.5 rounded-xl text-xs font-bold shadow-md transition-all">{isPending ? 'Procesando...' : 'Reabrir para Edición'}</button>
                 </div>
               </form>
             )}

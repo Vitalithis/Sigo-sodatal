@@ -3,6 +3,10 @@
 import React, { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { 
+  Plus, Truck, Wrench, Fuel, AlertTriangle, FileSpreadsheet, Edit3, Calendar, 
+  Search, X, Gauge, ChevronLeft, ChevronRight, Clock, Save, Trash2 
+} from 'lucide-react';
+import { 
   crearVehiculoAction, 
   editarVehiculoAction, 
   registrarMantencionAction, 
@@ -253,22 +257,26 @@ export default function VehicleManager({ initialVehiculos }: VehicleManagerProps
   };
 
   return (
-    <div className="px-6 pb-6 pt-6 flex flex-col gap-6">
-      {/* Encabezado */}
-      <div className="flex justify-between items-center pt-6">
+    <div className="flex flex-col gap-6">
+      {/* Encabezado de la Sección de Vehículos */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-slate-100">
         <div>
-          <h1 className="text-2xl font-bold text-slate-800">Control de Flota y Vehículos</h1>
-          <p className="text-sm text-slate-500">Supervisión técnica, kilometrajes y alertas de mantenimiento para camiones distribuidores Sodatal.</p>
+          <h2 className="text-base font-bold text-slate-800">Unidades Operativas</h2>
+          <p className="text-xs text-slate-500 font-medium">Supervisión técnica, kilometrajes, mantención y combustible.</p>
         </div>
-        <button onClick={handleOpenCreate} className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2 rounded-lg text-sm transition-colors shadow-sm">
-          + Registrar Vehículo
+        <button
+          onClick={handleOpenCreate}
+          className="text-white font-bold px-4 py-2.5 rounded-xl text-xs flex items-center justify-center gap-2 shadow-sm transition-all"
+          style={{ backgroundColor: '#013299' }}
+        >
+          <Plus className="w-4 h-4" />
+          <span>Registrar Vehículo</span>
         </button>
       </div>
 
-      {/* Grid de Vehículos Saneado */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      {/* Grid de Vehículos */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
         {initialVehiculos.map((vehiculo) => {
-          
           const tieneAlertas = vehiculo.alertas?.some((a: any) => {
             if (a.estado === 'RESUELTA' || a.activa === false) return false;
             
@@ -287,40 +295,50 @@ export default function VehicleManager({ initialVehiculos }: VehicleManagerProps
           const totalCargas = vehiculo.cargas_combustible?.length || vehiculo.cargasCombustible?.length || 0;
 
           return (
-            <div key={vehiculo.id} className={`bg-white border rounded-xl p-5 shadow-xs relative flex flex-col justify-between space-y-4 ${
-              tieneAlertas ? 'border-rose-300 ring-2 ring-rose-500/10' : 'border-slate-200'
+            <div key={vehiculo.id} className={`bg-white border rounded-2xl p-5 shadow-sm relative flex flex-col justify-between space-y-4 hover:shadow-md hover:border-slate-300 transition-all ${
+              tieneAlertas ? 'border-rose-300 ring-2 ring-rose-500/10' : 'border-slate-100'
             }`}>
               
               {tieneAlertas && (
-                <span className="absolute top-3 right-3 text-lg animate-bounce" title="¡Alerta técnica alcanzada o vencida!">⚠️</span>
+                <div className="absolute top-4 right-4 bg-rose-100 text-rose-700 p-1.5 rounded-xl animate-bounce" title="¡Alerta técnica alcanzada o vencida!">
+                  <AlertTriangle className="w-4 h-4" />
+                </div>
               )}
               
               <div>
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between pr-8">
                   <div className="flex items-center gap-2">
-                    <span className="bg-slate-900 text-white font-mono font-bold tracking-wider px-2 py-0.5 rounded text-sm border-2 border-slate-700 shadow-xs">
+                    <span className="bg-slate-900 text-white font-mono font-bold tracking-wider px-2.5 py-1 rounded-lg text-xs shadow-xs">
                       {vehiculo.patente}
                     </span>
-                    <span className={`text-xs px-2 py-0.5 rounded-full font-bold ${
+                    <span className={`text-[10px] px-2.5 py-1 rounded-full font-bold ${
                       vehiculo.estado === 'ACTIVO' ? 'bg-emerald-100 text-emerald-800' : 
                       vehiculo.estado === 'EN_MANTENCION' ? 'bg-amber-100 text-amber-800' : 'bg-rose-100 text-rose-800'
                     }`}>
                       {vehiculo.estado.replace('_', ' ')}
                     </span>
                   </div>
-                  <button onClick={() => handleOpenEdit(vehiculo)} className="text-xs text-blue-600 hover:text-blue-800 font-bold bg-blue-50 px-2 py-1 rounded">
-                    ✏️ Editar
+                </div>
+
+                <div className="flex items-center justify-between mt-3">
+                  <h3 className="font-bold text-slate-800 text-base">{vehiculo.marca} {vehiculo.modelo} <span className="text-slate-400 text-xs font-normal">({vehiculo.anio})</span></h3>
+                  <button onClick={() => handleOpenEdit(vehiculo)} className="text-xs text-[#013299] hover:bg-blue-100 font-bold bg-blue-50 px-2.5 py-1 rounded-lg transition-colors flex items-center gap-1">
+                    <Edit3 className="w-3 h-3" />
+                    <span>Editar</span>
                   </button>
                 </div>
-                <h3 className="font-bold text-slate-800 mt-2 text-base">{vehiculo.marca} {vehiculo.modelo} ({vehiculo.anio})</h3>
-                <p className="text-xs text-slate-500 font-medium mt-1">📊 Odómetro: <b className="text-slate-800">{Number(vehiculo.kilometraje_actual).toLocaleString('es-CL')} km</b></p>
+
+                <p className="text-xs text-slate-500 font-medium mt-2 flex items-center gap-1.5">
+                  <Gauge className="w-3.5 h-3.5 text-slate-400" />
+                  <span>Odómetro: <b className="text-slate-800 font-mono">{Number(vehiculo.kilometraje_actual).toLocaleString('es-CL')} km</b></span>
+                </p>
               </div>
 
-              <div className="pt-2 border-t flex items-center justify-between gap-1">
+              <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
                 <select 
                   value={vehiculo.estado} 
                   onChange={(e) => handleCambiarEstadoVehiculo(vehiculo.id, e.target.value as any)}
-                  className="border border-slate-200 text-xs rounded p-1 bg-white text-slate-700 outline-none font-medium"
+                  className="border border-slate-200 text-xs rounded-xl p-2 bg-white text-slate-700 outline-none font-semibold focus:ring-2 focus:ring-[#013299]/20"
                 >
                   <option value="ACTIVO">Activo</option>
                   <option value="EN_MANTENCION">En Mantención</option>
@@ -338,9 +356,13 @@ export default function VehicleManager({ initialVehiculos }: VehicleManagerProps
                     setPaginaActualCombustible(1); 
                     setPaginaActualMantencion(1);
                   }}
-                  className="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold px-3 py-1.5 rounded transition-colors"
+                  className="bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold px-3 py-2 rounded-xl transition-colors flex items-center gap-1.5"
                 >
-                  🔧 Taller ({vehiculo.mantenciones?.length || 0}) | ⛽ ({totalCargas})
+                  <Wrench className="w-3.5 h-3.5 text-[#013299]" />
+                  <span>Taller ({vehiculo.mantenciones?.length || 0})</span>
+                  <span className="text-slate-300">|</span>
+                  <Fuel className="w-3.5 h-3.5 text-amber-600" />
+                  <span>({totalCargas})</span>
                 </button>
               </div>
             </div>
@@ -350,43 +372,49 @@ export default function VehicleManager({ initialVehiculos }: VehicleManagerProps
 
       {/* Modal Alta/Edición de Vehículo */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 z-50">
-          <form onSubmit={handleSaveVehicle} className="bg-white rounded-xl shadow-xl border w-full max-w-md p-6 space-y-4">
-            <h2 className="text-lg font-bold text-slate-900 border-b pb-2">
-              {editandoVehiculoId ? `Modificar Unidad: ${vehicleForm.patente}` : 'Registrar Unidad Logística'}
-            </h2>
-            {errorForm && <div className="text-xs bg-rose-50 border border-rose-200 text-rose-700 p-2 rounded">{errorForm}</div>}
+        <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <form onSubmit={handleSaveVehicle} className="bg-white rounded-2xl shadow-2xl border border-slate-100 w-full max-w-md p-6 space-y-4">
+            <div className="flex justify-between items-center border-b border-slate-100 pb-3">
+              <h2 className="text-base font-bold text-slate-900">
+                {editandoVehiculoId ? `Modificar Unidad: ${vehicleForm.patente}` : 'Registrar Unidad Logística'}
+              </h2>
+              <button type="button" onClick={() => { setIsModalOpen(false); setEditandoVehiculoId(null); }} className="text-slate-400 hover:text-slate-600">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {errorForm && <div className="text-xs bg-rose-50 border border-rose-200 text-rose-700 p-3 rounded-xl font-medium">{errorForm}</div>}
             
             <div className="grid grid-cols-2 gap-3">
               <div className="flex flex-col gap-1">
-                <label className="text-xs font-bold uppercase text-slate-600">Patente *</label>
-                <input type="text" required disabled={!!editandoVehiculoId} placeholder="ABCD12" value={vehicleForm.patente} onChange={(e) => setVehicleForm({...vehicleForm, patente: e.target.value})} className="border p-2 rounded text-sm uppercase font-mono bg-white text-slate-900 disabled:bg-slate-100 disabled:text-slate-500" />
+                <label className="text-xs font-bold uppercase tracking-wider text-slate-600">Patente *</label>
+                <input type="text" required disabled={!!editandoVehiculoId} placeholder="ABCD12" value={vehicleForm.patente} onChange={(e) => setVehicleForm({...vehicleForm, patente: e.target.value})} className="border border-slate-200 p-2.5 rounded-xl text-sm uppercase font-mono bg-white text-slate-900 focus:ring-2 focus:ring-[#013299]/20 focus:border-[#013299] disabled:bg-slate-100 disabled:text-slate-500" />
               </div>
               <div className="flex flex-col gap-1">
-                <label className="text-xs font-bold uppercase text-slate-600">Año *</label>
-                <input type="number" required value={vehicleForm.anio} onChange={(e) => setVehicleForm({...vehicleForm, anio: Number(e.target.value)})} className="border p-2 rounded text-sm bg-white text-slate-900" />
+                <label className="text-xs font-bold uppercase tracking-wider text-slate-600">Año *</label>
+                <input type="number" required value={vehicleForm.anio} onChange={(e) => setVehicleForm({...vehicleForm, anio: Number(e.target.value)})} className="border border-slate-200 p-2.5 rounded-xl text-sm bg-white text-slate-900 focus:ring-2 focus:ring-[#013299]/20 focus:border-[#013299]" />
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <div className="flex flex-col gap-1">
-                <label className="text-xs font-bold uppercase text-slate-600">Marca *</label>
-                <input type="text" required placeholder="Hyundai" value={vehicleForm.marca} onChange={(e) => setVehicleForm({...vehicleForm, marca: e.target.value})} className="border p-2 rounded text-sm bg-white text-slate-900" />
+                <label className="text-xs font-bold uppercase tracking-wider text-slate-600">Marca *</label>
+                <input type="text" required placeholder="Hyundai" value={vehicleForm.marca} onChange={(e) => setVehicleForm({...vehicleForm, marca: e.target.value})} className="border border-slate-200 p-2.5 rounded-xl text-sm bg-white text-slate-900 focus:ring-2 focus:ring-[#013299]/20 focus:border-[#013299]" />
               </div>
               <div className="flex flex-col gap-1">
-                <label className="text-xs font-bold uppercase text-slate-600">Modelo *</label>
-                <input type="text" required placeholder="HD78" value={vehicleForm.modelo} onChange={(e) => setVehicleForm({...vehicleForm, modelo: e.target.value})} className="border p-2 rounded text-sm bg-white text-slate-900" />
+                <label className="text-xs font-bold uppercase tracking-wider text-slate-600">Modelo *</label>
+                <input type="text" required placeholder="HD78" value={vehicleForm.modelo} onChange={(e) => setVehicleForm({...vehicleForm, modelo: e.target.value})} className="border border-slate-200 p-2.5 rounded-xl text-sm bg-white text-slate-900 focus:ring-2 focus:ring-[#013299]/20 focus:border-[#013299]" />
               </div>
             </div>
 
             <div className="flex flex-col gap-1">
-              <label className="text-xs font-bold uppercase text-slate-600">Kilometraje Actual *</label>
-              <input type="number" required placeholder="0" value={vehicleForm.kilometraje_actual} onChange={(e) => setVehicleForm({...vehicleForm, kilometraje_actual: Number(e.target.value)})} className="border p-2 rounded text-sm bg-white text-slate-900" />
+              <label className="text-xs font-bold uppercase tracking-wider text-slate-600">Kilometraje Actual *</label>
+              <input type="number" required placeholder="0" value={vehicleForm.kilometraje_actual} onChange={(e) => setVehicleForm({...vehicleForm, kilometraje_actual: Number(e.target.value)})} className="border border-slate-200 p-2.5 rounded-xl text-sm bg-white text-slate-900 focus:ring-2 focus:ring-[#013299]/20 focus:border-[#013299]" />
             </div>
 
             <div className="flex justify-end gap-2 pt-2">
-              <button type="button" onClick={() => { setIsModalOpen(false); setEditandoVehiculoId(null); }} className="text-xs text-slate-500 px-3 py-2">Cancelar</button>
-              <button type="submit" disabled={isPending} className="bg-blue-600 text-white font-bold text-xs px-4 py-2 rounded-lg">
+              <button type="button" onClick={() => { setIsModalOpen(false); setEditandoVehiculoId(null); }} className="text-xs font-bold text-slate-600 hover:bg-slate-100 px-4 py-2.5 rounded-xl transition-colors">Cancelar</button>
+              <button type="submit" disabled={isPending} className="text-white font-bold text-xs px-5 py-2.5 rounded-xl transition-all shadow-sm" style={{ backgroundColor: '#013299' }}>
                 {editandoVehiculoId ? 'Actualizar Cambios' : 'Guardar Vehículo'}
               </button>
             </div>
@@ -396,45 +424,51 @@ export default function VehicleManager({ initialVehiculos }: VehicleManagerProps
 
       {/* Sidebar de Bitácora y Mantención */}
       {vehiculoSeleccionado && (
-        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs flex justify-end z-40">
-          <div className="bg-white w-full max-w-xl h-screen shadow-2xl flex flex-col border-l">
-            <div className="bg-slate-900 text-white p-5 flex justify-between items-center">
+        <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex justify-end z-40">
+          <div className="bg-white w-full max-w-xl h-screen shadow-2xl flex flex-col border-l border-slate-200">
+            <div className="p-5 text-white flex justify-between items-center flex-shrink-0" style={{ backgroundColor: '#013299' }}>
               <div>
-                <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400">Panel Técnico Flota</span>
+                <span className="text-[10px] uppercase font-bold tracking-wider opacity-70 block">Panel Técnico Flota</span>
                 <h2 className="text-lg font-bold font-mono text-white">{vehiculoSeleccionado.patente} — {vehiculoSeleccionado.marca}</h2>
               </div>
-              <button onClick={() => setVehiculoSeleccionadoId(null)} className="text-white text-2xl font-semibold">&times;</button>
+              <button onClick={() => setVehiculoSeleccionadoId(null)} className="text-white/70 hover:text-white transition-colors">
+                <X className="h-6 w-6" />
+              </button>
             </div>
 
-            <div className="flex border-b text-xs font-bold bg-slate-50 overflow-x-auto">
-              <button onClick={() => { setActiveTab('historial'); setPaginaActualMantencion(1); }} className={`flex-1 py-3 px-2 text-center whitespace-nowrap ${activeTab === 'historial' ? 'bg-white border-b-2 border-blue-600 text-blue-600' : 'text-slate-600'}`}>🛠️ Historial</button>
-              <button onClick={() => setActiveTab('nueva-mantencion')} className={`flex-1 py-3 px-2 text-center whitespace-nowrap ${activeTab === 'nueva-mantencion' ? 'bg-white border-b-2 border-blue-600 text-blue-600' : 'text-slate-600'}`}>➕ Registrar Taller</button>
-              <button onClick={() => { setActiveTab('combustible'); setPaginaActualCombustible(1); }} className={`flex-1 py-3 px-2 text-center whitespace-nowrap ${activeTab === 'combustible' ? 'bg-white border-b-2 border-blue-600 text-blue-600' : 'text-slate-600'}`}>⛽ Combustible</button>
-              <button onClick={() => setActiveTab('alertas')} className={`flex-1 py-3 px-2 text-center whitespace-nowrap ${activeTab === 'alertas' ? 'bg-white border-b-2 border-blue-600 text-blue-600' : 'text-slate-600'}`}>⏰ Alertas</button>
+            <div className="flex border-b border-slate-100 bg-slate-50 overflow-x-auto flex-shrink-0">
+              <button onClick={() => { setActiveTab('historial'); setPaginaActualMantencion(1); }} className={`flex-1 py-3.5 px-2 text-center whitespace-nowrap text-xs font-bold flex items-center justify-center gap-1.5 transition-colors ${activeTab === 'historial' ? 'bg-white text-[#013299] border-b-2 border-[#013299]' : 'text-slate-500 hover:text-slate-800'}`}><Wrench className="w-3.5 h-3.5" /> Bitácora</button>
+              <button onClick={() => setActiveTab('nueva-mantencion')} className={`flex-1 py-3.5 px-2 text-center whitespace-nowrap text-xs font-bold flex items-center justify-center gap-1.5 transition-colors ${activeTab === 'nueva-mantencion' ? 'bg-white text-[#013299] border-b-2 border-[#013299]' : 'text-slate-500 hover:text-slate-800'}`}><Plus className="w-3.5 h-3.5" /> Registrar Taller</button>
+              <button onClick={() => { setActiveTab('combustible'); setPaginaActualCombustible(1); }} className={`flex-1 py-3.5 px-2 text-center whitespace-nowrap text-xs font-bold flex items-center justify-center gap-1.5 transition-colors ${activeTab === 'combustible' ? 'bg-white text-[#013299] border-b-2 border-[#013299]' : 'text-slate-500 hover:text-slate-800'}`}><Fuel className="w-3.5 h-3.5" /> Combustible</button>
+              <button onClick={() => setActiveTab('alertas')} className={`flex-1 py-3.5 px-2 text-center whitespace-nowrap text-xs font-bold flex items-center justify-center gap-1.5 transition-colors ${activeTab === 'alertas' ? 'bg-white text-[#013299] border-b-2 border-[#013299]' : 'text-slate-500 hover:text-slate-800'}`}><Clock className="w-3.5 h-3.5" /> Alertas</button>
             </div>
 
             <div className="flex-1 overflow-y-auto p-5 space-y-4">
               {/* HISTORIAL (PAGINADO Y FILTRADO) */}
               {activeTab === 'historial' && (
                 <div className="space-y-3">
-                  <div className="flex gap-2 mb-2">
-                    <input 
-                      type="text"
-                      placeholder="🔍 Buscar por Taller, Repuesto, Tipo..."
-                      value={busquedaMantencion}
-                      onChange={(e) => {
-                        setBusquedaMantencion(e.target.value);
-                        setPaginaActualMantencion(1);
-                      }}
-                      className="flex-1 border p-2 rounded-lg text-xs bg-white text-slate-900 border-slate-300 shadow-inner outline-none focus:border-blue-500"
-                    />
+                  <div className="flex gap-2 mb-3">
+                    <div className="flex items-center gap-2 flex-1 border border-slate-200 rounded-xl px-3 py-2 bg-white focus-within:ring-2 focus-within:ring-[#013299]/20 focus-within:border-[#013299] transition-colors">
+                      <Search className="w-4 h-4 text-slate-400 shrink-0" />
+                      <input 
+                        type="text"
+                        placeholder="Buscar por Taller, Repuesto, Tipo..."
+                        value={busquedaMantencion}
+                        onChange={(e) => {
+                          setBusquedaMantencion(e.target.value);
+                          setPaginaActualMantencion(1);
+                        }}
+                        className="w-full text-xs text-slate-800 bg-transparent outline-none placeholder:text-slate-400 font-medium"
+                      />
+                    </div>
                     <button
                       type="button"
                       onClick={exportarMantencionesCSV}
-                      className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-3 rounded-lg transition-colors flex items-center gap-1 shadow-xs"
+                      className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-3.5 py-2 rounded-xl transition-colors flex items-center gap-1.5 shadow-xs"
                       title="Exportar bitácora de taller a Excel"
                     >
-                      📊 Excel
+                      <FileSpreadsheet className="w-4 h-4" />
+                      <span>Excel</span>
                     </button>
                   </div>
 
@@ -478,29 +512,29 @@ export default function VehicleManager({ initialVehiculos }: VehicleManagerProps
                     return (
                       <>
                         {mantencionesPaginadas.map((m: any) => (
-                          <div key={m.id} className="border border-slate-200 rounded-xl p-4 bg-slate-50 text-xs space-y-2 shadow-xs">
-                            <div className="flex justify-between items-center border-b pb-1">
-                              <span className="font-bold bg-slate-200 text-slate-800 px-2 py-0.5 rounded uppercase">{m.tipo}</span>
-                              <span className="text-slate-500 font-medium">{new Date(m.fecha).toLocaleDateString('es-CL', { timeZone: 'UTC' })}</span>
+                          <div key={m.id} className="border border-slate-100 rounded-2xl p-4 bg-slate-50 text-xs space-y-2 shadow-xs">
+                            <div className="flex justify-between items-center border-b border-slate-200/60 pb-1.5">
+                              <span className="font-bold bg-slate-200 text-slate-800 px-2.5 py-0.5 rounded-lg uppercase text-[10px]">{m.tipo}</span>
+                              <span className="text-slate-500 font-medium text-[11px]">{new Date(m.fecha).toLocaleDateString('es-CL', { timeZone: 'UTC' })}</span>
                             </div>
-                            <p className="text-slate-700 font-medium">🏢 Taller: <b>{m.taller}</b> | Odómetro: {Number(m.kilometraje).toLocaleString('es-CL')} km</p>
+                            <p className="text-slate-700 font-medium">Taller: <b className="text-slate-900">{m.taller}</b> | Odómetro: {Number(m.kilometraje).toLocaleString('es-CL')} km</p>
                             
                             {m.repuestos && m.repuestos.length > 0 && (
-                              <div className="bg-white p-2 rounded border border-slate-200 mt-1">
-                                <span className="text-[10px] uppercase font-bold text-slate-400 block mb-1">Repuestos/Insumos:</span>
-                                <ul className="space-y-0.5 divide-y divide-slate-100">
+                              <div className="bg-white p-2.5 rounded-xl border border-slate-200 mt-1 space-y-1">
+                                <span className="text-[10px] uppercase font-bold text-slate-400 block">Repuestos / Insumos:</span>
+                                <ul className="space-y-1 divide-y divide-slate-100">
                                   {m.repuestos.map((rep: any, idx: number) => (
-                                    <li key={idx} className="text-slate-600 flex justify-between text-[11px] pt-0.5">
+                                    <li key={idx} className="text-slate-600 flex justify-between text-[11px] pt-1">
                                       <span>🔧 {rep.nombre} (x{rep.cantidad})</span>
-                                      <span className="text-slate-500">${Number(rep.costo_unitario * rep.cantidad).toLocaleString('es-CL')}</span>
+                                      <span className="text-slate-500 font-mono">${Number(rep.costo_unitario * rep.cantidad).toLocaleString('es-CL')}</span>
                                     </li>
                                   ))}
                                 </ul>
                               </div>
                             )}
 
-                            {m.observaciones && <p className="text-slate-500 italic mt-1">"{m.observaciones}"</p>}
-                            <div className="text-right font-bold text-slate-900 pt-1 text-sm">Costo Total: ${Number(m.costo_total).toLocaleString('es-CL')}</div>
+                            {m.observaciones && <p className="text-slate-500 italic mt-1 text-[11px]">"{m.observaciones}"</p>}
+                            <div className="text-right font-extrabold text-slate-900 pt-1 text-sm">Costo Total: ${Number(m.costo_total).toLocaleString('es-CL')}</div>
                           </div>
                         ))}
 
@@ -510,9 +544,9 @@ export default function VehicleManager({ initialVehiculos }: VehicleManagerProps
                               type="button"
                               disabled={paginaActualMantencion === 1}
                               onClick={() => setPaginaActualMantencion(prev => prev - 1)}
-                              className="px-3 py-1 bg-slate-100 hover:bg-slate-200 disabled:opacity-50 text-slate-700 rounded font-bold transition-colors"
+                              className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 disabled:opacity-50 text-slate-700 rounded-xl font-bold transition-colors text-xs flex items-center gap-1"
                             >
-                              ◀ Anterior
+                              <ChevronLeft className="w-3.5 h-3.5" /> Anterior
                             </button>
                             <span className="text-slate-500 text-xs font-medium">
                               Pág. <b>{paginaActualMantencion}</b> de {totalPaginas}
@@ -521,9 +555,9 @@ export default function VehicleManager({ initialVehiculos }: VehicleManagerProps
                               type="button"
                               disabled={paginaActualMantencion === totalPaginas}
                               onClick={() => setPaginaActualMantencion(prev => prev + 1)}
-                              className="px-3 py-1 bg-slate-100 hover:bg-slate-200 disabled:opacity-50 text-slate-700 rounded font-bold transition-colors"
+                              className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 disabled:opacity-50 text-slate-700 rounded-xl font-bold transition-colors text-xs flex items-center gap-1"
                             >
-                              Siguiente ▶
+                              Siguiente <ChevronRight className="w-3.5 h-3.5" />
                             </button>
                           </div>
                         )}
@@ -538,8 +572,8 @@ export default function VehicleManager({ initialVehiculos }: VehicleManagerProps
                 <form onSubmit={handleGuardarMantencion} className="space-y-4 text-xs">
                   <div className="grid grid-cols-2 gap-3">
                     <div className="flex flex-col gap-1">
-                      <label className="font-bold text-slate-700 uppercase">Tipo</label>
-                      <select value={mantencionForm.tipo} onChange={(e) => setMantencionForm({...mantencionForm, tipo: e.target.value})} className="border p-2 rounded text-sm bg-white text-slate-900">
+                      <label className="font-bold text-slate-600 uppercase text-[10px]">Tipo</label>
+                      <select value={mantencionForm.tipo} onChange={(e) => setMantencionForm({...mantencionForm, tipo: e.target.value})} className="border border-slate-200 p-2.5 rounded-xl text-xs bg-white text-slate-900 focus:ring-2 focus:ring-[#013299]/20 focus:border-[#013299] font-medium">
                         <option value="PREVENTIVA">Preventiva </option>
                         <option value="CORRECTIVA">Correctiva </option>
                         <option value="NEUMATICOS">Cambio de Neumáticos</option>
@@ -547,108 +581,121 @@ export default function VehicleManager({ initialVehiculos }: VehicleManagerProps
                       </select>
                     </div>
                     <div className="flex flex-col gap-1">
-                      <label className="font-bold text-slate-700 uppercase">Fecha Órden</label>
-                      <input type="date" value={mantencionForm.fecha} onChange={(e) => setMantencionForm({...mantencionForm, fecha: e.target.value})} className="border p-2 rounded text-sm bg-white text-slate-900" />
+                      <label className="font-bold text-slate-600 uppercase text-[10px]">Fecha Órden</label>
+                      <input type="date" value={mantencionForm.fecha} onChange={(e) => setMantencionForm({...mantencionForm, fecha: e.target.value})} className="border border-slate-200 p-2.5 rounded-xl text-xs bg-white text-slate-900 focus:ring-2 focus:ring-[#013299]/20 focus:border-[#013299]" />
                     </div>
                   </div>
                   <div className="grid grid-cols-2 gap-3">
                     <div className="flex flex-col gap-1">
-                      <label className="font-bold text-slate-700 uppercase">Kilometraje en Taller</label>
-                      <input type="number" required placeholder="Ej: 145000" value={mantencionForm.kilometraje} onChange={(e) => setMantencionForm({...mantencionForm, kilometraje: e.target.value})} className="border p-2 rounded text-sm bg-white text-slate-900" />
+                      <label className="font-bold text-slate-600 uppercase text-[10px]">Kilometraje en Taller</label>
+                      <input type="number" required placeholder="Ej: 145000" value={mantencionForm.kilometraje} onChange={(e) => setMantencionForm({...mantencionForm, kilometraje: e.target.value})} className="border border-slate-200 p-2.5 rounded-xl text-xs bg-white text-slate-900 focus:ring-2 focus:ring-[#013299]/20 focus:border-[#013299]" />
                     </div>
                     <div className="flex flex-col gap-1">
-                      <label className="font-bold text-slate-700 uppercase">Mano de Obra ($)</label>
-                      <input type="number" required placeholder="Monto mecánico" value={mantencionForm.mano_de_obra} onChange={(e) => setMantencionForm({...mantencionForm, mano_de_obra: e.target.value})} className="border p-2 rounded text-sm bg-white text-slate-900" />
+                      <label className="font-bold text-slate-600 uppercase text-[10px]">Mano de Obra ($)</label>
+                      <input type="number" required placeholder="Monto mecánico" value={mantencionForm.mano_de_obra} onChange={(e) => setMantencionForm({...mantencionForm, mano_de_obra: e.target.value})} className="border border-slate-200 p-2.5 rounded-xl text-xs bg-white text-slate-900 focus:ring-2 focus:ring-[#013299]/20 focus:border-[#013299]" />
                     </div>
                   </div>
                   <div className="flex flex-col gap-1">
-                    <label className="font-bold text-slate-700 uppercase">Nombre Taller Técnico</label>
-                    <input type="text" required placeholder="Ej: Servicentro Central" value={mantencionForm.taller} onChange={(e) => setMantencionForm({...mantencionForm, taller: e.target.value})} className="border p-2 rounded text-sm bg-white text-slate-900" />
+                    <label className="font-bold text-slate-600 uppercase text-[10px]">Nombre Taller Técnico</label>
+                    <input type="text" required placeholder="Ej: Servicentro Central" value={mantencionForm.taller} onChange={(e) => setMantencionForm({...mantencionForm, taller: e.target.value})} className="border border-slate-200 p-2.5 rounded-xl text-xs bg-white text-slate-900 focus:ring-2 focus:ring-[#013299]/20 focus:border-[#013299]" />
                   </div>
-                  <div className="border p-3 rounded-xl bg-slate-50 space-y-2">
-                    <h4 className="font-bold text-slate-800">Desglose de Repuestos e Insumos</h4>
+                  <div className="border border-slate-200 p-3.5 rounded-2xl bg-slate-50 space-y-2.5">
+                    <h4 className="font-bold text-slate-800 text-xs">Desglose de Repuestos e Insumos</h4>
                     <div className="grid grid-cols-3 gap-2">
-                      <input type="text" placeholder="Filtro" value={nuevoRepuesto.nombre} onChange={(e) => setNuevoRepuesto({...nuevoRepuesto, nombre: e.target.value})} className="border p-1.5 rounded text-xs bg-white text-slate-900 col-span-1" />
-                      <input type="number" placeholder="Cant" value={nuevoRepuesto.cantidad} onChange={(e) => setNuevoRepuesto({...nuevoRepuesto, cantidad: Number(e.target.value)})} className="border p-1.5 rounded text-xs bg-white text-slate-900" />
-                      <button type="button" onClick={agregarRepuestoALista} className="bg-slate-900 text-white font-bold rounded text-xs px-2 hover:bg-slate-800">Agregar</button>
+                      <input type="text" placeholder="Filtro" value={nuevoRepuesto.nombre} onChange={(e) => setNuevoRepuesto({...nuevoRepuesto, nombre: e.target.value})} className="border border-slate-200 p-2 rounded-xl text-xs bg-white text-slate-900 col-span-1" />
+                      <input type="number" placeholder="Cant" value={nuevoRepuesto.cantidad} onChange={(e) => setNuevoRepuesto({...nuevoRepuesto, cantidad: Number(e.target.value)})} className="border border-slate-200 p-2 rounded-xl text-xs bg-white text-slate-900" />
+                      <button type="button" onClick={agregarRepuestoALista} className="bg-slate-900 text-white font-bold rounded-xl text-xs px-3 hover:bg-slate-800 transition-colors">Agregar</button>
                     </div>
-                    <input type="number" placeholder="Costo Unitario ($)" value={nuevoRepuesto.costo_unitario} onChange={(e) => setNuevoRepuesto({...nuevoRepuesto, costo_unitario: e.target.value})} className="border p-1.5 rounded text-xs bg-white text-slate-900 w-full" />
+                    <input type="number" placeholder="Costo Unitario ($)" value={nuevoRepuesto.costo_unitario} onChange={(e) => setNuevoRepuesto({...nuevoRepuesto, costo_unitario: e.target.value})} className="border border-slate-200 p-2 rounded-xl text-xs bg-white text-slate-900 w-full" />
                     
                     {repuestosList.length > 0 && (
-                      <ul className="mt-2 space-y-1 bg-white p-2 rounded border text-[11px]">
+                      <ul className="mt-2 space-y-1 bg-white p-2.5 rounded-xl border border-slate-200 text-[11px]">
                         {repuestosList.map((r, i) => (
                           <li key={i} className="flex justify-between text-slate-600 font-medium">
                             <span>📦 {r.nombre} (x{r.cantidad})</span>
-                            <span>${(r.costo_unitario * r.cantidad).toLocaleString('es-CL')}</span>
+                            <span className="font-mono">${(r.costo_unitario * r.cantidad).toLocaleString('es-CL')}</span>
                           </li>
                         ))}
                       </ul>
                     )}
                   </div>
                   <div className="flex flex-col gap-1">
-                    <label className="font-bold text-slate-700 uppercase">Observaciones</label>
-                    <textarea rows={3} value={mantencionForm.observaciones || mantencionForm.observaciones} onChange={(e) => setMantencionForm({...mantencionForm, observaciones: e.target.value})} className="border p-2 rounded text-sm bg-white text-slate-900" />
+                    <label className="font-bold text-slate-600 uppercase text-[10px]">Observaciones</label>
+                    <textarea rows={3} value={mantencionForm.observaciones || mantencionForm.observaciones} onChange={(e) => setMantencionForm({...mantencionForm, observaciones: e.target.value})} className="border border-slate-200 p-2.5 rounded-xl text-xs bg-white text-slate-900 focus:ring-2 focus:ring-[#013299]/20 focus:border-[#013299]" />
                   </div>
-                  <button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-lg transition-colors shadow-sm">Guardar Registro</button>
+                  <button type="submit" className="w-full text-white font-bold py-3 rounded-xl transition-colors shadow-sm text-xs flex items-center justify-center gap-2" style={{ backgroundColor: '#013299' }}>
+                    <Save className="w-4 h-4" />
+                    <span>Guardar Registro</span>
+                  </button>
                 </form>
               )}
 
               {/* PESTAÑA COMBUSTIBLE */}
               {activeTab === 'combustible' && (
                 <div className="space-y-4">
-                  <form onSubmit={handleGuardarCombustible} className="border-2 border-amber-500/20 p-4 rounded-xl bg-amber-50/40 space-y-3 text-xs">
-                    <h3 className="font-bold text-amber-800 flex items-center gap-1 uppercase tracking-wider text-[11px]">⛽ Registrar Carga de Combustible</h3>
+                  <form onSubmit={handleGuardarCombustible} className="border border-amber-200 p-4 rounded-2xl bg-amber-50/50 space-y-3 text-xs shadow-xs">
+                    <h3 className="font-bold text-amber-900 flex items-center gap-1.5 uppercase tracking-wider text-[11px]">
+                      <Fuel className="w-4 h-4 text-amber-700" />
+                      <span>Registrar Carga de Combustible</span>
+                    </h3>
                     <div className="grid grid-cols-2 gap-3">
                       <div className="flex flex-col gap-1">
-                        <label className="font-bold text-slate-700 uppercase">Fecha Carga</label>
-                        <input type="date" required value={combustibleForm.fecha} onChange={(e) => setCombustibleForm({...combustibleForm, fecha: e.target.value})} className="border p-2 rounded text-sm bg-white text-slate-900" />
+                        <label className="font-bold text-slate-600 uppercase text-[10px]">Fecha Carga</label>
+                        <input type="date" required value={combustibleForm.fecha} onChange={(e) => setCombustibleForm({...combustibleForm, fecha: e.target.value})} className="border border-slate-200 p-2.5 rounded-xl text-xs bg-white text-slate-900 focus:ring-2 focus:ring-[#013299]/20 focus:border-[#013299]" />
                       </div>
                       <div className="flex flex-col gap-1">
-                        <label className="font-bold text-slate-700 uppercase">Estación / Bencinera</label>
-                        <input type="text" required placeholder="Copec" value={combustibleForm.bencinera} onChange={(e) => setCombustibleForm({...combustibleForm, bencinera: e.target.value})} className="border p-2 rounded text-sm bg-white text-slate-900" />
+                        <label className="font-bold text-slate-600 uppercase text-[10px]">Estación / Bencinera</label>
+                        <input type="text" required placeholder="Copec" value={combustibleForm.bencinera} onChange={(e) => setCombustibleForm({...combustibleForm, bencinera: e.target.value})} className="border border-slate-200 p-2.5 rounded-xl text-xs bg-white text-slate-900 focus:ring-2 focus:ring-[#013299]/20 focus:border-[#013299]" />
                       </div>
                     </div>
                     <div className="flex flex-col gap-1">
-                      <label className="font-bold text-slate-700 uppercase">N° Factura *</label>
-                      <input type="number" required placeholder="Ej: 148920" value={combustibleForm.numero_factura} onChange={(e) => setCombustibleForm({...combustibleForm, numero_factura: e.target.value})} className="border p-2 rounded text-sm bg-white text-slate-900" />
+                      <label className="font-bold text-slate-600 uppercase text-[10px]">N° Factura *</label>
+                      <input type="number" required placeholder="Ej: 148920" value={combustibleForm.numero_factura} onChange={(e) => setCombustibleForm({...combustibleForm, numero_factura: e.target.value})} className="border border-slate-200 p-2.5 rounded-xl text-xs bg-white text-slate-900 focus:ring-2 focus:ring-[#013299]/20 focus:border-[#013299]" />
                     </div>
                     <div className="grid grid-cols-3 gap-2">
                       <div className="flex flex-col gap-1">
-                        <label className="font-bold text-slate-700 uppercase text-[10px]">Odómetro (KM)</label>
-                        <input type="number" required placeholder="Ej: 180500" value={combustibleForm.kilometraje} onChange={(e) => setCombustibleForm({...combustibleForm, kilometraje: e.target.value})} className="border p-1.5 rounded text-sm bg-white text-slate-900" />
+                        <label className="font-bold text-slate-600 uppercase text-[10px]">Odómetro (KM)</label>
+                        <input type="number" required placeholder="Ej: 180500" value={combustibleForm.kilometraje} onChange={(e) => setCombustibleForm({...combustibleForm, kilometraje: e.target.value})} className="border border-slate-200 p-2 rounded-xl text-xs bg-white text-slate-900" />
                       </div>
                       <div className="flex flex-col gap-1">
-                        <label className="font-bold text-slate-700 uppercase text-[10px]">Litros (L)</label>
-                        <input type="number" step="any" required placeholder="Ej: 45.5" value={combustibleForm.litros} onChange={(e) => setCombustibleForm({...combustibleForm, litros: e.target.value})} className="border p-1.5 rounded text-sm bg-white text-slate-900" />
+                        <label className="font-bold text-slate-600 uppercase text-[10px]">Litros (L)</label>
+                        <input type="number" step="any" required placeholder="Ej: 45.5" value={combustibleForm.litros} onChange={(e) => setCombustibleForm({...combustibleForm, litros: e.target.value})} className="border border-slate-200 p-2 rounded-xl text-xs bg-white text-slate-900" />
                       </div>
                       <div className="flex flex-col gap-1">
-                        <label className="font-bold text-slate-700 uppercase text-[10px]">Total Pesos ($)</label>
-                        <input type="number" required placeholder="Ej: 55000" value={combustibleForm.monto} onChange={(e) => setCombustibleForm({...combustibleForm, monto: e.target.value})} className="border p-1.5 rounded text-sm bg-white text-slate-900" />
+                        <label className="font-bold text-slate-600 uppercase text-[10px]">Total Pesos ($)</label>
+                        <input type="number" required placeholder="Ej: 55000" value={combustibleForm.monto} onChange={(e) => setCombustibleForm({...combustibleForm, monto: e.target.value})} className="border border-slate-200 p-2 rounded-xl text-xs bg-white text-slate-900" />
                       </div>
                     </div>
-                    <button type="submit" className="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold py-2 rounded-lg transition-colors shadow-xs uppercase tracking-wider text-[11px]">Guardar Carga de Petróleo</button>
+                    <button type="submit" className="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold py-2.5 rounded-xl transition-colors shadow-sm uppercase tracking-wider text-[11px] flex items-center justify-center gap-1.5">
+                      <Fuel className="w-4 h-4" />
+                      <span>Guardar Carga de Petróleo</span>
+                    </button>
                   </form>
 
-                  <div className="border-t pt-2 space-y-2">
+                  <div className="border-t border-slate-100 pt-3 space-y-2.5">
                     <h4 className="font-bold text-slate-700 text-xs uppercase tracking-wider">Historial de Consumo</h4>
-                    <div className="flex gap-2 mb-2">
-                      <input 
-                        type="text"
-                        placeholder="🔍 Buscar por Copec, Shell, Factura..."
-                        value={busquedaCombustible}
-                        onChange={(e) => {
-                          setBusquedaCombustible(e.target.value);
-                          setPaginaActualCombustible(1);
-                        }}
-                        className="flex-1 border p-2 rounded-lg text-xs bg-white text-slate-900 border-slate-300 shadow-inner outline-none focus:border-amber-500"
-                      />
+                    <div className="flex gap-2 mb-3">
+                      <div className="flex items-center gap-2 flex-1 border border-slate-200 rounded-xl px-3 py-2 bg-white focus-within:ring-2 focus-within:ring-[#013299]/20 focus-within:border-[#013299] transition-colors">
+                        <Search className="w-4 h-4 text-slate-400 shrink-0" />
+                        <input 
+                          type="text"
+                          placeholder="Buscar por Copec, Shell, Factura..."
+                          value={busquedaCombustible}
+                          onChange={(e) => {
+                            setBusquedaCombustible(e.target.value);
+                            setPaginaActualCombustible(1);
+                          }}
+                          className="w-full text-xs text-slate-800 bg-transparent outline-none placeholder:text-slate-400 font-medium"
+                        />
+                      </div>
                       <button
                         type="button"
                         onClick={exportarCombustibleCSV}
-                        className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-3 rounded-lg transition-colors flex items-center gap-1 shadow-xs"
+                        className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-3.5 py-2 rounded-xl transition-colors flex items-center gap-1.5 shadow-xs"
                         title="Exportar cargas de combustible a Excel"
                       >
-                        📊 Excel
+                        <FileSpreadsheet className="w-4 h-4" />
+                        <span>Excel</span>
                       </button>
                     </div>
 
@@ -703,22 +750,22 @@ export default function VehicleManager({ initialVehiculos }: VehicleManagerProps
                               }
 
                               return (
-                                <div key={c.id} className="border rounded-xl p-3 bg-white text-xs space-y-1 shadow-xs border-slate-200">
+                                <div key={c.id} className="border border-slate-100 rounded-2xl p-3.5 bg-white text-xs space-y-1 shadow-xs">
                                   <div className="flex justify-between items-center">
-                                    <div className="flex items-center gap-1.5">
-                                      <b className="text-slate-800">{new Date(c.fecha).toLocaleDateString('es-CL', { timeZone: 'UTC' })}</b>
-                                      <span className="bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded text-[10px] font-bold border border-slate-200">
+                                    <div className="flex items-center gap-2">
+                                      <b className="text-slate-800 font-bold">{new Date(c.fecha).toLocaleDateString('es-CL', { timeZone: 'UTC' })}</b>
+                                      <span className="bg-slate-100 text-slate-600 px-2 py-0.5 rounded-lg text-[10px] font-bold border border-slate-200">
                                         {c.taller_o_bencinera || c.bencinera}
                                       </span>
                                       {c.numero_factura && (
-                                        <span className="bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded text-[10px] font-mono font-bold border border-blue-200">
-                                          F: N° {c.numero_factura}
+                                        <span className="bg-blue-50 text-[#013299] px-2 py-0.5 rounded-lg text-[10px] font-mono font-bold border border-blue-100">
+                                          Factura N° {c.numero_factura}
                                         </span>
                                       )}
                                     </div>
                                   </div>
-                                  <p className="text-slate-500 font-medium">
-                                    {Number(c.litros).toLocaleString('es-CL')} L por <b className="text-slate-700">${Number(c.monto).toLocaleString('es-CL')}</b> | {Number(c.kilometraje).toLocaleString('es-CL')} km
+                                  <p className="text-slate-500 font-medium pt-1">
+                                    {Number(c.litros).toLocaleString('es-CL')} L por <b className="text-slate-800 font-mono">${Number(c.monto).toLocaleString('es-CL')}</b> | {Number(c.kilometraje).toLocaleString('es-CL')} km
                                   </p>
                                   <p className={`text-[11px] font-bold ${esRendimientoValido ? 'text-emerald-600' : 'text-slate-400 italic font-medium'}`}>
                                     {esRendimientoValido ? '📈 ' : ''}{rendimientoText}
@@ -734,9 +781,9 @@ export default function VehicleManager({ initialVehiculos }: VehicleManagerProps
                                 type="button"
                                 disabled={paginaActualCombustible === 1}
                                 onClick={() => setPaginaActualCombustible(prev => prev - 1)}
-                                className="px-3 py-1 bg-slate-100 hover:bg-slate-200 disabled:opacity-50 text-slate-700 rounded font-bold transition-colors"
+                                className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 disabled:opacity-50 text-slate-700 rounded-xl font-bold transition-colors text-xs flex items-center gap-1"
                               >
-                                ◀ Anterior
+                                <ChevronLeft className="w-3.5 h-3.5" /> Anterior
                               </button>
                               <span className="text-slate-500 text-xs font-medium">
                                 Página <b>{paginaActualCombustible}</b> de {paginasCombustible}
@@ -745,9 +792,9 @@ export default function VehicleManager({ initialVehiculos }: VehicleManagerProps
                                 type="button"
                                 disabled={paginaActualCombustible === paginasCombustible}
                                 onClick={() => setPaginaActualCombustible(prev => prev + 1)}
-                                className="px-3 py-1 bg-slate-100 hover:bg-slate-200 disabled:opacity-50 text-slate-700 rounded font-bold transition-colors"
+                                className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 disabled:opacity-50 text-slate-700 rounded-xl font-bold transition-colors text-xs flex items-center gap-1"
                               >
-                                Siguiente ▶
+                                Siguiente <ChevronRight className="w-3.5 h-3.5" />
                               </button>
                             </div>
                           )}
@@ -761,31 +808,35 @@ export default function VehicleManager({ initialVehiculos }: VehicleManagerProps
               {/* CONFIGURACIÓN DE ALERTAS */}
               {activeTab === 'alertas' && (
                 <div className="space-y-4 text-xs">
-                  <form onSubmit={handleGuardarAlerta} className="border-2 border-blue-600/10 p-4 rounded-xl bg-blue-50/30 space-y-3">
-                    <h3 className="font-bold text-blue-900 flex items-center gap-1 uppercase tracking-wider text-[11px]">⏰ Configurar Recordatorio</h3>
-                    <div className="grid grid-cols-2 gap-2 bg-white p-1 rounded-lg border border-slate-200 shadow-inner">
-                      <button type="button" onClick={() => setAlertaForm({...alertaForm, tipo: 'KM'})} className={`py-1.5 text-center font-bold rounded-md transition-colors ${alertaForm.tipo === 'KM' ? 'bg-slate-900 text-white' : 'text-slate-600 hover:bg-slate-100'}`}>Por Kilometraje</button>
-                      <button type="button" onClick={() => setAlertaForm({...alertaForm, tipo: 'FECHA'})} className={`py-1.5 text-center font-bold rounded-md transition-colors ${alertaForm.tipo === 'FECHA' ? 'bg-slate-900 text-white' : 'text-slate-600 hover:bg-slate-100'}`}>Por Fecha</button>
+                  <form onSubmit={handleGuardarAlerta} className="border border-blue-100 p-4 rounded-2xl bg-blue-50/40 space-y-3 shadow-xs">
+                    <h3 className="font-bold text-[#013299] flex items-center gap-1.5 uppercase tracking-wider text-[11px]">
+                      <Clock className="w-4 h-4 text-[#013299]" />
+                      <span>Configurar Recordatorio Técnico</span>
+                    </h3>
+                    <div className="grid grid-cols-2 gap-2 bg-white p-1 rounded-xl border border-slate-200 shadow-xs">
+                      <button type="button" onClick={() => setAlertaForm({...alertaForm, tipo: 'KM'})} className={`py-2 text-center font-bold rounded-lg transition-colors text-xs ${alertaForm.tipo === 'KM' ? 'bg-[#013299] text-white' : 'text-slate-600 hover:bg-slate-100'}`}>Por Kilometraje</button>
+                      <button type="button" onClick={() => setAlertaForm({...alertaForm, tipo: 'FECHA'})} className={`py-2 text-center font-bold rounded-lg transition-colors text-xs ${alertaForm.tipo === 'FECHA' ? 'bg-[#013299] text-white' : 'text-slate-600 hover:bg-slate-100'}`}>Por Fecha</button>
                     </div>
 
                     {alertaForm.tipo === 'KM' ? (
                       <div className="flex flex-col gap-1">
-                        <label className="font-bold text-slate-700">¿A QUÉ KILOMETRAJE AVISAR?</label>
-                        <input type="number" required placeholder="Ej: 150000" value={alertaForm.valor_km} onChange={(e) => setAlertaForm({...alertaForm, valor_km: e.target.value})} className="border p-2 rounded text-sm bg-white text-slate-900" />
+                        <label className="font-bold text-slate-600 uppercase text-[10px]">¿A qué kilometraje avisar?</label>
+                        <input type="number" required placeholder="Ej: 150000" value={alertaForm.valor_km} onChange={(e) => setAlertaForm({...alertaForm, valor_km: e.target.value})} className="border border-slate-200 p-2.5 rounded-xl text-xs bg-white text-slate-900 focus:ring-2 focus:ring-[#013299]/20 focus:border-[#013299]" />
                       </div>
                     ) : (
                       <div className="flex flex-col gap-1">
-                        <label className="font-bold text-slate-700">¿QUÉ DÍA ENVIAR ADVERTENCIA?</label>
-                        <input type="date" required value={alertaForm.fecha_alerta} onChange={(e) => setAlertaForm({...alertaForm, fecha_alerta: e.target.value})} className="border p-2 rounded text-sm bg-white text-slate-900" />
+                        <label className="font-bold text-slate-600 uppercase text-[10px]">¿Qué día enviar advertencia?</label>
+                        <input type="date" required value={alertaForm.fecha_alerta} onChange={(e) => setAlertaForm({...alertaForm, fecha_alerta: e.target.value})} className="border border-slate-200 p-2.5 rounded-xl text-xs bg-white text-slate-900 focus:ring-2 focus:ring-[#013299]/20 focus:border-[#013299]" />
                       </div>
                     )}
 
-                    <button type="submit" disabled={isPending} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-lg transition-colors shadow-xs">
-                      {editandoAlertaId ? 'Actualizar Recordatorio' : 'Activar Recordatorio'}
+                    <button type="submit" disabled={isPending} className="w-full text-white font-bold py-2.5 rounded-xl transition-colors shadow-sm flex items-center justify-center gap-1.5" style={{ backgroundColor: '#013299' }}>
+                      <Save className="w-4 h-4" />
+                      <span>{editandoAlertaId ? 'Actualizar Recordatorio' : 'Activar Recordatorio'}</span>
                     </button>
                   </form>
 
-                  <div className="border-t pt-2 space-y-2">
+                  <div className="border-t border-slate-100 pt-3 space-y-2.5">
                     <h4 className="font-bold text-slate-700 text-xs uppercase tracking-wider">Recordatorios Configurados</h4>
                     {vehiculoSeleccionado.alertas && vehiculoSeleccionado.alertas.length > 0 ? (
                       <div className="space-y-2">
@@ -795,18 +846,25 @@ export default function VehicleManager({ initialVehiculos }: VehicleManagerProps
                           if (alerta.tipo === 'FECHA') vencida = new Date().setHours(0,0,0,0) >= new Date(alerta.fecha_alerta).setHours(0,0,0,0);
 
                           return (
-                            <div key={alerta.id} className={`border rounded-xl p-3 flex justify-between items-center shadow-xs ${vencida ? 'bg-rose-50 border-rose-200' : 'bg-white border-slate-200'}`}>
+                            <div key={alerta.id} className={`border rounded-2xl p-3.5 flex justify-between items-center shadow-xs ${vencida ? 'bg-rose-50 border-rose-200' : 'bg-white border-slate-200'}`}>
                               <div>
-                                <p className="font-bold text-slate-800">
+                                <p className="font-bold text-slate-800 text-xs">
                                   {alerta.tipo === 'KM' ? `A los ${Number(alerta.valor_km).toLocaleString('es-CL')} km` : `El ${new Date(alerta.fecha_alerta).toLocaleDateString('es-CL', { timeZone: 'UTC' })}`}
                                 </p>
-                                <span className={`text-[10px] font-bold flex items-center gap-0.5 mt-0.5 ${vencida ? 'text-rose-600' : 'text-slate-500'}`}>
-                                  {vencida ? '🚨 CRÍTICA / VENCIDA' : '⏳ PENDIENTE'}
+                                <span className={`text-[10px] font-bold flex items-center gap-1 mt-1 ${vencida ? 'text-rose-600' : 'text-slate-500'}`}>
+                                  {vencida ? <AlertTriangle className="w-3 h-3 text-rose-600" /> : <Clock className="w-3 h-3 text-slate-400" />}
+                                  <span>{vencida ? 'ALERTA CRÍTICA / VENCIDA' : 'RECORDATORIO PENDIENTE'}</span>
                                 </span>
                               </div>
                               <div className="flex gap-2 text-xs font-bold">
-                                <button type="button" onClick={() => handleIniciarEdicionAlerta(alerta)} className="text-blue-600 hover:underline">Editar</button>
-                                <button type="button" onClick={() => handleQuitarAlerta(alerta.id)} className="text-rose-600 hover:underline">Eliminar</button>
+                                <button type="button" onClick={() => handleIniciarEdicionAlerta(alerta)} className="text-[#013299] hover:underline flex items-center gap-1">
+                                  <Edit3 className="w-3 h-3" />
+                                  <span>Editar</span>
+                                </button>
+                                <button type="button" onClick={() => handleQuitarAlerta(alerta.id)} className="text-rose-600 hover:underline flex items-center gap-1">
+                                  <Trash2 className="w-3 h-3" />
+                                  <span>Eliminar</span>
+                                </button>
                               </div>
                             </div>
                           );
