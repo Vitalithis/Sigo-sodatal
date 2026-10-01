@@ -38,6 +38,23 @@ export async function obtenerDispensadoresAction() {
   }
 }
 
+// 1b. Obtener dispensadores disponibles (sin cliente asignado o en bodega)
+export async function obtenerDispensadoresDisponiblesAction() {
+  try {
+    const disponibles = await prisma.dispensador.findMany({
+      where: {
+        cliente_id: null,
+        estado: { in: [EstadoDispensador.DISPONIBLE, EstadoDispensador.RETIRADO] }
+      },
+      orderBy: { marca: 'asc' },
+      select: { id: true, marca: true, modelo: true, numero_serie: true, precio_arriendo: true, estado: true }
+    });
+    return { success: true, disponibles };
+  } catch (error: any) {
+    return { success: false, disponibles: [], message: error.message };
+  }
+}
+
 // 2. Crear Dispensador Independiente
 export async function crearDispensadorIndependienteAction(data: DispensadorInput) {
   try {

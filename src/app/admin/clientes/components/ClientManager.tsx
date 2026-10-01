@@ -26,11 +26,13 @@ import {
   Filter, 
   CheckCircle2,
   FolderTree,
-  List
+  List,
+  Printer
 } from 'lucide-react';
 import { usePopup } from '@/hooks/usePopup';
 import PopupGlobal from '@/components/ui/PopupGlobal';
 import FichaTecnica from './FichaTecnica';
+import ModalImpresion from './ModalImpresion';
 
 const inputCls = 'w-full border border-slate-200 p-2.5 rounded-xl text-xs text-slate-800 bg-white outline-none focus:ring-2 focus:ring-[#013299]/20 focus:border-[#013299] transition-colors placeholder:text-slate-400 font-medium';
 const labelCls = 'text-xs font-bold text-slate-700 uppercase tracking-wider mb-1 block';
@@ -66,6 +68,8 @@ export default function ClientManager({ initialClientes }: { initialClientes: an
 
   // Modales y formularios
   const [isModalOpen, setIsModalOpen]           = useState(false);
+  const [isPrintModalOpen, setIsPrintModalOpen] = useState(false);
+  const [printTitle, setPrintTitle]             = useState('Reporte General de Clientes');
   const [isPending, startTransition]            = useTransition();
   const [editingClienteId, setEditingClienteId] = useState<string | null>(null);
   const [errorForm, setErrorForm]               = useState<string | null>(null);
@@ -315,6 +319,38 @@ export default function ClientManager({ initialClientes }: { initialClientes: an
 
   const hayFiltrosActivos = busqueda !== '' || filtroTipo !== 'TODOS' || filtroEstado !== 'TODOS' || filtroFrecuencia !== 'TODAS' || filtroDeuda !== 'TODOS' || filtroComuna !== 'TODAS' || filtroSector !== 'TODOS';
 
+  const handleImprimirDeudores = () => {
+    setFiltroDeuda('CON_DEUDA');
+    setPrintTitle('Informe de Clientes Deudores Morosos');
+    setIsPrintModalOpen(true);
+  };
+
+  const handleImprimirLista = () => {
+    if (filtroDeuda === 'CON_DEUDA') {
+      setPrintTitle('Informe de Clientes Deudores');
+    } else if (filtroSector !== 'TODOS') {
+      setPrintTitle('Reporte de Clientes por Sector');
+    } else if (filtroComuna !== 'TODAS') {
+      setPrintTitle('Reporte de Clientes por Comuna');
+    } else {
+      setPrintTitle('Reporte General de Clientes');
+    }
+    setIsPrintModalOpen(true);
+  };
+
+  const renderFrecuenciaBadge = (frecuencia: string) => {
+    switch (frecuencia) {
+      case 'QUINCENAL':
+        return <span className="bg-purple-50 text-purple-700 border border-purple-200 px-2 py-0.5 rounded-md text-[10px] font-extrabold uppercase">Quincenal</span>;
+      case 'MENSUAL':
+        return <span className="bg-amber-50 text-amber-800 border border-amber-200 px-2 py-0.5 rounded-md text-[10px] font-extrabold uppercase">Mensual</span>;
+      case 'A_PEDIDO':
+        return <span className="bg-slate-100 text-slate-700 border border-slate-200 px-2 py-0.5 rounded-md text-[10px] font-extrabold uppercase">A Pedido</span>;
+      default:
+        return <span className="bg-blue-50 text-[#013299] border border-blue-200 px-2 py-0.5 rounded-md text-[10px] font-extrabold uppercase">Semanal</span>;
+    }
+  };
+
   return (
     <div className="space-y-6">
       <PopupGlobal popup={popup} onClose={close} />
@@ -384,7 +420,27 @@ export default function ClientManager({ initialClientes }: { initialClientes: an
             )}
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
+            {/* Botón para Imprimir Deudores Directo */}
+            <button
+              onClick={handleImprimirDeudores}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold text-amber-900 bg-amber-50 hover:bg-amber-100 border border-amber-200 transition-all shrink-0"
+              title="Filtrar e imprimir reporte de clientes con deuda morosa"
+            >
+              <Printer className="w-4 h-4 text-amber-600" />
+              Imprimir Deudores
+            </button>
+
+            {/* Botón para Imprimir Filtro Actual */}
+            <button
+              onClick={handleImprimirLista}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200 transition-all shrink-0"
+              title="Imprimir informe de los clientes en pantalla"
+            >
+              <Printer className="w-4 h-4 text-slate-600" />
+              Imprimir Lista
+            </button>
+
             {/* Toggle de Modo de Vista */}
             <div className="bg-slate-100 p-1 rounded-xl flex items-center gap-1 border border-slate-200">
               <button
@@ -589,9 +645,7 @@ export default function ClientManager({ initialClientes }: { initialClientes: an
                         )}
                       </td>
                       <td className="py-3.5 px-4">
-                        <span className="bg-blue-50 text-[#013299] border border-blue-100 px-2 py-0.5 rounded-md text-[10px] font-extrabold uppercase">
-                          {c.frecuencia === 'QUINCENAL' ? 'Quincenal' : c.frecuencia === 'MENSUAL' ? 'Mensual' : c.frecuencia === 'A_PEDIDO' ? 'A pedido' : 'Semanal'}
-                        </span>
+                        {renderFrecuenciaBadge(c.frecuencia)}
                       </td>
                       <td className="py-3.5 px-4 text-right">
                         {(c.deuda || 0) > 0 ? (
@@ -729,9 +783,7 @@ export default function ClientManager({ initialClientes }: { initialClientes: an
                               <div className="text-[10px] text-slate-400">{c.telefono}</div>
                             </td>
                             <td className="py-3 px-4 text-center">
-                              <span className="bg-blue-50 text-[#013299] px-2 py-0.5 rounded text-[10px] font-bold uppercase">
-                                {c.frecuencia || 'SEMANAL'}
-                              </span>
+                              {renderFrecuenciaBadge(c.frecuencia)}
                             </td>
                             <td className="py-3 px-4 text-right">
                               {(c.deuda || 0) > 0 ? (
@@ -903,6 +955,15 @@ export default function ClientManager({ initialClientes }: { initialClientes: an
           showSuccess={showSuccess}
           showError={showError}
           showConfirm={showConfirm}
+        />
+      )}
+
+      {/* Modal de Impresión / Exportación de Reporte */}
+      {isPrintModalOpen && (
+        <ModalImpresion
+          clientes={clientesFiltrados}
+          tituloReporte={printTitle}
+          onClose={() => setIsPrintModalOpen(false)}
         />
       )}
     </div>

@@ -17,6 +17,8 @@ import {
   Building2,
   Droplets,
   LogOut,
+  TrendingUp,
+  BadgePercent,
   ChevronLeft,
   ChevronRight,
 } from 'lucide-react';
@@ -34,8 +36,10 @@ export default function Sidebar({ rol, nombre }: SidebarProps) {
 
   const menuItems = [
     { name: 'Dashboard',          href: '/admin',             icon: LayoutDashboard },
+    { name: 'Ventas',             href: '/admin/ventas',      icon: TrendingUp      },
     { name: 'Cuadraturas',        href: '/admin/cuadratura',  icon: ClipboardList   },
     { name: 'Clientes',           href: '/admin/clientes',    icon: Users           },
+    { name: 'Fichas Personal',    href: '/admin/personal',    icon: BadgePercent    },
     { name: 'Dispensadores',      href: '/admin/dispensadores', icon: Droplets        },
     { name: 'Flota',              href: '/admin/flota',       icon: Truck           },
     { name: 'Rutas y Despacho',   href: '/admin/rutas',       icon: MapPin          },
