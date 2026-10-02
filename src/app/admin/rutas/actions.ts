@@ -79,66 +79,82 @@ export async function generarRutasDesdeBaseAction(fechaStr: string, diaSemana: D
     }
 
     let rutasCreadasContador = 0;
+    let paradasAgregadasContador = 0;
 
     for (const plantilla of plantillasBase) {
-      const rutaExistente = await prisma.rutaDia.findFirst({
+      let rutaDia = await prisma.rutaDia.findFirst({
         where: {
           fecha: { gte: inicioDia, lte: finDia },
-          OR: [
-            { vehiculo_id: plantilla.vehiculo_id },
-            { usuario_id: plantilla.usuario_id }
-          ]
-        }
-      });
-
-      if (rutaExistente) {
-        continue; 
-      }
-
-      const nuevaRutaDia = await prisma.rutaDia.create({
-        data: {
-          fecha: fechaDestino,
-          estado: EstadoRuta.ACTIVA,
-          usuario_id: plantilla.usuario_id,
-          vehiculo_id: plantilla.vehiculo_id,
           ruta_base_id: plantilla.id
-        }
+        },
+        include: { paradas: true }
       });
 
-      rutasCreadasContador++;
+      if (!rutaDia) {
+        rutaDia = await prisma.rutaDia.create({
+          data: {
+            fecha: fechaDestino,
+            estado: EstadoRuta.ACTIVA,
+            usuario_id: plantilla.usuario_id,
+            vehiculo_id: plantilla.vehiculo_id,
+            ruta_base_id: plantilla.id
+          },
+          include: { paradas: true }
+        });
+        rutasCreadasContador++;
+      } else {
+        if (rutaDia.usuario_id !== plantilla.usuario_id || rutaDia.vehiculo_id !== plantilla.vehiculo_id) {
+          rutaDia = await prisma.rutaDia.update({
+            where: { id: rutaDia.id },
+            data: {
+              usuario_id: plantilla.usuario_id,
+              vehiculo_id: plantilla.vehiculo_id
+            },
+            include: { paradas: true }
+          });
+        }
+      }
 
       const clientesFijos = await prisma.clienteRutaBase.findMany({
         where: { ruta_base_id: plantilla.id },
         orderBy: { orden: 'asc' }
       });
 
+      const clientesExistentesIds = new Set((rutaDia.paradas || []).map((p: any) => p.cliente_id));
+      let proximoOrden = (rutaDia.paradas || []).length + 1;
+
       for (const cf of clientesFijos) {
-        await prisma.paradaDia.create({
-          data: {
-            ruta_dia_id: nuevaRutaDia.id,
-            cliente_id: cf.cliente_id,
-            orden: cf.orden,
-            estado: EstadoParada.PENDIENTE,
-            bot20_esperado: cf.bot20_default,
-            bot10_esperado: cf.bot10_default,
-            soda_esperada: cf.soda_default
-          }
-        });
+        if (!clientesExistentesIds.has(cf.cliente_id)) {
+          await prisma.paradaDia.create({
+            data: {
+              ruta_dia_id: rutaDia.id,
+              cliente_id: cf.cliente_id,
+              orden: proximoOrden++,
+              estado: EstadoParada.PENDIENTE,
+              bot20_esperado: cf.bot20_default,
+              bot10_esperado: cf.bot10_default,
+              soda_esperada: cf.soda_default
+            }
+          });
+          paradasAgregadasContador++;
+        }
       }
     }
 
-    revalidatePath('/admin/rutas');
+    try {
+      revalidatePath('/admin/rutas');
+    } catch (_) {}
 
-    if (rutasCreadasContador === 0) {
+    if (rutasCreadasContador === 0 && paradasAgregadasContador === 0) {
       return { 
         success: true, 
-        message: "Las hojas de ruta para los furgones y choferes de hoy ya se encontraban iniciadas." 
+        message: "Las hojas de ruta y sus clientes fijos para hoy ya estaban completamente cargados." 
       };
     }
 
     return { 
       success: true, 
-      message: `Se han generado exitosamente ${rutasCreadasContador} nueva(s) hoja(s) de ruta para la jornada.` 
+      message: `Se han sincronizado las rutas del día (${rutasCreadasContador} ruta(s) nueva(s), ${paradasAgregadasContador} cliente(s) cargado(s)).` 
     };
 
   } catch (error: any) {
@@ -406,33 +422,199 @@ export async function guardarRutaBaseAction(data: {
   }
 }
 
+export type DesgloseEsperadoItem = {
+  recargas: number;
+  nuevos: number;
+};
+
+export type ActualizarEsperadoPayload = {
+  bot20: DesgloseEsperadoItem;
+  bot10: DesgloseEsperadoItem;
+  soda: DesgloseEsperadoItem;
+} | {
+  bot20_esperado: number;
+  bot10_esperado: number;
+  soda_esperada: number;
+};
+
 /**
- * Actualiza SOLO la expectativa (esperado) de una parada puntual del día,
- * sin tocar la plantilla habitual (ClienteRutaBase). Solo permitido
- * mientras la parada sigue PENDIENTE.
+ * Actualiza la expectativa (esperado) de una parada puntual del día,
+ * sincronizando tanto las cantidades totales en ParadaDia como el detalle
+ * de productos (Recarga vs Nuevo) en los items del Pedido.
  */
 export async function actualizarEsperadoParadaAction(
   paradaId: string,
-  cantidades: { bot20_esperado: number; bot10_esperado: number; soda_esperada: number }
+  cantidades: ActualizarEsperadoPayload
 ) {
   try {
-    const parada = await prisma.paradaDia.findUnique({ where: { id: paradaId } });
+    const parada = await prisma.paradaDia.findUnique({
+      where: { id: paradaId },
+      include: {
+        pedido: { include: { items: true } },
+        ruta_dia: true
+      }
+    });
     if (!parada) return { success: false, message: 'Parada no encontrada.' };
 
     if (parada.estado !== EstadoParada.PENDIENTE) {
       return { success: false, message: 'Solo se puede editar la expectativa mientras la parada está pendiente.' };
     }
 
-    await prisma.paradaDia.update({
-      where: { id: paradaId },
-      data: {
-        bot20_esperado: Math.max(0, cantidades.bot20_esperado),
-        bot10_esperado: Math.max(0, cantidades.bot10_esperado),
-        soda_esperada: Math.max(0, cantidades.soda_esperada)
+    let b20 = { recargas: 0, nuevos: 0, total: 0 };
+    let b10 = { recargas: 0, nuevos: 0, total: 0 };
+    let soda = { recargas: 0, nuevos: 0, total: 0 };
+
+    if ('bot20' in (cantidades as any)) {
+      const c = cantidades as { bot20: DesgloseEsperadoItem; bot10: DesgloseEsperadoItem; soda: DesgloseEsperadoItem };
+      b20 = {
+        recargas: Math.max(0, Number(c.bot20?.recargas) || 0),
+        nuevos: Math.max(0, Number(c.bot20?.nuevos) || 0),
+        total: Math.max(0, (Number(c.bot20?.recargas) || 0) + (Number(c.bot20?.nuevos) || 0))
+      };
+      b10 = {
+        recargas: Math.max(0, Number(c.bot10?.recargas) || 0),
+        nuevos: Math.max(0, Number(c.bot10?.nuevos) || 0),
+        total: Math.max(0, (Number(c.bot10?.recargas) || 0) + (Number(c.bot10?.nuevos) || 0))
+      };
+      soda = {
+        recargas: Math.max(0, Number(c.soda?.recargas) || 0),
+        nuevos: Math.max(0, Number(c.soda?.nuevos) || 0),
+        total: Math.max(0, (Number(c.soda?.recargas) || 0) + (Number(c.soda?.nuevos) || 0))
+      };
+    } else {
+      const c = cantidades as any;
+      b20 = { recargas: Math.max(0, Number(c.bot20_esperado) || 0), nuevos: 0, total: Math.max(0, Number(c.bot20_esperado) || 0) };
+      b10 = { recargas: Math.max(0, Number(c.bot10_esperado) || 0), nuevos: 0, total: Math.max(0, Number(c.bot10_esperado) || 0) };
+      soda = { recargas: Math.max(0, Number(c.soda_esperada) || 0), nuevos: 0, total: Math.max(0, Number(c.soda_esperada) || 0) };
+    }
+
+    const productos = await prisma.producto.findMany({
+      where: { categoria: { in: ['BOTELLON20', 'BOTELLON10', 'SODA'] } }
+    });
+    const prodB20 = productos.find(p => p.categoria === 'BOTELLON20');
+    const prodB10 = productos.find(p => p.categoria === 'BOTELLON10');
+    const prodSoda = productos.find(p => p.categoria === 'SODA');
+
+    await prisma.$transaction(async (tx) => {
+      // 1. Actualizar expectativa en ParadaDia
+      await tx.paradaDia.update({
+        where: { id: paradaId },
+        data: {
+          bot20_esperado: b20.total,
+          bot10_esperado: b10.total,
+          soda_esperada: soda.total
+        }
+      });
+
+      // 2. Si la parada no tiene pedido asociado pero tiene cantidades, crear el Pedido para registrar los items
+      let pedidoId = parada.pedido_id;
+      if (!pedidoId && (b20.total > 0 || b10.total > 0 || soda.total > 0)) {
+        let userId = parada.ruta_dia?.usuario_id;
+        try {
+          const session = await auth.api.getSession({ headers: await headers() });
+          if (session?.user?.id) userId = session.user.id;
+        } catch (_) {}
+
+        const nuevoPedido = await tx.pedido.create({
+          data: {
+            cliente_id: parada.cliente_id,
+            fecha_solicitada: parada.ruta_dia?.fecha || new Date(),
+            estado: EstadoPedido.ASIGNADO,
+            canal_origen: 'LLAMADO',
+            usuario_registro_id: userId,
+            ruta_dia_id: parada.ruta_dia_id
+          }
+        });
+        pedidoId = nuevoPedido.id;
+        await tx.paradaDia.update({
+          where: { id: parada.id },
+          data: { pedido_id: pedidoId }
+        });
+      }
+
+      // 3. Sincronizar los items del pedido
+      if (pedidoId) {
+        await tx.pedidoItem.deleteMany({
+          where: { pedido_id: pedidoId }
+        });
+
+        const itemsNuevos: any[] = [];
+
+        if (prodB20) {
+          if (b20.recargas > 0) {
+            itemsNuevos.push({
+              pedido_id: pedidoId,
+              producto_id: prodB20.id,
+              tipo_transaccion: 'RECARGA',
+              cantidad: b20.recargas,
+              precio_historico: prodB20.precio_recarga ?? 3000
+            });
+          }
+          if (b20.nuevos > 0) {
+            itemsNuevos.push({
+              pedido_id: pedidoId,
+              producto_id: prodB20.id,
+              tipo_transaccion: 'VENTA',
+              cantidad: b20.nuevos,
+              precio_historico: prodB20.precio_venta_nueva ?? 6000
+            });
+          }
+        }
+
+        if (prodB10) {
+          if (b10.recargas > 0) {
+            itemsNuevos.push({
+              pedido_id: pedidoId,
+              producto_id: prodB10.id,
+              tipo_transaccion: 'RECARGA',
+              cantidad: b10.recargas,
+              precio_historico: prodB10.precio_recarga ?? 2000
+            });
+          }
+          if (b10.nuevos > 0) {
+            itemsNuevos.push({
+              pedido_id: pedidoId,
+              producto_id: prodB10.id,
+              tipo_transaccion: 'VENTA',
+              cantidad: b10.nuevos,
+              precio_historico: prodB10.precio_venta_nueva ?? 4500
+            });
+          }
+        }
+
+        if (prodSoda) {
+          if (soda.recargas > 0) {
+            itemsNuevos.push({
+              pedido_id: pedidoId,
+              producto_id: prodSoda.id,
+              tipo_transaccion: 'RECARGA',
+              cantidad: soda.recargas,
+              precio_historico: prodSoda.precio_recarga ?? 1500
+            });
+          }
+          if (soda.nuevos > 0) {
+            itemsNuevos.push({
+              pedido_id: pedidoId,
+              producto_id: prodSoda.id,
+              tipo_transaccion: 'VENTA',
+              cantidad: soda.nuevos,
+              precio_historico: prodSoda.precio_venta_nueva ?? 1500
+            });
+          }
+        }
+
+        if (itemsNuevos.length > 0) {
+          await tx.pedidoItem.createMany({
+            data: itemsNuevos
+          });
+        }
       }
     });
 
-    revalidatePath('/admin/rutas');
+    try {
+      revalidatePath('/admin/rutas');
+    } catch (_) {}
+
     return { success: true };
   } catch (error: any) {
     console.error('Error en actualizarEsperadoParadaAction:', error);
@@ -639,11 +821,74 @@ export async function eliminarRutaDiaAction(rutaDiaId: string) {
       prisma.paradaDia.deleteMany({ where: { ruta_dia_id: rutaDiaId } }),
       prisma.rutaDia.delete({ where: { id: rutaDiaId } })
     ]);
-    revalidatePath('/admin/rutas');
+    try {
+      revalidatePath('/admin/rutas');
+    } catch (_) {}
     return { success: true };
   } catch (error: any) {
     console.error('Error en eliminarRutaDiaAction:', error);
     return { success: false, message: error.message || 'Error al eliminar la hoja de ruta.' };
+  }
+}
+
+/**
+ * Elimina un pedido / parada individual de una Hoja de Ruta diaria.
+ * Si la parada tenía un pedido registrado, elimina el pedido y sus items.
+ * Reordena correlativamente las paradas restantes de la hoja.
+ */
+export async function eliminarParadaAction(paradaId: string) {
+  try {
+    const parada = await prisma.paradaDia.findUnique({
+      where: { id: paradaId }
+    });
+
+    if (!parada) {
+      return { success: false, message: 'La parada no existe o ya fue eliminada.' };
+    }
+
+    const rutaDiaId = parada.ruta_dia_id;
+    const pedidoId = parada.pedido_id;
+
+    await prisma.$transaction(async (tx) => {
+      // 1. Eliminar la parada
+      await tx.paradaDia.delete({
+        where: { id: paradaId }
+      });
+
+      // 2. Si tenía un pedido asociado, eliminar items y el pedido
+      if (pedidoId) {
+        await tx.pedidoItem.deleteMany({
+          where: { pedido_id: pedidoId }
+        });
+        await tx.pedido.delete({
+          where: { id: pedidoId }
+        });
+      }
+
+      // 3. Reordenar paradas restantes
+      const paradasRestantes = await tx.paradaDia.findMany({
+        where: { ruta_dia_id: rutaDiaId },
+        orderBy: { orden: 'asc' }
+      });
+
+      for (let i = 0; i < paradasRestantes.length; i++) {
+        if (paradasRestantes[i].orden !== i + 1) {
+          await tx.paradaDia.update({
+            where: { id: paradasRestantes[i].id },
+            data: { orden: i + 1 }
+          });
+        }
+      }
+    });
+
+    try {
+      revalidatePath('/admin/rutas');
+    } catch (_) {}
+
+    return { success: true, message: 'Pedido quitado de la ruta correctamente.' };
+  } catch (error: any) {
+    console.error('Error en eliminarParadaAction:', error);
+    return { success: false, message: error.message || 'Error al quitar el pedido.' };
   }
 }
 

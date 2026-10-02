@@ -1,4 +1,5 @@
 import { PrismaClient, CategoriaProducto, TipoCliente, ModalidadPago, TipoRuta, PreferenciaFacturacion, EstadoDispensador, Rol, EstadoVehiculo, DiaSemana } from '../lib/prisma/generated';
+import { hashPassword } from '@better-auth/utils/password';
 
 const prisma = new PrismaClient();
 
@@ -219,6 +220,43 @@ async function main() {
   });
 
   console.log('✅ Usuarios del staff y credenciales Auth sincronizados.');
+
+  // Crear credenciales de contraseña para better-auth (email+password)
+  const passwordAdmin = await hashPassword('admin1234');
+  const passwordRepartidor = await hashPassword('repartidor1234');
+
+  await prisma.account.upsert({
+    where: { providerId_accountId: { providerId: 'credential', accountId: authUserAdmin.id } },
+    update: { password: passwordAdmin },
+    create: {
+      id: 'account-admin-id-01',
+      accountId: authUserAdmin.id,
+      providerId: 'credential',
+      issuer: 'local:credential',
+      userId: authUserAdmin.id,
+      password: passwordAdmin,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
+  });
+
+  await prisma.account.upsert({
+    where: { providerId_accountId: { providerId: 'credential', accountId: authUserRepartidor.id } },
+    update: { password: passwordRepartidor },
+    create: {
+      id: 'account-repartidor-id-02',
+      accountId: authUserRepartidor.id,
+      providerId: 'credential',
+      issuer: 'local:credential',
+      userId: authUserRepartidor.id,
+      password: passwordRepartidor,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
+  });
+
+  console.log('✅ Credenciales creadas: admin (admin1234) | repartidor (repartidor1234)');
+
 
   // =========================================================
   // 6. CREAR CLIENTES DE PRUEBA

@@ -2,6 +2,8 @@
 
 import { prisma } from '../../../../lib/prisma';
 import { revalidatePath } from 'next/cache';
+import { auth } from '@/lib/auth';
+import { headers } from 'next/headers';
 
 // Obtener vehículos (solo lectura, para poblar el selector de asignación)
 export async function obtenerVehiculosAction() {
@@ -247,42 +249,166 @@ export async function registrarCargaCombustibleAction(payload: CargaCombustibleI
   } catch (error) {
     return { success: false, message: 'Error al registrar la carga de combustible.' };
   }
-}// ==========================================================================
-// AGREGAR ESTO a src/app/admin/flota/actions.ts (junto a obtenerChoferesAction)
+}
+
+// ==========================================================================
+// CHOFERES / REPARTIDORES
 // ==========================================================================
 
-interface ChoferInput {
+export interface ChoferInput {
   nombre: string;
-  apellido: string;
+  apellido?: string;
   rut: string;
   telefono: string;
   email: string;
   licencia_tipo: string;
+  password?: string;
+}
+
+export async function obtenerUsuariosDisponiblesAction() {
+  try {
+    const usuarios = await prisma.usuario.findMany({
+      where: { rol: { not: 'REPARTIDOR' } },
+      select: {
+        id: true,
+        nombre: true,
+        apellido: true,
+        email: true,
+        rut: true,
+        telefono: true,
+        rol: true,
+      },
+      orderBy: { nombre: 'asc' },
+    });
+    return { success: true, usuarios };
+  } catch (error: any) {
+    return { success: false, usuarios: [], message: error.message };
+  }
+}
+
+export async function asignarRolRepartidorAction(usuarioId: string, licencia_tipo: string) {
+  try {
+    await prisma.usuario.update({
+      where: { id: usuarioId },
+      data: {
+        rol: 'REPARTIDOR',
+        licencia_tipo: licencia_tipo || 'Clase B',
+      },
+    });
+
+    revalidatePath('/admin/flota');
+    revalidatePath('/admin/roles');
+    revalidatePath('/admin/personal');
+    revalidatePath('/admin/rutas');
+    revalidatePath('/admin/rutas-base');
+
+    return { success: true };
+  } catch (error: any) {
+    return { success: false, message: error.message || 'Error al asignar rol de repartidor.' };
+  }
 }
 
 export async function crearChoferAction(data: ChoferInput) {
   try {
-    await prisma.usuario.create({
-      data: {
-        nombre: data.nombre,
-        apellido: data.apellido || null,
-        rut: data.rut,
-        telefono: data.telefono,
-        email: data.email,
-        licencia_tipo: data.licencia_tipo,
-        rol: 'REPARTIDOR',
-        fecha_ingreso: new Date(),
-      },
+    const rutLimpio = data.rut.replace(/[^0-9kK]/g, '').toLowerCase();
+    const clave = data.password && data.password.trim().length >= 6 ? data.password.trim() : 'sodatal123';
+    const emailNormalizado = data.email.trim().toLowerCase();
+
+    // 1. Crear o buscar usuario en Better Auth (User)
+    let user = await prisma.user.findFirst({
+      where: {
+        OR: [
+          { email: emailNormalizado },
+          { rut: rutLimpio }
+        ]
+      }
     });
+
+    if (!user) {
+      try {
+        await auth.api.signUpEmail({
+          body: {
+            email: emailNormalizado,
+            password: clave,
+            name: `${data.nombre} ${data.apellido || ''}`.trim(),
+            rut: rutLimpio,
+          } as any,
+          headers: await headers(),
+        });
+        user = await prisma.user.findFirst({
+          where: { email: emailNormalizado }
+        });
+      } catch (authErr: any) {
+        console.warn('Registro en BetterAuth:', authErr?.message);
+        // Si falló por duplicado u otro motivo, buscar si ya existe
+        user = await prisma.user.findFirst({
+          where: {
+            OR: [
+              { email: emailNormalizado },
+              { rut: rutLimpio }
+            ]
+          }
+        });
+      }
+    }
+
+    // 2. Crear o actualizar registro en Usuario
+    const usuarioExistente = await prisma.usuario.findFirst({
+      where: {
+        OR: [
+          { email: emailNormalizado },
+          { rut: rutLimpio }
+        ]
+      }
+    });
+
+    if (usuarioExistente) {
+      await prisma.usuario.update({
+        where: { id: usuarioExistente.id },
+        data: {
+          user_id: user?.id || usuarioExistente.user_id,
+          nombre: data.nombre.trim(),
+          apellido: data.apellido?.trim() || null,
+          rut: rutLimpio,
+          telefono: data.telefono.trim(),
+          email: emailNormalizado,
+          licencia_tipo: data.licencia_tipo || 'Clase B',
+          rol: 'REPARTIDOR',
+          activo: true,
+        }
+      });
+    } else {
+      await prisma.usuario.create({
+        data: {
+          user_id: user?.id || null,
+          nombre: data.nombre.trim(),
+          apellido: data.apellido?.trim() || null,
+          rut: rutLimpio,
+          telefono: data.telefono.trim(),
+          email: emailNormalizado,
+          licencia_tipo: data.licencia_tipo || 'Clase B',
+          rol: 'REPARTIDOR',
+          fecha_ingreso: new Date(),
+          activo: true,
+        },
+      });
+    }
+
     revalidatePath('/admin/flota');
+    revalidatePath('/admin/roles');
+    revalidatePath('/admin/personal');
+    revalidatePath('/admin/rutas');
+    revalidatePath('/admin/rutas-base');
+
     return { success: true };
   } catch (error: any) {
+    console.error('Error en crearChoferAction:', error);
     if (error?.code === 'P2002') {
       const campo = error.meta?.target?.[0];
-      if (campo === 'rut') return { success: false, message: 'Ya existe un chofer con ese RUT.' };
-      if (campo === 'email') return { success: false, message: 'Ya existe un chofer con ese email.' };
-      return { success: false, message: 'Ese registro ya existe.' };
+      if (campo === 'rut') return { success: false, message: 'Ya existe un usuario con ese RUT.' };
+      if (campo === 'email') return { success: false, message: 'Ya existe un usuario con ese email.' };
+      return { success: false, message: 'Ese registro ya existe en el sistema.' };
     }
-    return { success: false, message: 'Error al crear el chofer.' };
+    return { success: false, message: error.message || 'Error al crear el chofer.' };
   }
 }

@@ -6,7 +6,7 @@ import { auth } from '../../../lib/auth';
 import { prisma } from '../../../../lib/prisma';
 import { Rol } from '../../../../lib/prisma/generated';
 
-const ROLES_VALIDOS: Rol[] = ['ADMIN', 'OFICINA', 'REPARTIDOR'];
+const ROLES_VALIDOS: Rol[] = ['ADMIN', 'OFICINA', 'REPARTIDOR', 'PENDIENTE'];
 
 async function getRolActual() {
   const session = await auth.api.getSession({ headers: await headers() });
@@ -29,6 +29,8 @@ export async function listUsuarios() {
       email: true,
       rol: true,
       nombre: true,
+      apellido: true,
+      rut: true,
       created_at: true,
     },
     orderBy: { created_at: 'asc' },
@@ -38,7 +40,8 @@ export async function listUsuarios() {
     id: u.id,
     email: u.email,
     rol: u.rol,
-    nombre: u.nombre,
+    nombre: `${u.nombre || ''}${u.apellido ? ' ' + u.apellido : ''}`.trim() || u.email,
+    rut: u.rut,
     creadoEn: u.created_at.toISOString(),
   }));
 }
@@ -67,5 +70,10 @@ export async function actualizarRol(userId: string, nuevoRol: string) {
   });
 
   revalidatePath('/admin/roles');
+  revalidatePath('/admin/flota');
+  revalidatePath('/admin/personal');
+  revalidatePath('/admin/rutas');
+  revalidatePath('/admin/rutas-base');
+
   return { success: true, error: '' };
 }

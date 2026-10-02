@@ -1,6 +1,9 @@
 import { listUsuarios } from './actions';
 import RolesTable from './components/RolesTable';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export const metadata = {
   title: 'Gestión de Roles y Permisos - SIGO Sodatal',
   description: 'Asignación de roles y permisos de acceso para usuarios del sistema.',

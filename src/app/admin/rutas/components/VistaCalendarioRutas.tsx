@@ -12,14 +12,19 @@ interface CalendarDay {
 }
 
 export default function VistaCalendarioRutas() {
+  // Helper para formatear YYYY-MM-DD en hora local
+  const formatDateStr = (d: Date) => {
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${day}`;
+  };
+
   const [currentDate, setCurrentDate] = useState<Date>(new Date());
   const [frecuenciaFiltro, setFrecuenciaFiltro] = useState<string>('TODAS');
-  const [fechaSeleccionada, setFechaSeleccionada] = useState<string>(new Date().toISOString().split('T')[0]);
+  const [fechaSeleccionada, setFechaSeleccionada] = useState<string>(() => formatDateStr(new Date()));
   const [rutasDia, setRutasDia] = useState<any[]>([]);
   const [cargandoRutas, setCargandoRutas] = useState<boolean>(false);
-
-  // Helper para formatear YYYY-MM-DD
-  const formatDateStr = (d: Date) => d.toISOString().split('T')[0];
 
   // Generar días del mes actual para el calendario
   const year = currentDate.getFullYear();
@@ -53,6 +58,18 @@ export default function VistaCalendarioRutas() {
       dateStr: formatDateStr(currDate),
       isCurrentMonth: true,
       isToday: formatDateStr(currDate) === todayStr,
+    });
+  }
+
+  // Días del mes siguiente para completar la cuadrícula de 7 columnas
+  const remainingDays = (7 - (days.length % 7)) % 7;
+  for (let i = 1; i <= remainingDays; i++) {
+    const nextDate = new Date(year, month + 1, i);
+    days.push({
+      date: nextDate,
+      dateStr: formatDateStr(nextDate),
+      isCurrentMonth: false,
+      isToday: formatDateStr(nextDate) === todayStr,
     });
   }
 

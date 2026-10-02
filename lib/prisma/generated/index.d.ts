@@ -238,6 +238,21 @@ export type Account = $Result.DefaultSelection<Prisma.$AccountPayload>
  * 
  */
 export type Verification = $Result.DefaultSelection<Prisma.$VerificationPayload>
+/**
+ * Model CierreCaja
+ * 
+ */
+export type CierreCaja = $Result.DefaultSelection<Prisma.$CierreCajaPayload>
+/**
+ * Model VentaCierreCaja
+ * 
+ */
+export type VentaCierreCaja = $Result.DefaultSelection<Prisma.$VentaCierreCajaPayload>
+/**
+ * Model GastoCierreCaja
+ * 
+ */
+export type GastoCierreCaja = $Result.DefaultSelection<Prisma.$GastoCierreCajaPayload>
 
 /**
  * Enums
@@ -461,6 +476,25 @@ export const CategoriaProducto: {
 
 export type CategoriaProducto = (typeof CategoriaProducto)[keyof typeof CategoriaProducto]
 
+
+export const EstadoCierreCaja: {
+  ABIERTO: 'ABIERTO',
+  CERRADO: 'CERRADO'
+};
+
+export type EstadoCierreCaja = (typeof EstadoCierreCaja)[keyof typeof EstadoCierreCaja]
+
+
+export const MetodoPagoCaja: {
+  EFECTIVO: 'EFECTIVO',
+  TARJETA: 'TARJETA',
+  TRANSFERENCIA: 'TRANSFERENCIA',
+  CREDITO_OFICINA: 'CREDITO_OFICINA',
+  PAGINA_WEB: 'PAGINA_WEB'
+};
+
+export type MetodoPagoCaja = (typeof MetodoPagoCaja)[keyof typeof MetodoPagoCaja]
+
 }
 
 export type TipoIncidencia = $Enums.TipoIncidencia
@@ -554,6 +588,14 @@ export const TipoMovimientoFinanciero: typeof $Enums.TipoMovimientoFinanciero
 export type CategoriaProducto = $Enums.CategoriaProducto
 
 export const CategoriaProducto: typeof $Enums.CategoriaProducto
+
+export type EstadoCierreCaja = $Enums.EstadoCierreCaja
+
+export const EstadoCierreCaja: typeof $Enums.EstadoCierreCaja
+
+export type MetodoPagoCaja = $Enums.MetodoPagoCaja
+
+export const MetodoPagoCaja: typeof $Enums.MetodoPagoCaja
 
 /**
  * ##  Prisma Client ʲˢ
@@ -1122,6 +1164,36 @@ export class PrismaClient<
     * ```
     */
   get verification(): Prisma.VerificationDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.cierreCaja`: Exposes CRUD operations for the **CierreCaja** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more CierreCajas
+    * const cierreCajas = await prisma.cierreCaja.findMany()
+    * ```
+    */
+  get cierreCaja(): Prisma.CierreCajaDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.ventaCierreCaja`: Exposes CRUD operations for the **VentaCierreCaja** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more VentaCierreCajas
+    * const ventaCierreCajas = await prisma.ventaCierreCaja.findMany()
+    * ```
+    */
+  get ventaCierreCaja(): Prisma.VentaCierreCajaDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.gastoCierreCaja`: Exposes CRUD operations for the **GastoCierreCaja** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more GastoCierreCajas
+    * const gastoCierreCajas = await prisma.gastoCierreCaja.findMany()
+    * ```
+    */
+  get gastoCierreCaja(): Prisma.GastoCierreCajaDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1607,7 +1679,10 @@ export namespace Prisma {
     User: 'User',
     Session: 'Session',
     Account: 'Account',
-    Verification: 'Verification'
+    Verification: 'Verification',
+    CierreCaja: 'CierreCaja',
+    VentaCierreCaja: 'VentaCierreCaja',
+    GastoCierreCaja: 'GastoCierreCaja'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1626,7 +1701,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "usuario" | "vehiculo" | "mantencion" | "repuestoMantencion" | "alertaVehiculo" | "producto" | "movimientoStock" | "comision" | "cliente" | "rutaBase" | "rutaBaseSector" | "comuna" | "sector" | "clienteRutaBase" | "rutaDia" | "paradaDia" | "pedido" | "pedidoItem" | "guiaDespacho" | "itemGuia" | "cuadratura" | "cuadraturaSalida" | "cuadraturaVenta" | "cuadraturaRetorno" | "cuadraturaGasto" | "botellonVacio" | "botellonDanado" | "produccionDiaria" | "tuboCO2" | "stockFabrica" | "stockCamion" | "configuracion" | "logAcceso" | "dispensador" | "mantencionDispensador" | "repuestoDispensador" | "maquinaReemplazo" | "notificacion" | "historialFinanciero" | "cargaCombustible" | "incidencia" | "user" | "session" | "account" | "verification"
+      modelProps: "usuario" | "vehiculo" | "mantencion" | "repuestoMantencion" | "alertaVehiculo" | "producto" | "movimientoStock" | "comision" | "cliente" | "rutaBase" | "rutaBaseSector" | "comuna" | "sector" | "clienteRutaBase" | "rutaDia" | "paradaDia" | "pedido" | "pedidoItem" | "guiaDespacho" | "itemGuia" | "cuadratura" | "cuadraturaSalida" | "cuadraturaVenta" | "cuadraturaRetorno" | "cuadraturaGasto" | "botellonVacio" | "botellonDanado" | "produccionDiaria" | "tuboCO2" | "stockFabrica" | "stockCamion" | "configuracion" | "logAcceso" | "dispensador" | "mantencionDispensador" | "repuestoDispensador" | "maquinaReemplazo" | "notificacion" | "historialFinanciero" | "cargaCombustible" | "incidencia" | "user" | "session" | "account" | "verification" | "cierreCaja" | "ventaCierreCaja" | "gastoCierreCaja"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -4600,6 +4675,204 @@ export namespace Prisma {
           }
         }
       }
+      CierreCaja: {
+        payload: Prisma.$CierreCajaPayload<ExtArgs>
+        fields: Prisma.CierreCajaFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.CierreCajaFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CierreCajaPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.CierreCajaFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CierreCajaPayload>
+          }
+          findFirst: {
+            args: Prisma.CierreCajaFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CierreCajaPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.CierreCajaFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CierreCajaPayload>
+          }
+          findMany: {
+            args: Prisma.CierreCajaFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CierreCajaPayload>[]
+          }
+          create: {
+            args: Prisma.CierreCajaCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CierreCajaPayload>
+          }
+          createMany: {
+            args: Prisma.CierreCajaCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.CierreCajaDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CierreCajaPayload>
+          }
+          update: {
+            args: Prisma.CierreCajaUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CierreCajaPayload>
+          }
+          deleteMany: {
+            args: Prisma.CierreCajaDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.CierreCajaUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.CierreCajaUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CierreCajaPayload>
+          }
+          aggregate: {
+            args: Prisma.CierreCajaAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCierreCaja>
+          }
+          groupBy: {
+            args: Prisma.CierreCajaGroupByArgs<ExtArgs>
+            result: $Utils.Optional<CierreCajaGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.CierreCajaCountArgs<ExtArgs>
+            result: $Utils.Optional<CierreCajaCountAggregateOutputType> | number
+          }
+        }
+      }
+      VentaCierreCaja: {
+        payload: Prisma.$VentaCierreCajaPayload<ExtArgs>
+        fields: Prisma.VentaCierreCajaFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.VentaCierreCajaFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VentaCierreCajaPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.VentaCierreCajaFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VentaCierreCajaPayload>
+          }
+          findFirst: {
+            args: Prisma.VentaCierreCajaFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VentaCierreCajaPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.VentaCierreCajaFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VentaCierreCajaPayload>
+          }
+          findMany: {
+            args: Prisma.VentaCierreCajaFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VentaCierreCajaPayload>[]
+          }
+          create: {
+            args: Prisma.VentaCierreCajaCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VentaCierreCajaPayload>
+          }
+          createMany: {
+            args: Prisma.VentaCierreCajaCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.VentaCierreCajaDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VentaCierreCajaPayload>
+          }
+          update: {
+            args: Prisma.VentaCierreCajaUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VentaCierreCajaPayload>
+          }
+          deleteMany: {
+            args: Prisma.VentaCierreCajaDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.VentaCierreCajaUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.VentaCierreCajaUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VentaCierreCajaPayload>
+          }
+          aggregate: {
+            args: Prisma.VentaCierreCajaAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateVentaCierreCaja>
+          }
+          groupBy: {
+            args: Prisma.VentaCierreCajaGroupByArgs<ExtArgs>
+            result: $Utils.Optional<VentaCierreCajaGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.VentaCierreCajaCountArgs<ExtArgs>
+            result: $Utils.Optional<VentaCierreCajaCountAggregateOutputType> | number
+          }
+        }
+      }
+      GastoCierreCaja: {
+        payload: Prisma.$GastoCierreCajaPayload<ExtArgs>
+        fields: Prisma.GastoCierreCajaFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.GastoCierreCajaFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GastoCierreCajaPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.GastoCierreCajaFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GastoCierreCajaPayload>
+          }
+          findFirst: {
+            args: Prisma.GastoCierreCajaFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GastoCierreCajaPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.GastoCierreCajaFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GastoCierreCajaPayload>
+          }
+          findMany: {
+            args: Prisma.GastoCierreCajaFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GastoCierreCajaPayload>[]
+          }
+          create: {
+            args: Prisma.GastoCierreCajaCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GastoCierreCajaPayload>
+          }
+          createMany: {
+            args: Prisma.GastoCierreCajaCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.GastoCierreCajaDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GastoCierreCajaPayload>
+          }
+          update: {
+            args: Prisma.GastoCierreCajaUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GastoCierreCajaPayload>
+          }
+          deleteMany: {
+            args: Prisma.GastoCierreCajaDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.GastoCierreCajaUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.GastoCierreCajaUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GastoCierreCajaPayload>
+          }
+          aggregate: {
+            args: Prisma.GastoCierreCajaAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateGastoCierreCaja>
+          }
+          groupBy: {
+            args: Prisma.GastoCierreCajaGroupByArgs<ExtArgs>
+            result: $Utils.Optional<GastoCierreCajaGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.GastoCierreCajaCountArgs<ExtArgs>
+            result: $Utils.Optional<GastoCierreCajaCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -4741,6 +5014,9 @@ export namespace Prisma {
     session?: SessionOmit
     account?: AccountOmit
     verification?: VerificationOmit
+    cierreCaja?: CierreCajaOmit
+    ventaCierreCaja?: VentaCierreCajaOmit
+    gastoCierreCaja?: GastoCierreCajaOmit
   }
 
   /* Types for Logging */
@@ -4833,6 +5109,7 @@ export namespace Prisma {
     stock_camion: number
     incidencias: number
     movimientos_stock: number
+    cierres_caja: number
   }
 
   export type UsuarioCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4848,6 +5125,7 @@ export namespace Prisma {
     stock_camion?: boolean | UsuarioCountOutputTypeCountStock_camionArgs
     incidencias?: boolean | UsuarioCountOutputTypeCountIncidenciasArgs
     movimientos_stock?: boolean | UsuarioCountOutputTypeCountMovimientos_stockArgs
+    cierres_caja?: boolean | UsuarioCountOutputTypeCountCierres_cajaArgs
   }
 
   // Custom InputTypes
@@ -4943,6 +5221,13 @@ export namespace Prisma {
    */
   export type UsuarioCountOutputTypeCountMovimientos_stockArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: MovimientoStockWhereInput
+  }
+
+  /**
+   * UsuarioCountOutputType without action
+   */
+  export type UsuarioCountOutputTypeCountCierres_cajaArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CierreCajaWhereInput
   }
 
 
@@ -5066,6 +5351,7 @@ export namespace Prisma {
     pedidoItems: number
     stock_camion: number
     movimientos_stock: number
+    ventas_cierre_caja: number
   }
 
   export type ProductoCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5077,6 +5363,7 @@ export namespace Prisma {
     pedidoItems?: boolean | ProductoCountOutputTypeCountPedidoItemsArgs
     stock_camion?: boolean | ProductoCountOutputTypeCountStock_camionArgs
     movimientos_stock?: boolean | ProductoCountOutputTypeCountMovimientos_stockArgs
+    ventas_cierre_caja?: boolean | ProductoCountOutputTypeCountVentas_cierre_cajaArgs
   }
 
   // Custom InputTypes
@@ -5144,6 +5431,13 @@ export namespace Prisma {
    */
   export type ProductoCountOutputTypeCountMovimientos_stockArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: MovimientoStockWhereInput
+  }
+
+  /**
+   * ProductoCountOutputType without action
+   */
+  export type ProductoCountOutputTypeCountVentas_cierre_cajaArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: VentaCierreCajaWhereInput
   }
 
 
@@ -5713,6 +6007,46 @@ export namespace Prisma {
 
 
   /**
+   * Count Type CierreCajaCountOutputType
+   */
+
+  export type CierreCajaCountOutputType = {
+    ventas: number
+    gastos: number
+  }
+
+  export type CierreCajaCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    ventas?: boolean | CierreCajaCountOutputTypeCountVentasArgs
+    gastos?: boolean | CierreCajaCountOutputTypeCountGastosArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * CierreCajaCountOutputType without action
+   */
+  export type CierreCajaCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CierreCajaCountOutputType
+     */
+    select?: CierreCajaCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * CierreCajaCountOutputType without action
+   */
+  export type CierreCajaCountOutputTypeCountVentasArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: VentaCierreCajaWhereInput
+  }
+
+  /**
+   * CierreCajaCountOutputType without action
+   */
+  export type CierreCajaCountOutputTypeCountGastosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GastoCierreCajaWhereInput
+  }
+
+
+  /**
    * Models
    */
 
@@ -5974,6 +6308,7 @@ export namespace Prisma {
     incidencias?: boolean | Usuario$incidenciasArgs<ExtArgs>
     movimientos_stock?: boolean | Usuario$movimientos_stockArgs<ExtArgs>
     user?: boolean | Usuario$userArgs<ExtArgs>
+    cierres_caja?: boolean | Usuario$cierres_cajaArgs<ExtArgs>
     _count?: boolean | UsuarioCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["usuario"]>
 
@@ -6013,6 +6348,7 @@ export namespace Prisma {
     incidencias?: boolean | Usuario$incidenciasArgs<ExtArgs>
     movimientos_stock?: boolean | Usuario$movimientos_stockArgs<ExtArgs>
     user?: boolean | Usuario$userArgs<ExtArgs>
+    cierres_caja?: boolean | Usuario$cierres_cajaArgs<ExtArgs>
     _count?: boolean | UsuarioCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -6033,6 +6369,7 @@ export namespace Prisma {
       incidencias: Prisma.$IncidenciaPayload<ExtArgs>[]
       movimientos_stock: Prisma.$MovimientoStockPayload<ExtArgs>[]
       user: Prisma.$UserPayload<ExtArgs> | null
+      cierres_caja: Prisma.$CierreCajaPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -6404,6 +6741,7 @@ export namespace Prisma {
     incidencias<T extends Usuario$incidenciasArgs<ExtArgs> = {}>(args?: Subset<T, Usuario$incidenciasArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IncidenciaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     movimientos_stock<T extends Usuario$movimientos_stockArgs<ExtArgs> = {}>(args?: Subset<T, Usuario$movimientos_stockArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MovimientoStockPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     user<T extends Usuario$userArgs<ExtArgs> = {}>(args?: Subset<T, Usuario$userArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    cierres_caja<T extends Usuario$cierres_cajaArgs<ExtArgs> = {}>(args?: Subset<T, Usuario$cierres_cajaArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CierreCajaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -7114,6 +7452,30 @@ export namespace Prisma {
      */
     include?: UserInclude<ExtArgs> | null
     where?: UserWhereInput
+  }
+
+  /**
+   * Usuario.cierres_caja
+   */
+  export type Usuario$cierres_cajaArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CierreCaja
+     */
+    select?: CierreCajaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CierreCaja
+     */
+    omit?: CierreCajaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CierreCajaInclude<ExtArgs> | null
+    where?: CierreCajaWhereInput
+    orderBy?: CierreCajaOrderByWithRelationInput | CierreCajaOrderByWithRelationInput[]
+    cursor?: CierreCajaWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CierreCajaScalarFieldEnum | CierreCajaScalarFieldEnum[]
   }
 
   /**
@@ -11563,6 +11925,7 @@ export namespace Prisma {
     stock_camion?: boolean | Producto$stock_camionArgs<ExtArgs>
     stock_fabrica?: boolean | Producto$stock_fabricaArgs<ExtArgs>
     movimientos_stock?: boolean | Producto$movimientos_stockArgs<ExtArgs>
+    ventas_cierre_caja?: boolean | Producto$ventas_cierre_cajaArgs<ExtArgs>
     _count?: boolean | ProductoCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["producto"]>
 
@@ -11589,6 +11952,7 @@ export namespace Prisma {
     stock_camion?: boolean | Producto$stock_camionArgs<ExtArgs>
     stock_fabrica?: boolean | Producto$stock_fabricaArgs<ExtArgs>
     movimientos_stock?: boolean | Producto$movimientos_stockArgs<ExtArgs>
+    ventas_cierre_caja?: boolean | Producto$ventas_cierre_cajaArgs<ExtArgs>
     _count?: boolean | ProductoCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -11604,6 +11968,7 @@ export namespace Prisma {
       stock_camion: Prisma.$StockCamionPayload<ExtArgs>[]
       stock_fabrica: Prisma.$StockFabricaPayload<ExtArgs> | null
       movimientos_stock: Prisma.$MovimientoStockPayload<ExtArgs>[]
+      ventas_cierre_caja: Prisma.$VentaCierreCajaPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -11962,6 +12327,7 @@ export namespace Prisma {
     stock_camion<T extends Producto$stock_camionArgs<ExtArgs> = {}>(args?: Subset<T, Producto$stock_camionArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockCamionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     stock_fabrica<T extends Producto$stock_fabricaArgs<ExtArgs> = {}>(args?: Subset<T, Producto$stock_fabricaArgs<ExtArgs>>): Prisma__StockFabricaClient<$Result.GetResult<Prisma.$StockFabricaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     movimientos_stock<T extends Producto$movimientos_stockArgs<ExtArgs> = {}>(args?: Subset<T, Producto$movimientos_stockArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MovimientoStockPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    ventas_cierre_caja<T extends Producto$ventas_cierre_cajaArgs<ExtArgs> = {}>(args?: Subset<T, Producto$ventas_cierre_cajaArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VentaCierreCajaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -12549,6 +12915,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: MovimientoStockScalarFieldEnum | MovimientoStockScalarFieldEnum[]
+  }
+
+  /**
+   * Producto.ventas_cierre_caja
+   */
+  export type Producto$ventas_cierre_cajaArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VentaCierreCaja
+     */
+    select?: VentaCierreCajaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VentaCierreCaja
+     */
+    omit?: VentaCierreCajaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VentaCierreCajaInclude<ExtArgs> | null
+    where?: VentaCierreCajaWhereInput
+    orderBy?: VentaCierreCajaOrderByWithRelationInput | VentaCierreCajaOrderByWithRelationInput[]
+    cursor?: VentaCierreCajaWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: VentaCierreCajaScalarFieldEnum | VentaCierreCajaScalarFieldEnum[]
   }
 
   /**
@@ -51953,6 +52343,3151 @@ export namespace Prisma {
 
 
   /**
+   * Model CierreCaja
+   */
+
+  export type AggregateCierreCaja = {
+    _count: CierreCajaCountAggregateOutputType | null
+    _avg: CierreCajaAvgAggregateOutputType | null
+    _sum: CierreCajaSumAggregateOutputType | null
+    _min: CierreCajaMinAggregateOutputType | null
+    _max: CierreCajaMaxAggregateOutputType | null
+  }
+
+  export type CierreCajaAvgAggregateOutputType = {
+    efectivo_inicial: number | null
+    total_efectivo: number | null
+    total_tarjeta: number | null
+    total_transferencia: number | null
+    total_credito_oficina: number | null
+    total_pagina_web: number | null
+    total_general: number | null
+  }
+
+  export type CierreCajaSumAggregateOutputType = {
+    efectivo_inicial: number | null
+    total_efectivo: number | null
+    total_tarjeta: number | null
+    total_transferencia: number | null
+    total_credito_oficina: number | null
+    total_pagina_web: number | null
+    total_general: number | null
+  }
+
+  export type CierreCajaMinAggregateOutputType = {
+    id: string | null
+    fecha: Date | null
+    efectivo_inicial: number | null
+    total_efectivo: number | null
+    total_tarjeta: number | null
+    total_transferencia: number | null
+    total_credito_oficina: number | null
+    total_pagina_web: number | null
+    total_general: number | null
+    estado: $Enums.EstadoCierreCaja | null
+    observaciones: string | null
+    created_at: Date | null
+    updated_at: Date | null
+    usuario_id: string | null
+  }
+
+  export type CierreCajaMaxAggregateOutputType = {
+    id: string | null
+    fecha: Date | null
+    efectivo_inicial: number | null
+    total_efectivo: number | null
+    total_tarjeta: number | null
+    total_transferencia: number | null
+    total_credito_oficina: number | null
+    total_pagina_web: number | null
+    total_general: number | null
+    estado: $Enums.EstadoCierreCaja | null
+    observaciones: string | null
+    created_at: Date | null
+    updated_at: Date | null
+    usuario_id: string | null
+  }
+
+  export type CierreCajaCountAggregateOutputType = {
+    id: number
+    fecha: number
+    efectivo_inicial: number
+    total_efectivo: number
+    total_tarjeta: number
+    total_transferencia: number
+    total_credito_oficina: number
+    total_pagina_web: number
+    total_general: number
+    estado: number
+    observaciones: number
+    created_at: number
+    updated_at: number
+    usuario_id: number
+    _all: number
+  }
+
+
+  export type CierreCajaAvgAggregateInputType = {
+    efectivo_inicial?: true
+    total_efectivo?: true
+    total_tarjeta?: true
+    total_transferencia?: true
+    total_credito_oficina?: true
+    total_pagina_web?: true
+    total_general?: true
+  }
+
+  export type CierreCajaSumAggregateInputType = {
+    efectivo_inicial?: true
+    total_efectivo?: true
+    total_tarjeta?: true
+    total_transferencia?: true
+    total_credito_oficina?: true
+    total_pagina_web?: true
+    total_general?: true
+  }
+
+  export type CierreCajaMinAggregateInputType = {
+    id?: true
+    fecha?: true
+    efectivo_inicial?: true
+    total_efectivo?: true
+    total_tarjeta?: true
+    total_transferencia?: true
+    total_credito_oficina?: true
+    total_pagina_web?: true
+    total_general?: true
+    estado?: true
+    observaciones?: true
+    created_at?: true
+    updated_at?: true
+    usuario_id?: true
+  }
+
+  export type CierreCajaMaxAggregateInputType = {
+    id?: true
+    fecha?: true
+    efectivo_inicial?: true
+    total_efectivo?: true
+    total_tarjeta?: true
+    total_transferencia?: true
+    total_credito_oficina?: true
+    total_pagina_web?: true
+    total_general?: true
+    estado?: true
+    observaciones?: true
+    created_at?: true
+    updated_at?: true
+    usuario_id?: true
+  }
+
+  export type CierreCajaCountAggregateInputType = {
+    id?: true
+    fecha?: true
+    efectivo_inicial?: true
+    total_efectivo?: true
+    total_tarjeta?: true
+    total_transferencia?: true
+    total_credito_oficina?: true
+    total_pagina_web?: true
+    total_general?: true
+    estado?: true
+    observaciones?: true
+    created_at?: true
+    updated_at?: true
+    usuario_id?: true
+    _all?: true
+  }
+
+  export type CierreCajaAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CierreCaja to aggregate.
+     */
+    where?: CierreCajaWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CierreCajas to fetch.
+     */
+    orderBy?: CierreCajaOrderByWithRelationInput | CierreCajaOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: CierreCajaWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CierreCajas from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CierreCajas.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned CierreCajas
+    **/
+    _count?: true | CierreCajaCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: CierreCajaAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: CierreCajaSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: CierreCajaMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: CierreCajaMaxAggregateInputType
+  }
+
+  export type GetCierreCajaAggregateType<T extends CierreCajaAggregateArgs> = {
+        [P in keyof T & keyof AggregateCierreCaja]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCierreCaja[P]>
+      : GetScalarType<T[P], AggregateCierreCaja[P]>
+  }
+
+
+
+
+  export type CierreCajaGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CierreCajaWhereInput
+    orderBy?: CierreCajaOrderByWithAggregationInput | CierreCajaOrderByWithAggregationInput[]
+    by: CierreCajaScalarFieldEnum[] | CierreCajaScalarFieldEnum
+    having?: CierreCajaScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: CierreCajaCountAggregateInputType | true
+    _avg?: CierreCajaAvgAggregateInputType
+    _sum?: CierreCajaSumAggregateInputType
+    _min?: CierreCajaMinAggregateInputType
+    _max?: CierreCajaMaxAggregateInputType
+  }
+
+  export type CierreCajaGroupByOutputType = {
+    id: string
+    fecha: Date
+    efectivo_inicial: number
+    total_efectivo: number
+    total_tarjeta: number
+    total_transferencia: number
+    total_credito_oficina: number
+    total_pagina_web: number
+    total_general: number
+    estado: $Enums.EstadoCierreCaja
+    observaciones: string | null
+    created_at: Date
+    updated_at: Date
+    usuario_id: string
+    _count: CierreCajaCountAggregateOutputType | null
+    _avg: CierreCajaAvgAggregateOutputType | null
+    _sum: CierreCajaSumAggregateOutputType | null
+    _min: CierreCajaMinAggregateOutputType | null
+    _max: CierreCajaMaxAggregateOutputType | null
+  }
+
+  type GetCierreCajaGroupByPayload<T extends CierreCajaGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<CierreCajaGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof CierreCajaGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CierreCajaGroupByOutputType[P]>
+            : GetScalarType<T[P], CierreCajaGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type CierreCajaSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    fecha?: boolean
+    efectivo_inicial?: boolean
+    total_efectivo?: boolean
+    total_tarjeta?: boolean
+    total_transferencia?: boolean
+    total_credito_oficina?: boolean
+    total_pagina_web?: boolean
+    total_general?: boolean
+    estado?: boolean
+    observaciones?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    usuario_id?: boolean
+    usuario?: boolean | UsuarioDefaultArgs<ExtArgs>
+    ventas?: boolean | CierreCaja$ventasArgs<ExtArgs>
+    gastos?: boolean | CierreCaja$gastosArgs<ExtArgs>
+    _count?: boolean | CierreCajaCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["cierreCaja"]>
+
+
+
+  export type CierreCajaSelectScalar = {
+    id?: boolean
+    fecha?: boolean
+    efectivo_inicial?: boolean
+    total_efectivo?: boolean
+    total_tarjeta?: boolean
+    total_transferencia?: boolean
+    total_credito_oficina?: boolean
+    total_pagina_web?: boolean
+    total_general?: boolean
+    estado?: boolean
+    observaciones?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    usuario_id?: boolean
+  }
+
+  export type CierreCajaOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "fecha" | "efectivo_inicial" | "total_efectivo" | "total_tarjeta" | "total_transferencia" | "total_credito_oficina" | "total_pagina_web" | "total_general" | "estado" | "observaciones" | "created_at" | "updated_at" | "usuario_id", ExtArgs["result"]["cierreCaja"]>
+  export type CierreCajaInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    usuario?: boolean | UsuarioDefaultArgs<ExtArgs>
+    ventas?: boolean | CierreCaja$ventasArgs<ExtArgs>
+    gastos?: boolean | CierreCaja$gastosArgs<ExtArgs>
+    _count?: boolean | CierreCajaCountOutputTypeDefaultArgs<ExtArgs>
+  }
+
+  export type $CierreCajaPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "CierreCaja"
+    objects: {
+      usuario: Prisma.$UsuarioPayload<ExtArgs>
+      ventas: Prisma.$VentaCierreCajaPayload<ExtArgs>[]
+      gastos: Prisma.$GastoCierreCajaPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      fecha: Date
+      efectivo_inicial: number
+      total_efectivo: number
+      total_tarjeta: number
+      total_transferencia: number
+      total_credito_oficina: number
+      total_pagina_web: number
+      total_general: number
+      estado: $Enums.EstadoCierreCaja
+      observaciones: string | null
+      created_at: Date
+      updated_at: Date
+      usuario_id: string
+    }, ExtArgs["result"]["cierreCaja"]>
+    composites: {}
+  }
+
+  type CierreCajaGetPayload<S extends boolean | null | undefined | CierreCajaDefaultArgs> = $Result.GetResult<Prisma.$CierreCajaPayload, S>
+
+  type CierreCajaCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<CierreCajaFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: CierreCajaCountAggregateInputType | true
+    }
+
+  export interface CierreCajaDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['CierreCaja'], meta: { name: 'CierreCaja' } }
+    /**
+     * Find zero or one CierreCaja that matches the filter.
+     * @param {CierreCajaFindUniqueArgs} args - Arguments to find a CierreCaja
+     * @example
+     * // Get one CierreCaja
+     * const cierreCaja = await prisma.cierreCaja.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends CierreCajaFindUniqueArgs>(args: SelectSubset<T, CierreCajaFindUniqueArgs<ExtArgs>>): Prisma__CierreCajaClient<$Result.GetResult<Prisma.$CierreCajaPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one CierreCaja that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {CierreCajaFindUniqueOrThrowArgs} args - Arguments to find a CierreCaja
+     * @example
+     * // Get one CierreCaja
+     * const cierreCaja = await prisma.cierreCaja.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends CierreCajaFindUniqueOrThrowArgs>(args: SelectSubset<T, CierreCajaFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CierreCajaClient<$Result.GetResult<Prisma.$CierreCajaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CierreCaja that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CierreCajaFindFirstArgs} args - Arguments to find a CierreCaja
+     * @example
+     * // Get one CierreCaja
+     * const cierreCaja = await prisma.cierreCaja.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends CierreCajaFindFirstArgs>(args?: SelectSubset<T, CierreCajaFindFirstArgs<ExtArgs>>): Prisma__CierreCajaClient<$Result.GetResult<Prisma.$CierreCajaPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CierreCaja that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CierreCajaFindFirstOrThrowArgs} args - Arguments to find a CierreCaja
+     * @example
+     * // Get one CierreCaja
+     * const cierreCaja = await prisma.cierreCaja.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends CierreCajaFindFirstOrThrowArgs>(args?: SelectSubset<T, CierreCajaFindFirstOrThrowArgs<ExtArgs>>): Prisma__CierreCajaClient<$Result.GetResult<Prisma.$CierreCajaPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more CierreCajas that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CierreCajaFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all CierreCajas
+     * const cierreCajas = await prisma.cierreCaja.findMany()
+     * 
+     * // Get first 10 CierreCajas
+     * const cierreCajas = await prisma.cierreCaja.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const cierreCajaWithIdOnly = await prisma.cierreCaja.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends CierreCajaFindManyArgs>(args?: SelectSubset<T, CierreCajaFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CierreCajaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a CierreCaja.
+     * @param {CierreCajaCreateArgs} args - Arguments to create a CierreCaja.
+     * @example
+     * // Create one CierreCaja
+     * const CierreCaja = await prisma.cierreCaja.create({
+     *   data: {
+     *     // ... data to create a CierreCaja
+     *   }
+     * })
+     * 
+     */
+    create<T extends CierreCajaCreateArgs>(args: SelectSubset<T, CierreCajaCreateArgs<ExtArgs>>): Prisma__CierreCajaClient<$Result.GetResult<Prisma.$CierreCajaPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many CierreCajas.
+     * @param {CierreCajaCreateManyArgs} args - Arguments to create many CierreCajas.
+     * @example
+     * // Create many CierreCajas
+     * const cierreCaja = await prisma.cierreCaja.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends CierreCajaCreateManyArgs>(args?: SelectSubset<T, CierreCajaCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a CierreCaja.
+     * @param {CierreCajaDeleteArgs} args - Arguments to delete one CierreCaja.
+     * @example
+     * // Delete one CierreCaja
+     * const CierreCaja = await prisma.cierreCaja.delete({
+     *   where: {
+     *     // ... filter to delete one CierreCaja
+     *   }
+     * })
+     * 
+     */
+    delete<T extends CierreCajaDeleteArgs>(args: SelectSubset<T, CierreCajaDeleteArgs<ExtArgs>>): Prisma__CierreCajaClient<$Result.GetResult<Prisma.$CierreCajaPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one CierreCaja.
+     * @param {CierreCajaUpdateArgs} args - Arguments to update one CierreCaja.
+     * @example
+     * // Update one CierreCaja
+     * const cierreCaja = await prisma.cierreCaja.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends CierreCajaUpdateArgs>(args: SelectSubset<T, CierreCajaUpdateArgs<ExtArgs>>): Prisma__CierreCajaClient<$Result.GetResult<Prisma.$CierreCajaPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more CierreCajas.
+     * @param {CierreCajaDeleteManyArgs} args - Arguments to filter CierreCajas to delete.
+     * @example
+     * // Delete a few CierreCajas
+     * const { count } = await prisma.cierreCaja.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends CierreCajaDeleteManyArgs>(args?: SelectSubset<T, CierreCajaDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CierreCajas.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CierreCajaUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many CierreCajas
+     * const cierreCaja = await prisma.cierreCaja.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends CierreCajaUpdateManyArgs>(args: SelectSubset<T, CierreCajaUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one CierreCaja.
+     * @param {CierreCajaUpsertArgs} args - Arguments to update or create a CierreCaja.
+     * @example
+     * // Update or create a CierreCaja
+     * const cierreCaja = await prisma.cierreCaja.upsert({
+     *   create: {
+     *     // ... data to create a CierreCaja
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the CierreCaja we want to update
+     *   }
+     * })
+     */
+    upsert<T extends CierreCajaUpsertArgs>(args: SelectSubset<T, CierreCajaUpsertArgs<ExtArgs>>): Prisma__CierreCajaClient<$Result.GetResult<Prisma.$CierreCajaPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of CierreCajas.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CierreCajaCountArgs} args - Arguments to filter CierreCajas to count.
+     * @example
+     * // Count the number of CierreCajas
+     * const count = await prisma.cierreCaja.count({
+     *   where: {
+     *     // ... the filter for the CierreCajas we want to count
+     *   }
+     * })
+    **/
+    count<T extends CierreCajaCountArgs>(
+      args?: Subset<T, CierreCajaCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], CierreCajaCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a CierreCaja.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CierreCajaAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends CierreCajaAggregateArgs>(args: Subset<T, CierreCajaAggregateArgs>): Prisma.PrismaPromise<GetCierreCajaAggregateType<T>>
+
+    /**
+     * Group by CierreCaja.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CierreCajaGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends CierreCajaGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: CierreCajaGroupByArgs['orderBy'] }
+        : { orderBy?: CierreCajaGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, CierreCajaGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCierreCajaGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the CierreCaja model
+   */
+  readonly fields: CierreCajaFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for CierreCaja.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__CierreCajaClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    usuario<T extends UsuarioDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UsuarioDefaultArgs<ExtArgs>>): Prisma__UsuarioClient<$Result.GetResult<Prisma.$UsuarioPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    ventas<T extends CierreCaja$ventasArgs<ExtArgs> = {}>(args?: Subset<T, CierreCaja$ventasArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VentaCierreCajaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    gastos<T extends CierreCaja$gastosArgs<ExtArgs> = {}>(args?: Subset<T, CierreCaja$gastosArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GastoCierreCajaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the CierreCaja model
+   */
+  interface CierreCajaFieldRefs {
+    readonly id: FieldRef<"CierreCaja", 'String'>
+    readonly fecha: FieldRef<"CierreCaja", 'DateTime'>
+    readonly efectivo_inicial: FieldRef<"CierreCaja", 'Float'>
+    readonly total_efectivo: FieldRef<"CierreCaja", 'Float'>
+    readonly total_tarjeta: FieldRef<"CierreCaja", 'Float'>
+    readonly total_transferencia: FieldRef<"CierreCaja", 'Float'>
+    readonly total_credito_oficina: FieldRef<"CierreCaja", 'Float'>
+    readonly total_pagina_web: FieldRef<"CierreCaja", 'Float'>
+    readonly total_general: FieldRef<"CierreCaja", 'Float'>
+    readonly estado: FieldRef<"CierreCaja", 'EstadoCierreCaja'>
+    readonly observaciones: FieldRef<"CierreCaja", 'String'>
+    readonly created_at: FieldRef<"CierreCaja", 'DateTime'>
+    readonly updated_at: FieldRef<"CierreCaja", 'DateTime'>
+    readonly usuario_id: FieldRef<"CierreCaja", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * CierreCaja findUnique
+   */
+  export type CierreCajaFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CierreCaja
+     */
+    select?: CierreCajaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CierreCaja
+     */
+    omit?: CierreCajaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CierreCajaInclude<ExtArgs> | null
+    /**
+     * Filter, which CierreCaja to fetch.
+     */
+    where: CierreCajaWhereUniqueInput
+  }
+
+  /**
+   * CierreCaja findUniqueOrThrow
+   */
+  export type CierreCajaFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CierreCaja
+     */
+    select?: CierreCajaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CierreCaja
+     */
+    omit?: CierreCajaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CierreCajaInclude<ExtArgs> | null
+    /**
+     * Filter, which CierreCaja to fetch.
+     */
+    where: CierreCajaWhereUniqueInput
+  }
+
+  /**
+   * CierreCaja findFirst
+   */
+  export type CierreCajaFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CierreCaja
+     */
+    select?: CierreCajaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CierreCaja
+     */
+    omit?: CierreCajaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CierreCajaInclude<ExtArgs> | null
+    /**
+     * Filter, which CierreCaja to fetch.
+     */
+    where?: CierreCajaWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CierreCajas to fetch.
+     */
+    orderBy?: CierreCajaOrderByWithRelationInput | CierreCajaOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CierreCajas.
+     */
+    cursor?: CierreCajaWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CierreCajas from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CierreCajas.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CierreCajas.
+     */
+    distinct?: CierreCajaScalarFieldEnum | CierreCajaScalarFieldEnum[]
+  }
+
+  /**
+   * CierreCaja findFirstOrThrow
+   */
+  export type CierreCajaFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CierreCaja
+     */
+    select?: CierreCajaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CierreCaja
+     */
+    omit?: CierreCajaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CierreCajaInclude<ExtArgs> | null
+    /**
+     * Filter, which CierreCaja to fetch.
+     */
+    where?: CierreCajaWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CierreCajas to fetch.
+     */
+    orderBy?: CierreCajaOrderByWithRelationInput | CierreCajaOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CierreCajas.
+     */
+    cursor?: CierreCajaWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CierreCajas from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CierreCajas.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CierreCajas.
+     */
+    distinct?: CierreCajaScalarFieldEnum | CierreCajaScalarFieldEnum[]
+  }
+
+  /**
+   * CierreCaja findMany
+   */
+  export type CierreCajaFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CierreCaja
+     */
+    select?: CierreCajaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CierreCaja
+     */
+    omit?: CierreCajaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CierreCajaInclude<ExtArgs> | null
+    /**
+     * Filter, which CierreCajas to fetch.
+     */
+    where?: CierreCajaWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CierreCajas to fetch.
+     */
+    orderBy?: CierreCajaOrderByWithRelationInput | CierreCajaOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing CierreCajas.
+     */
+    cursor?: CierreCajaWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CierreCajas from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CierreCajas.
+     */
+    skip?: number
+    distinct?: CierreCajaScalarFieldEnum | CierreCajaScalarFieldEnum[]
+  }
+
+  /**
+   * CierreCaja create
+   */
+  export type CierreCajaCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CierreCaja
+     */
+    select?: CierreCajaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CierreCaja
+     */
+    omit?: CierreCajaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CierreCajaInclude<ExtArgs> | null
+    /**
+     * The data needed to create a CierreCaja.
+     */
+    data: XOR<CierreCajaCreateInput, CierreCajaUncheckedCreateInput>
+  }
+
+  /**
+   * CierreCaja createMany
+   */
+  export type CierreCajaCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many CierreCajas.
+     */
+    data: CierreCajaCreateManyInput | CierreCajaCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * CierreCaja update
+   */
+  export type CierreCajaUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CierreCaja
+     */
+    select?: CierreCajaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CierreCaja
+     */
+    omit?: CierreCajaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CierreCajaInclude<ExtArgs> | null
+    /**
+     * The data needed to update a CierreCaja.
+     */
+    data: XOR<CierreCajaUpdateInput, CierreCajaUncheckedUpdateInput>
+    /**
+     * Choose, which CierreCaja to update.
+     */
+    where: CierreCajaWhereUniqueInput
+  }
+
+  /**
+   * CierreCaja updateMany
+   */
+  export type CierreCajaUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update CierreCajas.
+     */
+    data: XOR<CierreCajaUpdateManyMutationInput, CierreCajaUncheckedUpdateManyInput>
+    /**
+     * Filter which CierreCajas to update
+     */
+    where?: CierreCajaWhereInput
+    /**
+     * Limit how many CierreCajas to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * CierreCaja upsert
+   */
+  export type CierreCajaUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CierreCaja
+     */
+    select?: CierreCajaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CierreCaja
+     */
+    omit?: CierreCajaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CierreCajaInclude<ExtArgs> | null
+    /**
+     * The filter to search for the CierreCaja to update in case it exists.
+     */
+    where: CierreCajaWhereUniqueInput
+    /**
+     * In case the CierreCaja found by the `where` argument doesn't exist, create a new CierreCaja with this data.
+     */
+    create: XOR<CierreCajaCreateInput, CierreCajaUncheckedCreateInput>
+    /**
+     * In case the CierreCaja was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<CierreCajaUpdateInput, CierreCajaUncheckedUpdateInput>
+  }
+
+  /**
+   * CierreCaja delete
+   */
+  export type CierreCajaDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CierreCaja
+     */
+    select?: CierreCajaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CierreCaja
+     */
+    omit?: CierreCajaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CierreCajaInclude<ExtArgs> | null
+    /**
+     * Filter which CierreCaja to delete.
+     */
+    where: CierreCajaWhereUniqueInput
+  }
+
+  /**
+   * CierreCaja deleteMany
+   */
+  export type CierreCajaDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CierreCajas to delete
+     */
+    where?: CierreCajaWhereInput
+    /**
+     * Limit how many CierreCajas to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * CierreCaja.ventas
+   */
+  export type CierreCaja$ventasArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VentaCierreCaja
+     */
+    select?: VentaCierreCajaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VentaCierreCaja
+     */
+    omit?: VentaCierreCajaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VentaCierreCajaInclude<ExtArgs> | null
+    where?: VentaCierreCajaWhereInput
+    orderBy?: VentaCierreCajaOrderByWithRelationInput | VentaCierreCajaOrderByWithRelationInput[]
+    cursor?: VentaCierreCajaWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: VentaCierreCajaScalarFieldEnum | VentaCierreCajaScalarFieldEnum[]
+  }
+
+  /**
+   * CierreCaja.gastos
+   */
+  export type CierreCaja$gastosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GastoCierreCaja
+     */
+    select?: GastoCierreCajaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GastoCierreCaja
+     */
+    omit?: GastoCierreCajaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GastoCierreCajaInclude<ExtArgs> | null
+    where?: GastoCierreCajaWhereInput
+    orderBy?: GastoCierreCajaOrderByWithRelationInput | GastoCierreCajaOrderByWithRelationInput[]
+    cursor?: GastoCierreCajaWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: GastoCierreCajaScalarFieldEnum | GastoCierreCajaScalarFieldEnum[]
+  }
+
+  /**
+   * CierreCaja without action
+   */
+  export type CierreCajaDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CierreCaja
+     */
+    select?: CierreCajaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CierreCaja
+     */
+    omit?: CierreCajaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CierreCajaInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model VentaCierreCaja
+   */
+
+  export type AggregateVentaCierreCaja = {
+    _count: VentaCierreCajaCountAggregateOutputType | null
+    _avg: VentaCierreCajaAvgAggregateOutputType | null
+    _sum: VentaCierreCajaSumAggregateOutputType | null
+    _min: VentaCierreCajaMinAggregateOutputType | null
+    _max: VentaCierreCajaMaxAggregateOutputType | null
+  }
+
+  export type VentaCierreCajaAvgAggregateOutputType = {
+    cantidad: number | null
+    precio_unitario: number | null
+    subtotal: number | null
+  }
+
+  export type VentaCierreCajaSumAggregateOutputType = {
+    cantidad: number | null
+    precio_unitario: number | null
+    subtotal: number | null
+  }
+
+  export type VentaCierreCajaMinAggregateOutputType = {
+    id: string | null
+    cierre_id: string | null
+    descripcion: string | null
+    producto_id: string | null
+    cantidad: number | null
+    precio_unitario: number | null
+    subtotal: number | null
+    metodo_pago: $Enums.MetodoPagoCaja | null
+    es_otro: boolean | null
+  }
+
+  export type VentaCierreCajaMaxAggregateOutputType = {
+    id: string | null
+    cierre_id: string | null
+    descripcion: string | null
+    producto_id: string | null
+    cantidad: number | null
+    precio_unitario: number | null
+    subtotal: number | null
+    metodo_pago: $Enums.MetodoPagoCaja | null
+    es_otro: boolean | null
+  }
+
+  export type VentaCierreCajaCountAggregateOutputType = {
+    id: number
+    cierre_id: number
+    descripcion: number
+    producto_id: number
+    cantidad: number
+    precio_unitario: number
+    subtotal: number
+    metodo_pago: number
+    es_otro: number
+    _all: number
+  }
+
+
+  export type VentaCierreCajaAvgAggregateInputType = {
+    cantidad?: true
+    precio_unitario?: true
+    subtotal?: true
+  }
+
+  export type VentaCierreCajaSumAggregateInputType = {
+    cantidad?: true
+    precio_unitario?: true
+    subtotal?: true
+  }
+
+  export type VentaCierreCajaMinAggregateInputType = {
+    id?: true
+    cierre_id?: true
+    descripcion?: true
+    producto_id?: true
+    cantidad?: true
+    precio_unitario?: true
+    subtotal?: true
+    metodo_pago?: true
+    es_otro?: true
+  }
+
+  export type VentaCierreCajaMaxAggregateInputType = {
+    id?: true
+    cierre_id?: true
+    descripcion?: true
+    producto_id?: true
+    cantidad?: true
+    precio_unitario?: true
+    subtotal?: true
+    metodo_pago?: true
+    es_otro?: true
+  }
+
+  export type VentaCierreCajaCountAggregateInputType = {
+    id?: true
+    cierre_id?: true
+    descripcion?: true
+    producto_id?: true
+    cantidad?: true
+    precio_unitario?: true
+    subtotal?: true
+    metodo_pago?: true
+    es_otro?: true
+    _all?: true
+  }
+
+  export type VentaCierreCajaAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which VentaCierreCaja to aggregate.
+     */
+    where?: VentaCierreCajaWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of VentaCierreCajas to fetch.
+     */
+    orderBy?: VentaCierreCajaOrderByWithRelationInput | VentaCierreCajaOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: VentaCierreCajaWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` VentaCierreCajas from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` VentaCierreCajas.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned VentaCierreCajas
+    **/
+    _count?: true | VentaCierreCajaCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: VentaCierreCajaAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: VentaCierreCajaSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: VentaCierreCajaMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: VentaCierreCajaMaxAggregateInputType
+  }
+
+  export type GetVentaCierreCajaAggregateType<T extends VentaCierreCajaAggregateArgs> = {
+        [P in keyof T & keyof AggregateVentaCierreCaja]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateVentaCierreCaja[P]>
+      : GetScalarType<T[P], AggregateVentaCierreCaja[P]>
+  }
+
+
+
+
+  export type VentaCierreCajaGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: VentaCierreCajaWhereInput
+    orderBy?: VentaCierreCajaOrderByWithAggregationInput | VentaCierreCajaOrderByWithAggregationInput[]
+    by: VentaCierreCajaScalarFieldEnum[] | VentaCierreCajaScalarFieldEnum
+    having?: VentaCierreCajaScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: VentaCierreCajaCountAggregateInputType | true
+    _avg?: VentaCierreCajaAvgAggregateInputType
+    _sum?: VentaCierreCajaSumAggregateInputType
+    _min?: VentaCierreCajaMinAggregateInputType
+    _max?: VentaCierreCajaMaxAggregateInputType
+  }
+
+  export type VentaCierreCajaGroupByOutputType = {
+    id: string
+    cierre_id: string
+    descripcion: string
+    producto_id: string | null
+    cantidad: number
+    precio_unitario: number
+    subtotal: number
+    metodo_pago: $Enums.MetodoPagoCaja
+    es_otro: boolean
+    _count: VentaCierreCajaCountAggregateOutputType | null
+    _avg: VentaCierreCajaAvgAggregateOutputType | null
+    _sum: VentaCierreCajaSumAggregateOutputType | null
+    _min: VentaCierreCajaMinAggregateOutputType | null
+    _max: VentaCierreCajaMaxAggregateOutputType | null
+  }
+
+  type GetVentaCierreCajaGroupByPayload<T extends VentaCierreCajaGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<VentaCierreCajaGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof VentaCierreCajaGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], VentaCierreCajaGroupByOutputType[P]>
+            : GetScalarType<T[P], VentaCierreCajaGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type VentaCierreCajaSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    cierre_id?: boolean
+    descripcion?: boolean
+    producto_id?: boolean
+    cantidad?: boolean
+    precio_unitario?: boolean
+    subtotal?: boolean
+    metodo_pago?: boolean
+    es_otro?: boolean
+    cierre?: boolean | CierreCajaDefaultArgs<ExtArgs>
+    producto?: boolean | VentaCierreCaja$productoArgs<ExtArgs>
+  }, ExtArgs["result"]["ventaCierreCaja"]>
+
+
+
+  export type VentaCierreCajaSelectScalar = {
+    id?: boolean
+    cierre_id?: boolean
+    descripcion?: boolean
+    producto_id?: boolean
+    cantidad?: boolean
+    precio_unitario?: boolean
+    subtotal?: boolean
+    metodo_pago?: boolean
+    es_otro?: boolean
+  }
+
+  export type VentaCierreCajaOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "cierre_id" | "descripcion" | "producto_id" | "cantidad" | "precio_unitario" | "subtotal" | "metodo_pago" | "es_otro", ExtArgs["result"]["ventaCierreCaja"]>
+  export type VentaCierreCajaInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    cierre?: boolean | CierreCajaDefaultArgs<ExtArgs>
+    producto?: boolean | VentaCierreCaja$productoArgs<ExtArgs>
+  }
+
+  export type $VentaCierreCajaPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "VentaCierreCaja"
+    objects: {
+      cierre: Prisma.$CierreCajaPayload<ExtArgs>
+      producto: Prisma.$ProductoPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      cierre_id: string
+      descripcion: string
+      producto_id: string | null
+      cantidad: number
+      precio_unitario: number
+      subtotal: number
+      metodo_pago: $Enums.MetodoPagoCaja
+      es_otro: boolean
+    }, ExtArgs["result"]["ventaCierreCaja"]>
+    composites: {}
+  }
+
+  type VentaCierreCajaGetPayload<S extends boolean | null | undefined | VentaCierreCajaDefaultArgs> = $Result.GetResult<Prisma.$VentaCierreCajaPayload, S>
+
+  type VentaCierreCajaCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<VentaCierreCajaFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: VentaCierreCajaCountAggregateInputType | true
+    }
+
+  export interface VentaCierreCajaDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['VentaCierreCaja'], meta: { name: 'VentaCierreCaja' } }
+    /**
+     * Find zero or one VentaCierreCaja that matches the filter.
+     * @param {VentaCierreCajaFindUniqueArgs} args - Arguments to find a VentaCierreCaja
+     * @example
+     * // Get one VentaCierreCaja
+     * const ventaCierreCaja = await prisma.ventaCierreCaja.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends VentaCierreCajaFindUniqueArgs>(args: SelectSubset<T, VentaCierreCajaFindUniqueArgs<ExtArgs>>): Prisma__VentaCierreCajaClient<$Result.GetResult<Prisma.$VentaCierreCajaPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one VentaCierreCaja that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {VentaCierreCajaFindUniqueOrThrowArgs} args - Arguments to find a VentaCierreCaja
+     * @example
+     * // Get one VentaCierreCaja
+     * const ventaCierreCaja = await prisma.ventaCierreCaja.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends VentaCierreCajaFindUniqueOrThrowArgs>(args: SelectSubset<T, VentaCierreCajaFindUniqueOrThrowArgs<ExtArgs>>): Prisma__VentaCierreCajaClient<$Result.GetResult<Prisma.$VentaCierreCajaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first VentaCierreCaja that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VentaCierreCajaFindFirstArgs} args - Arguments to find a VentaCierreCaja
+     * @example
+     * // Get one VentaCierreCaja
+     * const ventaCierreCaja = await prisma.ventaCierreCaja.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends VentaCierreCajaFindFirstArgs>(args?: SelectSubset<T, VentaCierreCajaFindFirstArgs<ExtArgs>>): Prisma__VentaCierreCajaClient<$Result.GetResult<Prisma.$VentaCierreCajaPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first VentaCierreCaja that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VentaCierreCajaFindFirstOrThrowArgs} args - Arguments to find a VentaCierreCaja
+     * @example
+     * // Get one VentaCierreCaja
+     * const ventaCierreCaja = await prisma.ventaCierreCaja.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends VentaCierreCajaFindFirstOrThrowArgs>(args?: SelectSubset<T, VentaCierreCajaFindFirstOrThrowArgs<ExtArgs>>): Prisma__VentaCierreCajaClient<$Result.GetResult<Prisma.$VentaCierreCajaPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more VentaCierreCajas that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VentaCierreCajaFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all VentaCierreCajas
+     * const ventaCierreCajas = await prisma.ventaCierreCaja.findMany()
+     * 
+     * // Get first 10 VentaCierreCajas
+     * const ventaCierreCajas = await prisma.ventaCierreCaja.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const ventaCierreCajaWithIdOnly = await prisma.ventaCierreCaja.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends VentaCierreCajaFindManyArgs>(args?: SelectSubset<T, VentaCierreCajaFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VentaCierreCajaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a VentaCierreCaja.
+     * @param {VentaCierreCajaCreateArgs} args - Arguments to create a VentaCierreCaja.
+     * @example
+     * // Create one VentaCierreCaja
+     * const VentaCierreCaja = await prisma.ventaCierreCaja.create({
+     *   data: {
+     *     // ... data to create a VentaCierreCaja
+     *   }
+     * })
+     * 
+     */
+    create<T extends VentaCierreCajaCreateArgs>(args: SelectSubset<T, VentaCierreCajaCreateArgs<ExtArgs>>): Prisma__VentaCierreCajaClient<$Result.GetResult<Prisma.$VentaCierreCajaPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many VentaCierreCajas.
+     * @param {VentaCierreCajaCreateManyArgs} args - Arguments to create many VentaCierreCajas.
+     * @example
+     * // Create many VentaCierreCajas
+     * const ventaCierreCaja = await prisma.ventaCierreCaja.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends VentaCierreCajaCreateManyArgs>(args?: SelectSubset<T, VentaCierreCajaCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a VentaCierreCaja.
+     * @param {VentaCierreCajaDeleteArgs} args - Arguments to delete one VentaCierreCaja.
+     * @example
+     * // Delete one VentaCierreCaja
+     * const VentaCierreCaja = await prisma.ventaCierreCaja.delete({
+     *   where: {
+     *     // ... filter to delete one VentaCierreCaja
+     *   }
+     * })
+     * 
+     */
+    delete<T extends VentaCierreCajaDeleteArgs>(args: SelectSubset<T, VentaCierreCajaDeleteArgs<ExtArgs>>): Prisma__VentaCierreCajaClient<$Result.GetResult<Prisma.$VentaCierreCajaPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one VentaCierreCaja.
+     * @param {VentaCierreCajaUpdateArgs} args - Arguments to update one VentaCierreCaja.
+     * @example
+     * // Update one VentaCierreCaja
+     * const ventaCierreCaja = await prisma.ventaCierreCaja.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends VentaCierreCajaUpdateArgs>(args: SelectSubset<T, VentaCierreCajaUpdateArgs<ExtArgs>>): Prisma__VentaCierreCajaClient<$Result.GetResult<Prisma.$VentaCierreCajaPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more VentaCierreCajas.
+     * @param {VentaCierreCajaDeleteManyArgs} args - Arguments to filter VentaCierreCajas to delete.
+     * @example
+     * // Delete a few VentaCierreCajas
+     * const { count } = await prisma.ventaCierreCaja.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends VentaCierreCajaDeleteManyArgs>(args?: SelectSubset<T, VentaCierreCajaDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more VentaCierreCajas.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VentaCierreCajaUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many VentaCierreCajas
+     * const ventaCierreCaja = await prisma.ventaCierreCaja.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends VentaCierreCajaUpdateManyArgs>(args: SelectSubset<T, VentaCierreCajaUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one VentaCierreCaja.
+     * @param {VentaCierreCajaUpsertArgs} args - Arguments to update or create a VentaCierreCaja.
+     * @example
+     * // Update or create a VentaCierreCaja
+     * const ventaCierreCaja = await prisma.ventaCierreCaja.upsert({
+     *   create: {
+     *     // ... data to create a VentaCierreCaja
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the VentaCierreCaja we want to update
+     *   }
+     * })
+     */
+    upsert<T extends VentaCierreCajaUpsertArgs>(args: SelectSubset<T, VentaCierreCajaUpsertArgs<ExtArgs>>): Prisma__VentaCierreCajaClient<$Result.GetResult<Prisma.$VentaCierreCajaPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of VentaCierreCajas.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VentaCierreCajaCountArgs} args - Arguments to filter VentaCierreCajas to count.
+     * @example
+     * // Count the number of VentaCierreCajas
+     * const count = await prisma.ventaCierreCaja.count({
+     *   where: {
+     *     // ... the filter for the VentaCierreCajas we want to count
+     *   }
+     * })
+    **/
+    count<T extends VentaCierreCajaCountArgs>(
+      args?: Subset<T, VentaCierreCajaCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], VentaCierreCajaCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a VentaCierreCaja.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VentaCierreCajaAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends VentaCierreCajaAggregateArgs>(args: Subset<T, VentaCierreCajaAggregateArgs>): Prisma.PrismaPromise<GetVentaCierreCajaAggregateType<T>>
+
+    /**
+     * Group by VentaCierreCaja.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VentaCierreCajaGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends VentaCierreCajaGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: VentaCierreCajaGroupByArgs['orderBy'] }
+        : { orderBy?: VentaCierreCajaGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, VentaCierreCajaGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetVentaCierreCajaGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the VentaCierreCaja model
+   */
+  readonly fields: VentaCierreCajaFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for VentaCierreCaja.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__VentaCierreCajaClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    cierre<T extends CierreCajaDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CierreCajaDefaultArgs<ExtArgs>>): Prisma__CierreCajaClient<$Result.GetResult<Prisma.$CierreCajaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    producto<T extends VentaCierreCaja$productoArgs<ExtArgs> = {}>(args?: Subset<T, VentaCierreCaja$productoArgs<ExtArgs>>): Prisma__ProductoClient<$Result.GetResult<Prisma.$ProductoPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the VentaCierreCaja model
+   */
+  interface VentaCierreCajaFieldRefs {
+    readonly id: FieldRef<"VentaCierreCaja", 'String'>
+    readonly cierre_id: FieldRef<"VentaCierreCaja", 'String'>
+    readonly descripcion: FieldRef<"VentaCierreCaja", 'String'>
+    readonly producto_id: FieldRef<"VentaCierreCaja", 'String'>
+    readonly cantidad: FieldRef<"VentaCierreCaja", 'Int'>
+    readonly precio_unitario: FieldRef<"VentaCierreCaja", 'Float'>
+    readonly subtotal: FieldRef<"VentaCierreCaja", 'Float'>
+    readonly metodo_pago: FieldRef<"VentaCierreCaja", 'MetodoPagoCaja'>
+    readonly es_otro: FieldRef<"VentaCierreCaja", 'Boolean'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * VentaCierreCaja findUnique
+   */
+  export type VentaCierreCajaFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VentaCierreCaja
+     */
+    select?: VentaCierreCajaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VentaCierreCaja
+     */
+    omit?: VentaCierreCajaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VentaCierreCajaInclude<ExtArgs> | null
+    /**
+     * Filter, which VentaCierreCaja to fetch.
+     */
+    where: VentaCierreCajaWhereUniqueInput
+  }
+
+  /**
+   * VentaCierreCaja findUniqueOrThrow
+   */
+  export type VentaCierreCajaFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VentaCierreCaja
+     */
+    select?: VentaCierreCajaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VentaCierreCaja
+     */
+    omit?: VentaCierreCajaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VentaCierreCajaInclude<ExtArgs> | null
+    /**
+     * Filter, which VentaCierreCaja to fetch.
+     */
+    where: VentaCierreCajaWhereUniqueInput
+  }
+
+  /**
+   * VentaCierreCaja findFirst
+   */
+  export type VentaCierreCajaFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VentaCierreCaja
+     */
+    select?: VentaCierreCajaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VentaCierreCaja
+     */
+    omit?: VentaCierreCajaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VentaCierreCajaInclude<ExtArgs> | null
+    /**
+     * Filter, which VentaCierreCaja to fetch.
+     */
+    where?: VentaCierreCajaWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of VentaCierreCajas to fetch.
+     */
+    orderBy?: VentaCierreCajaOrderByWithRelationInput | VentaCierreCajaOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for VentaCierreCajas.
+     */
+    cursor?: VentaCierreCajaWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` VentaCierreCajas from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` VentaCierreCajas.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of VentaCierreCajas.
+     */
+    distinct?: VentaCierreCajaScalarFieldEnum | VentaCierreCajaScalarFieldEnum[]
+  }
+
+  /**
+   * VentaCierreCaja findFirstOrThrow
+   */
+  export type VentaCierreCajaFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VentaCierreCaja
+     */
+    select?: VentaCierreCajaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VentaCierreCaja
+     */
+    omit?: VentaCierreCajaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VentaCierreCajaInclude<ExtArgs> | null
+    /**
+     * Filter, which VentaCierreCaja to fetch.
+     */
+    where?: VentaCierreCajaWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of VentaCierreCajas to fetch.
+     */
+    orderBy?: VentaCierreCajaOrderByWithRelationInput | VentaCierreCajaOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for VentaCierreCajas.
+     */
+    cursor?: VentaCierreCajaWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` VentaCierreCajas from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` VentaCierreCajas.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of VentaCierreCajas.
+     */
+    distinct?: VentaCierreCajaScalarFieldEnum | VentaCierreCajaScalarFieldEnum[]
+  }
+
+  /**
+   * VentaCierreCaja findMany
+   */
+  export type VentaCierreCajaFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VentaCierreCaja
+     */
+    select?: VentaCierreCajaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VentaCierreCaja
+     */
+    omit?: VentaCierreCajaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VentaCierreCajaInclude<ExtArgs> | null
+    /**
+     * Filter, which VentaCierreCajas to fetch.
+     */
+    where?: VentaCierreCajaWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of VentaCierreCajas to fetch.
+     */
+    orderBy?: VentaCierreCajaOrderByWithRelationInput | VentaCierreCajaOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing VentaCierreCajas.
+     */
+    cursor?: VentaCierreCajaWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` VentaCierreCajas from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` VentaCierreCajas.
+     */
+    skip?: number
+    distinct?: VentaCierreCajaScalarFieldEnum | VentaCierreCajaScalarFieldEnum[]
+  }
+
+  /**
+   * VentaCierreCaja create
+   */
+  export type VentaCierreCajaCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VentaCierreCaja
+     */
+    select?: VentaCierreCajaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VentaCierreCaja
+     */
+    omit?: VentaCierreCajaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VentaCierreCajaInclude<ExtArgs> | null
+    /**
+     * The data needed to create a VentaCierreCaja.
+     */
+    data: XOR<VentaCierreCajaCreateInput, VentaCierreCajaUncheckedCreateInput>
+  }
+
+  /**
+   * VentaCierreCaja createMany
+   */
+  export type VentaCierreCajaCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many VentaCierreCajas.
+     */
+    data: VentaCierreCajaCreateManyInput | VentaCierreCajaCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * VentaCierreCaja update
+   */
+  export type VentaCierreCajaUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VentaCierreCaja
+     */
+    select?: VentaCierreCajaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VentaCierreCaja
+     */
+    omit?: VentaCierreCajaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VentaCierreCajaInclude<ExtArgs> | null
+    /**
+     * The data needed to update a VentaCierreCaja.
+     */
+    data: XOR<VentaCierreCajaUpdateInput, VentaCierreCajaUncheckedUpdateInput>
+    /**
+     * Choose, which VentaCierreCaja to update.
+     */
+    where: VentaCierreCajaWhereUniqueInput
+  }
+
+  /**
+   * VentaCierreCaja updateMany
+   */
+  export type VentaCierreCajaUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update VentaCierreCajas.
+     */
+    data: XOR<VentaCierreCajaUpdateManyMutationInput, VentaCierreCajaUncheckedUpdateManyInput>
+    /**
+     * Filter which VentaCierreCajas to update
+     */
+    where?: VentaCierreCajaWhereInput
+    /**
+     * Limit how many VentaCierreCajas to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * VentaCierreCaja upsert
+   */
+  export type VentaCierreCajaUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VentaCierreCaja
+     */
+    select?: VentaCierreCajaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VentaCierreCaja
+     */
+    omit?: VentaCierreCajaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VentaCierreCajaInclude<ExtArgs> | null
+    /**
+     * The filter to search for the VentaCierreCaja to update in case it exists.
+     */
+    where: VentaCierreCajaWhereUniqueInput
+    /**
+     * In case the VentaCierreCaja found by the `where` argument doesn't exist, create a new VentaCierreCaja with this data.
+     */
+    create: XOR<VentaCierreCajaCreateInput, VentaCierreCajaUncheckedCreateInput>
+    /**
+     * In case the VentaCierreCaja was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<VentaCierreCajaUpdateInput, VentaCierreCajaUncheckedUpdateInput>
+  }
+
+  /**
+   * VentaCierreCaja delete
+   */
+  export type VentaCierreCajaDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VentaCierreCaja
+     */
+    select?: VentaCierreCajaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VentaCierreCaja
+     */
+    omit?: VentaCierreCajaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VentaCierreCajaInclude<ExtArgs> | null
+    /**
+     * Filter which VentaCierreCaja to delete.
+     */
+    where: VentaCierreCajaWhereUniqueInput
+  }
+
+  /**
+   * VentaCierreCaja deleteMany
+   */
+  export type VentaCierreCajaDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which VentaCierreCajas to delete
+     */
+    where?: VentaCierreCajaWhereInput
+    /**
+     * Limit how many VentaCierreCajas to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * VentaCierreCaja.producto
+   */
+  export type VentaCierreCaja$productoArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Producto
+     */
+    select?: ProductoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Producto
+     */
+    omit?: ProductoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductoInclude<ExtArgs> | null
+    where?: ProductoWhereInput
+  }
+
+  /**
+   * VentaCierreCaja without action
+   */
+  export type VentaCierreCajaDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VentaCierreCaja
+     */
+    select?: VentaCierreCajaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VentaCierreCaja
+     */
+    omit?: VentaCierreCajaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VentaCierreCajaInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model GastoCierreCaja
+   */
+
+  export type AggregateGastoCierreCaja = {
+    _count: GastoCierreCajaCountAggregateOutputType | null
+    _avg: GastoCierreCajaAvgAggregateOutputType | null
+    _sum: GastoCierreCajaSumAggregateOutputType | null
+    _min: GastoCierreCajaMinAggregateOutputType | null
+    _max: GastoCierreCajaMaxAggregateOutputType | null
+  }
+
+  export type GastoCierreCajaAvgAggregateOutputType = {
+    monto: number | null
+  }
+
+  export type GastoCierreCajaSumAggregateOutputType = {
+    monto: number | null
+  }
+
+  export type GastoCierreCajaMinAggregateOutputType = {
+    id: string | null
+    cierre_id: string | null
+    descripcion: string | null
+    monto: number | null
+    tipo: string | null
+  }
+
+  export type GastoCierreCajaMaxAggregateOutputType = {
+    id: string | null
+    cierre_id: string | null
+    descripcion: string | null
+    monto: number | null
+    tipo: string | null
+  }
+
+  export type GastoCierreCajaCountAggregateOutputType = {
+    id: number
+    cierre_id: number
+    descripcion: number
+    monto: number
+    tipo: number
+    _all: number
+  }
+
+
+  export type GastoCierreCajaAvgAggregateInputType = {
+    monto?: true
+  }
+
+  export type GastoCierreCajaSumAggregateInputType = {
+    monto?: true
+  }
+
+  export type GastoCierreCajaMinAggregateInputType = {
+    id?: true
+    cierre_id?: true
+    descripcion?: true
+    monto?: true
+    tipo?: true
+  }
+
+  export type GastoCierreCajaMaxAggregateInputType = {
+    id?: true
+    cierre_id?: true
+    descripcion?: true
+    monto?: true
+    tipo?: true
+  }
+
+  export type GastoCierreCajaCountAggregateInputType = {
+    id?: true
+    cierre_id?: true
+    descripcion?: true
+    monto?: true
+    tipo?: true
+    _all?: true
+  }
+
+  export type GastoCierreCajaAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which GastoCierreCaja to aggregate.
+     */
+    where?: GastoCierreCajaWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GastoCierreCajas to fetch.
+     */
+    orderBy?: GastoCierreCajaOrderByWithRelationInput | GastoCierreCajaOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: GastoCierreCajaWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GastoCierreCajas from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GastoCierreCajas.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned GastoCierreCajas
+    **/
+    _count?: true | GastoCierreCajaCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: GastoCierreCajaAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: GastoCierreCajaSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: GastoCierreCajaMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: GastoCierreCajaMaxAggregateInputType
+  }
+
+  export type GetGastoCierreCajaAggregateType<T extends GastoCierreCajaAggregateArgs> = {
+        [P in keyof T & keyof AggregateGastoCierreCaja]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateGastoCierreCaja[P]>
+      : GetScalarType<T[P], AggregateGastoCierreCaja[P]>
+  }
+
+
+
+
+  export type GastoCierreCajaGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GastoCierreCajaWhereInput
+    orderBy?: GastoCierreCajaOrderByWithAggregationInput | GastoCierreCajaOrderByWithAggregationInput[]
+    by: GastoCierreCajaScalarFieldEnum[] | GastoCierreCajaScalarFieldEnum
+    having?: GastoCierreCajaScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: GastoCierreCajaCountAggregateInputType | true
+    _avg?: GastoCierreCajaAvgAggregateInputType
+    _sum?: GastoCierreCajaSumAggregateInputType
+    _min?: GastoCierreCajaMinAggregateInputType
+    _max?: GastoCierreCajaMaxAggregateInputType
+  }
+
+  export type GastoCierreCajaGroupByOutputType = {
+    id: string
+    cierre_id: string
+    descripcion: string
+    monto: number
+    tipo: string
+    _count: GastoCierreCajaCountAggregateOutputType | null
+    _avg: GastoCierreCajaAvgAggregateOutputType | null
+    _sum: GastoCierreCajaSumAggregateOutputType | null
+    _min: GastoCierreCajaMinAggregateOutputType | null
+    _max: GastoCierreCajaMaxAggregateOutputType | null
+  }
+
+  type GetGastoCierreCajaGroupByPayload<T extends GastoCierreCajaGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<GastoCierreCajaGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof GastoCierreCajaGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], GastoCierreCajaGroupByOutputType[P]>
+            : GetScalarType<T[P], GastoCierreCajaGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type GastoCierreCajaSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    cierre_id?: boolean
+    descripcion?: boolean
+    monto?: boolean
+    tipo?: boolean
+    cierre?: boolean | CierreCajaDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["gastoCierreCaja"]>
+
+
+
+  export type GastoCierreCajaSelectScalar = {
+    id?: boolean
+    cierre_id?: boolean
+    descripcion?: boolean
+    monto?: boolean
+    tipo?: boolean
+  }
+
+  export type GastoCierreCajaOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "cierre_id" | "descripcion" | "monto" | "tipo", ExtArgs["result"]["gastoCierreCaja"]>
+  export type GastoCierreCajaInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    cierre?: boolean | CierreCajaDefaultArgs<ExtArgs>
+  }
+
+  export type $GastoCierreCajaPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "GastoCierreCaja"
+    objects: {
+      cierre: Prisma.$CierreCajaPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      cierre_id: string
+      descripcion: string
+      monto: number
+      tipo: string
+    }, ExtArgs["result"]["gastoCierreCaja"]>
+    composites: {}
+  }
+
+  type GastoCierreCajaGetPayload<S extends boolean | null | undefined | GastoCierreCajaDefaultArgs> = $Result.GetResult<Prisma.$GastoCierreCajaPayload, S>
+
+  type GastoCierreCajaCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<GastoCierreCajaFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: GastoCierreCajaCountAggregateInputType | true
+    }
+
+  export interface GastoCierreCajaDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['GastoCierreCaja'], meta: { name: 'GastoCierreCaja' } }
+    /**
+     * Find zero or one GastoCierreCaja that matches the filter.
+     * @param {GastoCierreCajaFindUniqueArgs} args - Arguments to find a GastoCierreCaja
+     * @example
+     * // Get one GastoCierreCaja
+     * const gastoCierreCaja = await prisma.gastoCierreCaja.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends GastoCierreCajaFindUniqueArgs>(args: SelectSubset<T, GastoCierreCajaFindUniqueArgs<ExtArgs>>): Prisma__GastoCierreCajaClient<$Result.GetResult<Prisma.$GastoCierreCajaPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one GastoCierreCaja that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {GastoCierreCajaFindUniqueOrThrowArgs} args - Arguments to find a GastoCierreCaja
+     * @example
+     * // Get one GastoCierreCaja
+     * const gastoCierreCaja = await prisma.gastoCierreCaja.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends GastoCierreCajaFindUniqueOrThrowArgs>(args: SelectSubset<T, GastoCierreCajaFindUniqueOrThrowArgs<ExtArgs>>): Prisma__GastoCierreCajaClient<$Result.GetResult<Prisma.$GastoCierreCajaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first GastoCierreCaja that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GastoCierreCajaFindFirstArgs} args - Arguments to find a GastoCierreCaja
+     * @example
+     * // Get one GastoCierreCaja
+     * const gastoCierreCaja = await prisma.gastoCierreCaja.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends GastoCierreCajaFindFirstArgs>(args?: SelectSubset<T, GastoCierreCajaFindFirstArgs<ExtArgs>>): Prisma__GastoCierreCajaClient<$Result.GetResult<Prisma.$GastoCierreCajaPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first GastoCierreCaja that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GastoCierreCajaFindFirstOrThrowArgs} args - Arguments to find a GastoCierreCaja
+     * @example
+     * // Get one GastoCierreCaja
+     * const gastoCierreCaja = await prisma.gastoCierreCaja.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends GastoCierreCajaFindFirstOrThrowArgs>(args?: SelectSubset<T, GastoCierreCajaFindFirstOrThrowArgs<ExtArgs>>): Prisma__GastoCierreCajaClient<$Result.GetResult<Prisma.$GastoCierreCajaPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more GastoCierreCajas that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GastoCierreCajaFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all GastoCierreCajas
+     * const gastoCierreCajas = await prisma.gastoCierreCaja.findMany()
+     * 
+     * // Get first 10 GastoCierreCajas
+     * const gastoCierreCajas = await prisma.gastoCierreCaja.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const gastoCierreCajaWithIdOnly = await prisma.gastoCierreCaja.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends GastoCierreCajaFindManyArgs>(args?: SelectSubset<T, GastoCierreCajaFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GastoCierreCajaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a GastoCierreCaja.
+     * @param {GastoCierreCajaCreateArgs} args - Arguments to create a GastoCierreCaja.
+     * @example
+     * // Create one GastoCierreCaja
+     * const GastoCierreCaja = await prisma.gastoCierreCaja.create({
+     *   data: {
+     *     // ... data to create a GastoCierreCaja
+     *   }
+     * })
+     * 
+     */
+    create<T extends GastoCierreCajaCreateArgs>(args: SelectSubset<T, GastoCierreCajaCreateArgs<ExtArgs>>): Prisma__GastoCierreCajaClient<$Result.GetResult<Prisma.$GastoCierreCajaPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many GastoCierreCajas.
+     * @param {GastoCierreCajaCreateManyArgs} args - Arguments to create many GastoCierreCajas.
+     * @example
+     * // Create many GastoCierreCajas
+     * const gastoCierreCaja = await prisma.gastoCierreCaja.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends GastoCierreCajaCreateManyArgs>(args?: SelectSubset<T, GastoCierreCajaCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a GastoCierreCaja.
+     * @param {GastoCierreCajaDeleteArgs} args - Arguments to delete one GastoCierreCaja.
+     * @example
+     * // Delete one GastoCierreCaja
+     * const GastoCierreCaja = await prisma.gastoCierreCaja.delete({
+     *   where: {
+     *     // ... filter to delete one GastoCierreCaja
+     *   }
+     * })
+     * 
+     */
+    delete<T extends GastoCierreCajaDeleteArgs>(args: SelectSubset<T, GastoCierreCajaDeleteArgs<ExtArgs>>): Prisma__GastoCierreCajaClient<$Result.GetResult<Prisma.$GastoCierreCajaPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one GastoCierreCaja.
+     * @param {GastoCierreCajaUpdateArgs} args - Arguments to update one GastoCierreCaja.
+     * @example
+     * // Update one GastoCierreCaja
+     * const gastoCierreCaja = await prisma.gastoCierreCaja.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends GastoCierreCajaUpdateArgs>(args: SelectSubset<T, GastoCierreCajaUpdateArgs<ExtArgs>>): Prisma__GastoCierreCajaClient<$Result.GetResult<Prisma.$GastoCierreCajaPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more GastoCierreCajas.
+     * @param {GastoCierreCajaDeleteManyArgs} args - Arguments to filter GastoCierreCajas to delete.
+     * @example
+     * // Delete a few GastoCierreCajas
+     * const { count } = await prisma.gastoCierreCaja.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends GastoCierreCajaDeleteManyArgs>(args?: SelectSubset<T, GastoCierreCajaDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more GastoCierreCajas.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GastoCierreCajaUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many GastoCierreCajas
+     * const gastoCierreCaja = await prisma.gastoCierreCaja.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends GastoCierreCajaUpdateManyArgs>(args: SelectSubset<T, GastoCierreCajaUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one GastoCierreCaja.
+     * @param {GastoCierreCajaUpsertArgs} args - Arguments to update or create a GastoCierreCaja.
+     * @example
+     * // Update or create a GastoCierreCaja
+     * const gastoCierreCaja = await prisma.gastoCierreCaja.upsert({
+     *   create: {
+     *     // ... data to create a GastoCierreCaja
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the GastoCierreCaja we want to update
+     *   }
+     * })
+     */
+    upsert<T extends GastoCierreCajaUpsertArgs>(args: SelectSubset<T, GastoCierreCajaUpsertArgs<ExtArgs>>): Prisma__GastoCierreCajaClient<$Result.GetResult<Prisma.$GastoCierreCajaPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of GastoCierreCajas.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GastoCierreCajaCountArgs} args - Arguments to filter GastoCierreCajas to count.
+     * @example
+     * // Count the number of GastoCierreCajas
+     * const count = await prisma.gastoCierreCaja.count({
+     *   where: {
+     *     // ... the filter for the GastoCierreCajas we want to count
+     *   }
+     * })
+    **/
+    count<T extends GastoCierreCajaCountArgs>(
+      args?: Subset<T, GastoCierreCajaCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], GastoCierreCajaCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a GastoCierreCaja.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GastoCierreCajaAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends GastoCierreCajaAggregateArgs>(args: Subset<T, GastoCierreCajaAggregateArgs>): Prisma.PrismaPromise<GetGastoCierreCajaAggregateType<T>>
+
+    /**
+     * Group by GastoCierreCaja.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GastoCierreCajaGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends GastoCierreCajaGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: GastoCierreCajaGroupByArgs['orderBy'] }
+        : { orderBy?: GastoCierreCajaGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, GastoCierreCajaGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetGastoCierreCajaGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the GastoCierreCaja model
+   */
+  readonly fields: GastoCierreCajaFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for GastoCierreCaja.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__GastoCierreCajaClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    cierre<T extends CierreCajaDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CierreCajaDefaultArgs<ExtArgs>>): Prisma__CierreCajaClient<$Result.GetResult<Prisma.$CierreCajaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the GastoCierreCaja model
+   */
+  interface GastoCierreCajaFieldRefs {
+    readonly id: FieldRef<"GastoCierreCaja", 'String'>
+    readonly cierre_id: FieldRef<"GastoCierreCaja", 'String'>
+    readonly descripcion: FieldRef<"GastoCierreCaja", 'String'>
+    readonly monto: FieldRef<"GastoCierreCaja", 'Float'>
+    readonly tipo: FieldRef<"GastoCierreCaja", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * GastoCierreCaja findUnique
+   */
+  export type GastoCierreCajaFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GastoCierreCaja
+     */
+    select?: GastoCierreCajaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GastoCierreCaja
+     */
+    omit?: GastoCierreCajaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GastoCierreCajaInclude<ExtArgs> | null
+    /**
+     * Filter, which GastoCierreCaja to fetch.
+     */
+    where: GastoCierreCajaWhereUniqueInput
+  }
+
+  /**
+   * GastoCierreCaja findUniqueOrThrow
+   */
+  export type GastoCierreCajaFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GastoCierreCaja
+     */
+    select?: GastoCierreCajaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GastoCierreCaja
+     */
+    omit?: GastoCierreCajaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GastoCierreCajaInclude<ExtArgs> | null
+    /**
+     * Filter, which GastoCierreCaja to fetch.
+     */
+    where: GastoCierreCajaWhereUniqueInput
+  }
+
+  /**
+   * GastoCierreCaja findFirst
+   */
+  export type GastoCierreCajaFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GastoCierreCaja
+     */
+    select?: GastoCierreCajaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GastoCierreCaja
+     */
+    omit?: GastoCierreCajaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GastoCierreCajaInclude<ExtArgs> | null
+    /**
+     * Filter, which GastoCierreCaja to fetch.
+     */
+    where?: GastoCierreCajaWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GastoCierreCajas to fetch.
+     */
+    orderBy?: GastoCierreCajaOrderByWithRelationInput | GastoCierreCajaOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for GastoCierreCajas.
+     */
+    cursor?: GastoCierreCajaWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GastoCierreCajas from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GastoCierreCajas.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of GastoCierreCajas.
+     */
+    distinct?: GastoCierreCajaScalarFieldEnum | GastoCierreCajaScalarFieldEnum[]
+  }
+
+  /**
+   * GastoCierreCaja findFirstOrThrow
+   */
+  export type GastoCierreCajaFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GastoCierreCaja
+     */
+    select?: GastoCierreCajaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GastoCierreCaja
+     */
+    omit?: GastoCierreCajaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GastoCierreCajaInclude<ExtArgs> | null
+    /**
+     * Filter, which GastoCierreCaja to fetch.
+     */
+    where?: GastoCierreCajaWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GastoCierreCajas to fetch.
+     */
+    orderBy?: GastoCierreCajaOrderByWithRelationInput | GastoCierreCajaOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for GastoCierreCajas.
+     */
+    cursor?: GastoCierreCajaWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GastoCierreCajas from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GastoCierreCajas.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of GastoCierreCajas.
+     */
+    distinct?: GastoCierreCajaScalarFieldEnum | GastoCierreCajaScalarFieldEnum[]
+  }
+
+  /**
+   * GastoCierreCaja findMany
+   */
+  export type GastoCierreCajaFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GastoCierreCaja
+     */
+    select?: GastoCierreCajaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GastoCierreCaja
+     */
+    omit?: GastoCierreCajaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GastoCierreCajaInclude<ExtArgs> | null
+    /**
+     * Filter, which GastoCierreCajas to fetch.
+     */
+    where?: GastoCierreCajaWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GastoCierreCajas to fetch.
+     */
+    orderBy?: GastoCierreCajaOrderByWithRelationInput | GastoCierreCajaOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing GastoCierreCajas.
+     */
+    cursor?: GastoCierreCajaWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GastoCierreCajas from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GastoCierreCajas.
+     */
+    skip?: number
+    distinct?: GastoCierreCajaScalarFieldEnum | GastoCierreCajaScalarFieldEnum[]
+  }
+
+  /**
+   * GastoCierreCaja create
+   */
+  export type GastoCierreCajaCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GastoCierreCaja
+     */
+    select?: GastoCierreCajaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GastoCierreCaja
+     */
+    omit?: GastoCierreCajaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GastoCierreCajaInclude<ExtArgs> | null
+    /**
+     * The data needed to create a GastoCierreCaja.
+     */
+    data: XOR<GastoCierreCajaCreateInput, GastoCierreCajaUncheckedCreateInput>
+  }
+
+  /**
+   * GastoCierreCaja createMany
+   */
+  export type GastoCierreCajaCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many GastoCierreCajas.
+     */
+    data: GastoCierreCajaCreateManyInput | GastoCierreCajaCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * GastoCierreCaja update
+   */
+  export type GastoCierreCajaUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GastoCierreCaja
+     */
+    select?: GastoCierreCajaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GastoCierreCaja
+     */
+    omit?: GastoCierreCajaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GastoCierreCajaInclude<ExtArgs> | null
+    /**
+     * The data needed to update a GastoCierreCaja.
+     */
+    data: XOR<GastoCierreCajaUpdateInput, GastoCierreCajaUncheckedUpdateInput>
+    /**
+     * Choose, which GastoCierreCaja to update.
+     */
+    where: GastoCierreCajaWhereUniqueInput
+  }
+
+  /**
+   * GastoCierreCaja updateMany
+   */
+  export type GastoCierreCajaUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update GastoCierreCajas.
+     */
+    data: XOR<GastoCierreCajaUpdateManyMutationInput, GastoCierreCajaUncheckedUpdateManyInput>
+    /**
+     * Filter which GastoCierreCajas to update
+     */
+    where?: GastoCierreCajaWhereInput
+    /**
+     * Limit how many GastoCierreCajas to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * GastoCierreCaja upsert
+   */
+  export type GastoCierreCajaUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GastoCierreCaja
+     */
+    select?: GastoCierreCajaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GastoCierreCaja
+     */
+    omit?: GastoCierreCajaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GastoCierreCajaInclude<ExtArgs> | null
+    /**
+     * The filter to search for the GastoCierreCaja to update in case it exists.
+     */
+    where: GastoCierreCajaWhereUniqueInput
+    /**
+     * In case the GastoCierreCaja found by the `where` argument doesn't exist, create a new GastoCierreCaja with this data.
+     */
+    create: XOR<GastoCierreCajaCreateInput, GastoCierreCajaUncheckedCreateInput>
+    /**
+     * In case the GastoCierreCaja was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<GastoCierreCajaUpdateInput, GastoCierreCajaUncheckedUpdateInput>
+  }
+
+  /**
+   * GastoCierreCaja delete
+   */
+  export type GastoCierreCajaDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GastoCierreCaja
+     */
+    select?: GastoCierreCajaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GastoCierreCaja
+     */
+    omit?: GastoCierreCajaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GastoCierreCajaInclude<ExtArgs> | null
+    /**
+     * Filter which GastoCierreCaja to delete.
+     */
+    where: GastoCierreCajaWhereUniqueInput
+  }
+
+  /**
+   * GastoCierreCaja deleteMany
+   */
+  export type GastoCierreCajaDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which GastoCierreCajas to delete
+     */
+    where?: GastoCierreCajaWhereInput
+    /**
+     * Limit how many GastoCierreCajas to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * GastoCierreCaja without action
+   */
+  export type GastoCierreCajaDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GastoCierreCaja
+     */
+    select?: GastoCierreCajaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GastoCierreCaja
+     */
+    omit?: GastoCierreCajaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GastoCierreCajaInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -52593,6 +56128,52 @@ export namespace Prisma {
   export type VerificationScalarFieldEnum = (typeof VerificationScalarFieldEnum)[keyof typeof VerificationScalarFieldEnum]
 
 
+  export const CierreCajaScalarFieldEnum: {
+    id: 'id',
+    fecha: 'fecha',
+    efectivo_inicial: 'efectivo_inicial',
+    total_efectivo: 'total_efectivo',
+    total_tarjeta: 'total_tarjeta',
+    total_transferencia: 'total_transferencia',
+    total_credito_oficina: 'total_credito_oficina',
+    total_pagina_web: 'total_pagina_web',
+    total_general: 'total_general',
+    estado: 'estado',
+    observaciones: 'observaciones',
+    created_at: 'created_at',
+    updated_at: 'updated_at',
+    usuario_id: 'usuario_id'
+  };
+
+  export type CierreCajaScalarFieldEnum = (typeof CierreCajaScalarFieldEnum)[keyof typeof CierreCajaScalarFieldEnum]
+
+
+  export const VentaCierreCajaScalarFieldEnum: {
+    id: 'id',
+    cierre_id: 'cierre_id',
+    descripcion: 'descripcion',
+    producto_id: 'producto_id',
+    cantidad: 'cantidad',
+    precio_unitario: 'precio_unitario',
+    subtotal: 'subtotal',
+    metodo_pago: 'metodo_pago',
+    es_otro: 'es_otro'
+  };
+
+  export type VentaCierreCajaScalarFieldEnum = (typeof VentaCierreCajaScalarFieldEnum)[keyof typeof VentaCierreCajaScalarFieldEnum]
+
+
+  export const GastoCierreCajaScalarFieldEnum: {
+    id: 'id',
+    cierre_id: 'cierre_id',
+    descripcion: 'descripcion',
+    monto: 'monto',
+    tipo: 'tipo'
+  };
+
+  export type GastoCierreCajaScalarFieldEnum = (typeof GastoCierreCajaScalarFieldEnum)[keyof typeof GastoCierreCajaScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -53094,6 +56675,35 @@ export namespace Prisma {
   export type VerificationOrderByRelevanceFieldEnum = (typeof VerificationOrderByRelevanceFieldEnum)[keyof typeof VerificationOrderByRelevanceFieldEnum]
 
 
+  export const CierreCajaOrderByRelevanceFieldEnum: {
+    id: 'id',
+    observaciones: 'observaciones',
+    usuario_id: 'usuario_id'
+  };
+
+  export type CierreCajaOrderByRelevanceFieldEnum = (typeof CierreCajaOrderByRelevanceFieldEnum)[keyof typeof CierreCajaOrderByRelevanceFieldEnum]
+
+
+  export const VentaCierreCajaOrderByRelevanceFieldEnum: {
+    id: 'id',
+    cierre_id: 'cierre_id',
+    descripcion: 'descripcion',
+    producto_id: 'producto_id'
+  };
+
+  export type VentaCierreCajaOrderByRelevanceFieldEnum = (typeof VentaCierreCajaOrderByRelevanceFieldEnum)[keyof typeof VentaCierreCajaOrderByRelevanceFieldEnum]
+
+
+  export const GastoCierreCajaOrderByRelevanceFieldEnum: {
+    id: 'id',
+    cierre_id: 'cierre_id',
+    descripcion: 'descripcion',
+    tipo: 'tipo'
+  };
+
+  export type GastoCierreCajaOrderByRelevanceFieldEnum = (typeof GastoCierreCajaOrderByRelevanceFieldEnum)[keyof typeof GastoCierreCajaOrderByRelevanceFieldEnum]
+
+
   /**
    * Field references
    */
@@ -53307,6 +56917,20 @@ export namespace Prisma {
    */
   export type EnumTipoIncidenciaFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TipoIncidencia'>
     
+
+
+  /**
+   * Reference to a field of type 'EstadoCierreCaja'
+   */
+  export type EnumEstadoCierreCajaFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EstadoCierreCaja'>
+    
+
+
+  /**
+   * Reference to a field of type 'MetodoPagoCaja'
+   */
+  export type EnumMetodoPagoCajaFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MetodoPagoCaja'>
+    
   /**
    * Deep Input Types
    */
@@ -53345,6 +56969,7 @@ export namespace Prisma {
     incidencias?: IncidenciaListRelationFilter
     movimientos_stock?: MovimientoStockListRelationFilter
     user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    cierres_caja?: CierreCajaListRelationFilter
   }
 
   export type UsuarioOrderByWithRelationInput = {
@@ -53377,6 +57002,7 @@ export namespace Prisma {
     incidencias?: IncidenciaOrderByRelationAggregateInput
     movimientos_stock?: MovimientoStockOrderByRelationAggregateInput
     user?: UserOrderByWithRelationInput
+    cierres_caja?: CierreCajaOrderByRelationAggregateInput
     _relevance?: UsuarioOrderByRelevanceInput
   }
 
@@ -53413,6 +57039,7 @@ export namespace Prisma {
     incidencias?: IncidenciaListRelationFilter
     movimientos_stock?: MovimientoStockListRelationFilter
     user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    cierres_caja?: CierreCajaListRelationFilter
   }, "id" | "user_id" | "rut" | "email">
 
   export type UsuarioOrderByWithAggregationInput = {
@@ -53780,6 +57407,7 @@ export namespace Prisma {
     stock_camion?: StockCamionListRelationFilter
     stock_fabrica?: XOR<StockFabricaNullableScalarRelationFilter, StockFabricaWhereInput> | null
     movimientos_stock?: MovimientoStockListRelationFilter
+    ventas_cierre_caja?: VentaCierreCajaListRelationFilter
   }
 
   export type ProductoOrderByWithRelationInput = {
@@ -53799,6 +57427,7 @@ export namespace Prisma {
     stock_camion?: StockCamionOrderByRelationAggregateInput
     stock_fabrica?: StockFabricaOrderByWithRelationInput
     movimientos_stock?: MovimientoStockOrderByRelationAggregateInput
+    ventas_cierre_caja?: VentaCierreCajaOrderByRelationAggregateInput
     _relevance?: ProductoOrderByRelevanceInput
   }
 
@@ -53822,6 +57451,7 @@ export namespace Prisma {
     stock_camion?: StockCamionListRelationFilter
     stock_fabrica?: XOR<StockFabricaNullableScalarRelationFilter, StockFabricaWhereInput> | null
     movimientos_stock?: MovimientoStockListRelationFilter
+    ventas_cierre_caja?: VentaCierreCajaListRelationFilter
   }, "id">
 
   export type ProductoOrderByWithAggregationInput = {
@@ -56784,6 +60414,254 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"Verification"> | Date | string
   }
 
+  export type CierreCajaWhereInput = {
+    AND?: CierreCajaWhereInput | CierreCajaWhereInput[]
+    OR?: CierreCajaWhereInput[]
+    NOT?: CierreCajaWhereInput | CierreCajaWhereInput[]
+    id?: StringFilter<"CierreCaja"> | string
+    fecha?: DateTimeFilter<"CierreCaja"> | Date | string
+    efectivo_inicial?: FloatFilter<"CierreCaja"> | number
+    total_efectivo?: FloatFilter<"CierreCaja"> | number
+    total_tarjeta?: FloatFilter<"CierreCaja"> | number
+    total_transferencia?: FloatFilter<"CierreCaja"> | number
+    total_credito_oficina?: FloatFilter<"CierreCaja"> | number
+    total_pagina_web?: FloatFilter<"CierreCaja"> | number
+    total_general?: FloatFilter<"CierreCaja"> | number
+    estado?: EnumEstadoCierreCajaFilter<"CierreCaja"> | $Enums.EstadoCierreCaja
+    observaciones?: StringNullableFilter<"CierreCaja"> | string | null
+    created_at?: DateTimeFilter<"CierreCaja"> | Date | string
+    updated_at?: DateTimeFilter<"CierreCaja"> | Date | string
+    usuario_id?: StringFilter<"CierreCaja"> | string
+    usuario?: XOR<UsuarioScalarRelationFilter, UsuarioWhereInput>
+    ventas?: VentaCierreCajaListRelationFilter
+    gastos?: GastoCierreCajaListRelationFilter
+  }
+
+  export type CierreCajaOrderByWithRelationInput = {
+    id?: SortOrder
+    fecha?: SortOrder
+    efectivo_inicial?: SortOrder
+    total_efectivo?: SortOrder
+    total_tarjeta?: SortOrder
+    total_transferencia?: SortOrder
+    total_credito_oficina?: SortOrder
+    total_pagina_web?: SortOrder
+    total_general?: SortOrder
+    estado?: SortOrder
+    observaciones?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    usuario_id?: SortOrder
+    usuario?: UsuarioOrderByWithRelationInput
+    ventas?: VentaCierreCajaOrderByRelationAggregateInput
+    gastos?: GastoCierreCajaOrderByRelationAggregateInput
+    _relevance?: CierreCajaOrderByRelevanceInput
+  }
+
+  export type CierreCajaWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    fecha?: Date | string
+    AND?: CierreCajaWhereInput | CierreCajaWhereInput[]
+    OR?: CierreCajaWhereInput[]
+    NOT?: CierreCajaWhereInput | CierreCajaWhereInput[]
+    efectivo_inicial?: FloatFilter<"CierreCaja"> | number
+    total_efectivo?: FloatFilter<"CierreCaja"> | number
+    total_tarjeta?: FloatFilter<"CierreCaja"> | number
+    total_transferencia?: FloatFilter<"CierreCaja"> | number
+    total_credito_oficina?: FloatFilter<"CierreCaja"> | number
+    total_pagina_web?: FloatFilter<"CierreCaja"> | number
+    total_general?: FloatFilter<"CierreCaja"> | number
+    estado?: EnumEstadoCierreCajaFilter<"CierreCaja"> | $Enums.EstadoCierreCaja
+    observaciones?: StringNullableFilter<"CierreCaja"> | string | null
+    created_at?: DateTimeFilter<"CierreCaja"> | Date | string
+    updated_at?: DateTimeFilter<"CierreCaja"> | Date | string
+    usuario_id?: StringFilter<"CierreCaja"> | string
+    usuario?: XOR<UsuarioScalarRelationFilter, UsuarioWhereInput>
+    ventas?: VentaCierreCajaListRelationFilter
+    gastos?: GastoCierreCajaListRelationFilter
+  }, "id" | "fecha">
+
+  export type CierreCajaOrderByWithAggregationInput = {
+    id?: SortOrder
+    fecha?: SortOrder
+    efectivo_inicial?: SortOrder
+    total_efectivo?: SortOrder
+    total_tarjeta?: SortOrder
+    total_transferencia?: SortOrder
+    total_credito_oficina?: SortOrder
+    total_pagina_web?: SortOrder
+    total_general?: SortOrder
+    estado?: SortOrder
+    observaciones?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    usuario_id?: SortOrder
+    _count?: CierreCajaCountOrderByAggregateInput
+    _avg?: CierreCajaAvgOrderByAggregateInput
+    _max?: CierreCajaMaxOrderByAggregateInput
+    _min?: CierreCajaMinOrderByAggregateInput
+    _sum?: CierreCajaSumOrderByAggregateInput
+  }
+
+  export type CierreCajaScalarWhereWithAggregatesInput = {
+    AND?: CierreCajaScalarWhereWithAggregatesInput | CierreCajaScalarWhereWithAggregatesInput[]
+    OR?: CierreCajaScalarWhereWithAggregatesInput[]
+    NOT?: CierreCajaScalarWhereWithAggregatesInput | CierreCajaScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"CierreCaja"> | string
+    fecha?: DateTimeWithAggregatesFilter<"CierreCaja"> | Date | string
+    efectivo_inicial?: FloatWithAggregatesFilter<"CierreCaja"> | number
+    total_efectivo?: FloatWithAggregatesFilter<"CierreCaja"> | number
+    total_tarjeta?: FloatWithAggregatesFilter<"CierreCaja"> | number
+    total_transferencia?: FloatWithAggregatesFilter<"CierreCaja"> | number
+    total_credito_oficina?: FloatWithAggregatesFilter<"CierreCaja"> | number
+    total_pagina_web?: FloatWithAggregatesFilter<"CierreCaja"> | number
+    total_general?: FloatWithAggregatesFilter<"CierreCaja"> | number
+    estado?: EnumEstadoCierreCajaWithAggregatesFilter<"CierreCaja"> | $Enums.EstadoCierreCaja
+    observaciones?: StringNullableWithAggregatesFilter<"CierreCaja"> | string | null
+    created_at?: DateTimeWithAggregatesFilter<"CierreCaja"> | Date | string
+    updated_at?: DateTimeWithAggregatesFilter<"CierreCaja"> | Date | string
+    usuario_id?: StringWithAggregatesFilter<"CierreCaja"> | string
+  }
+
+  export type VentaCierreCajaWhereInput = {
+    AND?: VentaCierreCajaWhereInput | VentaCierreCajaWhereInput[]
+    OR?: VentaCierreCajaWhereInput[]
+    NOT?: VentaCierreCajaWhereInput | VentaCierreCajaWhereInput[]
+    id?: StringFilter<"VentaCierreCaja"> | string
+    cierre_id?: StringFilter<"VentaCierreCaja"> | string
+    descripcion?: StringFilter<"VentaCierreCaja"> | string
+    producto_id?: StringNullableFilter<"VentaCierreCaja"> | string | null
+    cantidad?: IntFilter<"VentaCierreCaja"> | number
+    precio_unitario?: FloatFilter<"VentaCierreCaja"> | number
+    subtotal?: FloatFilter<"VentaCierreCaja"> | number
+    metodo_pago?: EnumMetodoPagoCajaFilter<"VentaCierreCaja"> | $Enums.MetodoPagoCaja
+    es_otro?: BoolFilter<"VentaCierreCaja"> | boolean
+    cierre?: XOR<CierreCajaScalarRelationFilter, CierreCajaWhereInput>
+    producto?: XOR<ProductoNullableScalarRelationFilter, ProductoWhereInput> | null
+  }
+
+  export type VentaCierreCajaOrderByWithRelationInput = {
+    id?: SortOrder
+    cierre_id?: SortOrder
+    descripcion?: SortOrder
+    producto_id?: SortOrderInput | SortOrder
+    cantidad?: SortOrder
+    precio_unitario?: SortOrder
+    subtotal?: SortOrder
+    metodo_pago?: SortOrder
+    es_otro?: SortOrder
+    cierre?: CierreCajaOrderByWithRelationInput
+    producto?: ProductoOrderByWithRelationInput
+    _relevance?: VentaCierreCajaOrderByRelevanceInput
+  }
+
+  export type VentaCierreCajaWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: VentaCierreCajaWhereInput | VentaCierreCajaWhereInput[]
+    OR?: VentaCierreCajaWhereInput[]
+    NOT?: VentaCierreCajaWhereInput | VentaCierreCajaWhereInput[]
+    cierre_id?: StringFilter<"VentaCierreCaja"> | string
+    descripcion?: StringFilter<"VentaCierreCaja"> | string
+    producto_id?: StringNullableFilter<"VentaCierreCaja"> | string | null
+    cantidad?: IntFilter<"VentaCierreCaja"> | number
+    precio_unitario?: FloatFilter<"VentaCierreCaja"> | number
+    subtotal?: FloatFilter<"VentaCierreCaja"> | number
+    metodo_pago?: EnumMetodoPagoCajaFilter<"VentaCierreCaja"> | $Enums.MetodoPagoCaja
+    es_otro?: BoolFilter<"VentaCierreCaja"> | boolean
+    cierre?: XOR<CierreCajaScalarRelationFilter, CierreCajaWhereInput>
+    producto?: XOR<ProductoNullableScalarRelationFilter, ProductoWhereInput> | null
+  }, "id">
+
+  export type VentaCierreCajaOrderByWithAggregationInput = {
+    id?: SortOrder
+    cierre_id?: SortOrder
+    descripcion?: SortOrder
+    producto_id?: SortOrderInput | SortOrder
+    cantidad?: SortOrder
+    precio_unitario?: SortOrder
+    subtotal?: SortOrder
+    metodo_pago?: SortOrder
+    es_otro?: SortOrder
+    _count?: VentaCierreCajaCountOrderByAggregateInput
+    _avg?: VentaCierreCajaAvgOrderByAggregateInput
+    _max?: VentaCierreCajaMaxOrderByAggregateInput
+    _min?: VentaCierreCajaMinOrderByAggregateInput
+    _sum?: VentaCierreCajaSumOrderByAggregateInput
+  }
+
+  export type VentaCierreCajaScalarWhereWithAggregatesInput = {
+    AND?: VentaCierreCajaScalarWhereWithAggregatesInput | VentaCierreCajaScalarWhereWithAggregatesInput[]
+    OR?: VentaCierreCajaScalarWhereWithAggregatesInput[]
+    NOT?: VentaCierreCajaScalarWhereWithAggregatesInput | VentaCierreCajaScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"VentaCierreCaja"> | string
+    cierre_id?: StringWithAggregatesFilter<"VentaCierreCaja"> | string
+    descripcion?: StringWithAggregatesFilter<"VentaCierreCaja"> | string
+    producto_id?: StringNullableWithAggregatesFilter<"VentaCierreCaja"> | string | null
+    cantidad?: IntWithAggregatesFilter<"VentaCierreCaja"> | number
+    precio_unitario?: FloatWithAggregatesFilter<"VentaCierreCaja"> | number
+    subtotal?: FloatWithAggregatesFilter<"VentaCierreCaja"> | number
+    metodo_pago?: EnumMetodoPagoCajaWithAggregatesFilter<"VentaCierreCaja"> | $Enums.MetodoPagoCaja
+    es_otro?: BoolWithAggregatesFilter<"VentaCierreCaja"> | boolean
+  }
+
+  export type GastoCierreCajaWhereInput = {
+    AND?: GastoCierreCajaWhereInput | GastoCierreCajaWhereInput[]
+    OR?: GastoCierreCajaWhereInput[]
+    NOT?: GastoCierreCajaWhereInput | GastoCierreCajaWhereInput[]
+    id?: StringFilter<"GastoCierreCaja"> | string
+    cierre_id?: StringFilter<"GastoCierreCaja"> | string
+    descripcion?: StringFilter<"GastoCierreCaja"> | string
+    monto?: FloatFilter<"GastoCierreCaja"> | number
+    tipo?: StringFilter<"GastoCierreCaja"> | string
+    cierre?: XOR<CierreCajaScalarRelationFilter, CierreCajaWhereInput>
+  }
+
+  export type GastoCierreCajaOrderByWithRelationInput = {
+    id?: SortOrder
+    cierre_id?: SortOrder
+    descripcion?: SortOrder
+    monto?: SortOrder
+    tipo?: SortOrder
+    cierre?: CierreCajaOrderByWithRelationInput
+    _relevance?: GastoCierreCajaOrderByRelevanceInput
+  }
+
+  export type GastoCierreCajaWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: GastoCierreCajaWhereInput | GastoCierreCajaWhereInput[]
+    OR?: GastoCierreCajaWhereInput[]
+    NOT?: GastoCierreCajaWhereInput | GastoCierreCajaWhereInput[]
+    cierre_id?: StringFilter<"GastoCierreCaja"> | string
+    descripcion?: StringFilter<"GastoCierreCaja"> | string
+    monto?: FloatFilter<"GastoCierreCaja"> | number
+    tipo?: StringFilter<"GastoCierreCaja"> | string
+    cierre?: XOR<CierreCajaScalarRelationFilter, CierreCajaWhereInput>
+  }, "id">
+
+  export type GastoCierreCajaOrderByWithAggregationInput = {
+    id?: SortOrder
+    cierre_id?: SortOrder
+    descripcion?: SortOrder
+    monto?: SortOrder
+    tipo?: SortOrder
+    _count?: GastoCierreCajaCountOrderByAggregateInput
+    _avg?: GastoCierreCajaAvgOrderByAggregateInput
+    _max?: GastoCierreCajaMaxOrderByAggregateInput
+    _min?: GastoCierreCajaMinOrderByAggregateInput
+    _sum?: GastoCierreCajaSumOrderByAggregateInput
+  }
+
+  export type GastoCierreCajaScalarWhereWithAggregatesInput = {
+    AND?: GastoCierreCajaScalarWhereWithAggregatesInput | GastoCierreCajaScalarWhereWithAggregatesInput[]
+    OR?: GastoCierreCajaScalarWhereWithAggregatesInput[]
+    NOT?: GastoCierreCajaScalarWhereWithAggregatesInput | GastoCierreCajaScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"GastoCierreCaja"> | string
+    cierre_id?: StringWithAggregatesFilter<"GastoCierreCaja"> | string
+    descripcion?: StringWithAggregatesFilter<"GastoCierreCaja"> | string
+    monto?: FloatWithAggregatesFilter<"GastoCierreCaja"> | number
+    tipo?: StringWithAggregatesFilter<"GastoCierreCaja"> | string
+  }
+
   export type UsuarioCreateInput = {
     id?: string
     nombre: string
@@ -56812,6 +60690,7 @@ export namespace Prisma {
     incidencias?: IncidenciaCreateNestedManyWithoutUsuarioInput
     movimientos_stock?: MovimientoStockCreateNestedManyWithoutUsuarioInput
     user?: UserCreateNestedOneWithoutUsuarioInput
+    cierres_caja?: CierreCajaCreateNestedManyWithoutUsuarioInput
   }
 
   export type UsuarioUncheckedCreateInput = {
@@ -56842,6 +60721,7 @@ export namespace Prisma {
     stock_camion?: StockCamionUncheckedCreateNestedManyWithoutUsuarioInput
     incidencias?: IncidenciaUncheckedCreateNestedManyWithoutUsuarioInput
     movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutUsuarioInput
+    cierres_caja?: CierreCajaUncheckedCreateNestedManyWithoutUsuarioInput
   }
 
   export type UsuarioUpdateInput = {
@@ -56872,6 +60752,7 @@ export namespace Prisma {
     incidencias?: IncidenciaUpdateManyWithoutUsuarioNestedInput
     movimientos_stock?: MovimientoStockUpdateManyWithoutUsuarioNestedInput
     user?: UserUpdateOneWithoutUsuarioNestedInput
+    cierres_caja?: CierreCajaUpdateManyWithoutUsuarioNestedInput
   }
 
   export type UsuarioUncheckedUpdateInput = {
@@ -56902,6 +60783,7 @@ export namespace Prisma {
     stock_camion?: StockCamionUncheckedUpdateManyWithoutUsuarioNestedInput
     incidencias?: IncidenciaUncheckedUpdateManyWithoutUsuarioNestedInput
     movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutUsuarioNestedInput
+    cierres_caja?: CierreCajaUncheckedUpdateManyWithoutUsuarioNestedInput
   }
 
   export type UsuarioCreateManyInput = {
@@ -57291,6 +61173,7 @@ export namespace Prisma {
     stock_camion?: StockCamionCreateNestedManyWithoutProductoInput
     stock_fabrica?: StockFabricaCreateNestedOneWithoutProductoInput
     movimientos_stock?: MovimientoStockCreateNestedManyWithoutProductoInput
+    ventas_cierre_caja?: VentaCierreCajaCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoUncheckedCreateInput = {
@@ -57310,6 +61193,7 @@ export namespace Prisma {
     stock_camion?: StockCamionUncheckedCreateNestedManyWithoutProductoInput
     stock_fabrica?: StockFabricaUncheckedCreateNestedOneWithoutProductoInput
     movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutProductoInput
+    ventas_cierre_caja?: VentaCierreCajaUncheckedCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoUpdateInput = {
@@ -57329,6 +61213,7 @@ export namespace Prisma {
     stock_camion?: StockCamionUpdateManyWithoutProductoNestedInput
     stock_fabrica?: StockFabricaUpdateOneWithoutProductoNestedInput
     movimientos_stock?: MovimientoStockUpdateManyWithoutProductoNestedInput
+    ventas_cierre_caja?: VentaCierreCajaUpdateManyWithoutProductoNestedInput
   }
 
   export type ProductoUncheckedUpdateInput = {
@@ -57348,6 +61233,7 @@ export namespace Prisma {
     stock_camion?: StockCamionUncheckedUpdateManyWithoutProductoNestedInput
     stock_fabrica?: StockFabricaUncheckedUpdateOneWithoutProductoNestedInput
     movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutProductoNestedInput
+    ventas_cierre_caja?: VentaCierreCajaUncheckedUpdateManyWithoutProductoNestedInput
   }
 
   export type ProductoCreateManyInput = {
@@ -60409,6 +64295,269 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type CierreCajaCreateInput = {
+    id?: string
+    fecha: Date | string
+    efectivo_inicial?: number
+    total_efectivo?: number
+    total_tarjeta?: number
+    total_transferencia?: number
+    total_credito_oficina?: number
+    total_pagina_web?: number
+    total_general?: number
+    estado?: $Enums.EstadoCierreCaja
+    observaciones?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    usuario: UsuarioCreateNestedOneWithoutCierres_cajaInput
+    ventas?: VentaCierreCajaCreateNestedManyWithoutCierreInput
+    gastos?: GastoCierreCajaCreateNestedManyWithoutCierreInput
+  }
+
+  export type CierreCajaUncheckedCreateInput = {
+    id?: string
+    fecha: Date | string
+    efectivo_inicial?: number
+    total_efectivo?: number
+    total_tarjeta?: number
+    total_transferencia?: number
+    total_credito_oficina?: number
+    total_pagina_web?: number
+    total_general?: number
+    estado?: $Enums.EstadoCierreCaja
+    observaciones?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    usuario_id: string
+    ventas?: VentaCierreCajaUncheckedCreateNestedManyWithoutCierreInput
+    gastos?: GastoCierreCajaUncheckedCreateNestedManyWithoutCierreInput
+  }
+
+  export type CierreCajaUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fecha?: DateTimeFieldUpdateOperationsInput | Date | string
+    efectivo_inicial?: FloatFieldUpdateOperationsInput | number
+    total_efectivo?: FloatFieldUpdateOperationsInput | number
+    total_tarjeta?: FloatFieldUpdateOperationsInput | number
+    total_transferencia?: FloatFieldUpdateOperationsInput | number
+    total_credito_oficina?: FloatFieldUpdateOperationsInput | number
+    total_pagina_web?: FloatFieldUpdateOperationsInput | number
+    total_general?: FloatFieldUpdateOperationsInput | number
+    estado?: EnumEstadoCierreCajaFieldUpdateOperationsInput | $Enums.EstadoCierreCaja
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    usuario?: UsuarioUpdateOneRequiredWithoutCierres_cajaNestedInput
+    ventas?: VentaCierreCajaUpdateManyWithoutCierreNestedInput
+    gastos?: GastoCierreCajaUpdateManyWithoutCierreNestedInput
+  }
+
+  export type CierreCajaUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fecha?: DateTimeFieldUpdateOperationsInput | Date | string
+    efectivo_inicial?: FloatFieldUpdateOperationsInput | number
+    total_efectivo?: FloatFieldUpdateOperationsInput | number
+    total_tarjeta?: FloatFieldUpdateOperationsInput | number
+    total_transferencia?: FloatFieldUpdateOperationsInput | number
+    total_credito_oficina?: FloatFieldUpdateOperationsInput | number
+    total_pagina_web?: FloatFieldUpdateOperationsInput | number
+    total_general?: FloatFieldUpdateOperationsInput | number
+    estado?: EnumEstadoCierreCajaFieldUpdateOperationsInput | $Enums.EstadoCierreCaja
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    usuario_id?: StringFieldUpdateOperationsInput | string
+    ventas?: VentaCierreCajaUncheckedUpdateManyWithoutCierreNestedInput
+    gastos?: GastoCierreCajaUncheckedUpdateManyWithoutCierreNestedInput
+  }
+
+  export type CierreCajaCreateManyInput = {
+    id?: string
+    fecha: Date | string
+    efectivo_inicial?: number
+    total_efectivo?: number
+    total_tarjeta?: number
+    total_transferencia?: number
+    total_credito_oficina?: number
+    total_pagina_web?: number
+    total_general?: number
+    estado?: $Enums.EstadoCierreCaja
+    observaciones?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    usuario_id: string
+  }
+
+  export type CierreCajaUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fecha?: DateTimeFieldUpdateOperationsInput | Date | string
+    efectivo_inicial?: FloatFieldUpdateOperationsInput | number
+    total_efectivo?: FloatFieldUpdateOperationsInput | number
+    total_tarjeta?: FloatFieldUpdateOperationsInput | number
+    total_transferencia?: FloatFieldUpdateOperationsInput | number
+    total_credito_oficina?: FloatFieldUpdateOperationsInput | number
+    total_pagina_web?: FloatFieldUpdateOperationsInput | number
+    total_general?: FloatFieldUpdateOperationsInput | number
+    estado?: EnumEstadoCierreCajaFieldUpdateOperationsInput | $Enums.EstadoCierreCaja
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CierreCajaUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fecha?: DateTimeFieldUpdateOperationsInput | Date | string
+    efectivo_inicial?: FloatFieldUpdateOperationsInput | number
+    total_efectivo?: FloatFieldUpdateOperationsInput | number
+    total_tarjeta?: FloatFieldUpdateOperationsInput | number
+    total_transferencia?: FloatFieldUpdateOperationsInput | number
+    total_credito_oficina?: FloatFieldUpdateOperationsInput | number
+    total_pagina_web?: FloatFieldUpdateOperationsInput | number
+    total_general?: FloatFieldUpdateOperationsInput | number
+    estado?: EnumEstadoCierreCajaFieldUpdateOperationsInput | $Enums.EstadoCierreCaja
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    usuario_id?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type VentaCierreCajaCreateInput = {
+    id?: string
+    descripcion: string
+    cantidad?: number
+    precio_unitario: number
+    subtotal: number
+    metodo_pago: $Enums.MetodoPagoCaja
+    es_otro?: boolean
+    cierre: CierreCajaCreateNestedOneWithoutVentasInput
+    producto?: ProductoCreateNestedOneWithoutVentas_cierre_cajaInput
+  }
+
+  export type VentaCierreCajaUncheckedCreateInput = {
+    id?: string
+    cierre_id: string
+    descripcion: string
+    producto_id?: string | null
+    cantidad?: number
+    precio_unitario: number
+    subtotal: number
+    metodo_pago: $Enums.MetodoPagoCaja
+    es_otro?: boolean
+  }
+
+  export type VentaCierreCajaUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    descripcion?: StringFieldUpdateOperationsInput | string
+    cantidad?: IntFieldUpdateOperationsInput | number
+    precio_unitario?: FloatFieldUpdateOperationsInput | number
+    subtotal?: FloatFieldUpdateOperationsInput | number
+    metodo_pago?: EnumMetodoPagoCajaFieldUpdateOperationsInput | $Enums.MetodoPagoCaja
+    es_otro?: BoolFieldUpdateOperationsInput | boolean
+    cierre?: CierreCajaUpdateOneRequiredWithoutVentasNestedInput
+    producto?: ProductoUpdateOneWithoutVentas_cierre_cajaNestedInput
+  }
+
+  export type VentaCierreCajaUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    cierre_id?: StringFieldUpdateOperationsInput | string
+    descripcion?: StringFieldUpdateOperationsInput | string
+    producto_id?: NullableStringFieldUpdateOperationsInput | string | null
+    cantidad?: IntFieldUpdateOperationsInput | number
+    precio_unitario?: FloatFieldUpdateOperationsInput | number
+    subtotal?: FloatFieldUpdateOperationsInput | number
+    metodo_pago?: EnumMetodoPagoCajaFieldUpdateOperationsInput | $Enums.MetodoPagoCaja
+    es_otro?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type VentaCierreCajaCreateManyInput = {
+    id?: string
+    cierre_id: string
+    descripcion: string
+    producto_id?: string | null
+    cantidad?: number
+    precio_unitario: number
+    subtotal: number
+    metodo_pago: $Enums.MetodoPagoCaja
+    es_otro?: boolean
+  }
+
+  export type VentaCierreCajaUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    descripcion?: StringFieldUpdateOperationsInput | string
+    cantidad?: IntFieldUpdateOperationsInput | number
+    precio_unitario?: FloatFieldUpdateOperationsInput | number
+    subtotal?: FloatFieldUpdateOperationsInput | number
+    metodo_pago?: EnumMetodoPagoCajaFieldUpdateOperationsInput | $Enums.MetodoPagoCaja
+    es_otro?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type VentaCierreCajaUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    cierre_id?: StringFieldUpdateOperationsInput | string
+    descripcion?: StringFieldUpdateOperationsInput | string
+    producto_id?: NullableStringFieldUpdateOperationsInput | string | null
+    cantidad?: IntFieldUpdateOperationsInput | number
+    precio_unitario?: FloatFieldUpdateOperationsInput | number
+    subtotal?: FloatFieldUpdateOperationsInput | number
+    metodo_pago?: EnumMetodoPagoCajaFieldUpdateOperationsInput | $Enums.MetodoPagoCaja
+    es_otro?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type GastoCierreCajaCreateInput = {
+    id?: string
+    descripcion: string
+    monto: number
+    tipo: string
+    cierre: CierreCajaCreateNestedOneWithoutGastosInput
+  }
+
+  export type GastoCierreCajaUncheckedCreateInput = {
+    id?: string
+    cierre_id: string
+    descripcion: string
+    monto: number
+    tipo: string
+  }
+
+  export type GastoCierreCajaUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    descripcion?: StringFieldUpdateOperationsInput | string
+    monto?: FloatFieldUpdateOperationsInput | number
+    tipo?: StringFieldUpdateOperationsInput | string
+    cierre?: CierreCajaUpdateOneRequiredWithoutGastosNestedInput
+  }
+
+  export type GastoCierreCajaUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    cierre_id?: StringFieldUpdateOperationsInput | string
+    descripcion?: StringFieldUpdateOperationsInput | string
+    monto?: FloatFieldUpdateOperationsInput | number
+    tipo?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type GastoCierreCajaCreateManyInput = {
+    id?: string
+    cierre_id: string
+    descripcion: string
+    monto: number
+    tipo: string
+  }
+
+  export type GastoCierreCajaUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    descripcion?: StringFieldUpdateOperationsInput | string
+    monto?: FloatFieldUpdateOperationsInput | number
+    tipo?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type GastoCierreCajaUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    cierre_id?: StringFieldUpdateOperationsInput | string
+    descripcion?: StringFieldUpdateOperationsInput | string
+    monto?: FloatFieldUpdateOperationsInput | number
+    tipo?: StringFieldUpdateOperationsInput | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[]
@@ -60555,6 +64704,12 @@ export namespace Prisma {
     isNot?: UserWhereInput | null
   }
 
+  export type CierreCajaListRelationFilter = {
+    every?: CierreCajaWhereInput
+    some?: CierreCajaWhereInput
+    none?: CierreCajaWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -60605,6 +64760,10 @@ export namespace Prisma {
   }
 
   export type MovimientoStockOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type CierreCajaOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -61159,6 +65318,12 @@ export namespace Prisma {
     isNot?: StockFabricaWhereInput | null
   }
 
+  export type VentaCierreCajaListRelationFilter = {
+    every?: VentaCierreCajaWhereInput
+    some?: VentaCierreCajaWhereInput
+    none?: VentaCierreCajaWhereInput
+  }
+
   export type ComisionOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -61180,6 +65345,10 @@ export namespace Prisma {
   }
 
   export type PedidoItemOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type VentaCierreCajaOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -63673,6 +67842,229 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
+  export type EnumEstadoCierreCajaFilter<$PrismaModel = never> = {
+    equals?: $Enums.EstadoCierreCaja | EnumEstadoCierreCajaFieldRefInput<$PrismaModel>
+    in?: $Enums.EstadoCierreCaja[]
+    notIn?: $Enums.EstadoCierreCaja[]
+    not?: NestedEnumEstadoCierreCajaFilter<$PrismaModel> | $Enums.EstadoCierreCaja
+  }
+
+  export type GastoCierreCajaListRelationFilter = {
+    every?: GastoCierreCajaWhereInput
+    some?: GastoCierreCajaWhereInput
+    none?: GastoCierreCajaWhereInput
+  }
+
+  export type GastoCierreCajaOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type CierreCajaOrderByRelevanceInput = {
+    fields: CierreCajaOrderByRelevanceFieldEnum | CierreCajaOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type CierreCajaCountOrderByAggregateInput = {
+    id?: SortOrder
+    fecha?: SortOrder
+    efectivo_inicial?: SortOrder
+    total_efectivo?: SortOrder
+    total_tarjeta?: SortOrder
+    total_transferencia?: SortOrder
+    total_credito_oficina?: SortOrder
+    total_pagina_web?: SortOrder
+    total_general?: SortOrder
+    estado?: SortOrder
+    observaciones?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    usuario_id?: SortOrder
+  }
+
+  export type CierreCajaAvgOrderByAggregateInput = {
+    efectivo_inicial?: SortOrder
+    total_efectivo?: SortOrder
+    total_tarjeta?: SortOrder
+    total_transferencia?: SortOrder
+    total_credito_oficina?: SortOrder
+    total_pagina_web?: SortOrder
+    total_general?: SortOrder
+  }
+
+  export type CierreCajaMaxOrderByAggregateInput = {
+    id?: SortOrder
+    fecha?: SortOrder
+    efectivo_inicial?: SortOrder
+    total_efectivo?: SortOrder
+    total_tarjeta?: SortOrder
+    total_transferencia?: SortOrder
+    total_credito_oficina?: SortOrder
+    total_pagina_web?: SortOrder
+    total_general?: SortOrder
+    estado?: SortOrder
+    observaciones?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    usuario_id?: SortOrder
+  }
+
+  export type CierreCajaMinOrderByAggregateInput = {
+    id?: SortOrder
+    fecha?: SortOrder
+    efectivo_inicial?: SortOrder
+    total_efectivo?: SortOrder
+    total_tarjeta?: SortOrder
+    total_transferencia?: SortOrder
+    total_credito_oficina?: SortOrder
+    total_pagina_web?: SortOrder
+    total_general?: SortOrder
+    estado?: SortOrder
+    observaciones?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    usuario_id?: SortOrder
+  }
+
+  export type CierreCajaSumOrderByAggregateInput = {
+    efectivo_inicial?: SortOrder
+    total_efectivo?: SortOrder
+    total_tarjeta?: SortOrder
+    total_transferencia?: SortOrder
+    total_credito_oficina?: SortOrder
+    total_pagina_web?: SortOrder
+    total_general?: SortOrder
+  }
+
+  export type EnumEstadoCierreCajaWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.EstadoCierreCaja | EnumEstadoCierreCajaFieldRefInput<$PrismaModel>
+    in?: $Enums.EstadoCierreCaja[]
+    notIn?: $Enums.EstadoCierreCaja[]
+    not?: NestedEnumEstadoCierreCajaWithAggregatesFilter<$PrismaModel> | $Enums.EstadoCierreCaja
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumEstadoCierreCajaFilter<$PrismaModel>
+    _max?: NestedEnumEstadoCierreCajaFilter<$PrismaModel>
+  }
+
+  export type EnumMetodoPagoCajaFilter<$PrismaModel = never> = {
+    equals?: $Enums.MetodoPagoCaja | EnumMetodoPagoCajaFieldRefInput<$PrismaModel>
+    in?: $Enums.MetodoPagoCaja[]
+    notIn?: $Enums.MetodoPagoCaja[]
+    not?: NestedEnumMetodoPagoCajaFilter<$PrismaModel> | $Enums.MetodoPagoCaja
+  }
+
+  export type CierreCajaScalarRelationFilter = {
+    is?: CierreCajaWhereInput
+    isNot?: CierreCajaWhereInput
+  }
+
+  export type ProductoNullableScalarRelationFilter = {
+    is?: ProductoWhereInput | null
+    isNot?: ProductoWhereInput | null
+  }
+
+  export type VentaCierreCajaOrderByRelevanceInput = {
+    fields: VentaCierreCajaOrderByRelevanceFieldEnum | VentaCierreCajaOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type VentaCierreCajaCountOrderByAggregateInput = {
+    id?: SortOrder
+    cierre_id?: SortOrder
+    descripcion?: SortOrder
+    producto_id?: SortOrder
+    cantidad?: SortOrder
+    precio_unitario?: SortOrder
+    subtotal?: SortOrder
+    metodo_pago?: SortOrder
+    es_otro?: SortOrder
+  }
+
+  export type VentaCierreCajaAvgOrderByAggregateInput = {
+    cantidad?: SortOrder
+    precio_unitario?: SortOrder
+    subtotal?: SortOrder
+  }
+
+  export type VentaCierreCajaMaxOrderByAggregateInput = {
+    id?: SortOrder
+    cierre_id?: SortOrder
+    descripcion?: SortOrder
+    producto_id?: SortOrder
+    cantidad?: SortOrder
+    precio_unitario?: SortOrder
+    subtotal?: SortOrder
+    metodo_pago?: SortOrder
+    es_otro?: SortOrder
+  }
+
+  export type VentaCierreCajaMinOrderByAggregateInput = {
+    id?: SortOrder
+    cierre_id?: SortOrder
+    descripcion?: SortOrder
+    producto_id?: SortOrder
+    cantidad?: SortOrder
+    precio_unitario?: SortOrder
+    subtotal?: SortOrder
+    metodo_pago?: SortOrder
+    es_otro?: SortOrder
+  }
+
+  export type VentaCierreCajaSumOrderByAggregateInput = {
+    cantidad?: SortOrder
+    precio_unitario?: SortOrder
+    subtotal?: SortOrder
+  }
+
+  export type EnumMetodoPagoCajaWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.MetodoPagoCaja | EnumMetodoPagoCajaFieldRefInput<$PrismaModel>
+    in?: $Enums.MetodoPagoCaja[]
+    notIn?: $Enums.MetodoPagoCaja[]
+    not?: NestedEnumMetodoPagoCajaWithAggregatesFilter<$PrismaModel> | $Enums.MetodoPagoCaja
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumMetodoPagoCajaFilter<$PrismaModel>
+    _max?: NestedEnumMetodoPagoCajaFilter<$PrismaModel>
+  }
+
+  export type GastoCierreCajaOrderByRelevanceInput = {
+    fields: GastoCierreCajaOrderByRelevanceFieldEnum | GastoCierreCajaOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type GastoCierreCajaCountOrderByAggregateInput = {
+    id?: SortOrder
+    cierre_id?: SortOrder
+    descripcion?: SortOrder
+    monto?: SortOrder
+    tipo?: SortOrder
+  }
+
+  export type GastoCierreCajaAvgOrderByAggregateInput = {
+    monto?: SortOrder
+  }
+
+  export type GastoCierreCajaMaxOrderByAggregateInput = {
+    id?: SortOrder
+    cierre_id?: SortOrder
+    descripcion?: SortOrder
+    monto?: SortOrder
+    tipo?: SortOrder
+  }
+
+  export type GastoCierreCajaMinOrderByAggregateInput = {
+    id?: SortOrder
+    cierre_id?: SortOrder
+    descripcion?: SortOrder
+    monto?: SortOrder
+    tipo?: SortOrder
+  }
+
+  export type GastoCierreCajaSumOrderByAggregateInput = {
+    monto?: SortOrder
+  }
+
   export type BotellonDanadoCreateNestedManyWithoutUsuarioInput = {
     create?: XOR<BotellonDanadoCreateWithoutUsuarioInput, BotellonDanadoUncheckedCreateWithoutUsuarioInput> | BotellonDanadoCreateWithoutUsuarioInput[] | BotellonDanadoUncheckedCreateWithoutUsuarioInput[]
     connectOrCreate?: BotellonDanadoCreateOrConnectWithoutUsuarioInput | BotellonDanadoCreateOrConnectWithoutUsuarioInput[]
@@ -63769,6 +68161,13 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput
   }
 
+  export type CierreCajaCreateNestedManyWithoutUsuarioInput = {
+    create?: XOR<CierreCajaCreateWithoutUsuarioInput, CierreCajaUncheckedCreateWithoutUsuarioInput> | CierreCajaCreateWithoutUsuarioInput[] | CierreCajaUncheckedCreateWithoutUsuarioInput[]
+    connectOrCreate?: CierreCajaCreateOrConnectWithoutUsuarioInput | CierreCajaCreateOrConnectWithoutUsuarioInput[]
+    createMany?: CierreCajaCreateManyUsuarioInputEnvelope
+    connect?: CierreCajaWhereUniqueInput | CierreCajaWhereUniqueInput[]
+  }
+
   export type BotellonDanadoUncheckedCreateNestedManyWithoutUsuarioInput = {
     create?: XOR<BotellonDanadoCreateWithoutUsuarioInput, BotellonDanadoUncheckedCreateWithoutUsuarioInput> | BotellonDanadoCreateWithoutUsuarioInput[] | BotellonDanadoUncheckedCreateWithoutUsuarioInput[]
     connectOrCreate?: BotellonDanadoCreateOrConnectWithoutUsuarioInput | BotellonDanadoCreateOrConnectWithoutUsuarioInput[]
@@ -63851,6 +68250,13 @@ export namespace Prisma {
     connectOrCreate?: MovimientoStockCreateOrConnectWithoutUsuarioInput | MovimientoStockCreateOrConnectWithoutUsuarioInput[]
     createMany?: MovimientoStockCreateManyUsuarioInputEnvelope
     connect?: MovimientoStockWhereUniqueInput | MovimientoStockWhereUniqueInput[]
+  }
+
+  export type CierreCajaUncheckedCreateNestedManyWithoutUsuarioInput = {
+    create?: XOR<CierreCajaCreateWithoutUsuarioInput, CierreCajaUncheckedCreateWithoutUsuarioInput> | CierreCajaCreateWithoutUsuarioInput[] | CierreCajaUncheckedCreateWithoutUsuarioInput[]
+    connectOrCreate?: CierreCajaCreateOrConnectWithoutUsuarioInput | CierreCajaCreateOrConnectWithoutUsuarioInput[]
+    createMany?: CierreCajaCreateManyUsuarioInputEnvelope
+    connect?: CierreCajaWhereUniqueInput | CierreCajaWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -64065,6 +68471,20 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutUsuarioInput, UserUpdateWithoutUsuarioInput>, UserUncheckedUpdateWithoutUsuarioInput>
   }
 
+  export type CierreCajaUpdateManyWithoutUsuarioNestedInput = {
+    create?: XOR<CierreCajaCreateWithoutUsuarioInput, CierreCajaUncheckedCreateWithoutUsuarioInput> | CierreCajaCreateWithoutUsuarioInput[] | CierreCajaUncheckedCreateWithoutUsuarioInput[]
+    connectOrCreate?: CierreCajaCreateOrConnectWithoutUsuarioInput | CierreCajaCreateOrConnectWithoutUsuarioInput[]
+    upsert?: CierreCajaUpsertWithWhereUniqueWithoutUsuarioInput | CierreCajaUpsertWithWhereUniqueWithoutUsuarioInput[]
+    createMany?: CierreCajaCreateManyUsuarioInputEnvelope
+    set?: CierreCajaWhereUniqueInput | CierreCajaWhereUniqueInput[]
+    disconnect?: CierreCajaWhereUniqueInput | CierreCajaWhereUniqueInput[]
+    delete?: CierreCajaWhereUniqueInput | CierreCajaWhereUniqueInput[]
+    connect?: CierreCajaWhereUniqueInput | CierreCajaWhereUniqueInput[]
+    update?: CierreCajaUpdateWithWhereUniqueWithoutUsuarioInput | CierreCajaUpdateWithWhereUniqueWithoutUsuarioInput[]
+    updateMany?: CierreCajaUpdateManyWithWhereWithoutUsuarioInput | CierreCajaUpdateManyWithWhereWithoutUsuarioInput[]
+    deleteMany?: CierreCajaScalarWhereInput | CierreCajaScalarWhereInput[]
+  }
+
   export type BotellonDanadoUncheckedUpdateManyWithoutUsuarioNestedInput = {
     create?: XOR<BotellonDanadoCreateWithoutUsuarioInput, BotellonDanadoUncheckedCreateWithoutUsuarioInput> | BotellonDanadoCreateWithoutUsuarioInput[] | BotellonDanadoUncheckedCreateWithoutUsuarioInput[]
     connectOrCreate?: BotellonDanadoCreateOrConnectWithoutUsuarioInput | BotellonDanadoCreateOrConnectWithoutUsuarioInput[]
@@ -64231,6 +68651,20 @@ export namespace Prisma {
     update?: MovimientoStockUpdateWithWhereUniqueWithoutUsuarioInput | MovimientoStockUpdateWithWhereUniqueWithoutUsuarioInput[]
     updateMany?: MovimientoStockUpdateManyWithWhereWithoutUsuarioInput | MovimientoStockUpdateManyWithWhereWithoutUsuarioInput[]
     deleteMany?: MovimientoStockScalarWhereInput | MovimientoStockScalarWhereInput[]
+  }
+
+  export type CierreCajaUncheckedUpdateManyWithoutUsuarioNestedInput = {
+    create?: XOR<CierreCajaCreateWithoutUsuarioInput, CierreCajaUncheckedCreateWithoutUsuarioInput> | CierreCajaCreateWithoutUsuarioInput[] | CierreCajaUncheckedCreateWithoutUsuarioInput[]
+    connectOrCreate?: CierreCajaCreateOrConnectWithoutUsuarioInput | CierreCajaCreateOrConnectWithoutUsuarioInput[]
+    upsert?: CierreCajaUpsertWithWhereUniqueWithoutUsuarioInput | CierreCajaUpsertWithWhereUniqueWithoutUsuarioInput[]
+    createMany?: CierreCajaCreateManyUsuarioInputEnvelope
+    set?: CierreCajaWhereUniqueInput | CierreCajaWhereUniqueInput[]
+    disconnect?: CierreCajaWhereUniqueInput | CierreCajaWhereUniqueInput[]
+    delete?: CierreCajaWhereUniqueInput | CierreCajaWhereUniqueInput[]
+    connect?: CierreCajaWhereUniqueInput | CierreCajaWhereUniqueInput[]
+    update?: CierreCajaUpdateWithWhereUniqueWithoutUsuarioInput | CierreCajaUpdateWithWhereUniqueWithoutUsuarioInput[]
+    updateMany?: CierreCajaUpdateManyWithWhereWithoutUsuarioInput | CierreCajaUpdateManyWithWhereWithoutUsuarioInput[]
+    deleteMany?: CierreCajaScalarWhereInput | CierreCajaScalarWhereInput[]
   }
 
   export type AlertaVehiculoCreateNestedManyWithoutVehiculoInput = {
@@ -64679,6 +69113,13 @@ export namespace Prisma {
     connect?: MovimientoStockWhereUniqueInput | MovimientoStockWhereUniqueInput[]
   }
 
+  export type VentaCierreCajaCreateNestedManyWithoutProductoInput = {
+    create?: XOR<VentaCierreCajaCreateWithoutProductoInput, VentaCierreCajaUncheckedCreateWithoutProductoInput> | VentaCierreCajaCreateWithoutProductoInput[] | VentaCierreCajaUncheckedCreateWithoutProductoInput[]
+    connectOrCreate?: VentaCierreCajaCreateOrConnectWithoutProductoInput | VentaCierreCajaCreateOrConnectWithoutProductoInput[]
+    createMany?: VentaCierreCajaCreateManyProductoInputEnvelope
+    connect?: VentaCierreCajaWhereUniqueInput | VentaCierreCajaWhereUniqueInput[]
+  }
+
   export type ComisionUncheckedCreateNestedManyWithoutProductoInput = {
     create?: XOR<ComisionCreateWithoutProductoInput, ComisionUncheckedCreateWithoutProductoInput> | ComisionCreateWithoutProductoInput[] | ComisionUncheckedCreateWithoutProductoInput[]
     connectOrCreate?: ComisionCreateOrConnectWithoutProductoInput | ComisionCreateOrConnectWithoutProductoInput[]
@@ -64739,6 +69180,13 @@ export namespace Prisma {
     connectOrCreate?: MovimientoStockCreateOrConnectWithoutProductoInput | MovimientoStockCreateOrConnectWithoutProductoInput[]
     createMany?: MovimientoStockCreateManyProductoInputEnvelope
     connect?: MovimientoStockWhereUniqueInput | MovimientoStockWhereUniqueInput[]
+  }
+
+  export type VentaCierreCajaUncheckedCreateNestedManyWithoutProductoInput = {
+    create?: XOR<VentaCierreCajaCreateWithoutProductoInput, VentaCierreCajaUncheckedCreateWithoutProductoInput> | VentaCierreCajaCreateWithoutProductoInput[] | VentaCierreCajaUncheckedCreateWithoutProductoInput[]
+    connectOrCreate?: VentaCierreCajaCreateOrConnectWithoutProductoInput | VentaCierreCajaCreateOrConnectWithoutProductoInput[]
+    createMany?: VentaCierreCajaCreateManyProductoInputEnvelope
+    connect?: VentaCierreCajaWhereUniqueInput | VentaCierreCajaWhereUniqueInput[]
   }
 
   export type EnumCategoriaProductoFieldUpdateOperationsInput = {
@@ -64875,6 +69323,20 @@ export namespace Prisma {
     deleteMany?: MovimientoStockScalarWhereInput | MovimientoStockScalarWhereInput[]
   }
 
+  export type VentaCierreCajaUpdateManyWithoutProductoNestedInput = {
+    create?: XOR<VentaCierreCajaCreateWithoutProductoInput, VentaCierreCajaUncheckedCreateWithoutProductoInput> | VentaCierreCajaCreateWithoutProductoInput[] | VentaCierreCajaUncheckedCreateWithoutProductoInput[]
+    connectOrCreate?: VentaCierreCajaCreateOrConnectWithoutProductoInput | VentaCierreCajaCreateOrConnectWithoutProductoInput[]
+    upsert?: VentaCierreCajaUpsertWithWhereUniqueWithoutProductoInput | VentaCierreCajaUpsertWithWhereUniqueWithoutProductoInput[]
+    createMany?: VentaCierreCajaCreateManyProductoInputEnvelope
+    set?: VentaCierreCajaWhereUniqueInput | VentaCierreCajaWhereUniqueInput[]
+    disconnect?: VentaCierreCajaWhereUniqueInput | VentaCierreCajaWhereUniqueInput[]
+    delete?: VentaCierreCajaWhereUniqueInput | VentaCierreCajaWhereUniqueInput[]
+    connect?: VentaCierreCajaWhereUniqueInput | VentaCierreCajaWhereUniqueInput[]
+    update?: VentaCierreCajaUpdateWithWhereUniqueWithoutProductoInput | VentaCierreCajaUpdateWithWhereUniqueWithoutProductoInput[]
+    updateMany?: VentaCierreCajaUpdateManyWithWhereWithoutProductoInput | VentaCierreCajaUpdateManyWithWhereWithoutProductoInput[]
+    deleteMany?: VentaCierreCajaScalarWhereInput | VentaCierreCajaScalarWhereInput[]
+  }
+
   export type ComisionUncheckedUpdateManyWithoutProductoNestedInput = {
     create?: XOR<ComisionCreateWithoutProductoInput, ComisionUncheckedCreateWithoutProductoInput> | ComisionCreateWithoutProductoInput[] | ComisionUncheckedCreateWithoutProductoInput[]
     connectOrCreate?: ComisionCreateOrConnectWithoutProductoInput | ComisionCreateOrConnectWithoutProductoInput[]
@@ -64995,6 +69457,20 @@ export namespace Prisma {
     update?: MovimientoStockUpdateWithWhereUniqueWithoutProductoInput | MovimientoStockUpdateWithWhereUniqueWithoutProductoInput[]
     updateMany?: MovimientoStockUpdateManyWithWhereWithoutProductoInput | MovimientoStockUpdateManyWithWhereWithoutProductoInput[]
     deleteMany?: MovimientoStockScalarWhereInput | MovimientoStockScalarWhereInput[]
+  }
+
+  export type VentaCierreCajaUncheckedUpdateManyWithoutProductoNestedInput = {
+    create?: XOR<VentaCierreCajaCreateWithoutProductoInput, VentaCierreCajaUncheckedCreateWithoutProductoInput> | VentaCierreCajaCreateWithoutProductoInput[] | VentaCierreCajaUncheckedCreateWithoutProductoInput[]
+    connectOrCreate?: VentaCierreCajaCreateOrConnectWithoutProductoInput | VentaCierreCajaCreateOrConnectWithoutProductoInput[]
+    upsert?: VentaCierreCajaUpsertWithWhereUniqueWithoutProductoInput | VentaCierreCajaUpsertWithWhereUniqueWithoutProductoInput[]
+    createMany?: VentaCierreCajaCreateManyProductoInputEnvelope
+    set?: VentaCierreCajaWhereUniqueInput | VentaCierreCajaWhereUniqueInput[]
+    disconnect?: VentaCierreCajaWhereUniqueInput | VentaCierreCajaWhereUniqueInput[]
+    delete?: VentaCierreCajaWhereUniqueInput | VentaCierreCajaWhereUniqueInput[]
+    connect?: VentaCierreCajaWhereUniqueInput | VentaCierreCajaWhereUniqueInput[]
+    update?: VentaCierreCajaUpdateWithWhereUniqueWithoutProductoInput | VentaCierreCajaUpdateWithWhereUniqueWithoutProductoInput[]
+    updateMany?: VentaCierreCajaUpdateManyWithWhereWithoutProductoInput | VentaCierreCajaUpdateManyWithWhereWithoutProductoInput[]
+    deleteMany?: VentaCierreCajaScalarWhereInput | VentaCierreCajaScalarWhereInput[]
   }
 
   export type ProductoCreateNestedOneWithoutMovimientos_stockInput = {
@@ -67231,6 +71707,156 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAccountsInput, UserUpdateWithoutAccountsInput>, UserUncheckedUpdateWithoutAccountsInput>
   }
 
+  export type UsuarioCreateNestedOneWithoutCierres_cajaInput = {
+    create?: XOR<UsuarioCreateWithoutCierres_cajaInput, UsuarioUncheckedCreateWithoutCierres_cajaInput>
+    connectOrCreate?: UsuarioCreateOrConnectWithoutCierres_cajaInput
+    connect?: UsuarioWhereUniqueInput
+  }
+
+  export type VentaCierreCajaCreateNestedManyWithoutCierreInput = {
+    create?: XOR<VentaCierreCajaCreateWithoutCierreInput, VentaCierreCajaUncheckedCreateWithoutCierreInput> | VentaCierreCajaCreateWithoutCierreInput[] | VentaCierreCajaUncheckedCreateWithoutCierreInput[]
+    connectOrCreate?: VentaCierreCajaCreateOrConnectWithoutCierreInput | VentaCierreCajaCreateOrConnectWithoutCierreInput[]
+    createMany?: VentaCierreCajaCreateManyCierreInputEnvelope
+    connect?: VentaCierreCajaWhereUniqueInput | VentaCierreCajaWhereUniqueInput[]
+  }
+
+  export type GastoCierreCajaCreateNestedManyWithoutCierreInput = {
+    create?: XOR<GastoCierreCajaCreateWithoutCierreInput, GastoCierreCajaUncheckedCreateWithoutCierreInput> | GastoCierreCajaCreateWithoutCierreInput[] | GastoCierreCajaUncheckedCreateWithoutCierreInput[]
+    connectOrCreate?: GastoCierreCajaCreateOrConnectWithoutCierreInput | GastoCierreCajaCreateOrConnectWithoutCierreInput[]
+    createMany?: GastoCierreCajaCreateManyCierreInputEnvelope
+    connect?: GastoCierreCajaWhereUniqueInput | GastoCierreCajaWhereUniqueInput[]
+  }
+
+  export type VentaCierreCajaUncheckedCreateNestedManyWithoutCierreInput = {
+    create?: XOR<VentaCierreCajaCreateWithoutCierreInput, VentaCierreCajaUncheckedCreateWithoutCierreInput> | VentaCierreCajaCreateWithoutCierreInput[] | VentaCierreCajaUncheckedCreateWithoutCierreInput[]
+    connectOrCreate?: VentaCierreCajaCreateOrConnectWithoutCierreInput | VentaCierreCajaCreateOrConnectWithoutCierreInput[]
+    createMany?: VentaCierreCajaCreateManyCierreInputEnvelope
+    connect?: VentaCierreCajaWhereUniqueInput | VentaCierreCajaWhereUniqueInput[]
+  }
+
+  export type GastoCierreCajaUncheckedCreateNestedManyWithoutCierreInput = {
+    create?: XOR<GastoCierreCajaCreateWithoutCierreInput, GastoCierreCajaUncheckedCreateWithoutCierreInput> | GastoCierreCajaCreateWithoutCierreInput[] | GastoCierreCajaUncheckedCreateWithoutCierreInput[]
+    connectOrCreate?: GastoCierreCajaCreateOrConnectWithoutCierreInput | GastoCierreCajaCreateOrConnectWithoutCierreInput[]
+    createMany?: GastoCierreCajaCreateManyCierreInputEnvelope
+    connect?: GastoCierreCajaWhereUniqueInput | GastoCierreCajaWhereUniqueInput[]
+  }
+
+  export type EnumEstadoCierreCajaFieldUpdateOperationsInput = {
+    set?: $Enums.EstadoCierreCaja
+  }
+
+  export type UsuarioUpdateOneRequiredWithoutCierres_cajaNestedInput = {
+    create?: XOR<UsuarioCreateWithoutCierres_cajaInput, UsuarioUncheckedCreateWithoutCierres_cajaInput>
+    connectOrCreate?: UsuarioCreateOrConnectWithoutCierres_cajaInput
+    upsert?: UsuarioUpsertWithoutCierres_cajaInput
+    connect?: UsuarioWhereUniqueInput
+    update?: XOR<XOR<UsuarioUpdateToOneWithWhereWithoutCierres_cajaInput, UsuarioUpdateWithoutCierres_cajaInput>, UsuarioUncheckedUpdateWithoutCierres_cajaInput>
+  }
+
+  export type VentaCierreCajaUpdateManyWithoutCierreNestedInput = {
+    create?: XOR<VentaCierreCajaCreateWithoutCierreInput, VentaCierreCajaUncheckedCreateWithoutCierreInput> | VentaCierreCajaCreateWithoutCierreInput[] | VentaCierreCajaUncheckedCreateWithoutCierreInput[]
+    connectOrCreate?: VentaCierreCajaCreateOrConnectWithoutCierreInput | VentaCierreCajaCreateOrConnectWithoutCierreInput[]
+    upsert?: VentaCierreCajaUpsertWithWhereUniqueWithoutCierreInput | VentaCierreCajaUpsertWithWhereUniqueWithoutCierreInput[]
+    createMany?: VentaCierreCajaCreateManyCierreInputEnvelope
+    set?: VentaCierreCajaWhereUniqueInput | VentaCierreCajaWhereUniqueInput[]
+    disconnect?: VentaCierreCajaWhereUniqueInput | VentaCierreCajaWhereUniqueInput[]
+    delete?: VentaCierreCajaWhereUniqueInput | VentaCierreCajaWhereUniqueInput[]
+    connect?: VentaCierreCajaWhereUniqueInput | VentaCierreCajaWhereUniqueInput[]
+    update?: VentaCierreCajaUpdateWithWhereUniqueWithoutCierreInput | VentaCierreCajaUpdateWithWhereUniqueWithoutCierreInput[]
+    updateMany?: VentaCierreCajaUpdateManyWithWhereWithoutCierreInput | VentaCierreCajaUpdateManyWithWhereWithoutCierreInput[]
+    deleteMany?: VentaCierreCajaScalarWhereInput | VentaCierreCajaScalarWhereInput[]
+  }
+
+  export type GastoCierreCajaUpdateManyWithoutCierreNestedInput = {
+    create?: XOR<GastoCierreCajaCreateWithoutCierreInput, GastoCierreCajaUncheckedCreateWithoutCierreInput> | GastoCierreCajaCreateWithoutCierreInput[] | GastoCierreCajaUncheckedCreateWithoutCierreInput[]
+    connectOrCreate?: GastoCierreCajaCreateOrConnectWithoutCierreInput | GastoCierreCajaCreateOrConnectWithoutCierreInput[]
+    upsert?: GastoCierreCajaUpsertWithWhereUniqueWithoutCierreInput | GastoCierreCajaUpsertWithWhereUniqueWithoutCierreInput[]
+    createMany?: GastoCierreCajaCreateManyCierreInputEnvelope
+    set?: GastoCierreCajaWhereUniqueInput | GastoCierreCajaWhereUniqueInput[]
+    disconnect?: GastoCierreCajaWhereUniqueInput | GastoCierreCajaWhereUniqueInput[]
+    delete?: GastoCierreCajaWhereUniqueInput | GastoCierreCajaWhereUniqueInput[]
+    connect?: GastoCierreCajaWhereUniqueInput | GastoCierreCajaWhereUniqueInput[]
+    update?: GastoCierreCajaUpdateWithWhereUniqueWithoutCierreInput | GastoCierreCajaUpdateWithWhereUniqueWithoutCierreInput[]
+    updateMany?: GastoCierreCajaUpdateManyWithWhereWithoutCierreInput | GastoCierreCajaUpdateManyWithWhereWithoutCierreInput[]
+    deleteMany?: GastoCierreCajaScalarWhereInput | GastoCierreCajaScalarWhereInput[]
+  }
+
+  export type VentaCierreCajaUncheckedUpdateManyWithoutCierreNestedInput = {
+    create?: XOR<VentaCierreCajaCreateWithoutCierreInput, VentaCierreCajaUncheckedCreateWithoutCierreInput> | VentaCierreCajaCreateWithoutCierreInput[] | VentaCierreCajaUncheckedCreateWithoutCierreInput[]
+    connectOrCreate?: VentaCierreCajaCreateOrConnectWithoutCierreInput | VentaCierreCajaCreateOrConnectWithoutCierreInput[]
+    upsert?: VentaCierreCajaUpsertWithWhereUniqueWithoutCierreInput | VentaCierreCajaUpsertWithWhereUniqueWithoutCierreInput[]
+    createMany?: VentaCierreCajaCreateManyCierreInputEnvelope
+    set?: VentaCierreCajaWhereUniqueInput | VentaCierreCajaWhereUniqueInput[]
+    disconnect?: VentaCierreCajaWhereUniqueInput | VentaCierreCajaWhereUniqueInput[]
+    delete?: VentaCierreCajaWhereUniqueInput | VentaCierreCajaWhereUniqueInput[]
+    connect?: VentaCierreCajaWhereUniqueInput | VentaCierreCajaWhereUniqueInput[]
+    update?: VentaCierreCajaUpdateWithWhereUniqueWithoutCierreInput | VentaCierreCajaUpdateWithWhereUniqueWithoutCierreInput[]
+    updateMany?: VentaCierreCajaUpdateManyWithWhereWithoutCierreInput | VentaCierreCajaUpdateManyWithWhereWithoutCierreInput[]
+    deleteMany?: VentaCierreCajaScalarWhereInput | VentaCierreCajaScalarWhereInput[]
+  }
+
+  export type GastoCierreCajaUncheckedUpdateManyWithoutCierreNestedInput = {
+    create?: XOR<GastoCierreCajaCreateWithoutCierreInput, GastoCierreCajaUncheckedCreateWithoutCierreInput> | GastoCierreCajaCreateWithoutCierreInput[] | GastoCierreCajaUncheckedCreateWithoutCierreInput[]
+    connectOrCreate?: GastoCierreCajaCreateOrConnectWithoutCierreInput | GastoCierreCajaCreateOrConnectWithoutCierreInput[]
+    upsert?: GastoCierreCajaUpsertWithWhereUniqueWithoutCierreInput | GastoCierreCajaUpsertWithWhereUniqueWithoutCierreInput[]
+    createMany?: GastoCierreCajaCreateManyCierreInputEnvelope
+    set?: GastoCierreCajaWhereUniqueInput | GastoCierreCajaWhereUniqueInput[]
+    disconnect?: GastoCierreCajaWhereUniqueInput | GastoCierreCajaWhereUniqueInput[]
+    delete?: GastoCierreCajaWhereUniqueInput | GastoCierreCajaWhereUniqueInput[]
+    connect?: GastoCierreCajaWhereUniqueInput | GastoCierreCajaWhereUniqueInput[]
+    update?: GastoCierreCajaUpdateWithWhereUniqueWithoutCierreInput | GastoCierreCajaUpdateWithWhereUniqueWithoutCierreInput[]
+    updateMany?: GastoCierreCajaUpdateManyWithWhereWithoutCierreInput | GastoCierreCajaUpdateManyWithWhereWithoutCierreInput[]
+    deleteMany?: GastoCierreCajaScalarWhereInput | GastoCierreCajaScalarWhereInput[]
+  }
+
+  export type CierreCajaCreateNestedOneWithoutVentasInput = {
+    create?: XOR<CierreCajaCreateWithoutVentasInput, CierreCajaUncheckedCreateWithoutVentasInput>
+    connectOrCreate?: CierreCajaCreateOrConnectWithoutVentasInput
+    connect?: CierreCajaWhereUniqueInput
+  }
+
+  export type ProductoCreateNestedOneWithoutVentas_cierre_cajaInput = {
+    create?: XOR<ProductoCreateWithoutVentas_cierre_cajaInput, ProductoUncheckedCreateWithoutVentas_cierre_cajaInput>
+    connectOrCreate?: ProductoCreateOrConnectWithoutVentas_cierre_cajaInput
+    connect?: ProductoWhereUniqueInput
+  }
+
+  export type EnumMetodoPagoCajaFieldUpdateOperationsInput = {
+    set?: $Enums.MetodoPagoCaja
+  }
+
+  export type CierreCajaUpdateOneRequiredWithoutVentasNestedInput = {
+    create?: XOR<CierreCajaCreateWithoutVentasInput, CierreCajaUncheckedCreateWithoutVentasInput>
+    connectOrCreate?: CierreCajaCreateOrConnectWithoutVentasInput
+    upsert?: CierreCajaUpsertWithoutVentasInput
+    connect?: CierreCajaWhereUniqueInput
+    update?: XOR<XOR<CierreCajaUpdateToOneWithWhereWithoutVentasInput, CierreCajaUpdateWithoutVentasInput>, CierreCajaUncheckedUpdateWithoutVentasInput>
+  }
+
+  export type ProductoUpdateOneWithoutVentas_cierre_cajaNestedInput = {
+    create?: XOR<ProductoCreateWithoutVentas_cierre_cajaInput, ProductoUncheckedCreateWithoutVentas_cierre_cajaInput>
+    connectOrCreate?: ProductoCreateOrConnectWithoutVentas_cierre_cajaInput
+    upsert?: ProductoUpsertWithoutVentas_cierre_cajaInput
+    disconnect?: ProductoWhereInput | boolean
+    delete?: ProductoWhereInput | boolean
+    connect?: ProductoWhereUniqueInput
+    update?: XOR<XOR<ProductoUpdateToOneWithWhereWithoutVentas_cierre_cajaInput, ProductoUpdateWithoutVentas_cierre_cajaInput>, ProductoUncheckedUpdateWithoutVentas_cierre_cajaInput>
+  }
+
+  export type CierreCajaCreateNestedOneWithoutGastosInput = {
+    create?: XOR<CierreCajaCreateWithoutGastosInput, CierreCajaUncheckedCreateWithoutGastosInput>
+    connectOrCreate?: CierreCajaCreateOrConnectWithoutGastosInput
+    connect?: CierreCajaWhereUniqueInput
+  }
+
+  export type CierreCajaUpdateOneRequiredWithoutGastosNestedInput = {
+    create?: XOR<CierreCajaCreateWithoutGastosInput, CierreCajaUncheckedCreateWithoutGastosInput>
+    connectOrCreate?: CierreCajaCreateOrConnectWithoutGastosInput
+    upsert?: CierreCajaUpsertWithoutGastosInput
+    connect?: CierreCajaWhereUniqueInput
+    update?: XOR<XOR<CierreCajaUpdateToOneWithWhereWithoutGastosInput, CierreCajaUpdateWithoutGastosInput>, CierreCajaUncheckedUpdateWithoutGastosInput>
+  }
+
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[]
@@ -67899,6 +72525,40 @@ export namespace Prisma {
     _max?: NestedEnumTipoIncidenciaFilter<$PrismaModel>
   }
 
+  export type NestedEnumEstadoCierreCajaFilter<$PrismaModel = never> = {
+    equals?: $Enums.EstadoCierreCaja | EnumEstadoCierreCajaFieldRefInput<$PrismaModel>
+    in?: $Enums.EstadoCierreCaja[]
+    notIn?: $Enums.EstadoCierreCaja[]
+    not?: NestedEnumEstadoCierreCajaFilter<$PrismaModel> | $Enums.EstadoCierreCaja
+  }
+
+  export type NestedEnumEstadoCierreCajaWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.EstadoCierreCaja | EnumEstadoCierreCajaFieldRefInput<$PrismaModel>
+    in?: $Enums.EstadoCierreCaja[]
+    notIn?: $Enums.EstadoCierreCaja[]
+    not?: NestedEnumEstadoCierreCajaWithAggregatesFilter<$PrismaModel> | $Enums.EstadoCierreCaja
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumEstadoCierreCajaFilter<$PrismaModel>
+    _max?: NestedEnumEstadoCierreCajaFilter<$PrismaModel>
+  }
+
+  export type NestedEnumMetodoPagoCajaFilter<$PrismaModel = never> = {
+    equals?: $Enums.MetodoPagoCaja | EnumMetodoPagoCajaFieldRefInput<$PrismaModel>
+    in?: $Enums.MetodoPagoCaja[]
+    notIn?: $Enums.MetodoPagoCaja[]
+    not?: NestedEnumMetodoPagoCajaFilter<$PrismaModel> | $Enums.MetodoPagoCaja
+  }
+
+  export type NestedEnumMetodoPagoCajaWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.MetodoPagoCaja | EnumMetodoPagoCajaFieldRefInput<$PrismaModel>
+    in?: $Enums.MetodoPagoCaja[]
+    notIn?: $Enums.MetodoPagoCaja[]
+    not?: NestedEnumMetodoPagoCajaWithAggregatesFilter<$PrismaModel> | $Enums.MetodoPagoCaja
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumMetodoPagoCajaFilter<$PrismaModel>
+    _max?: NestedEnumMetodoPagoCajaFilter<$PrismaModel>
+  }
+
   export type BotellonDanadoCreateWithoutUsuarioInput = {
     id?: string
     cuadratura_id: string
@@ -68375,6 +73035,52 @@ export namespace Prisma {
     create: XOR<UserCreateWithoutUsuarioInput, UserUncheckedCreateWithoutUsuarioInput>
   }
 
+  export type CierreCajaCreateWithoutUsuarioInput = {
+    id?: string
+    fecha: Date | string
+    efectivo_inicial?: number
+    total_efectivo?: number
+    total_tarjeta?: number
+    total_transferencia?: number
+    total_credito_oficina?: number
+    total_pagina_web?: number
+    total_general?: number
+    estado?: $Enums.EstadoCierreCaja
+    observaciones?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    ventas?: VentaCierreCajaCreateNestedManyWithoutCierreInput
+    gastos?: GastoCierreCajaCreateNestedManyWithoutCierreInput
+  }
+
+  export type CierreCajaUncheckedCreateWithoutUsuarioInput = {
+    id?: string
+    fecha: Date | string
+    efectivo_inicial?: number
+    total_efectivo?: number
+    total_tarjeta?: number
+    total_transferencia?: number
+    total_credito_oficina?: number
+    total_pagina_web?: number
+    total_general?: number
+    estado?: $Enums.EstadoCierreCaja
+    observaciones?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    ventas?: VentaCierreCajaUncheckedCreateNestedManyWithoutCierreInput
+    gastos?: GastoCierreCajaUncheckedCreateNestedManyWithoutCierreInput
+  }
+
+  export type CierreCajaCreateOrConnectWithoutUsuarioInput = {
+    where: CierreCajaWhereUniqueInput
+    create: XOR<CierreCajaCreateWithoutUsuarioInput, CierreCajaUncheckedCreateWithoutUsuarioInput>
+  }
+
+  export type CierreCajaCreateManyUsuarioInputEnvelope = {
+    data: CierreCajaCreateManyUsuarioInput | CierreCajaCreateManyUsuarioInput[]
+    skipDuplicates?: boolean
+  }
+
   export type BotellonDanadoUpsertWithWhereUniqueWithoutUsuarioInput = {
     where: BotellonDanadoWhereUniqueInput
     update: XOR<BotellonDanadoUpdateWithoutUsuarioInput, BotellonDanadoUncheckedUpdateWithoutUsuarioInput>
@@ -68826,6 +73532,42 @@ export namespace Prisma {
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
   }
 
+  export type CierreCajaUpsertWithWhereUniqueWithoutUsuarioInput = {
+    where: CierreCajaWhereUniqueInput
+    update: XOR<CierreCajaUpdateWithoutUsuarioInput, CierreCajaUncheckedUpdateWithoutUsuarioInput>
+    create: XOR<CierreCajaCreateWithoutUsuarioInput, CierreCajaUncheckedCreateWithoutUsuarioInput>
+  }
+
+  export type CierreCajaUpdateWithWhereUniqueWithoutUsuarioInput = {
+    where: CierreCajaWhereUniqueInput
+    data: XOR<CierreCajaUpdateWithoutUsuarioInput, CierreCajaUncheckedUpdateWithoutUsuarioInput>
+  }
+
+  export type CierreCajaUpdateManyWithWhereWithoutUsuarioInput = {
+    where: CierreCajaScalarWhereInput
+    data: XOR<CierreCajaUpdateManyMutationInput, CierreCajaUncheckedUpdateManyWithoutUsuarioInput>
+  }
+
+  export type CierreCajaScalarWhereInput = {
+    AND?: CierreCajaScalarWhereInput | CierreCajaScalarWhereInput[]
+    OR?: CierreCajaScalarWhereInput[]
+    NOT?: CierreCajaScalarWhereInput | CierreCajaScalarWhereInput[]
+    id?: StringFilter<"CierreCaja"> | string
+    fecha?: DateTimeFilter<"CierreCaja"> | Date | string
+    efectivo_inicial?: FloatFilter<"CierreCaja"> | number
+    total_efectivo?: FloatFilter<"CierreCaja"> | number
+    total_tarjeta?: FloatFilter<"CierreCaja"> | number
+    total_transferencia?: FloatFilter<"CierreCaja"> | number
+    total_credito_oficina?: FloatFilter<"CierreCaja"> | number
+    total_pagina_web?: FloatFilter<"CierreCaja"> | number
+    total_general?: FloatFilter<"CierreCaja"> | number
+    estado?: EnumEstadoCierreCajaFilter<"CierreCaja"> | $Enums.EstadoCierreCaja
+    observaciones?: StringNullableFilter<"CierreCaja"> | string | null
+    created_at?: DateTimeFilter<"CierreCaja"> | Date | string
+    updated_at?: DateTimeFilter<"CierreCaja"> | Date | string
+    usuario_id?: StringFilter<"CierreCaja"> | string
+  }
+
   export type AlertaVehiculoCreateWithoutVehiculoInput = {
     id?: string
     tipo: $Enums.TipoAlerta
@@ -69013,6 +73755,7 @@ export namespace Prisma {
     incidencias?: IncidenciaCreateNestedManyWithoutUsuarioInput
     movimientos_stock?: MovimientoStockCreateNestedManyWithoutUsuarioInput
     user?: UserCreateNestedOneWithoutUsuarioInput
+    cierres_caja?: CierreCajaCreateNestedManyWithoutUsuarioInput
   }
 
   export type UsuarioUncheckedCreateWithoutVehiculoInput = {
@@ -69042,6 +73785,7 @@ export namespace Prisma {
     stock_camion?: StockCamionUncheckedCreateNestedManyWithoutUsuarioInput
     incidencias?: IncidenciaUncheckedCreateNestedManyWithoutUsuarioInput
     movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutUsuarioInput
+    cierres_caja?: CierreCajaUncheckedCreateNestedManyWithoutUsuarioInput
   }
 
   export type UsuarioCreateOrConnectWithoutVehiculoInput = {
@@ -69210,6 +73954,7 @@ export namespace Prisma {
     incidencias?: IncidenciaCreateNestedManyWithoutUsuarioInput
     movimientos_stock?: MovimientoStockCreateNestedManyWithoutUsuarioInput
     user?: UserCreateNestedOneWithoutUsuarioInput
+    cierres_caja?: CierreCajaCreateNestedManyWithoutUsuarioInput
   }
 
   export type UsuarioUncheckedCreateWithoutMantencionesInput = {
@@ -69239,6 +73984,7 @@ export namespace Prisma {
     stock_camion?: StockCamionUncheckedCreateNestedManyWithoutUsuarioInput
     incidencias?: IncidenciaUncheckedCreateNestedManyWithoutUsuarioInput
     movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutUsuarioInput
+    cierres_caja?: CierreCajaUncheckedCreateNestedManyWithoutUsuarioInput
   }
 
   export type UsuarioCreateOrConnectWithoutMantencionesInput = {
@@ -69345,6 +74091,7 @@ export namespace Prisma {
     incidencias?: IncidenciaUpdateManyWithoutUsuarioNestedInput
     movimientos_stock?: MovimientoStockUpdateManyWithoutUsuarioNestedInput
     user?: UserUpdateOneWithoutUsuarioNestedInput
+    cierres_caja?: CierreCajaUpdateManyWithoutUsuarioNestedInput
   }
 
   export type UsuarioUncheckedUpdateWithoutMantencionesInput = {
@@ -69374,6 +74121,7 @@ export namespace Prisma {
     stock_camion?: StockCamionUncheckedUpdateManyWithoutUsuarioNestedInput
     incidencias?: IncidenciaUncheckedUpdateManyWithoutUsuarioNestedInput
     movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutUsuarioNestedInput
+    cierres_caja?: CierreCajaUncheckedUpdateManyWithoutUsuarioNestedInput
   }
 
   export type VehiculoUpsertWithoutMantencionesInput = {
@@ -69825,6 +74573,38 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type VentaCierreCajaCreateWithoutProductoInput = {
+    id?: string
+    descripcion: string
+    cantidad?: number
+    precio_unitario: number
+    subtotal: number
+    metodo_pago: $Enums.MetodoPagoCaja
+    es_otro?: boolean
+    cierre: CierreCajaCreateNestedOneWithoutVentasInput
+  }
+
+  export type VentaCierreCajaUncheckedCreateWithoutProductoInput = {
+    id?: string
+    cierre_id: string
+    descripcion: string
+    cantidad?: number
+    precio_unitario: number
+    subtotal: number
+    metodo_pago: $Enums.MetodoPagoCaja
+    es_otro?: boolean
+  }
+
+  export type VentaCierreCajaCreateOrConnectWithoutProductoInput = {
+    where: VentaCierreCajaWhereUniqueInput
+    create: XOR<VentaCierreCajaCreateWithoutProductoInput, VentaCierreCajaUncheckedCreateWithoutProductoInput>
+  }
+
+  export type VentaCierreCajaCreateManyProductoInputEnvelope = {
+    data: VentaCierreCajaCreateManyProductoInput | VentaCierreCajaCreateManyProductoInput[]
+    skipDuplicates?: boolean
+  }
+
   export type ComisionUpsertWithWhereUniqueWithoutProductoInput = {
     where: ComisionWhereUniqueInput
     update: XOR<ComisionUpdateWithoutProductoInput, ComisionUncheckedUpdateWithoutProductoInput>
@@ -70048,6 +74828,37 @@ export namespace Prisma {
     data: XOR<MovimientoStockUpdateManyMutationInput, MovimientoStockUncheckedUpdateManyWithoutProductoInput>
   }
 
+  export type VentaCierreCajaUpsertWithWhereUniqueWithoutProductoInput = {
+    where: VentaCierreCajaWhereUniqueInput
+    update: XOR<VentaCierreCajaUpdateWithoutProductoInput, VentaCierreCajaUncheckedUpdateWithoutProductoInput>
+    create: XOR<VentaCierreCajaCreateWithoutProductoInput, VentaCierreCajaUncheckedCreateWithoutProductoInput>
+  }
+
+  export type VentaCierreCajaUpdateWithWhereUniqueWithoutProductoInput = {
+    where: VentaCierreCajaWhereUniqueInput
+    data: XOR<VentaCierreCajaUpdateWithoutProductoInput, VentaCierreCajaUncheckedUpdateWithoutProductoInput>
+  }
+
+  export type VentaCierreCajaUpdateManyWithWhereWithoutProductoInput = {
+    where: VentaCierreCajaScalarWhereInput
+    data: XOR<VentaCierreCajaUpdateManyMutationInput, VentaCierreCajaUncheckedUpdateManyWithoutProductoInput>
+  }
+
+  export type VentaCierreCajaScalarWhereInput = {
+    AND?: VentaCierreCajaScalarWhereInput | VentaCierreCajaScalarWhereInput[]
+    OR?: VentaCierreCajaScalarWhereInput[]
+    NOT?: VentaCierreCajaScalarWhereInput | VentaCierreCajaScalarWhereInput[]
+    id?: StringFilter<"VentaCierreCaja"> | string
+    cierre_id?: StringFilter<"VentaCierreCaja"> | string
+    descripcion?: StringFilter<"VentaCierreCaja"> | string
+    producto_id?: StringNullableFilter<"VentaCierreCaja"> | string | null
+    cantidad?: IntFilter<"VentaCierreCaja"> | number
+    precio_unitario?: FloatFilter<"VentaCierreCaja"> | number
+    subtotal?: FloatFilter<"VentaCierreCaja"> | number
+    metodo_pago?: EnumMetodoPagoCajaFilter<"VentaCierreCaja"> | $Enums.MetodoPagoCaja
+    es_otro?: BoolFilter<"VentaCierreCaja"> | boolean
+  }
+
   export type ProductoCreateWithoutMovimientos_stockInput = {
     id?: string
     nombre: string
@@ -70064,6 +74875,7 @@ export namespace Prisma {
     pedidoItems?: PedidoItemCreateNestedManyWithoutProductoInput
     stock_camion?: StockCamionCreateNestedManyWithoutProductoInput
     stock_fabrica?: StockFabricaCreateNestedOneWithoutProductoInput
+    ventas_cierre_caja?: VentaCierreCajaCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoUncheckedCreateWithoutMovimientos_stockInput = {
@@ -70082,6 +74894,7 @@ export namespace Prisma {
     pedidoItems?: PedidoItemUncheckedCreateNestedManyWithoutProductoInput
     stock_camion?: StockCamionUncheckedCreateNestedManyWithoutProductoInput
     stock_fabrica?: StockFabricaUncheckedCreateNestedOneWithoutProductoInput
+    ventas_cierre_caja?: VentaCierreCajaUncheckedCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoCreateOrConnectWithoutMovimientos_stockInput = {
@@ -70116,6 +74929,7 @@ export namespace Prisma {
     vehiculo?: VehiculoCreateNestedOneWithoutUsuariosInput
     incidencias?: IncidenciaCreateNestedManyWithoutUsuarioInput
     user?: UserCreateNestedOneWithoutUsuarioInput
+    cierres_caja?: CierreCajaCreateNestedManyWithoutUsuarioInput
   }
 
   export type UsuarioUncheckedCreateWithoutMovimientos_stockInput = {
@@ -70145,6 +74959,7 @@ export namespace Prisma {
     rutas_dia?: RutaDiaUncheckedCreateNestedManyWithoutUsuarioInput
     stock_camion?: StockCamionUncheckedCreateNestedManyWithoutUsuarioInput
     incidencias?: IncidenciaUncheckedCreateNestedManyWithoutUsuarioInput
+    cierres_caja?: CierreCajaUncheckedCreateNestedManyWithoutUsuarioInput
   }
 
   export type UsuarioCreateOrConnectWithoutMovimientos_stockInput = {
@@ -70179,6 +74994,7 @@ export namespace Prisma {
     pedidoItems?: PedidoItemUpdateManyWithoutProductoNestedInput
     stock_camion?: StockCamionUpdateManyWithoutProductoNestedInput
     stock_fabrica?: StockFabricaUpdateOneWithoutProductoNestedInput
+    ventas_cierre_caja?: VentaCierreCajaUpdateManyWithoutProductoNestedInput
   }
 
   export type ProductoUncheckedUpdateWithoutMovimientos_stockInput = {
@@ -70197,6 +75013,7 @@ export namespace Prisma {
     pedidoItems?: PedidoItemUncheckedUpdateManyWithoutProductoNestedInput
     stock_camion?: StockCamionUncheckedUpdateManyWithoutProductoNestedInput
     stock_fabrica?: StockFabricaUncheckedUpdateOneWithoutProductoNestedInput
+    ventas_cierre_caja?: VentaCierreCajaUncheckedUpdateManyWithoutProductoNestedInput
   }
 
   export type UsuarioUpsertWithoutMovimientos_stockInput = {
@@ -70237,6 +75054,7 @@ export namespace Prisma {
     vehiculo?: VehiculoUpdateOneWithoutUsuariosNestedInput
     incidencias?: IncidenciaUpdateManyWithoutUsuarioNestedInput
     user?: UserUpdateOneWithoutUsuarioNestedInput
+    cierres_caja?: CierreCajaUpdateManyWithoutUsuarioNestedInput
   }
 
   export type UsuarioUncheckedUpdateWithoutMovimientos_stockInput = {
@@ -70266,6 +75084,7 @@ export namespace Prisma {
     rutas_dia?: RutaDiaUncheckedUpdateManyWithoutUsuarioNestedInput
     stock_camion?: StockCamionUncheckedUpdateManyWithoutUsuarioNestedInput
     incidencias?: IncidenciaUncheckedUpdateManyWithoutUsuarioNestedInput
+    cierres_caja?: CierreCajaUncheckedUpdateManyWithoutUsuarioNestedInput
   }
 
   export type ProductoCreateWithoutComisionesInput = {
@@ -70284,6 +75103,7 @@ export namespace Prisma {
     stock_camion?: StockCamionCreateNestedManyWithoutProductoInput
     stock_fabrica?: StockFabricaCreateNestedOneWithoutProductoInput
     movimientos_stock?: MovimientoStockCreateNestedManyWithoutProductoInput
+    ventas_cierre_caja?: VentaCierreCajaCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoUncheckedCreateWithoutComisionesInput = {
@@ -70302,6 +75122,7 @@ export namespace Prisma {
     stock_camion?: StockCamionUncheckedCreateNestedManyWithoutProductoInput
     stock_fabrica?: StockFabricaUncheckedCreateNestedOneWithoutProductoInput
     movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutProductoInput
+    ventas_cierre_caja?: VentaCierreCajaUncheckedCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoCreateOrConnectWithoutComisionesInput = {
@@ -70336,6 +75157,7 @@ export namespace Prisma {
     stock_camion?: StockCamionUpdateManyWithoutProductoNestedInput
     stock_fabrica?: StockFabricaUpdateOneWithoutProductoNestedInput
     movimientos_stock?: MovimientoStockUpdateManyWithoutProductoNestedInput
+    ventas_cierre_caja?: VentaCierreCajaUpdateManyWithoutProductoNestedInput
   }
 
   export type ProductoUncheckedUpdateWithoutComisionesInput = {
@@ -70354,6 +75176,7 @@ export namespace Prisma {
     stock_camion?: StockCamionUncheckedUpdateManyWithoutProductoNestedInput
     stock_fabrica?: StockFabricaUncheckedUpdateOneWithoutProductoNestedInput
     movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutProductoNestedInput
+    ventas_cierre_caja?: VentaCierreCajaUncheckedUpdateManyWithoutProductoNestedInput
   }
 
   export type SectorCreateWithoutClientesInput = {
@@ -70995,6 +75818,7 @@ export namespace Prisma {
     incidencias?: IncidenciaCreateNestedManyWithoutUsuarioInput
     movimientos_stock?: MovimientoStockCreateNestedManyWithoutUsuarioInput
     user?: UserCreateNestedOneWithoutUsuarioInput
+    cierres_caja?: CierreCajaCreateNestedManyWithoutUsuarioInput
   }
 
   export type UsuarioUncheckedCreateWithoutRutas_baseInput = {
@@ -71024,6 +75848,7 @@ export namespace Prisma {
     stock_camion?: StockCamionUncheckedCreateNestedManyWithoutUsuarioInput
     incidencias?: IncidenciaUncheckedCreateNestedManyWithoutUsuarioInput
     movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutUsuarioInput
+    cierres_caja?: CierreCajaUncheckedCreateNestedManyWithoutUsuarioInput
   }
 
   export type UsuarioCreateOrConnectWithoutRutas_baseInput = {
@@ -71175,6 +76000,7 @@ export namespace Prisma {
     incidencias?: IncidenciaUpdateManyWithoutUsuarioNestedInput
     movimientos_stock?: MovimientoStockUpdateManyWithoutUsuarioNestedInput
     user?: UserUpdateOneWithoutUsuarioNestedInput
+    cierres_caja?: CierreCajaUpdateManyWithoutUsuarioNestedInput
   }
 
   export type UsuarioUncheckedUpdateWithoutRutas_baseInput = {
@@ -71204,6 +76030,7 @@ export namespace Prisma {
     stock_camion?: StockCamionUncheckedUpdateManyWithoutUsuarioNestedInput
     incidencias?: IncidenciaUncheckedUpdateManyWithoutUsuarioNestedInput
     movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutUsuarioNestedInput
+    cierres_caja?: CierreCajaUncheckedUpdateManyWithoutUsuarioNestedInput
   }
 
   export type VehiculoUpsertWithoutRutas_baseInput = {
@@ -71911,6 +76738,7 @@ export namespace Prisma {
     incidencias?: IncidenciaCreateNestedManyWithoutUsuarioInput
     movimientos_stock?: MovimientoStockCreateNestedManyWithoutUsuarioInput
     user?: UserCreateNestedOneWithoutUsuarioInput
+    cierres_caja?: CierreCajaCreateNestedManyWithoutUsuarioInput
   }
 
   export type UsuarioUncheckedCreateWithoutRutas_diaInput = {
@@ -71940,6 +76768,7 @@ export namespace Prisma {
     stock_camion?: StockCamionUncheckedCreateNestedManyWithoutUsuarioInput
     incidencias?: IncidenciaUncheckedCreateNestedManyWithoutUsuarioInput
     movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutUsuarioInput
+    cierres_caja?: CierreCajaUncheckedCreateNestedManyWithoutUsuarioInput
   }
 
   export type UsuarioCreateOrConnectWithoutRutas_diaInput = {
@@ -72073,6 +76902,7 @@ export namespace Prisma {
     incidencias?: IncidenciaUpdateManyWithoutUsuarioNestedInput
     movimientos_stock?: MovimientoStockUpdateManyWithoutUsuarioNestedInput
     user?: UserUpdateOneWithoutUsuarioNestedInput
+    cierres_caja?: CierreCajaUpdateManyWithoutUsuarioNestedInput
   }
 
   export type UsuarioUncheckedUpdateWithoutRutas_diaInput = {
@@ -72102,6 +76932,7 @@ export namespace Prisma {
     stock_camion?: StockCamionUncheckedUpdateManyWithoutUsuarioNestedInput
     incidencias?: IncidenciaUncheckedUpdateManyWithoutUsuarioNestedInput
     movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutUsuarioNestedInput
+    cierres_caja?: CierreCajaUncheckedUpdateManyWithoutUsuarioNestedInput
   }
 
   export type VehiculoUpsertWithoutRutas_diaInput = {
@@ -72847,6 +77678,7 @@ export namespace Prisma {
     stock_camion?: StockCamionCreateNestedManyWithoutProductoInput
     stock_fabrica?: StockFabricaCreateNestedOneWithoutProductoInput
     movimientos_stock?: MovimientoStockCreateNestedManyWithoutProductoInput
+    ventas_cierre_caja?: VentaCierreCajaCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoUncheckedCreateWithoutPedidoItemsInput = {
@@ -72865,6 +77697,7 @@ export namespace Prisma {
     stock_camion?: StockCamionUncheckedCreateNestedManyWithoutProductoInput
     stock_fabrica?: StockFabricaUncheckedCreateNestedOneWithoutProductoInput
     movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutProductoInput
+    ventas_cierre_caja?: VentaCierreCajaUncheckedCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoCreateOrConnectWithoutPedidoItemsInput = {
@@ -72942,6 +77775,7 @@ export namespace Prisma {
     stock_camion?: StockCamionUpdateManyWithoutProductoNestedInput
     stock_fabrica?: StockFabricaUpdateOneWithoutProductoNestedInput
     movimientos_stock?: MovimientoStockUpdateManyWithoutProductoNestedInput
+    ventas_cierre_caja?: VentaCierreCajaUpdateManyWithoutProductoNestedInput
   }
 
   export type ProductoUncheckedUpdateWithoutPedidoItemsInput = {
@@ -72960,6 +77794,7 @@ export namespace Prisma {
     stock_camion?: StockCamionUncheckedUpdateManyWithoutProductoNestedInput
     stock_fabrica?: StockFabricaUncheckedUpdateOneWithoutProductoNestedInput
     movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutProductoNestedInput
+    ventas_cierre_caja?: VentaCierreCajaUncheckedUpdateManyWithoutProductoNestedInput
   }
 
   export type CuadraturaVentaCreateWithoutGuiaInput = {
@@ -73082,6 +77917,7 @@ export namespace Prisma {
     incidencias?: IncidenciaCreateNestedManyWithoutUsuarioInput
     movimientos_stock?: MovimientoStockCreateNestedManyWithoutUsuarioInput
     user?: UserCreateNestedOneWithoutUsuarioInput
+    cierres_caja?: CierreCajaCreateNestedManyWithoutUsuarioInput
   }
 
   export type UsuarioUncheckedCreateWithoutGuiasInput = {
@@ -73111,6 +77947,7 @@ export namespace Prisma {
     stock_camion?: StockCamionUncheckedCreateNestedManyWithoutUsuarioInput
     incidencias?: IncidenciaUncheckedCreateNestedManyWithoutUsuarioInput
     movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutUsuarioInput
+    cierres_caja?: CierreCajaUncheckedCreateNestedManyWithoutUsuarioInput
   }
 
   export type UsuarioCreateOrConnectWithoutGuiasInput = {
@@ -73304,6 +78141,7 @@ export namespace Prisma {
     incidencias?: IncidenciaUpdateManyWithoutUsuarioNestedInput
     movimientos_stock?: MovimientoStockUpdateManyWithoutUsuarioNestedInput
     user?: UserUpdateOneWithoutUsuarioNestedInput
+    cierres_caja?: CierreCajaUpdateManyWithoutUsuarioNestedInput
   }
 
   export type UsuarioUncheckedUpdateWithoutGuiasInput = {
@@ -73333,6 +78171,7 @@ export namespace Prisma {
     stock_camion?: StockCamionUncheckedUpdateManyWithoutUsuarioNestedInput
     incidencias?: IncidenciaUncheckedUpdateManyWithoutUsuarioNestedInput
     movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutUsuarioNestedInput
+    cierres_caja?: CierreCajaUncheckedUpdateManyWithoutUsuarioNestedInput
   }
 
   export type PedidoUpsertWithoutGuiaInput = {
@@ -73457,6 +78296,7 @@ export namespace Prisma {
     stock_camion?: StockCamionCreateNestedManyWithoutProductoInput
     stock_fabrica?: StockFabricaCreateNestedOneWithoutProductoInput
     movimientos_stock?: MovimientoStockCreateNestedManyWithoutProductoInput
+    ventas_cierre_caja?: VentaCierreCajaCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoUncheckedCreateWithoutItems_guiaInput = {
@@ -73475,6 +78315,7 @@ export namespace Prisma {
     stock_camion?: StockCamionUncheckedCreateNestedManyWithoutProductoInput
     stock_fabrica?: StockFabricaUncheckedCreateNestedOneWithoutProductoInput
     movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutProductoInput
+    ventas_cierre_caja?: VentaCierreCajaUncheckedCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoCreateOrConnectWithoutItems_guiaInput = {
@@ -73561,6 +78402,7 @@ export namespace Prisma {
     stock_camion?: StockCamionUpdateManyWithoutProductoNestedInput
     stock_fabrica?: StockFabricaUpdateOneWithoutProductoNestedInput
     movimientos_stock?: MovimientoStockUpdateManyWithoutProductoNestedInput
+    ventas_cierre_caja?: VentaCierreCajaUpdateManyWithoutProductoNestedInput
   }
 
   export type ProductoUncheckedUpdateWithoutItems_guiaInput = {
@@ -73579,6 +78421,7 @@ export namespace Prisma {
     stock_camion?: StockCamionUncheckedUpdateManyWithoutProductoNestedInput
     stock_fabrica?: StockFabricaUncheckedUpdateOneWithoutProductoNestedInput
     movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutProductoNestedInput
+    ventas_cierre_caja?: VentaCierreCajaUncheckedUpdateManyWithoutProductoNestedInput
   }
 
   export type BotellonVacioCreateWithoutCuadraturaInput = {
@@ -73630,6 +78473,7 @@ export namespace Prisma {
     incidencias?: IncidenciaCreateNestedManyWithoutUsuarioInput
     movimientos_stock?: MovimientoStockCreateNestedManyWithoutUsuarioInput
     user?: UserCreateNestedOneWithoutUsuarioInput
+    cierres_caja?: CierreCajaCreateNestedManyWithoutUsuarioInput
   }
 
   export type UsuarioUncheckedCreateWithoutCuadraturasInput = {
@@ -73659,6 +78503,7 @@ export namespace Prisma {
     stock_camion?: StockCamionUncheckedCreateNestedManyWithoutUsuarioInput
     incidencias?: IncidenciaUncheckedCreateNestedManyWithoutUsuarioInput
     movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutUsuarioInput
+    cierres_caja?: CierreCajaUncheckedCreateNestedManyWithoutUsuarioInput
   }
 
   export type UsuarioCreateOrConnectWithoutCuadraturasInput = {
@@ -73862,6 +78707,7 @@ export namespace Prisma {
     incidencias?: IncidenciaUpdateManyWithoutUsuarioNestedInput
     movimientos_stock?: MovimientoStockUpdateManyWithoutUsuarioNestedInput
     user?: UserUpdateOneWithoutUsuarioNestedInput
+    cierres_caja?: CierreCajaUpdateManyWithoutUsuarioNestedInput
   }
 
   export type UsuarioUncheckedUpdateWithoutCuadraturasInput = {
@@ -73891,6 +78737,7 @@ export namespace Prisma {
     stock_camion?: StockCamionUncheckedUpdateManyWithoutUsuarioNestedInput
     incidencias?: IncidenciaUncheckedUpdateManyWithoutUsuarioNestedInput
     movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutUsuarioNestedInput
+    cierres_caja?: CierreCajaUncheckedUpdateManyWithoutUsuarioNestedInput
   }
 
   export type CuadraturaRetornoUpsertWithWhereUniqueWithoutCuadraturaInput = {
@@ -74049,6 +78896,7 @@ export namespace Prisma {
     stock_camion?: StockCamionCreateNestedManyWithoutProductoInput
     stock_fabrica?: StockFabricaCreateNestedOneWithoutProductoInput
     movimientos_stock?: MovimientoStockCreateNestedManyWithoutProductoInput
+    ventas_cierre_caja?: VentaCierreCajaCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoUncheckedCreateWithoutCuadratura_salidaInput = {
@@ -74067,6 +78915,7 @@ export namespace Prisma {
     stock_camion?: StockCamionUncheckedCreateNestedManyWithoutProductoInput
     stock_fabrica?: StockFabricaUncheckedCreateNestedOneWithoutProductoInput
     movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutProductoInput
+    ventas_cierre_caja?: VentaCierreCajaUncheckedCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoCreateOrConnectWithoutCuadratura_salidaInput = {
@@ -74156,6 +79005,7 @@ export namespace Prisma {
     stock_camion?: StockCamionUpdateManyWithoutProductoNestedInput
     stock_fabrica?: StockFabricaUpdateOneWithoutProductoNestedInput
     movimientos_stock?: MovimientoStockUpdateManyWithoutProductoNestedInput
+    ventas_cierre_caja?: VentaCierreCajaUpdateManyWithoutProductoNestedInput
   }
 
   export type ProductoUncheckedUpdateWithoutCuadratura_salidaInput = {
@@ -74174,6 +79024,7 @@ export namespace Prisma {
     stock_camion?: StockCamionUncheckedUpdateManyWithoutProductoNestedInput
     stock_fabrica?: StockFabricaUncheckedUpdateOneWithoutProductoNestedInput
     movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutProductoNestedInput
+    ventas_cierre_caja?: VentaCierreCajaUncheckedUpdateManyWithoutProductoNestedInput
   }
 
   export type CuadraturaCreateWithoutVentasInput = {
@@ -74288,6 +79139,7 @@ export namespace Prisma {
     stock_camion?: StockCamionCreateNestedManyWithoutProductoInput
     stock_fabrica?: StockFabricaCreateNestedOneWithoutProductoInput
     movimientos_stock?: MovimientoStockCreateNestedManyWithoutProductoInput
+    ventas_cierre_caja?: VentaCierreCajaCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoUncheckedCreateWithoutCuadratura_ventasInput = {
@@ -74306,6 +79158,7 @@ export namespace Prisma {
     stock_camion?: StockCamionUncheckedCreateNestedManyWithoutProductoInput
     stock_fabrica?: StockFabricaUncheckedCreateNestedOneWithoutProductoInput
     movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutProductoInput
+    ventas_cierre_caja?: VentaCierreCajaUncheckedCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoCreateOrConnectWithoutCuadratura_ventasInput = {
@@ -74447,6 +79300,7 @@ export namespace Prisma {
     stock_camion?: StockCamionUpdateManyWithoutProductoNestedInput
     stock_fabrica?: StockFabricaUpdateOneWithoutProductoNestedInput
     movimientos_stock?: MovimientoStockUpdateManyWithoutProductoNestedInput
+    ventas_cierre_caja?: VentaCierreCajaUpdateManyWithoutProductoNestedInput
   }
 
   export type ProductoUncheckedUpdateWithoutCuadratura_ventasInput = {
@@ -74465,6 +79319,7 @@ export namespace Prisma {
     stock_camion?: StockCamionUncheckedUpdateManyWithoutProductoNestedInput
     stock_fabrica?: StockFabricaUncheckedUpdateOneWithoutProductoNestedInput
     movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutProductoNestedInput
+    ventas_cierre_caja?: VentaCierreCajaUncheckedUpdateManyWithoutProductoNestedInput
   }
 
   export type CuadraturaCreateWithoutRetornoInput = {
@@ -74532,6 +79387,7 @@ export namespace Prisma {
     stock_camion?: StockCamionCreateNestedManyWithoutProductoInput
     stock_fabrica?: StockFabricaCreateNestedOneWithoutProductoInput
     movimientos_stock?: MovimientoStockCreateNestedManyWithoutProductoInput
+    ventas_cierre_caja?: VentaCierreCajaCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoUncheckedCreateWithoutCuadratura_retornoInput = {
@@ -74550,6 +79406,7 @@ export namespace Prisma {
     stock_camion?: StockCamionUncheckedCreateNestedManyWithoutProductoInput
     stock_fabrica?: StockFabricaUncheckedCreateNestedOneWithoutProductoInput
     movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutProductoInput
+    ventas_cierre_caja?: VentaCierreCajaUncheckedCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoCreateOrConnectWithoutCuadratura_retornoInput = {
@@ -74639,6 +79496,7 @@ export namespace Prisma {
     stock_camion?: StockCamionUpdateManyWithoutProductoNestedInput
     stock_fabrica?: StockFabricaUpdateOneWithoutProductoNestedInput
     movimientos_stock?: MovimientoStockUpdateManyWithoutProductoNestedInput
+    ventas_cierre_caja?: VentaCierreCajaUpdateManyWithoutProductoNestedInput
   }
 
   export type ProductoUncheckedUpdateWithoutCuadratura_retornoInput = {
@@ -74657,6 +79515,7 @@ export namespace Prisma {
     stock_camion?: StockCamionUncheckedUpdateManyWithoutProductoNestedInput
     stock_fabrica?: StockFabricaUncheckedUpdateOneWithoutProductoNestedInput
     movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutProductoNestedInput
+    ventas_cierre_caja?: VentaCierreCajaUncheckedUpdateManyWithoutProductoNestedInput
   }
 
   export type CuadraturaCreateWithoutGastosInput = {
@@ -74955,6 +79814,7 @@ export namespace Prisma {
     incidencias?: IncidenciaCreateNestedManyWithoutUsuarioInput
     movimientos_stock?: MovimientoStockCreateNestedManyWithoutUsuarioInput
     user?: UserCreateNestedOneWithoutUsuarioInput
+    cierres_caja?: CierreCajaCreateNestedManyWithoutUsuarioInput
   }
 
   export type UsuarioUncheckedCreateWithoutBotellones_danadosInput = {
@@ -74984,6 +79844,7 @@ export namespace Prisma {
     stock_camion?: StockCamionUncheckedCreateNestedManyWithoutUsuarioInput
     incidencias?: IncidenciaUncheckedCreateNestedManyWithoutUsuarioInput
     movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutUsuarioInput
+    cierres_caja?: CierreCajaUncheckedCreateNestedManyWithoutUsuarioInput
   }
 
   export type UsuarioCreateOrConnectWithoutBotellones_danadosInput = {
@@ -75096,6 +79957,7 @@ export namespace Prisma {
     incidencias?: IncidenciaUpdateManyWithoutUsuarioNestedInput
     movimientos_stock?: MovimientoStockUpdateManyWithoutUsuarioNestedInput
     user?: UserUpdateOneWithoutUsuarioNestedInput
+    cierres_caja?: CierreCajaUpdateManyWithoutUsuarioNestedInput
   }
 
   export type UsuarioUncheckedUpdateWithoutBotellones_danadosInput = {
@@ -75125,6 +79987,7 @@ export namespace Prisma {
     stock_camion?: StockCamionUncheckedUpdateManyWithoutUsuarioNestedInput
     incidencias?: IncidenciaUncheckedUpdateManyWithoutUsuarioNestedInput
     movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutUsuarioNestedInput
+    cierres_caja?: CierreCajaUncheckedUpdateManyWithoutUsuarioNestedInput
   }
 
   export type UsuarioCreateWithoutProduccionInput = {
@@ -75154,6 +80017,7 @@ export namespace Prisma {
     incidencias?: IncidenciaCreateNestedManyWithoutUsuarioInput
     movimientos_stock?: MovimientoStockCreateNestedManyWithoutUsuarioInput
     user?: UserCreateNestedOneWithoutUsuarioInput
+    cierres_caja?: CierreCajaCreateNestedManyWithoutUsuarioInput
   }
 
   export type UsuarioUncheckedCreateWithoutProduccionInput = {
@@ -75183,6 +80047,7 @@ export namespace Prisma {
     stock_camion?: StockCamionUncheckedCreateNestedManyWithoutUsuarioInput
     incidencias?: IncidenciaUncheckedCreateNestedManyWithoutUsuarioInput
     movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutUsuarioInput
+    cierres_caja?: CierreCajaUncheckedCreateNestedManyWithoutUsuarioInput
   }
 
   export type UsuarioCreateOrConnectWithoutProduccionInput = {
@@ -75228,6 +80093,7 @@ export namespace Prisma {
     incidencias?: IncidenciaUpdateManyWithoutUsuarioNestedInput
     movimientos_stock?: MovimientoStockUpdateManyWithoutUsuarioNestedInput
     user?: UserUpdateOneWithoutUsuarioNestedInput
+    cierres_caja?: CierreCajaUpdateManyWithoutUsuarioNestedInput
   }
 
   export type UsuarioUncheckedUpdateWithoutProduccionInput = {
@@ -75257,6 +80123,7 @@ export namespace Prisma {
     stock_camion?: StockCamionUncheckedUpdateManyWithoutUsuarioNestedInput
     incidencias?: IncidenciaUncheckedUpdateManyWithoutUsuarioNestedInput
     movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutUsuarioNestedInput
+    cierres_caja?: CierreCajaUncheckedUpdateManyWithoutUsuarioNestedInput
   }
 
   export type ProductoCreateWithoutStock_fabricaInput = {
@@ -75275,6 +80142,7 @@ export namespace Prisma {
     pedidoItems?: PedidoItemCreateNestedManyWithoutProductoInput
     stock_camion?: StockCamionCreateNestedManyWithoutProductoInput
     movimientos_stock?: MovimientoStockCreateNestedManyWithoutProductoInput
+    ventas_cierre_caja?: VentaCierreCajaCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoUncheckedCreateWithoutStock_fabricaInput = {
@@ -75293,6 +80161,7 @@ export namespace Prisma {
     pedidoItems?: PedidoItemUncheckedCreateNestedManyWithoutProductoInput
     stock_camion?: StockCamionUncheckedCreateNestedManyWithoutProductoInput
     movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutProductoInput
+    ventas_cierre_caja?: VentaCierreCajaUncheckedCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoCreateOrConnectWithoutStock_fabricaInput = {
@@ -75327,6 +80196,7 @@ export namespace Prisma {
     pedidoItems?: PedidoItemUpdateManyWithoutProductoNestedInput
     stock_camion?: StockCamionUpdateManyWithoutProductoNestedInput
     movimientos_stock?: MovimientoStockUpdateManyWithoutProductoNestedInput
+    ventas_cierre_caja?: VentaCierreCajaUpdateManyWithoutProductoNestedInput
   }
 
   export type ProductoUncheckedUpdateWithoutStock_fabricaInput = {
@@ -75345,6 +80215,7 @@ export namespace Prisma {
     pedidoItems?: PedidoItemUncheckedUpdateManyWithoutProductoNestedInput
     stock_camion?: StockCamionUncheckedUpdateManyWithoutProductoNestedInput
     movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutProductoNestedInput
+    ventas_cierre_caja?: VentaCierreCajaUncheckedUpdateManyWithoutProductoNestedInput
   }
 
   export type ProductoCreateWithoutStock_camionInput = {
@@ -75363,6 +80234,7 @@ export namespace Prisma {
     pedidoItems?: PedidoItemCreateNestedManyWithoutProductoInput
     stock_fabrica?: StockFabricaCreateNestedOneWithoutProductoInput
     movimientos_stock?: MovimientoStockCreateNestedManyWithoutProductoInput
+    ventas_cierre_caja?: VentaCierreCajaCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoUncheckedCreateWithoutStock_camionInput = {
@@ -75381,6 +80253,7 @@ export namespace Prisma {
     pedidoItems?: PedidoItemUncheckedCreateNestedManyWithoutProductoInput
     stock_fabrica?: StockFabricaUncheckedCreateNestedOneWithoutProductoInput
     movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutProductoInput
+    ventas_cierre_caja?: VentaCierreCajaUncheckedCreateNestedManyWithoutProductoInput
   }
 
   export type ProductoCreateOrConnectWithoutStock_camionInput = {
@@ -75415,6 +80288,7 @@ export namespace Prisma {
     incidencias?: IncidenciaCreateNestedManyWithoutUsuarioInput
     movimientos_stock?: MovimientoStockCreateNestedManyWithoutUsuarioInput
     user?: UserCreateNestedOneWithoutUsuarioInput
+    cierres_caja?: CierreCajaCreateNestedManyWithoutUsuarioInput
   }
 
   export type UsuarioUncheckedCreateWithoutStock_camionInput = {
@@ -75444,6 +80318,7 @@ export namespace Prisma {
     rutas_dia?: RutaDiaUncheckedCreateNestedManyWithoutUsuarioInput
     incidencias?: IncidenciaUncheckedCreateNestedManyWithoutUsuarioInput
     movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutUsuarioInput
+    cierres_caja?: CierreCajaUncheckedCreateNestedManyWithoutUsuarioInput
   }
 
   export type UsuarioCreateOrConnectWithoutStock_camionInput = {
@@ -75478,6 +80353,7 @@ export namespace Prisma {
     pedidoItems?: PedidoItemUpdateManyWithoutProductoNestedInput
     stock_fabrica?: StockFabricaUpdateOneWithoutProductoNestedInput
     movimientos_stock?: MovimientoStockUpdateManyWithoutProductoNestedInput
+    ventas_cierre_caja?: VentaCierreCajaUpdateManyWithoutProductoNestedInput
   }
 
   export type ProductoUncheckedUpdateWithoutStock_camionInput = {
@@ -75496,6 +80372,7 @@ export namespace Prisma {
     pedidoItems?: PedidoItemUncheckedUpdateManyWithoutProductoNestedInput
     stock_fabrica?: StockFabricaUncheckedUpdateOneWithoutProductoNestedInput
     movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutProductoNestedInput
+    ventas_cierre_caja?: VentaCierreCajaUncheckedUpdateManyWithoutProductoNestedInput
   }
 
   export type UsuarioUpsertWithoutStock_camionInput = {
@@ -75536,6 +80413,7 @@ export namespace Prisma {
     incidencias?: IncidenciaUpdateManyWithoutUsuarioNestedInput
     movimientos_stock?: MovimientoStockUpdateManyWithoutUsuarioNestedInput
     user?: UserUpdateOneWithoutUsuarioNestedInput
+    cierres_caja?: CierreCajaUpdateManyWithoutUsuarioNestedInput
   }
 
   export type UsuarioUncheckedUpdateWithoutStock_camionInput = {
@@ -75565,6 +80443,7 @@ export namespace Prisma {
     rutas_dia?: RutaDiaUncheckedUpdateManyWithoutUsuarioNestedInput
     incidencias?: IncidenciaUncheckedUpdateManyWithoutUsuarioNestedInput
     movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutUsuarioNestedInput
+    cierres_caja?: CierreCajaUncheckedUpdateManyWithoutUsuarioNestedInput
   }
 
   export type UsuarioCreateWithoutLog_accesosInput = {
@@ -75594,6 +80473,7 @@ export namespace Prisma {
     incidencias?: IncidenciaCreateNestedManyWithoutUsuarioInput
     movimientos_stock?: MovimientoStockCreateNestedManyWithoutUsuarioInput
     user?: UserCreateNestedOneWithoutUsuarioInput
+    cierres_caja?: CierreCajaCreateNestedManyWithoutUsuarioInput
   }
 
   export type UsuarioUncheckedCreateWithoutLog_accesosInput = {
@@ -75623,6 +80503,7 @@ export namespace Prisma {
     stock_camion?: StockCamionUncheckedCreateNestedManyWithoutUsuarioInput
     incidencias?: IncidenciaUncheckedCreateNestedManyWithoutUsuarioInput
     movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutUsuarioInput
+    cierres_caja?: CierreCajaUncheckedCreateNestedManyWithoutUsuarioInput
   }
 
   export type UsuarioCreateOrConnectWithoutLog_accesosInput = {
@@ -75668,6 +80549,7 @@ export namespace Prisma {
     incidencias?: IncidenciaUpdateManyWithoutUsuarioNestedInput
     movimientos_stock?: MovimientoStockUpdateManyWithoutUsuarioNestedInput
     user?: UserUpdateOneWithoutUsuarioNestedInput
+    cierres_caja?: CierreCajaUpdateManyWithoutUsuarioNestedInput
   }
 
   export type UsuarioUncheckedUpdateWithoutLog_accesosInput = {
@@ -75697,6 +80579,7 @@ export namespace Prisma {
     stock_camion?: StockCamionUncheckedUpdateManyWithoutUsuarioNestedInput
     incidencias?: IncidenciaUncheckedUpdateManyWithoutUsuarioNestedInput
     movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutUsuarioNestedInput
+    cierres_caja?: CierreCajaUncheckedUpdateManyWithoutUsuarioNestedInput
   }
 
   export type ClienteCreateWithoutDispensadoresInput = {
@@ -76360,6 +81243,7 @@ export namespace Prisma {
     incidencias?: IncidenciaCreateNestedManyWithoutUsuarioInput
     movimientos_stock?: MovimientoStockCreateNestedManyWithoutUsuarioInput
     user?: UserCreateNestedOneWithoutUsuarioInput
+    cierres_caja?: CierreCajaCreateNestedManyWithoutUsuarioInput
   }
 
   export type UsuarioUncheckedCreateWithoutCargas_combustibleInput = {
@@ -76389,6 +81273,7 @@ export namespace Prisma {
     stock_camion?: StockCamionUncheckedCreateNestedManyWithoutUsuarioInput
     incidencias?: IncidenciaUncheckedCreateNestedManyWithoutUsuarioInput
     movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutUsuarioInput
+    cierres_caja?: CierreCajaUncheckedCreateNestedManyWithoutUsuarioInput
   }
 
   export type UsuarioCreateOrConnectWithoutCargas_combustibleInput = {
@@ -76471,6 +81356,7 @@ export namespace Prisma {
     incidencias?: IncidenciaUpdateManyWithoutUsuarioNestedInput
     movimientos_stock?: MovimientoStockUpdateManyWithoutUsuarioNestedInput
     user?: UserUpdateOneWithoutUsuarioNestedInput
+    cierres_caja?: CierreCajaUpdateManyWithoutUsuarioNestedInput
   }
 
   export type UsuarioUncheckedUpdateWithoutCargas_combustibleInput = {
@@ -76500,6 +81386,7 @@ export namespace Prisma {
     stock_camion?: StockCamionUncheckedUpdateManyWithoutUsuarioNestedInput
     incidencias?: IncidenciaUncheckedUpdateManyWithoutUsuarioNestedInput
     movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutUsuarioNestedInput
+    cierres_caja?: CierreCajaUncheckedUpdateManyWithoutUsuarioNestedInput
   }
 
   export type VehiculoUpsertWithoutCargas_combustibleInput = {
@@ -76680,6 +81567,7 @@ export namespace Prisma {
     vehiculo?: VehiculoCreateNestedOneWithoutUsuariosInput
     movimientos_stock?: MovimientoStockCreateNestedManyWithoutUsuarioInput
     user?: UserCreateNestedOneWithoutUsuarioInput
+    cierres_caja?: CierreCajaCreateNestedManyWithoutUsuarioInput
   }
 
   export type UsuarioUncheckedCreateWithoutIncidenciasInput = {
@@ -76709,6 +81597,7 @@ export namespace Prisma {
     rutas_dia?: RutaDiaUncheckedCreateNestedManyWithoutUsuarioInput
     stock_camion?: StockCamionUncheckedCreateNestedManyWithoutUsuarioInput
     movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutUsuarioInput
+    cierres_caja?: CierreCajaUncheckedCreateNestedManyWithoutUsuarioInput
   }
 
   export type UsuarioCreateOrConnectWithoutIncidenciasInput = {
@@ -76923,6 +81812,7 @@ export namespace Prisma {
     vehiculo?: VehiculoUpdateOneWithoutUsuariosNestedInput
     movimientos_stock?: MovimientoStockUpdateManyWithoutUsuarioNestedInput
     user?: UserUpdateOneWithoutUsuarioNestedInput
+    cierres_caja?: CierreCajaUpdateManyWithoutUsuarioNestedInput
   }
 
   export type UsuarioUncheckedUpdateWithoutIncidenciasInput = {
@@ -76952,6 +81842,7 @@ export namespace Prisma {
     rutas_dia?: RutaDiaUncheckedUpdateManyWithoutUsuarioNestedInput
     stock_camion?: StockCamionUncheckedUpdateManyWithoutUsuarioNestedInput
     movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutUsuarioNestedInput
+    cierres_caja?: CierreCajaUncheckedUpdateManyWithoutUsuarioNestedInput
   }
 
   export type CuadraturaUpsertWithoutIncidenciasInput = {
@@ -77108,6 +81999,7 @@ export namespace Prisma {
     vehiculo?: VehiculoCreateNestedOneWithoutUsuariosInput
     incidencias?: IncidenciaCreateNestedManyWithoutUsuarioInput
     movimientos_stock?: MovimientoStockCreateNestedManyWithoutUsuarioInput
+    cierres_caja?: CierreCajaCreateNestedManyWithoutUsuarioInput
   }
 
   export type UsuarioUncheckedCreateWithoutUserInput = {
@@ -77137,6 +82029,7 @@ export namespace Prisma {
     stock_camion?: StockCamionUncheckedCreateNestedManyWithoutUsuarioInput
     incidencias?: IncidenciaUncheckedCreateNestedManyWithoutUsuarioInput
     movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutUsuarioInput
+    cierres_caja?: CierreCajaUncheckedCreateNestedManyWithoutUsuarioInput
   }
 
   export type UsuarioCreateOrConnectWithoutUserInput = {
@@ -77248,6 +82141,7 @@ export namespace Prisma {
     vehiculo?: VehiculoUpdateOneWithoutUsuariosNestedInput
     incidencias?: IncidenciaUpdateManyWithoutUsuarioNestedInput
     movimientos_stock?: MovimientoStockUpdateManyWithoutUsuarioNestedInput
+    cierres_caja?: CierreCajaUpdateManyWithoutUsuarioNestedInput
   }
 
   export type UsuarioUncheckedUpdateWithoutUserInput = {
@@ -77277,6 +82171,7 @@ export namespace Prisma {
     stock_camion?: StockCamionUncheckedUpdateManyWithoutUsuarioNestedInput
     incidencias?: IncidenciaUncheckedUpdateManyWithoutUsuarioNestedInput
     movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutUsuarioNestedInput
+    cierres_caja?: CierreCajaUncheckedUpdateManyWithoutUsuarioNestedInput
   }
 
   export type UserCreateWithoutSessionsInput = {
@@ -77415,6 +82310,509 @@ export namespace Prisma {
     usuario?: UsuarioUncheckedUpdateOneWithoutUserNestedInput
   }
 
+  export type UsuarioCreateWithoutCierres_cajaInput = {
+    id?: string
+    nombre: string
+    apellido?: string | null
+    rut: string
+    telefono: string
+    email: string
+    rol?: $Enums.Rol
+    fecha_ingreso: Date | string
+    activo?: boolean
+    created_at?: Date | string
+    licencia_tipo?: string | null
+    recibe_comision?: boolean
+    vencimiento_lic?: Date | string | null
+    botellones_danados?: BotellonDanadoCreateNestedManyWithoutUsuarioInput
+    cargas_combustible?: CargaCombustibleCreateNestedManyWithoutUsuarioInput
+    cuadraturas?: CuadraturaCreateNestedManyWithoutUsuarioInput
+    guias?: GuiaDespachoCreateNestedManyWithoutUsuario_repartidorInput
+    log_accesos?: LogAccesoCreateNestedManyWithoutUsuarioInput
+    mantenciones?: MantencionCreateNestedManyWithoutUsuarioInput
+    produccion?: ProduccionDiariaCreateNestedManyWithoutUsuarioInput
+    rutas_base?: RutaBaseCreateNestedManyWithoutUsuarioInput
+    rutas_dia?: RutaDiaCreateNestedManyWithoutUsuarioInput
+    stock_camion?: StockCamionCreateNestedManyWithoutUsuarioInput
+    vehiculo?: VehiculoCreateNestedOneWithoutUsuariosInput
+    incidencias?: IncidenciaCreateNestedManyWithoutUsuarioInput
+    movimientos_stock?: MovimientoStockCreateNestedManyWithoutUsuarioInput
+    user?: UserCreateNestedOneWithoutUsuarioInput
+  }
+
+  export type UsuarioUncheckedCreateWithoutCierres_cajaInput = {
+    id?: string
+    user_id?: string | null
+    nombre: string
+    apellido?: string | null
+    rut: string
+    telefono: string
+    email: string
+    rol?: $Enums.Rol
+    vehiculo_id?: string | null
+    fecha_ingreso: Date | string
+    activo?: boolean
+    created_at?: Date | string
+    licencia_tipo?: string | null
+    recibe_comision?: boolean
+    vencimiento_lic?: Date | string | null
+    botellones_danados?: BotellonDanadoUncheckedCreateNestedManyWithoutUsuarioInput
+    cargas_combustible?: CargaCombustibleUncheckedCreateNestedManyWithoutUsuarioInput
+    cuadraturas?: CuadraturaUncheckedCreateNestedManyWithoutUsuarioInput
+    guias?: GuiaDespachoUncheckedCreateNestedManyWithoutUsuario_repartidorInput
+    log_accesos?: LogAccesoUncheckedCreateNestedManyWithoutUsuarioInput
+    mantenciones?: MantencionUncheckedCreateNestedManyWithoutUsuarioInput
+    produccion?: ProduccionDiariaUncheckedCreateNestedManyWithoutUsuarioInput
+    rutas_base?: RutaBaseUncheckedCreateNestedManyWithoutUsuarioInput
+    rutas_dia?: RutaDiaUncheckedCreateNestedManyWithoutUsuarioInput
+    stock_camion?: StockCamionUncheckedCreateNestedManyWithoutUsuarioInput
+    incidencias?: IncidenciaUncheckedCreateNestedManyWithoutUsuarioInput
+    movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutUsuarioInput
+  }
+
+  export type UsuarioCreateOrConnectWithoutCierres_cajaInput = {
+    where: UsuarioWhereUniqueInput
+    create: XOR<UsuarioCreateWithoutCierres_cajaInput, UsuarioUncheckedCreateWithoutCierres_cajaInput>
+  }
+
+  export type VentaCierreCajaCreateWithoutCierreInput = {
+    id?: string
+    descripcion: string
+    cantidad?: number
+    precio_unitario: number
+    subtotal: number
+    metodo_pago: $Enums.MetodoPagoCaja
+    es_otro?: boolean
+    producto?: ProductoCreateNestedOneWithoutVentas_cierre_cajaInput
+  }
+
+  export type VentaCierreCajaUncheckedCreateWithoutCierreInput = {
+    id?: string
+    descripcion: string
+    producto_id?: string | null
+    cantidad?: number
+    precio_unitario: number
+    subtotal: number
+    metodo_pago: $Enums.MetodoPagoCaja
+    es_otro?: boolean
+  }
+
+  export type VentaCierreCajaCreateOrConnectWithoutCierreInput = {
+    where: VentaCierreCajaWhereUniqueInput
+    create: XOR<VentaCierreCajaCreateWithoutCierreInput, VentaCierreCajaUncheckedCreateWithoutCierreInput>
+  }
+
+  export type VentaCierreCajaCreateManyCierreInputEnvelope = {
+    data: VentaCierreCajaCreateManyCierreInput | VentaCierreCajaCreateManyCierreInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type GastoCierreCajaCreateWithoutCierreInput = {
+    id?: string
+    descripcion: string
+    monto: number
+    tipo: string
+  }
+
+  export type GastoCierreCajaUncheckedCreateWithoutCierreInput = {
+    id?: string
+    descripcion: string
+    monto: number
+    tipo: string
+  }
+
+  export type GastoCierreCajaCreateOrConnectWithoutCierreInput = {
+    where: GastoCierreCajaWhereUniqueInput
+    create: XOR<GastoCierreCajaCreateWithoutCierreInput, GastoCierreCajaUncheckedCreateWithoutCierreInput>
+  }
+
+  export type GastoCierreCajaCreateManyCierreInputEnvelope = {
+    data: GastoCierreCajaCreateManyCierreInput | GastoCierreCajaCreateManyCierreInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type UsuarioUpsertWithoutCierres_cajaInput = {
+    update: XOR<UsuarioUpdateWithoutCierres_cajaInput, UsuarioUncheckedUpdateWithoutCierres_cajaInput>
+    create: XOR<UsuarioCreateWithoutCierres_cajaInput, UsuarioUncheckedCreateWithoutCierres_cajaInput>
+    where?: UsuarioWhereInput
+  }
+
+  export type UsuarioUpdateToOneWithWhereWithoutCierres_cajaInput = {
+    where?: UsuarioWhereInput
+    data: XOR<UsuarioUpdateWithoutCierres_cajaInput, UsuarioUncheckedUpdateWithoutCierres_cajaInput>
+  }
+
+  export type UsuarioUpdateWithoutCierres_cajaInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nombre?: StringFieldUpdateOperationsInput | string
+    apellido?: NullableStringFieldUpdateOperationsInput | string | null
+    rut?: StringFieldUpdateOperationsInput | string
+    telefono?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    rol?: EnumRolFieldUpdateOperationsInput | $Enums.Rol
+    fecha_ingreso?: DateTimeFieldUpdateOperationsInput | Date | string
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    licencia_tipo?: NullableStringFieldUpdateOperationsInput | string | null
+    recibe_comision?: BoolFieldUpdateOperationsInput | boolean
+    vencimiento_lic?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    botellones_danados?: BotellonDanadoUpdateManyWithoutUsuarioNestedInput
+    cargas_combustible?: CargaCombustibleUpdateManyWithoutUsuarioNestedInput
+    cuadraturas?: CuadraturaUpdateManyWithoutUsuarioNestedInput
+    guias?: GuiaDespachoUpdateManyWithoutUsuario_repartidorNestedInput
+    log_accesos?: LogAccesoUpdateManyWithoutUsuarioNestedInput
+    mantenciones?: MantencionUpdateManyWithoutUsuarioNestedInput
+    produccion?: ProduccionDiariaUpdateManyWithoutUsuarioNestedInput
+    rutas_base?: RutaBaseUpdateManyWithoutUsuarioNestedInput
+    rutas_dia?: RutaDiaUpdateManyWithoutUsuarioNestedInput
+    stock_camion?: StockCamionUpdateManyWithoutUsuarioNestedInput
+    vehiculo?: VehiculoUpdateOneWithoutUsuariosNestedInput
+    incidencias?: IncidenciaUpdateManyWithoutUsuarioNestedInput
+    movimientos_stock?: MovimientoStockUpdateManyWithoutUsuarioNestedInput
+    user?: UserUpdateOneWithoutUsuarioNestedInput
+  }
+
+  export type UsuarioUncheckedUpdateWithoutCierres_cajaInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    nombre?: StringFieldUpdateOperationsInput | string
+    apellido?: NullableStringFieldUpdateOperationsInput | string | null
+    rut?: StringFieldUpdateOperationsInput | string
+    telefono?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    rol?: EnumRolFieldUpdateOperationsInput | $Enums.Rol
+    vehiculo_id?: NullableStringFieldUpdateOperationsInput | string | null
+    fecha_ingreso?: DateTimeFieldUpdateOperationsInput | Date | string
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    licencia_tipo?: NullableStringFieldUpdateOperationsInput | string | null
+    recibe_comision?: BoolFieldUpdateOperationsInput | boolean
+    vencimiento_lic?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    botellones_danados?: BotellonDanadoUncheckedUpdateManyWithoutUsuarioNestedInput
+    cargas_combustible?: CargaCombustibleUncheckedUpdateManyWithoutUsuarioNestedInput
+    cuadraturas?: CuadraturaUncheckedUpdateManyWithoutUsuarioNestedInput
+    guias?: GuiaDespachoUncheckedUpdateManyWithoutUsuario_repartidorNestedInput
+    log_accesos?: LogAccesoUncheckedUpdateManyWithoutUsuarioNestedInput
+    mantenciones?: MantencionUncheckedUpdateManyWithoutUsuarioNestedInput
+    produccion?: ProduccionDiariaUncheckedUpdateManyWithoutUsuarioNestedInput
+    rutas_base?: RutaBaseUncheckedUpdateManyWithoutUsuarioNestedInput
+    rutas_dia?: RutaDiaUncheckedUpdateManyWithoutUsuarioNestedInput
+    stock_camion?: StockCamionUncheckedUpdateManyWithoutUsuarioNestedInput
+    incidencias?: IncidenciaUncheckedUpdateManyWithoutUsuarioNestedInput
+    movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutUsuarioNestedInput
+  }
+
+  export type VentaCierreCajaUpsertWithWhereUniqueWithoutCierreInput = {
+    where: VentaCierreCajaWhereUniqueInput
+    update: XOR<VentaCierreCajaUpdateWithoutCierreInput, VentaCierreCajaUncheckedUpdateWithoutCierreInput>
+    create: XOR<VentaCierreCajaCreateWithoutCierreInput, VentaCierreCajaUncheckedCreateWithoutCierreInput>
+  }
+
+  export type VentaCierreCajaUpdateWithWhereUniqueWithoutCierreInput = {
+    where: VentaCierreCajaWhereUniqueInput
+    data: XOR<VentaCierreCajaUpdateWithoutCierreInput, VentaCierreCajaUncheckedUpdateWithoutCierreInput>
+  }
+
+  export type VentaCierreCajaUpdateManyWithWhereWithoutCierreInput = {
+    where: VentaCierreCajaScalarWhereInput
+    data: XOR<VentaCierreCajaUpdateManyMutationInput, VentaCierreCajaUncheckedUpdateManyWithoutCierreInput>
+  }
+
+  export type GastoCierreCajaUpsertWithWhereUniqueWithoutCierreInput = {
+    where: GastoCierreCajaWhereUniqueInput
+    update: XOR<GastoCierreCajaUpdateWithoutCierreInput, GastoCierreCajaUncheckedUpdateWithoutCierreInput>
+    create: XOR<GastoCierreCajaCreateWithoutCierreInput, GastoCierreCajaUncheckedCreateWithoutCierreInput>
+  }
+
+  export type GastoCierreCajaUpdateWithWhereUniqueWithoutCierreInput = {
+    where: GastoCierreCajaWhereUniqueInput
+    data: XOR<GastoCierreCajaUpdateWithoutCierreInput, GastoCierreCajaUncheckedUpdateWithoutCierreInput>
+  }
+
+  export type GastoCierreCajaUpdateManyWithWhereWithoutCierreInput = {
+    where: GastoCierreCajaScalarWhereInput
+    data: XOR<GastoCierreCajaUpdateManyMutationInput, GastoCierreCajaUncheckedUpdateManyWithoutCierreInput>
+  }
+
+  export type GastoCierreCajaScalarWhereInput = {
+    AND?: GastoCierreCajaScalarWhereInput | GastoCierreCajaScalarWhereInput[]
+    OR?: GastoCierreCajaScalarWhereInput[]
+    NOT?: GastoCierreCajaScalarWhereInput | GastoCierreCajaScalarWhereInput[]
+    id?: StringFilter<"GastoCierreCaja"> | string
+    cierre_id?: StringFilter<"GastoCierreCaja"> | string
+    descripcion?: StringFilter<"GastoCierreCaja"> | string
+    monto?: FloatFilter<"GastoCierreCaja"> | number
+    tipo?: StringFilter<"GastoCierreCaja"> | string
+  }
+
+  export type CierreCajaCreateWithoutVentasInput = {
+    id?: string
+    fecha: Date | string
+    efectivo_inicial?: number
+    total_efectivo?: number
+    total_tarjeta?: number
+    total_transferencia?: number
+    total_credito_oficina?: number
+    total_pagina_web?: number
+    total_general?: number
+    estado?: $Enums.EstadoCierreCaja
+    observaciones?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    usuario: UsuarioCreateNestedOneWithoutCierres_cajaInput
+    gastos?: GastoCierreCajaCreateNestedManyWithoutCierreInput
+  }
+
+  export type CierreCajaUncheckedCreateWithoutVentasInput = {
+    id?: string
+    fecha: Date | string
+    efectivo_inicial?: number
+    total_efectivo?: number
+    total_tarjeta?: number
+    total_transferencia?: number
+    total_credito_oficina?: number
+    total_pagina_web?: number
+    total_general?: number
+    estado?: $Enums.EstadoCierreCaja
+    observaciones?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    usuario_id: string
+    gastos?: GastoCierreCajaUncheckedCreateNestedManyWithoutCierreInput
+  }
+
+  export type CierreCajaCreateOrConnectWithoutVentasInput = {
+    where: CierreCajaWhereUniqueInput
+    create: XOR<CierreCajaCreateWithoutVentasInput, CierreCajaUncheckedCreateWithoutVentasInput>
+  }
+
+  export type ProductoCreateWithoutVentas_cierre_cajaInput = {
+    id?: string
+    nombre: string
+    categoria: $Enums.CategoriaProducto
+    precio_venta_nueva: number
+    precio_recarga?: number | null
+    stock_minimo?: number
+    activo?: boolean
+    comisiones?: ComisionCreateNestedManyWithoutProductoInput
+    cuadratura_retorno?: CuadraturaRetornoCreateNestedManyWithoutProductoInput
+    cuadratura_salida?: CuadraturaSalidaCreateNestedManyWithoutProductoInput
+    cuadratura_ventas?: CuadraturaVentaCreateNestedManyWithoutProductoInput
+    items_guia?: ItemGuiaCreateNestedManyWithoutProductoInput
+    pedidoItems?: PedidoItemCreateNestedManyWithoutProductoInput
+    stock_camion?: StockCamionCreateNestedManyWithoutProductoInput
+    stock_fabrica?: StockFabricaCreateNestedOneWithoutProductoInput
+    movimientos_stock?: MovimientoStockCreateNestedManyWithoutProductoInput
+  }
+
+  export type ProductoUncheckedCreateWithoutVentas_cierre_cajaInput = {
+    id?: string
+    nombre: string
+    categoria: $Enums.CategoriaProducto
+    precio_venta_nueva: number
+    precio_recarga?: number | null
+    stock_minimo?: number
+    activo?: boolean
+    comisiones?: ComisionUncheckedCreateNestedManyWithoutProductoInput
+    cuadratura_retorno?: CuadraturaRetornoUncheckedCreateNestedManyWithoutProductoInput
+    cuadratura_salida?: CuadraturaSalidaUncheckedCreateNestedManyWithoutProductoInput
+    cuadratura_ventas?: CuadraturaVentaUncheckedCreateNestedManyWithoutProductoInput
+    items_guia?: ItemGuiaUncheckedCreateNestedManyWithoutProductoInput
+    pedidoItems?: PedidoItemUncheckedCreateNestedManyWithoutProductoInput
+    stock_camion?: StockCamionUncheckedCreateNestedManyWithoutProductoInput
+    stock_fabrica?: StockFabricaUncheckedCreateNestedOneWithoutProductoInput
+    movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutProductoInput
+  }
+
+  export type ProductoCreateOrConnectWithoutVentas_cierre_cajaInput = {
+    where: ProductoWhereUniqueInput
+    create: XOR<ProductoCreateWithoutVentas_cierre_cajaInput, ProductoUncheckedCreateWithoutVentas_cierre_cajaInput>
+  }
+
+  export type CierreCajaUpsertWithoutVentasInput = {
+    update: XOR<CierreCajaUpdateWithoutVentasInput, CierreCajaUncheckedUpdateWithoutVentasInput>
+    create: XOR<CierreCajaCreateWithoutVentasInput, CierreCajaUncheckedCreateWithoutVentasInput>
+    where?: CierreCajaWhereInput
+  }
+
+  export type CierreCajaUpdateToOneWithWhereWithoutVentasInput = {
+    where?: CierreCajaWhereInput
+    data: XOR<CierreCajaUpdateWithoutVentasInput, CierreCajaUncheckedUpdateWithoutVentasInput>
+  }
+
+  export type CierreCajaUpdateWithoutVentasInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fecha?: DateTimeFieldUpdateOperationsInput | Date | string
+    efectivo_inicial?: FloatFieldUpdateOperationsInput | number
+    total_efectivo?: FloatFieldUpdateOperationsInput | number
+    total_tarjeta?: FloatFieldUpdateOperationsInput | number
+    total_transferencia?: FloatFieldUpdateOperationsInput | number
+    total_credito_oficina?: FloatFieldUpdateOperationsInput | number
+    total_pagina_web?: FloatFieldUpdateOperationsInput | number
+    total_general?: FloatFieldUpdateOperationsInput | number
+    estado?: EnumEstadoCierreCajaFieldUpdateOperationsInput | $Enums.EstadoCierreCaja
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    usuario?: UsuarioUpdateOneRequiredWithoutCierres_cajaNestedInput
+    gastos?: GastoCierreCajaUpdateManyWithoutCierreNestedInput
+  }
+
+  export type CierreCajaUncheckedUpdateWithoutVentasInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fecha?: DateTimeFieldUpdateOperationsInput | Date | string
+    efectivo_inicial?: FloatFieldUpdateOperationsInput | number
+    total_efectivo?: FloatFieldUpdateOperationsInput | number
+    total_tarjeta?: FloatFieldUpdateOperationsInput | number
+    total_transferencia?: FloatFieldUpdateOperationsInput | number
+    total_credito_oficina?: FloatFieldUpdateOperationsInput | number
+    total_pagina_web?: FloatFieldUpdateOperationsInput | number
+    total_general?: FloatFieldUpdateOperationsInput | number
+    estado?: EnumEstadoCierreCajaFieldUpdateOperationsInput | $Enums.EstadoCierreCaja
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    usuario_id?: StringFieldUpdateOperationsInput | string
+    gastos?: GastoCierreCajaUncheckedUpdateManyWithoutCierreNestedInput
+  }
+
+  export type ProductoUpsertWithoutVentas_cierre_cajaInput = {
+    update: XOR<ProductoUpdateWithoutVentas_cierre_cajaInput, ProductoUncheckedUpdateWithoutVentas_cierre_cajaInput>
+    create: XOR<ProductoCreateWithoutVentas_cierre_cajaInput, ProductoUncheckedCreateWithoutVentas_cierre_cajaInput>
+    where?: ProductoWhereInput
+  }
+
+  export type ProductoUpdateToOneWithWhereWithoutVentas_cierre_cajaInput = {
+    where?: ProductoWhereInput
+    data: XOR<ProductoUpdateWithoutVentas_cierre_cajaInput, ProductoUncheckedUpdateWithoutVentas_cierre_cajaInput>
+  }
+
+  export type ProductoUpdateWithoutVentas_cierre_cajaInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nombre?: StringFieldUpdateOperationsInput | string
+    categoria?: EnumCategoriaProductoFieldUpdateOperationsInput | $Enums.CategoriaProducto
+    precio_venta_nueva?: FloatFieldUpdateOperationsInput | number
+    precio_recarga?: NullableFloatFieldUpdateOperationsInput | number | null
+    stock_minimo?: IntFieldUpdateOperationsInput | number
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    comisiones?: ComisionUpdateManyWithoutProductoNestedInput
+    cuadratura_retorno?: CuadraturaRetornoUpdateManyWithoutProductoNestedInput
+    cuadratura_salida?: CuadraturaSalidaUpdateManyWithoutProductoNestedInput
+    cuadratura_ventas?: CuadraturaVentaUpdateManyWithoutProductoNestedInput
+    items_guia?: ItemGuiaUpdateManyWithoutProductoNestedInput
+    pedidoItems?: PedidoItemUpdateManyWithoutProductoNestedInput
+    stock_camion?: StockCamionUpdateManyWithoutProductoNestedInput
+    stock_fabrica?: StockFabricaUpdateOneWithoutProductoNestedInput
+    movimientos_stock?: MovimientoStockUpdateManyWithoutProductoNestedInput
+  }
+
+  export type ProductoUncheckedUpdateWithoutVentas_cierre_cajaInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nombre?: StringFieldUpdateOperationsInput | string
+    categoria?: EnumCategoriaProductoFieldUpdateOperationsInput | $Enums.CategoriaProducto
+    precio_venta_nueva?: FloatFieldUpdateOperationsInput | number
+    precio_recarga?: NullableFloatFieldUpdateOperationsInput | number | null
+    stock_minimo?: IntFieldUpdateOperationsInput | number
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    comisiones?: ComisionUncheckedUpdateManyWithoutProductoNestedInput
+    cuadratura_retorno?: CuadraturaRetornoUncheckedUpdateManyWithoutProductoNestedInput
+    cuadratura_salida?: CuadraturaSalidaUncheckedUpdateManyWithoutProductoNestedInput
+    cuadratura_ventas?: CuadraturaVentaUncheckedUpdateManyWithoutProductoNestedInput
+    items_guia?: ItemGuiaUncheckedUpdateManyWithoutProductoNestedInput
+    pedidoItems?: PedidoItemUncheckedUpdateManyWithoutProductoNestedInput
+    stock_camion?: StockCamionUncheckedUpdateManyWithoutProductoNestedInput
+    stock_fabrica?: StockFabricaUncheckedUpdateOneWithoutProductoNestedInput
+    movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutProductoNestedInput
+  }
+
+  export type CierreCajaCreateWithoutGastosInput = {
+    id?: string
+    fecha: Date | string
+    efectivo_inicial?: number
+    total_efectivo?: number
+    total_tarjeta?: number
+    total_transferencia?: number
+    total_credito_oficina?: number
+    total_pagina_web?: number
+    total_general?: number
+    estado?: $Enums.EstadoCierreCaja
+    observaciones?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    usuario: UsuarioCreateNestedOneWithoutCierres_cajaInput
+    ventas?: VentaCierreCajaCreateNestedManyWithoutCierreInput
+  }
+
+  export type CierreCajaUncheckedCreateWithoutGastosInput = {
+    id?: string
+    fecha: Date | string
+    efectivo_inicial?: number
+    total_efectivo?: number
+    total_tarjeta?: number
+    total_transferencia?: number
+    total_credito_oficina?: number
+    total_pagina_web?: number
+    total_general?: number
+    estado?: $Enums.EstadoCierreCaja
+    observaciones?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    usuario_id: string
+    ventas?: VentaCierreCajaUncheckedCreateNestedManyWithoutCierreInput
+  }
+
+  export type CierreCajaCreateOrConnectWithoutGastosInput = {
+    where: CierreCajaWhereUniqueInput
+    create: XOR<CierreCajaCreateWithoutGastosInput, CierreCajaUncheckedCreateWithoutGastosInput>
+  }
+
+  export type CierreCajaUpsertWithoutGastosInput = {
+    update: XOR<CierreCajaUpdateWithoutGastosInput, CierreCajaUncheckedUpdateWithoutGastosInput>
+    create: XOR<CierreCajaCreateWithoutGastosInput, CierreCajaUncheckedCreateWithoutGastosInput>
+    where?: CierreCajaWhereInput
+  }
+
+  export type CierreCajaUpdateToOneWithWhereWithoutGastosInput = {
+    where?: CierreCajaWhereInput
+    data: XOR<CierreCajaUpdateWithoutGastosInput, CierreCajaUncheckedUpdateWithoutGastosInput>
+  }
+
+  export type CierreCajaUpdateWithoutGastosInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fecha?: DateTimeFieldUpdateOperationsInput | Date | string
+    efectivo_inicial?: FloatFieldUpdateOperationsInput | number
+    total_efectivo?: FloatFieldUpdateOperationsInput | number
+    total_tarjeta?: FloatFieldUpdateOperationsInput | number
+    total_transferencia?: FloatFieldUpdateOperationsInput | number
+    total_credito_oficina?: FloatFieldUpdateOperationsInput | number
+    total_pagina_web?: FloatFieldUpdateOperationsInput | number
+    total_general?: FloatFieldUpdateOperationsInput | number
+    estado?: EnumEstadoCierreCajaFieldUpdateOperationsInput | $Enums.EstadoCierreCaja
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    usuario?: UsuarioUpdateOneRequiredWithoutCierres_cajaNestedInput
+    ventas?: VentaCierreCajaUpdateManyWithoutCierreNestedInput
+  }
+
+  export type CierreCajaUncheckedUpdateWithoutGastosInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fecha?: DateTimeFieldUpdateOperationsInput | Date | string
+    efectivo_inicial?: FloatFieldUpdateOperationsInput | number
+    total_efectivo?: FloatFieldUpdateOperationsInput | number
+    total_tarjeta?: FloatFieldUpdateOperationsInput | number
+    total_transferencia?: FloatFieldUpdateOperationsInput | number
+    total_credito_oficina?: FloatFieldUpdateOperationsInput | number
+    total_pagina_web?: FloatFieldUpdateOperationsInput | number
+    total_general?: FloatFieldUpdateOperationsInput | number
+    estado?: EnumEstadoCierreCajaFieldUpdateOperationsInput | $Enums.EstadoCierreCaja
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    usuario_id?: StringFieldUpdateOperationsInput | string
+    ventas?: VentaCierreCajaUncheckedUpdateManyWithoutCierreNestedInput
+  }
+
   export type BotellonDanadoCreateManyUsuarioInput = {
     id?: string
     cuadratura_id: string
@@ -77544,6 +82942,22 @@ export namespace Prisma {
     stock_antes: number
     stock_despues: number
     created_at?: Date | string
+  }
+
+  export type CierreCajaCreateManyUsuarioInput = {
+    id?: string
+    fecha: Date | string
+    efectivo_inicial?: number
+    total_efectivo?: number
+    total_tarjeta?: number
+    total_transferencia?: number
+    total_credito_oficina?: number
+    total_pagina_web?: number
+    total_general?: number
+    estado?: $Enums.EstadoCierreCaja
+    observaciones?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
   }
 
   export type BotellonDanadoUpdateWithoutUsuarioInput = {
@@ -77964,6 +83378,58 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type CierreCajaUpdateWithoutUsuarioInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fecha?: DateTimeFieldUpdateOperationsInput | Date | string
+    efectivo_inicial?: FloatFieldUpdateOperationsInput | number
+    total_efectivo?: FloatFieldUpdateOperationsInput | number
+    total_tarjeta?: FloatFieldUpdateOperationsInput | number
+    total_transferencia?: FloatFieldUpdateOperationsInput | number
+    total_credito_oficina?: FloatFieldUpdateOperationsInput | number
+    total_pagina_web?: FloatFieldUpdateOperationsInput | number
+    total_general?: FloatFieldUpdateOperationsInput | number
+    estado?: EnumEstadoCierreCajaFieldUpdateOperationsInput | $Enums.EstadoCierreCaja
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    ventas?: VentaCierreCajaUpdateManyWithoutCierreNestedInput
+    gastos?: GastoCierreCajaUpdateManyWithoutCierreNestedInput
+  }
+
+  export type CierreCajaUncheckedUpdateWithoutUsuarioInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fecha?: DateTimeFieldUpdateOperationsInput | Date | string
+    efectivo_inicial?: FloatFieldUpdateOperationsInput | number
+    total_efectivo?: FloatFieldUpdateOperationsInput | number
+    total_tarjeta?: FloatFieldUpdateOperationsInput | number
+    total_transferencia?: FloatFieldUpdateOperationsInput | number
+    total_credito_oficina?: FloatFieldUpdateOperationsInput | number
+    total_pagina_web?: FloatFieldUpdateOperationsInput | number
+    total_general?: FloatFieldUpdateOperationsInput | number
+    estado?: EnumEstadoCierreCajaFieldUpdateOperationsInput | $Enums.EstadoCierreCaja
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    ventas?: VentaCierreCajaUncheckedUpdateManyWithoutCierreNestedInput
+    gastos?: GastoCierreCajaUncheckedUpdateManyWithoutCierreNestedInput
+  }
+
+  export type CierreCajaUncheckedUpdateManyWithoutUsuarioInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fecha?: DateTimeFieldUpdateOperationsInput | Date | string
+    efectivo_inicial?: FloatFieldUpdateOperationsInput | number
+    total_efectivo?: FloatFieldUpdateOperationsInput | number
+    total_tarjeta?: FloatFieldUpdateOperationsInput | number
+    total_transferencia?: FloatFieldUpdateOperationsInput | number
+    total_credito_oficina?: FloatFieldUpdateOperationsInput | number
+    total_pagina_web?: FloatFieldUpdateOperationsInput | number
+    total_general?: FloatFieldUpdateOperationsInput | number
+    estado?: EnumEstadoCierreCajaFieldUpdateOperationsInput | $Enums.EstadoCierreCaja
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type AlertaVehiculoCreateManyVehiculoInput = {
     id?: string
     tipo: $Enums.TipoAlerta
@@ -78218,6 +83684,7 @@ export namespace Prisma {
     incidencias?: IncidenciaUpdateManyWithoutUsuarioNestedInput
     movimientos_stock?: MovimientoStockUpdateManyWithoutUsuarioNestedInput
     user?: UserUpdateOneWithoutUsuarioNestedInput
+    cierres_caja?: CierreCajaUpdateManyWithoutUsuarioNestedInput
   }
 
   export type UsuarioUncheckedUpdateWithoutVehiculoInput = {
@@ -78247,6 +83714,7 @@ export namespace Prisma {
     stock_camion?: StockCamionUncheckedUpdateManyWithoutUsuarioNestedInput
     incidencias?: IncidenciaUncheckedUpdateManyWithoutUsuarioNestedInput
     movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutUsuarioNestedInput
+    cierres_caja?: CierreCajaUncheckedUpdateManyWithoutUsuarioNestedInput
   }
 
   export type UsuarioUncheckedUpdateManyWithoutVehiculoInput = {
@@ -78357,6 +83825,17 @@ export namespace Prisma {
     stock_antes: number
     stock_despues: number
     created_at?: Date | string
+  }
+
+  export type VentaCierreCajaCreateManyProductoInput = {
+    id?: string
+    cierre_id: string
+    descripcion: string
+    cantidad?: number
+    precio_unitario: number
+    subtotal: number
+    metodo_pago: $Enums.MetodoPagoCaja
+    es_otro?: boolean
   }
 
   export type ComisionUpdateWithoutProductoInput = {
@@ -78552,6 +84031,39 @@ export namespace Prisma {
     stock_antes?: IntFieldUpdateOperationsInput | number
     stock_despues?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type VentaCierreCajaUpdateWithoutProductoInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    descripcion?: StringFieldUpdateOperationsInput | string
+    cantidad?: IntFieldUpdateOperationsInput | number
+    precio_unitario?: FloatFieldUpdateOperationsInput | number
+    subtotal?: FloatFieldUpdateOperationsInput | number
+    metodo_pago?: EnumMetodoPagoCajaFieldUpdateOperationsInput | $Enums.MetodoPagoCaja
+    es_otro?: BoolFieldUpdateOperationsInput | boolean
+    cierre?: CierreCajaUpdateOneRequiredWithoutVentasNestedInput
+  }
+
+  export type VentaCierreCajaUncheckedUpdateWithoutProductoInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    cierre_id?: StringFieldUpdateOperationsInput | string
+    descripcion?: StringFieldUpdateOperationsInput | string
+    cantidad?: IntFieldUpdateOperationsInput | number
+    precio_unitario?: FloatFieldUpdateOperationsInput | number
+    subtotal?: FloatFieldUpdateOperationsInput | number
+    metodo_pago?: EnumMetodoPagoCajaFieldUpdateOperationsInput | $Enums.MetodoPagoCaja
+    es_otro?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type VentaCierreCajaUncheckedUpdateManyWithoutProductoInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    cierre_id?: StringFieldUpdateOperationsInput | string
+    descripcion?: StringFieldUpdateOperationsInput | string
+    cantidad?: IntFieldUpdateOperationsInput | number
+    precio_unitario?: FloatFieldUpdateOperationsInput | number
+    subtotal?: FloatFieldUpdateOperationsInput | number
+    metodo_pago?: EnumMetodoPagoCajaFieldUpdateOperationsInput | $Enums.MetodoPagoCaja
+    es_otro?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type BotellonDanadoCreateManyClienteInput = {
@@ -79987,6 +85499,78 @@ export namespace Prisma {
     password?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type VentaCierreCajaCreateManyCierreInput = {
+    id?: string
+    descripcion: string
+    producto_id?: string | null
+    cantidad?: number
+    precio_unitario: number
+    subtotal: number
+    metodo_pago: $Enums.MetodoPagoCaja
+    es_otro?: boolean
+  }
+
+  export type GastoCierreCajaCreateManyCierreInput = {
+    id?: string
+    descripcion: string
+    monto: number
+    tipo: string
+  }
+
+  export type VentaCierreCajaUpdateWithoutCierreInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    descripcion?: StringFieldUpdateOperationsInput | string
+    cantidad?: IntFieldUpdateOperationsInput | number
+    precio_unitario?: FloatFieldUpdateOperationsInput | number
+    subtotal?: FloatFieldUpdateOperationsInput | number
+    metodo_pago?: EnumMetodoPagoCajaFieldUpdateOperationsInput | $Enums.MetodoPagoCaja
+    es_otro?: BoolFieldUpdateOperationsInput | boolean
+    producto?: ProductoUpdateOneWithoutVentas_cierre_cajaNestedInput
+  }
+
+  export type VentaCierreCajaUncheckedUpdateWithoutCierreInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    descripcion?: StringFieldUpdateOperationsInput | string
+    producto_id?: NullableStringFieldUpdateOperationsInput | string | null
+    cantidad?: IntFieldUpdateOperationsInput | number
+    precio_unitario?: FloatFieldUpdateOperationsInput | number
+    subtotal?: FloatFieldUpdateOperationsInput | number
+    metodo_pago?: EnumMetodoPagoCajaFieldUpdateOperationsInput | $Enums.MetodoPagoCaja
+    es_otro?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type VentaCierreCajaUncheckedUpdateManyWithoutCierreInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    descripcion?: StringFieldUpdateOperationsInput | string
+    producto_id?: NullableStringFieldUpdateOperationsInput | string | null
+    cantidad?: IntFieldUpdateOperationsInput | number
+    precio_unitario?: FloatFieldUpdateOperationsInput | number
+    subtotal?: FloatFieldUpdateOperationsInput | number
+    metodo_pago?: EnumMetodoPagoCajaFieldUpdateOperationsInput | $Enums.MetodoPagoCaja
+    es_otro?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type GastoCierreCajaUpdateWithoutCierreInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    descripcion?: StringFieldUpdateOperationsInput | string
+    monto?: FloatFieldUpdateOperationsInput | number
+    tipo?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type GastoCierreCajaUncheckedUpdateWithoutCierreInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    descripcion?: StringFieldUpdateOperationsInput | string
+    monto?: FloatFieldUpdateOperationsInput | number
+    tipo?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type GastoCierreCajaUncheckedUpdateManyWithoutCierreInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    descripcion?: StringFieldUpdateOperationsInput | string
+    monto?: FloatFieldUpdateOperationsInput | number
+    tipo?: StringFieldUpdateOperationsInput | string
   }
 
 

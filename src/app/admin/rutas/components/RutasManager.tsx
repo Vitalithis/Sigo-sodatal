@@ -11,34 +11,46 @@ import {
   actualizarParadaCompletaAction,
   actualizarOrdenParadasAction,
   actualizarEsperadoParadaAction,
-  eliminarRutaDiaAction
+  eliminarRutaDiaAction,
+  eliminarParadaAction
 } from '../actions';
 
 import VistaCalendarioRutas from './VistaCalendarioRutas';
+import ModalEliminarParada from './ModalEliminarParada';
 import { Calendar, ListFilter } from 'lucide-react';
+
+const getFechaHoyLocal = () => {
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = String(now.getMonth() + 1).padStart(2, '0');
+  const d = String(now.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+};
 
 export default function RutasManager() {
   const [vistaModo, setVistaModo] = useState<'despacho' | 'calendario'>('despacho');
-  const [fechaSeleccionada, setFechaSeleccionada] = useState(new Date().toISOString().split('T')[0]);
+  const [fechaSeleccionada, setFechaSeleccionada] = useState(getFechaHoyLocal);
   const [rutas, setRutas] = useState<any[]>([]);
   const [pedidosFlotantes, setPedidosFlotantes] = useState<any[]>([]);
   const [cargando, setCargando] = useState(false);
   const [modalAbierto, setModalAbierto] = useState(false);
+  const [paradaParaEliminar, setParadaParaEliminar] = useState<{ id: string; nombreCliente?: string } | null>(null);
+  const [eliminandoParada, setEliminandoParada] = useState(false);
   const [mensajeEstado, setMensajeEstado] = useState<{ texto: string; error: boolean } | null>(null);
 
   const diasSemanaUnidad = ['DOMINGO', 'LUNES', 'MARTES', 'MIERCOLES', 'JUEVES', 'VIERNES', 'SABADO'];
   const numDia = new Date(fechaSeleccionada + 'T12:00:00').getDay();
   const nombreDiaSemana = diasSemanaUnidad[numDia];
 
-  const cargarDatos = async () => {
-    setCargando(true);
+  const cargarDatos = async (silencioso = false) => {
+    if (!silencioso) setCargando(true);
     setMensajeEstado(null);
     const res = await obtenerRutasPorFechaAction(fechaSeleccionada);
     if (res.success) {
       setRutas(res.rutas || []);
       setPedidosFlotantes(res.pedidos || []);
     }
-    setCargando(false);
+    if (!silencioso) setCargando(false);
   };
 
   useEffect(() => {
@@ -61,43 +73,55 @@ export default function RutasManager() {
 
   const handleActualizarParada = async (paradaId: string, datos: any) => {
     const res = await actualizarParadaCompletaAction(paradaId, datos);
-    if (res.success) await cargarDatos();
+    if (res.success) await cargarDatos(true);
     return res; 
   };
 
   const handleActualizarEsperado = async (
     paradaId: string,
-    cantidades: { bot20_esperado: number; bot10_esperado: number; soda_esperada: number }
+    cantidades: any
   ) => {
     const res = await actualizarEsperadoParadaAction(paradaId, cantidades);
-    if (res.success) await cargarDatos();
+    if (res.success) await cargarDatos(true);
     return res;
   };
+
   const handleEliminarRuta = async (rutaDiaId: string) => {
-  if (!confirm('¿Eliminar esta hoja de ruta completa? Se perderán todas sus paradas y no se puede deshacer.')) return;
-  const res = await eliminarRutaDiaAction(rutaDiaId);
-  if (res.success) {
-    await cargarDatos();
-  } else {
-    alert('Error al eliminar: ' + res.message);
-  }
-};
+    if (!confirm('¿Eliminar esta hoja de ruta completa? Se perderán todas sus paradas y no se puede deshacer.')) return;
+    const res = await eliminarRutaDiaAction(rutaDiaId);
+    if (res.success) {
+      await cargarDatos();
+    } else {
+      alert('Error al eliminar: ' + res.message);
+    }
+  };
+
+  const handleSolicitarEliminarParada = (paradaId: string, nombreCliente?: string) => {
+    setParadaParaEliminar({ id: paradaId, nombreCliente });
+  };
+
+  const handleConfirmarEliminarParada = async () => {
+    if (!paradaParaEliminar) return;
+    setEliminandoParada(true);
+    const res = await eliminarParadaAction(paradaParaEliminar.id);
+    if (res.success) {
+      setMensajeEstado({ texto: res.message || 'Pedido quitado de la ruta.', error: false });
+      await cargarDatos(true);
+    } else {
+      setMensajeEstado({ texto: res.message || 'Error al quitar el pedido.', error: true });
+    }
+    setEliminandoParada(false);
+    setParadaParaEliminar(null);
+  };
 
   const handleReorder = async (rutaId: string, nuevasParadas: any[]) => {
-    const rutasClonadas = [...rutas];
-    const indexRuta = rutasClonadas.findIndex(r => r.id === rutaId);
-    if (indexRuta > -1) {
-      rutasClonadas[indexRuta].paradas = nuevasParadas;
-      setRutas(rutasClonadas);
-    }
+    setRutas(prev => prev.map(r => r.id === rutaId ? { ...r, paradas: nuevasParadas } : r));
     const payload = nuevasParadas.map((parada, index) => ({ id: parada.id, orden_nuevo: index + 1 }));
-    setCargando(true);
     const res = await actualizarOrdenParadasAction(payload);
     if (!res.success) {
       alert('Error al guardar el nuevo orden: ' + res.message);
-      await cargarDatos();
+      await cargarDatos(true);
     }
-    setCargando(false);
   };
 
   return (
@@ -134,40 +158,47 @@ export default function RutasManager() {
       ) : (
         <>
           {/* ── Barra superior ── */}
-          <div className="bg-white p-4 rounded-lg border border-gray-200 flex flex-wrap items-center justify-between gap-4 shadow-sm">
-            <div className="flex items-center space-x-3">
+          <div className="bg-white p-5 rounded-2xl border border-slate-100 flex flex-wrap items-center justify-between gap-4 shadow-sm">
+            <div className="flex items-center gap-3">
               <div>
-                <label className="block text-xs font-semibold text-gray-500 mb-1">Día de despacho</label>
+                <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">
+                  Día de Despacho
+                </label>
                 <input
                   type="date"
                   value={fechaSeleccionada}
                   onChange={(e) => setFechaSeleccionada(e.target.value)}
-                  className="border border-gray-300 rounded px-3 py-1.5 text-sm font-bold text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="border border-slate-200 bg-slate-50 hover:bg-white rounded-xl px-3 py-2 text-xs font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#013299]/20 transition-all cursor-pointer"
                 />
               </div>
               <div className="pt-5">
-                <span className="bg-blue-50 text-blue-700 px-3 py-1.5 rounded-md font-black text-xs border border-blue-100">
-                   {nombreDiaSemana}
+                <span className="bg-blue-50 text-[#013299] px-3.5 py-2 rounded-xl font-black text-xs border border-blue-200/60 uppercase tracking-wider">
+                  {nombreDiaSemana}
                 </span>
               </div>
             </div>
-            <div className="flex items-center space-x-2">
-              <button onClick={handleIniciarHojasDelDia} disabled={cargando}
-                className="bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white text-xs font-bold px-4 py-2.5 rounded shadow-sm transition-colors uppercase tracking-wider">
-                {cargando ? 'Procesando...' : 'cargar Ruta fijos'}
+            <div className="flex items-center gap-2.5">
+              <button
+                onClick={handleIniciarHojasDelDia}
+                disabled={cargando}
+                className="bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-sm transition-all uppercase tracking-wider flex items-center gap-1.5"
+              >
+                {cargando ? 'Procesando...' : '📥 Cargar Ruta Base (Fijos)'}
               </button>
-              <button onClick={() => setModalAbierto(true)}
-                className="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-4 py-2.5 rounded shadow-sm transition-colors uppercase tracking-wider">
-                Agendar Pedido
+              <button
+                onClick={() => setModalAbierto(true)}
+                className="bg-[#013299] hover:bg-blue-900 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-sm transition-all uppercase tracking-wider flex items-center gap-1.5"
+              >
+                ➕ Agendar Pedido
               </button>
             </div>
           </div>
 
       {/* ── Alertas de feedback ── */}
       {mensajeEstado && (
-        <div className={`p-3 rounded-lg border text-sm font-semibold ${
+        <div className={`p-4 rounded-2xl border text-xs font-bold ${
           mensajeEstado.error
-            ? 'bg-red-50 border-red-200 text-red-800'
+            ? 'bg-rose-50 border-rose-200 text-rose-800'
             : 'bg-emerald-50 border-emerald-200 text-emerald-800'
         }`}>
           {mensajeEstado.texto}
@@ -176,62 +207,32 @@ export default function RutasManager() {
 
       {/* ── Contenido principal ── */}
       {cargando ? (
-        <div className="text-center py-12 text-sm font-medium text-gray-500">
+        <div className="text-center py-12 text-sm font-medium text-slate-500">
           Cargando la planificación de la jornada...
         </div>
       ) : rutas.length === 0 ? (
-        <div className="bg-slate-50 border border-dashed border-slate-200 p-12 text-center rounded-xl">
-          <p className="text-gray-600 font-bold text-base">No hay Hojas de Ruta activas en esta fecha.</p>
-          <p className="text-xs text-gray-400 mt-1">
-            Haga clic en "Iniciar Hoja del Día" si ya configuró sus plantillas de ruta base para el día {nombreDiaSemana}.
+        <div className="bg-slate-50 border border-dashed border-slate-200 p-12 text-center rounded-2xl">
+          <p className="text-slate-700 font-bold text-base">No hay Hojas de Ruta activas en esta fecha.</p>
+          <p className="text-xs text-slate-400 mt-1">
+            Haga clic en "Cargar Ruta Base (Fijos)" para iniciar las rutas configuradas del día {nombreDiaSemana}.
           </p>
         </div>
       ) : (
         /* ── Una sola columna, ancho completo, TablaSortable es el contenedor ── */
         <div className="flex flex-col gap-6">
-          {rutas.map((ruta) =>
-            ruta.paradas.length === 0 ? (
-              <div key={ruta.id} className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-                <div className="bg-slate-800 px-3 py-2 flex items-center justify-between">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="text-white font-bold text-xs">
-                      🚚 {ruta.vehiculo?.marca} {ruta.vehiculo?.modelo}
-                    </span>
-                    <span className="bg-blue-600 text-white text-[10px] px-1.5 py-0.5 rounded font-mono tracking-wide">
-                      {ruta.vehiculo?.patente}
-                    </span>
-                    <span className="text-slate-300 text-[10px]">
-                      {ruta.usuario?.nombre} {ruta.usuario?.apellido}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-black text-[10px] px-2 py-1 rounded">
-                      {ruta.estado}
-                    </span>
-                    <button onClick={() => handleEliminarRuta(ruta.id)}
-                      className="bg-red-500/20 hover:bg-red-500/30 text-red-200 hover:text-red-100 text-[10px] font-bold px-2.5 py-1.5 rounded border border-red-400/30 transition-colors">
-                      🗑️ Eliminar
-                    </button>
-                  </div>
-                </div>
-                <p className="text-xs text-gray-400 italic py-6 text-center">
-                  Ruta vacía. No tiene clientes ni paradas asignadas todavía.
-                </p>
-              </div>
-            ) : (
-              /* Ruta con paradas: TablaSortable ocupa todo el ancho */
-              <TablaSortable
-                key={ruta.id}
-                rutaId={ruta.id}
-                ruta={ruta}
-                paradas={ruta.paradas}
-                onReorder={handleReorder}
-                onActualizarParada={handleActualizarParada}
-                onActualizarEsperado={handleActualizarEsperado}
-                onEliminarRuta={handleEliminarRuta}
-              />
-            )
-          )}
+          {rutas.map((ruta) => (
+            <TablaSortable
+              key={ruta.id}
+              rutaId={ruta.id}
+              ruta={ruta}
+              paradas={ruta.paradas}
+              onReorder={handleReorder}
+              onActualizarParada={handleActualizarParada}
+              onActualizarEsperado={handleActualizarEsperado}
+              onEliminarRuta={handleEliminarRuta}
+              onEliminarParada={handleSolicitarEliminarParada}
+            />
+          ))}
         </div>
       )}
 
@@ -242,6 +243,15 @@ export default function RutasManager() {
         rutasDia={rutas}
         onClose={() => setModalAbierto(false)}
         onSuccess={() => { setModalAbierto(false); cargarDatos(); }}
+      />
+
+      {/* ── Modal confirmar eliminar parada ── */}
+      <ModalEliminarParada
+        isOpen={!!paradaParaEliminar}
+        paradaInfo={paradaParaEliminar}
+        isPending={eliminandoParada}
+        onConfirm={handleConfirmarEliminarParada}
+        onCancel={() => setParadaParaEliminar(null)}
       />
         </>
       )}

@@ -39,6 +39,7 @@ model Usuario {
   incidencias        Incidencia[]
   movimientos_stock  MovimientoStock[]
   user               User?              @relation(fields: [user_id], references: [id])
+  cierres_caja       CierreCaja[]
 }
 
 model Vehiculo {
@@ -111,6 +112,7 @@ model Producto {
   stock_camion       StockCamion[]
   stock_fabrica      StockFabrica?
   movimientos_stock  MovimientoStock[]
+  ventas_cierre_caja VentaCierreCaja[]
 }
 
 model MovimientoStock {
@@ -798,4 +800,62 @@ enum CategoriaProducto {
   BOTELLON20
   SODA
   OTRO
+}
+
+// ── Cierre de Caja (fábrica / oficina) ──────────────────────────────────────
+
+model CierreCaja {
+  id                    String            @id @default(uuid())
+  fecha                 DateTime          @unique
+  efectivo_inicial      Float             @default(0)
+  total_efectivo        Float             @default(0)
+  total_tarjeta         Float             @default(0)
+  total_transferencia   Float             @default(0)
+  total_credito_oficina Float             @default(0)
+  total_pagina_web      Float             @default(0)
+  total_general         Float             @default(0)
+  estado                EstadoCierreCaja  @default(ABIERTO)
+  observaciones         String?           @db.Text
+  created_at            DateTime          @default(now())
+  updated_at            DateTime          @updatedAt
+  usuario_id            String
+  usuario               Usuario           @relation(fields: [usuario_id], references: [id])
+  ventas                VentaCierreCaja[]
+  gastos                GastoCierreCaja[]
+}
+
+model VentaCierreCaja {
+  id              String         @id @default(uuid())
+  cierre_id       String
+  descripcion     String
+  producto_id     String?
+  cantidad        Int            @default(1)
+  precio_unitario Float
+  subtotal        Float
+  metodo_pago     MetodoPagoCaja
+  es_otro         Boolean        @default(false)
+  cierre          CierreCaja     @relation(fields: [cierre_id], references: [id], onDelete: Cascade)
+  producto        Producto?      @relation(fields: [producto_id], references: [id])
+}
+
+model GastoCierreCaja {
+  id          String     @id @default(uuid())
+  cierre_id   String
+  descripcion String
+  monto       Float
+  tipo        String
+  cierre      CierreCaja @relation(fields: [cierre_id], references: [id], onDelete: Cascade)
+}
+
+enum EstadoCierreCaja {
+  ABIERTO
+  CERRADO
+}
+
+enum MetodoPagoCaja {
+  EFECTIVO
+  TARJETA
+  TRANSFERENCIA
+  CREDITO_OFICINA
+  PAGINA_WEB
 }
