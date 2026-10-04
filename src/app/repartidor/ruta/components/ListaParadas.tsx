@@ -21,7 +21,7 @@ import { CSS } from '@dnd-kit/utilities';
 import { actualizarOrdenParadasAction } from '@/app/admin/rutas/actions';
 import ModalEntrega from './ModalEntrega';
 import ModalIncidencia from './ModalIncidencia';
-import { Phone, MapPin, AlertTriangle, CheckCircle2, GripVertical, Check, ShieldAlert, Package } from 'lucide-react';
+import { Phone, MapPin, AlertTriangle, CheckCircle2, GripVertical, Check, ShieldAlert, Package, FileText } from 'lucide-react';
 
 function ParadaItem({ 
   parada, 
@@ -107,6 +107,12 @@ function ParadaItem({
             {parada.cliente.botellones_prestados > 0 && (
               <span className="bg-blue-50 text-[#013299] border border-blue-200 px-2 py-0.5 rounded-full text-[10px] font-bold">
                 {parada.cliente.botellones_prestados} envases prestados
+              </span>
+            )}
+
+            {(parada.pedido?.guia?.numero_correlativo || parada.guia_correlativo) && (
+              <span className="bg-purple-100 text-purple-900 border border-purple-200 px-2 py-0.5 rounded-full text-[10px] font-black flex items-center gap-1">
+                <FileText className="w-3 h-3 text-purple-700" /> Guía #{parada.pedido?.guia?.numero_correlativo || parada.guia_correlativo}
               </span>
             )}
           </div>
@@ -266,8 +272,22 @@ export default function ListaParadas({ paradasIniciales, usuarioId }: { paradasI
       {modalAbierto === 'ENTREGA' && paradaSeleccionada && (
         <ModalEntrega 
           parada={paradaSeleccionada} 
+          usuarioId={usuarioId}
           onClose={() => setModalAbierto(null)}
           onAbrirIncidencia={() => setModalAbierto('INCIDENCIA')}
+          onSuccess={(cantidades, guiaInfo) => {
+            setParadas(current => current.map(p => 
+              p.id === paradaSeleccionada.id ? { 
+                ...p, 
+                estado: 'ENTREGADO',
+                bot20_entregado: cantidades.bot20,
+                bot10_entregado: cantidades.bot10,
+                soda_entregada: cantidades.soda,
+                guia_correlativo: guiaInfo?.numero_correlativo || p.guia_correlativo,
+              } : p
+            ));
+            setModalAbierto(null);
+          }}
         />
       )}
 

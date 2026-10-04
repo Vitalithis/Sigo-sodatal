@@ -64,9 +64,17 @@ export async function actualizarRol(userId: string, nuevoRol: string) {
     return { success: false, error: 'No se puede modificar al superadministrador.' };
   }
 
+  const usuarioObj = await prisma.usuario.findUnique({
+    where: { id: userId },
+    select: { licencia_tipo: true },
+  });
+
   await prisma.usuario.update({
     where: { id: userId },
-    data: { rol: nuevoRol as Rol },
+    data: {
+      rol: nuevoRol as Rol,
+      ...(nuevoRol === 'REPARTIDOR' && !usuarioObj?.licencia_tipo ? { licencia_tipo: 'Clase B' } : {}),
+    },
   });
 
   revalidatePath('/admin/roles');

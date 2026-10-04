@@ -472,7 +472,7 @@ model StockCamion {
 model Configuracion {
   id    String @id @default(uuid())
   clave String @unique
-  valor String
+  valor String @db.Text
 }
 
 model LogAcceso {

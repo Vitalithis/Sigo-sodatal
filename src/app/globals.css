@@ -32,3 +32,21 @@ main,
   margin-top: 0 !important;
   padding-top: 0 !important;
 }
+
+/* Evita que los selectores space-y-* de Tailwind o márgenes colapsados 
+   empujen hacia abajo los modales, drawers o backdrops fijos */
+.fixed,
+[class*="fixed inset-0"],
+[class*="fixed"][class*="inset-0"] {
+  margin-top: 0 !important;
+}
+
+.fixed.inset-0,
+[class*="fixed inset-0"],
+[class*="fixed"][class*="inset-0"] {
+  margin: 0 !important;
+  top: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  left: 0 !important;
+}

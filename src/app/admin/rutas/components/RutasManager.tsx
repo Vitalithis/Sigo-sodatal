@@ -17,23 +17,20 @@ import {
 
 import VistaCalendarioRutas from './VistaCalendarioRutas';
 import ModalEliminarParada from './ModalEliminarParada';
-import { Calendar, ListFilter } from 'lucide-react';
-
-const getFechaHoyLocal = () => {
-  const now = new Date();
-  const y = now.getFullYear();
-  const m = String(now.getMonth() + 1).padStart(2, '0');
-  const d = String(now.getDate()).padStart(2, '0');
-  return `${y}-${m}-${d}`;
-};
+import ModalRutaContencion from './ModalRutaContencion';
+import { Calendar, ListFilter, Shield } from 'lucide-react';
+import { getHoyHabilStr, handleDateInputSoloHabiles } from '@/lib/fechas';
 
 export default function RutasManager() {
   const [vistaModo, setVistaModo] = useState<'despacho' | 'calendario'>('despacho');
-  const [fechaSeleccionada, setFechaSeleccionada] = useState(getFechaHoyLocal);
+  const [fechaSeleccionada, setFechaSeleccionada] = useState(getHoyHabilStr);
   const [rutas, setRutas] = useState<any[]>([]);
   const [pedidosFlotantes, setPedidosFlotantes] = useState<any[]>([]);
+  const [choferes, setChoferes] = useState<any[]>([]);
+  const [vehiculos, setVehiculos] = useState<any[]>([]);
   const [cargando, setCargando] = useState(false);
   const [modalAbierto, setModalAbierto] = useState(false);
+  const [modalContencionAbierto, setModalContencionAbierto] = useState(false);
   const [paradaParaEliminar, setParadaParaEliminar] = useState<{ id: string; nombreCliente?: string } | null>(null);
   const [eliminandoParada, setEliminandoParada] = useState(false);
   const [mensajeEstado, setMensajeEstado] = useState<{ texto: string; error: boolean } | null>(null);
@@ -49,6 +46,8 @@ export default function RutasManager() {
     if (res.success) {
       setRutas(res.rutas || []);
       setPedidosFlotantes(res.pedidos || []);
+      if (res.choferes) setChoferes(res.choferes);
+      if (res.vehiculos) setVehiculos(res.vehiculos);
     }
     if (!silencioso) setCargando(false);
   };
@@ -60,6 +59,16 @@ export default function RutasManager() {
   const handleIniciarHojasDelDia = async () => {
     setCargando(true);
     setMensajeEstado(null);
+
+    if (['SABADO', 'DOMINGO'].includes(nombreDiaSemana)) {
+      setCargando(false);
+      setMensajeEstado({
+        texto: `Los repartos habituales con ruta base funcionan de Lunes a Viernes. El día ${nombreDiaSemana} no tiene rutas base programadas. Puedes crear una "Ruta de Contención / Emergencia" si tienes pedidos extraordinarios hoy.`,
+        error: true,
+      });
+      return;
+    }
+
     const diaEnum = nombreDiaSemana as DiaSemana;
     const respuesta = await generarRutasDesdeBaseAction(fechaSeleccionada, diaEnum);
     if (respuesta.success) {
@@ -167,7 +176,12 @@ export default function RutasManager() {
                 <input
                   type="date"
                   value={fechaSeleccionada}
-                  onChange={(e) => setFechaSeleccionada(e.target.value)}
+                  onChange={(e) => {
+                    const ajustada = handleDateInputSoloHabiles(e.target.value, (msg) => {
+                      setMensajeEstado({ texto: msg, error: false });
+                    });
+                    setFechaSeleccionada(ajustada);
+                  }}
                   className="border border-slate-200 bg-slate-50 hover:bg-white rounded-xl px-3 py-2 text-xs font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#013299]/20 transition-all cursor-pointer"
                 />
               </div>
@@ -177,7 +191,16 @@ export default function RutasManager() {
                 </span>
               </div>
             </div>
-            <div className="flex items-center gap-2.5">
+            <div className="flex items-center gap-2.5 flex-wrap">
+              <button
+                type="button"
+                onClick={() => setModalContencionAbierto(true)}
+                className="bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold px-3.5 py-2.5 rounded-xl shadow-sm transition-all uppercase tracking-wider flex items-center gap-1.5"
+                title="Crear hoja de ruta vacía para emergencias o repartos fuera de horario"
+              >
+                <Shield className="w-3.5 h-3.5" /> + Ruta Contención / Emergencia
+              </button>
+
               <button
                 onClick={handleIniciarHojasDelDia}
                 disabled={cargando}
@@ -211,11 +234,32 @@ export default function RutasManager() {
           Cargando la planificación de la jornada...
         </div>
       ) : rutas.length === 0 ? (
-        <div className="bg-slate-50 border border-dashed border-slate-200 p-12 text-center rounded-2xl">
-          <p className="text-slate-700 font-bold text-base">No hay Hojas de Ruta activas en esta fecha.</p>
-          <p className="text-xs text-slate-400 mt-1">
-            Haga clic en "Cargar Ruta Base (Fijos)" para iniciar las rutas configuradas del día {nombreDiaSemana}.
+        <div className="bg-slate-50 border border-dashed border-slate-200 p-10 text-center rounded-2xl">
+          <p className="text-slate-800 font-extrabold text-base">No hay Hojas de Ruta activas en esta fecha.</p>
+          <p className="text-xs text-slate-500 mt-1.5 max-w-lg mx-auto leading-relaxed">
+            {['SABADO', 'DOMINGO'].includes(nombreDiaSemana)
+              ? 'Los repartos habituales operan de lunes a viernes. Para salidas de emergencia o despachos en fin de semana, crea una Ruta de Contención / Emergencia.'
+              : `Puedes cargar las rutas base configuradas para el día ${nombreDiaSemana}, o crear una Ruta de Contención si se trata de una salida extraordinaria.`}
           </p>
+          <div className="mt-5 flex items-center justify-center gap-3 flex-wrap">
+            <button
+              type="button"
+              onClick={() => setModalContencionAbierto(true)}
+              className="bg-amber-600 hover:bg-amber-700 active:scale-[0.98] text-white text-xs font-black px-4 py-2.5 rounded-xl shadow-sm shadow-amber-600/20 transition-all inline-flex items-center gap-1.5"
+            >
+              <Shield className="w-3.5 h-3.5" /> Crear Ruta de Contención / Emergencia
+            </button>
+            {!['SABADO', 'DOMINGO'].includes(nombreDiaSemana) && (
+              <button
+                type="button"
+                onClick={handleIniciarHojasDelDia}
+                disabled={cargando}
+                className="bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-sm transition-all inline-flex items-center gap-1.5"
+              >
+                📥 Cargar Ruta Base ({nombreDiaSemana})
+              </button>
+            )}
+          </div>
         </div>
       ) : (
         /* ── Una sola columna, ancho completo, TablaSortable es el contenedor ── */
@@ -226,11 +270,15 @@ export default function RutasManager() {
               rutaId={ruta.id}
               ruta={ruta}
               paradas={ruta.paradas}
+              todasLasRutas={rutas}
+              choferes={choferes}
+              vehiculos={vehiculos}
               onReorder={handleReorder}
               onActualizarParada={handleActualizarParada}
               onActualizarEsperado={handleActualizarEsperado}
               onEliminarRuta={handleEliminarRuta}
               onEliminarParada={handleSolicitarEliminarParada}
+              onRutaActualizada={() => cargarDatos(true)}
             />
           ))}
         </div>
@@ -252,6 +300,19 @@ export default function RutasManager() {
         isPending={eliminandoParada}
         onConfirm={handleConfirmarEliminarParada}
         onCancel={() => setParadaParaEliminar(null)}
+      />
+
+      {/* ── Modal crear ruta de contención / emergencia ── */}
+      <ModalRutaContencion
+        isOpen={modalContencionAbierto}
+        fechaSeleccionada={fechaSeleccionada}
+        choferes={choferes}
+        vehiculos={vehiculos}
+        onClose={() => setModalContencionAbierto(false)}
+        onSuccess={async (msg) => {
+          setMensajeEstado({ texto: msg, error: false });
+          await cargarDatos();
+        }}
       />
         </>
       )}

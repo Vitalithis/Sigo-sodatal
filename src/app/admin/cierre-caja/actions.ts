@@ -3,6 +3,7 @@
 import { prisma } from '../../../../lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { getUsuarioActual } from '@/lib/auth-session';
+import { getHoyHabilStr, esFinDeSemana } from '@/lib/fechas';
 
 export type MetodoPagoCaja = 'EFECTIVO' | 'TARJETA' | 'TRANSFERENCIA' | 'CREDITO_OFICINA' | 'PAGINA_WEB';
 
@@ -13,8 +14,9 @@ export async function obtenerOCrearCierreDiaAction() {
     const usuario = await getUsuarioActual();
     if (!usuario) return { success: false, message: 'No autenticado.' };
 
-    const hoy = new Date();
-    hoy.setUTCHours(0, 0, 0, 0);
+    const hoyHabilStr = getHoyHabilStr();
+    const [anio, mes, dia] = hoyHabilStr.split('-').map(Number);
+    const hoy = new Date(Date.UTC(anio, mes - 1, dia, 0, 0, 0, 0));
 
     let cierre = await prisma.cierreCaja.findFirst({
       where: { fecha: hoy },
@@ -299,6 +301,10 @@ export async function obtenerCierrePorFechaAction(fechaStr: string) {
 
     if (isNaN(anio) || isNaN(mes) || isNaN(dia)) {
       return { success: false, message: 'Formato de fecha inválido. Use AAAA-MM-DD.' };
+    }
+
+    if (esFinDeSemana(fechaStr)) {
+      return { success: false, message: 'La empresa opera de Lunes a Viernes. Los fines de semana no tienen arqueo de caja.' };
     }
 
     const fechaInicio = new Date(Date.UTC(anio, mes - 1, dia, 0, 0, 0));

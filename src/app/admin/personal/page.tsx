@@ -6,7 +6,7 @@ export const dynamic = 'force-dynamic';
 
 export const metadata = {
   title: 'Fichas Personal - SIGO Sodatal',
-  description: 'Gestión de repartidores, comisiones y rendimiento del personal.',
+  description: 'Gestión de personal, datos de contacto, vehículos y control de asistencia.',
 };
 
 export default async function PersonalPage() {
@@ -14,10 +14,7 @@ export default async function PersonalPage() {
 
   return (
     <div className="space-y-6 pb-12">
-      <PersonalApp
-        initialUsuarios={resultado.usuarios as any}
-        initialConfigsMap={resultado.configsMap}
-      />
+      <PersonalApp initialUsuarios={resultado.usuarios as any} />
     </div>
   );
 }

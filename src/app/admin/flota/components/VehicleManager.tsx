@@ -16,6 +16,7 @@ import {
   VehiculoInput,
   registrarCargaCombustibleAction
 } from '../actions';
+import { getHoyHabilStr, handleDateInputSoloHabiles } from '@/lib/fechas';
 
 interface VehicleManagerProps {
   initialVehiculos: any[];
@@ -40,7 +41,7 @@ export default function VehicleManager({ initialVehiculos }: VehicleManagerProps
 
   // Formulario Mantención
   const [mantencionForm, setMantencionForm] = useState({
-    tipo: 'PREVENTIVA', kilometraje: '', mano_de_obra: '', taller: '', observaciones: '', fecha: new Date().toISOString().split('T')[0]
+    tipo: 'PREVENTIVA', kilometraje: '', mano_de_obra: '', taller: '', observaciones: '', fecha: getHoyHabilStr()
   });
   const [repuestosList, setRepuestosList] = useState<{ nombre: string; cantidad: number; costo_unitario: number }[]>([]);
   const [nuevoRepuesto, setNuevoRepuesto] = useState({ nombre: '', cantidad: 1, costo_unitario: '' });
@@ -51,7 +52,7 @@ export default function VehicleManager({ initialVehiculos }: VehicleManagerProps
 
   // Formulario Combustible
   const [combustibleForm, setCombustibleForm] = useState({
-    fecha: new Date().toISOString().split('T')[0],
+    fecha: getHoyHabilStr(),
     kilometraje: '',
     litros: '',
     monto: '',
@@ -582,7 +583,7 @@ export default function VehicleManager({ initialVehiculos }: VehicleManagerProps
                     </div>
                     <div className="flex flex-col gap-1">
                       <label className="font-bold text-slate-600 uppercase text-[10px]">Fecha Órden</label>
-                      <input type="date" value={mantencionForm.fecha} onChange={(e) => setMantencionForm({...mantencionForm, fecha: e.target.value})} className="border border-slate-200 p-2.5 rounded-xl text-xs bg-white text-slate-900 focus:ring-2 focus:ring-[#013299]/20 focus:border-[#013299]" />
+                      <input type="date" value={mantencionForm.fecha} onChange={(e) => setMantencionForm({...mantencionForm, fecha: handleDateInputSoloHabiles(e.target.value)})} className="border border-slate-200 p-2.5 rounded-xl text-xs bg-white text-slate-900 focus:ring-2 focus:ring-[#013299]/20 focus:border-[#013299]" />
                     </div>
                   </div>
                   <div className="grid grid-cols-2 gap-3">
@@ -641,7 +642,7 @@ export default function VehicleManager({ initialVehiculos }: VehicleManagerProps
                     <div className="grid grid-cols-2 gap-3">
                       <div className="flex flex-col gap-1">
                         <label className="font-bold text-slate-600 uppercase text-[10px]">Fecha Carga</label>
-                        <input type="date" required value={combustibleForm.fecha} onChange={(e) => setCombustibleForm({...combustibleForm, fecha: e.target.value})} className="border border-slate-200 p-2.5 rounded-xl text-xs bg-white text-slate-900 focus:ring-2 focus:ring-[#013299]/20 focus:border-[#013299]" />
+                        <input type="date" required value={combustibleForm.fecha} onChange={(e) => setCombustibleForm({...combustibleForm, fecha: handleDateInputSoloHabiles(e.target.value)})} className="border border-slate-200 p-2.5 rounded-xl text-xs bg-white text-slate-900 focus:ring-2 focus:ring-[#013299]/20 focus:border-[#013299]" />
                       </div>
                       <div className="flex flex-col gap-1">
                         <label className="font-bold text-slate-600 uppercase text-[10px]">Estación / Bencinera</label>

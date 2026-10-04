@@ -24,6 +24,8 @@ export interface NuevaGuiaInput {
   observaciones?: string;
   botellones_prestados_entrega?: number;
   items: ItemGuiaInput[];
+  pedido_id?: string;
+  parada_id?: string;
 }
 
 // ────────────────────────────────────────────────────────────────
@@ -64,7 +66,7 @@ export async function buscarClientesGuiaAction(criterio: string) {
 
 export async function crearGuiaAction(data: NuevaGuiaInput) {
   try {
-    const { metodo_pago, items, ...restData } = data;
+    const { metodo_pago, items, pedido_id, parada_id, ...restData } = data;
     const cliente = await prisma.cliente.findUnique({ where: { id: restData.cliente_id } });
     if (!cliente) throw new Error('Cliente no encontrado.');
 
@@ -74,14 +76,53 @@ export async function crearGuiaAction(data: NuevaGuiaInput) {
     const guia = await prisma.guiaDespacho.create({
       data: {
         ...restData,
+        pedido_id: pedido_id || undefined,
         total,
+        hora_entrega: new Date(),
         estado: derivarEstadoEntrega(metodo_pago, cliente.modalidad_pago),
         items: { create: itemsData }
       }
     });
 
+    if (parada_id) {
+      // Sumar cantidades de items para la parada
+      let bot20 = 0;
+      let bot10 = 0;
+      let soda = 0;
+
+      for (const item of items) {
+        const prod = await prisma.producto.findUnique({ where: { id: item.producto_id } });
+        if (prod?.categoria === 'BOTELLON20') bot20 += item.cantidad;
+        else if (prod?.categoria === 'BOTELLON10') bot10 += item.cantidad;
+        else if (prod?.categoria === 'SODA') soda += item.cantidad;
+      }
+
+      await prisma.paradaDia.update({
+        where: { id: parada_id },
+        data: {
+          estado: 'ENTREGADO',
+          bot20_entregado: bot20,
+          bot10_entregado: bot10,
+          soda_entregada: soda,
+        }
+      });
+
+      if (pedido_id) {
+        await prisma.pedido.update({
+          where: { id: pedido_id },
+          data: {
+            metodo_pago_web: metodo_pago,
+            pagado: metodo_pago !== 'GUIA_MENSUAL',
+            estado: 'ENTREGADO',
+          }
+        });
+      }
+      revalidatePath('/repartidor/ruta');
+      revalidatePath('/admin/rutas');
+    }
+
     revalidatePath('/admin/guias');
-    return { success: true, numero_correlativo: guia.numero_correlativo };
+    return { success: true, numero_correlativo: guia.numero_correlativo, guia_id: guia.id };
   } catch (error) {
     return { success: false, message: error instanceof Error ? error.message : 'Error al crear guía' };
   }

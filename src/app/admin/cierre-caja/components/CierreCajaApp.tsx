@@ -49,6 +49,7 @@ import {
   obtenerCierrePorFechaAction,
   MetodoPagoCaja,
 } from '../actions';
+import { handleDateInputSoloHabiles } from '@/lib/fechas';
 
 export const METODO_LABELS: Record<MetodoPagoCaja, string> = {
   EFECTIVO: 'Efectivo',
@@ -2123,7 +2124,10 @@ export default function CierreCajaApp({ initialCierre, initialProductos, errorMs
                   <input
                     type="date"
                     value={filtroFechaExacta}
-                    onChange={e => setFiltroFechaExacta(e.target.value)}
+                    onChange={e => {
+                      const ajustada = handleDateInputSoloHabiles(e.target.value, (msg) => showToast('err', msg));
+                      setFiltroFechaExacta(ajustada);
+                    }}
                     className="border border-slate-200 bg-white rounded-lg px-2.5 py-1 text-xs font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#013299]/20"
                   />
                   <button

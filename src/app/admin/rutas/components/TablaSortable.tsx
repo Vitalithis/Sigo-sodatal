@@ -10,7 +10,8 @@ import {
   verticalListSortingStrategy, useSortable
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { MessageSquare, Trash2 } from 'lucide-react';
+import { MessageSquare, Trash2, RefreshCw } from 'lucide-react';
+import ModalReasignarRuta from './ModalReasignarRuta';
 
 type EstadoParada = 'PENDIENTE' | 'ENTREGADO' | 'FALLIDO' | 'POSTERGADO';
 
@@ -140,6 +141,9 @@ function SortableRow({ parada, index, onActualizarParada, onActualizarEsperado, 
   const [guardando, setGuardando] = useState(false);
   const [confirmado, setConfirmado] = useState(parada.estado === 'ENTREGADO');
   const [mensaje, setMensaje] = useState<{ tipo: 'ok' | 'error', texto: string } | null>(null);
+  const [metodoPago, setMetodoPago] = useState<string>(() => {
+    return parada.pedido?.metodo_pago_web || (parada.cliente?.modalidad_pago === 'MENSUAL' ? 'GUIA_MENSUAL' : 'EFECTIVO');
+  });
 
   const initB20 = getDesgloseParada(parada, 'BOTELLON20');
   const initB10 = getDesgloseParada(parada, 'BOTELLON10');
@@ -163,6 +167,7 @@ function SortableRow({ parada, index, onActualizarParada, onActualizarEsperado, 
     setSoda(String(parada.soda_entregada ?? ''));
     setObs(parada.observaciones || '');
     setConfirmado(parada.estado === 'ENTREGADO');
+    setMetodoPago(parada.pedido?.metodo_pago_web || (parada.cliente?.modalidad_pago === 'MENSUAL' ? 'GUIA_MENSUAL' : 'EFECTIVO'));
 
     const dB20 = getDesgloseParada(parada, 'BOTELLON20');
     const dB10 = getDesgloseParada(parada, 'BOTELLON10');
@@ -278,6 +283,7 @@ function SortableRow({ parada, index, onActualizarParada, onActualizarEsperado, 
       estado: 'ENTREGADO',
       cantidades: { bot20: pB20.total, bot10: pB10.total, soda: pSoda.total },
       observaciones: obs,
+      metodo_pago: metodoPago,
     });
     if (res?.success) { setMensaje({ tipo: 'ok', texto: 'Guardado' }); setConfirmado(true); }
     else { setMensaje({ tipo: 'error', texto: res?.message || 'Error' }); setEstado('PENDIENTE'); }
@@ -379,8 +385,10 @@ function SortableRow({ parada, index, onActualizarParada, onActualizarEsperado, 
           <span className="text-[13px] leading-none text-slate-300 group-hover:text-blue-400 transition-colors">⋮⋮</span>
         </td>
 
-        <td className="py-1.5 px-2 align-middle w-48">
-          <p className="font-semibold text-slate-800 text-[11px] leading-tight">{parada.cliente?.nombre}</p>
+        <td className="py-1 px-2 align-middle w-48">
+          <p className="font-semibold text-slate-800 text-[11px] leading-tight truncate" title={parada.cliente?.nombre}>
+            {parada.cliente?.nombre}
+          </p>
         </td>
 
         <td className="py-1.5 px-2 align-middle w-32">
@@ -464,11 +472,32 @@ function SortableRow({ parada, index, onActualizarParada, onActualizarEsperado, 
             <option value="FALLIDO">FALLIDO</option>
             <option value="POSTERGADO">POSTERGADO</option>
           </select>
-          {estado === 'ENTREGADO' && !confirmado && (
-            <button onClick={confirmarEntrega} disabled={guardando}
-              className="mt-1 w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 disabled:opacity-50 text-white text-[9px] font-bold py-1 rounded shadow-sm uppercase tracking-wider transition-colors">
-              {guardando ? '…' : 'Confirmar'}
-            </button>
+          {estado === 'ENTREGADO' && (
+            <div className="mt-1 space-y-1">
+              <select
+                value={metodoPago}
+                onChange={async (e) => {
+                  const nuevoMetodo = e.target.value;
+                  setMetodoPago(nuevoMetodo);
+                  if (confirmado) {
+                    await onActualizarParada(parada.id, { estado: 'ENTREGADO', metodo_pago: nuevoMetodo });
+                  }
+                }}
+                title="Método de Pago"
+                className="w-full text-[9px] font-bold px-1 py-1 rounded border border-slate-200 bg-white text-slate-800 outline-none cursor-pointer"
+              >
+                <option value="EFECTIVO">💵 Efectivo</option>
+                <option value="TARJETA">💳 Tarjeta</option>
+                <option value="TRANSFERENCIA">📱 Transfer.</option>
+                <option value="GUIA_MENSUAL">📄 Guía/Créd.</option>
+              </select>
+              {!confirmado && (
+                <button onClick={confirmarEntrega} disabled={guardando}
+                  className="w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 disabled:opacity-50 text-white text-[9px] font-bold py-1 rounded shadow-sm uppercase tracking-wider transition-colors">
+                  {guardando ? '…' : 'Confirmar'}
+                </button>
+              )}
+            </div>
           )}
           {mensaje && !esExpandible && (
             <div className={`mt-0.5 text-[9px] font-bold ${mensaje.tipo === 'ok' ? 'text-emerald-600' : 'text-red-600'}`}>
@@ -579,6 +608,9 @@ interface TablaSortableProps {
   rutaId: string;
   ruta: any;
   paradas: any[];
+  todasLasRutas?: any[];
+  choferes?: any[];
+  vehiculos?: any[];
   onReorder: (rutaId: string, nuevasParadas: any[]) => void;
   onActualizarParada: (paradaId: string, datos: any) => Promise<{ success: boolean; message?: string }>;
   onActualizarEsperado: (
@@ -587,9 +619,24 @@ interface TablaSortableProps {
   ) => Promise<{ success: boolean; message?: string }>;
   onEliminarRuta: (rutaDiaId: string) => void;
   onEliminarParada: (paradaId: string, nombreCliente?: string) => void;
+  onRutaActualizada?: () => void;
 }
 
-export default function TablaSortable({ rutaId, ruta, paradas, onReorder, onActualizarParada, onActualizarEsperado, onEliminarRuta, onEliminarParada }: TablaSortableProps) {
+export default function TablaSortable({ 
+  rutaId, 
+  ruta, 
+  paradas, 
+  todasLasRutas = [], 
+  choferes = [], 
+  vehiculos = [], 
+  onReorder, 
+  onActualizarParada, 
+  onActualizarEsperado, 
+  onEliminarRuta, 
+  onEliminarParada,
+  onRutaActualizada 
+}: TablaSortableProps) {
+  const [modalReasignarAbierto, setModalReasignarAbierto] = useState(false);
   const sectores = useMemo(() => {
     const map: Record<string, any[]> = {};
     paradas.forEach(p => {
@@ -832,6 +879,12 @@ export default function TablaSortable({ rutaId, ruta, paradas, onReorder, onActu
             &nbsp;· Soda: <b className="text-white">{formatTotalCol(totales.soda_recargas, totales.soda_nuevos, totales.soda_total)}</b>
             &nbsp;· <b className="text-white">{paradas.length}</b> paradas
           </span>
+          <button onClick={() => setModalReasignarAbierto(true)}
+            title="Cambiar conductor o vehículo de esta ruta hoy"
+            className="bg-white/10 hover:bg-white/20 text-white text-[10px] font-bold px-2.5 py-1.5 rounded-xl border border-white/20 transition-all flex items-center gap-1.5 shadow-xs">
+            <RefreshCw className="w-3.5 h-3.5" />
+            <span>Reasignar</span>
+          </button>
           <button onClick={handlePrint}
             className="bg-white/10 hover:bg-white/20 text-white text-[10px] font-bold px-2.5 py-1.5 rounded-xl border border-white/20 transition-all flex items-center gap-1.5 shadow-xs">
             🖨️ Imprimir
@@ -920,6 +973,19 @@ export default function TablaSortable({ rutaId, ruta, paradas, onReorder, onActu
           </table>
         </div>
       </DndContext>
+
+      {/* Modal para reasignar chofer o camión de la jornada */}
+      <ModalReasignarRuta
+        isOpen={modalReasignarAbierto}
+        onClose={() => setModalReasignarAbierto(false)}
+        ruta={ruta}
+        todasLasRutas={todasLasRutas}
+        choferes={choferes}
+        vehiculos={vehiculos}
+        onSuccess={() => {
+          if (onRutaActualizada) onRutaActualizada();
+        }}
+      />
     </div>
   );
 }

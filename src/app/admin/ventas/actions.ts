@@ -79,8 +79,8 @@ function procesarItem(
 
 export async function obtenerVentasPorAnioAction(anio: number) {
   try {
-    const fechaInicio = new Date(`${anio}-01-01T00:00:00.000Z`);
-    const fechaFin = new Date(`${anio}-12-31T23:59:59.999Z`);
+    const fechaInicio = new Date(anio, 0, 1, 0, 0, 0, 0);
+    const fechaFin = new Date(anio, 11, 31, 23, 59, 59, 999);
 
     const guias = await prisma.guiaDespacho.findMany({
       where: {
@@ -106,9 +106,9 @@ export async function obtenerVentasPorAnioAction(anio: number) {
     }> = {};
 
     for (const g of guias) {
-      // Usar fecha local del servidor (UTC offset ajuste)
+      // Usar fecha local del servidor
       const fechaEmision = new Date(g.fecha_emision);
-      const mes = fechaEmision.getUTCMonth(); // 0-11
+      const mes = fechaEmision.getMonth(); // 0-11 según mes local del cliente/negocio
 
       if (!mesesMap[mes]) {
         mesesMap[mes] = { repMap: {}, totalGuias: 0 };

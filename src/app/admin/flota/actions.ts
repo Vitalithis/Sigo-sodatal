@@ -263,6 +263,48 @@ export interface ChoferInput {
   email: string;
   licencia_tipo: string;
   password?: string;
+  vehiculo_id?: string;
+}
+
+export async function asignarVehiculoPredeterminadoAction(usuarioId: string, vehiculoId: string | null) {
+  try {
+    await prisma.usuario.update({
+      where: { id: usuarioId },
+      data: {
+        vehiculo_id: vehiculoId ? vehiculoId : null,
+      },
+    });
+
+    revalidatePath('/admin/flota');
+    revalidatePath('/admin/rutas');
+    revalidatePath('/admin/rutas-base');
+    return { success: true };
+  } catch (error: any) {
+    console.error('Error en asignarVehiculoPredeterminadoAction:', error);
+    return { success: false, message: error.message || 'Error al asignar vehículo predeterminado.' };
+  }
+}
+
+export async function actualizarDatosChoferAction(
+  usuarioId: string,
+  data: { telefono?: string; licencia_tipo?: string }
+) {
+  try {
+    await prisma.usuario.update({
+      where: { id: usuarioId },
+      data: {
+        ...(data.telefono !== undefined ? { telefono: data.telefono.trim() } : {}),
+        ...(data.licencia_tipo !== undefined ? { licencia_tipo: data.licencia_tipo } : {}),
+      },
+    });
+
+    revalidatePath('/admin/flota');
+    revalidatePath('/admin/rutas');
+    return { success: true };
+  } catch (error: any) {
+    console.error('Error al actualizar datos del chofer:', error);
+    return { success: false, message: error.message || 'Error al actualizar el conductor.' };
+  }
 }
 
 export async function obtenerUsuariosDisponiblesAction() {
@@ -374,6 +416,7 @@ export async function crearChoferAction(data: ChoferInput) {
           email: emailNormalizado,
           licencia_tipo: data.licencia_tipo || 'Clase B',
           rol: 'REPARTIDOR',
+          vehiculo_id: data.vehiculo_id || usuarioExistente.vehiculo_id || null,
           activo: true,
         }
       });
@@ -388,6 +431,7 @@ export async function crearChoferAction(data: ChoferInput) {
           email: emailNormalizado,
           licencia_tipo: data.licencia_tipo || 'Clase B',
           rol: 'REPARTIDOR',
+          vehiculo_id: data.vehiculo_id || null,
           fecha_ingreso: new Date(),
           activo: true,
         },

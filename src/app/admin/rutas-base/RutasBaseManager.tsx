@@ -353,7 +353,12 @@ export default function RutasBaseManager({ rutasBaseIniciales, choferes, vehicul
                             onClick={() => seleccionarClienteParaAlta(rb.id, c)}
                             className="w-full text-left p-2.5 hover:bg-blue-50 rounded-xl transition-colors block"
                           >
-                            <span className="block font-bold text-slate-900 text-xs">{c.nombre}</span>
+                            <div className="flex items-center justify-between gap-2">
+                              <span className="font-bold text-slate-900 text-xs">{c.nombre}</span>
+                              <span className="text-[9px] font-black px-1.5 py-0.5 rounded bg-blue-50 text-blue-800 border border-blue-200 uppercase">
+                                {c.frecuencia || 'SEMANAL'}
+                              </span>
+                            </div>
                             <span className="block text-[11px] text-slate-500 truncate mt-0.5">📍 {c.direccion}</span>
                           </button>
                         ))}
@@ -595,12 +600,25 @@ export default function RutasBaseManager({ rutasBaseIniciales, choferes, vehicul
                 <label className={labelCls}>Repartidor Encargado *</label>
                 <select
                   value={form.usuario_id}
-                  onChange={e => setForm({ ...form, usuario_id: e.target.value })}
+                  onChange={e => {
+                    const choferId = e.target.value;
+                    const choferObj = choferes.find(c => c.id === choferId);
+                    setForm(prev => ({
+                      ...prev,
+                      usuario_id: choferId,
+                      vehiculo_id: choferObj?.vehiculo_id || prev.vehiculo_id
+                    }));
+                  }}
                   className={inputCls}
                   required
                 >
                   <option value="">-- Seleccionar Chofer --</option>
-                  {choferes.map(c => <option key={c.id} value={c.id}>{c.nombre} {c.apellido}</option>)}
+                  {choferes.map(c => (
+                    <option key={c.id} value={c.id}>
+                      {c.nombre} {c.apellido}
+                      {c.vehiculo ? ` (Habitual: ${c.vehiculo.patente})` : ''}
+                    </option>
+                  ))}
                 </select>
               </div>
               <div>
@@ -612,7 +630,7 @@ export default function RutasBaseManager({ rutasBaseIniciales, choferes, vehicul
                   required
                 >
                   <option value="">-- Seleccionar Vehículo --</option>
-                  {vehiculos.map(v => <option key={v.id} value={v.id}>[{v.patente}] {v.marca}</option>)}
+                  {vehiculos.map(v => <option key={v.id} value={v.id}>[{v.patente}] {v.marca} {v.modelo}</option>)}
                 </select>
               </div>
             </div>

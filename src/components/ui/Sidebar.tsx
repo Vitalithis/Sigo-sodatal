@@ -19,6 +19,7 @@ import {
   LogOut,
   TrendingUp,
   BadgePercent,
+  UserCheck,
   ChevronLeft,
   ChevronRight,
   ChevronDown,
@@ -93,7 +94,7 @@ export default function Sidebar({ rol, nombre }: SidebarProps) {
         label: 'Comercial',
         icon: DollarSign,
         items: [
-          { name: 'Comisiones',       href: '/admin/ventas',        icon: TrendingUp   },
+          { name: 'Comisiones',       href: '/admin/comisiones',    icon: TrendingUp   },
           { name: 'Cierre de Caja',   href: '/admin/cierre-caja',   icon: Archive      },
           { name: 'Cuadraturas',      href: '/admin/cuadratura',    icon: ClipboardList },
           { name: 'Guías de Despacho',href: '/admin/guias',         icon: FileText     },
@@ -108,8 +109,8 @@ export default function Sidebar({ rol, nombre }: SidebarProps) {
         label: 'Clientes y Personal',
         icon: Users,
         items: [
-          { name: 'Clientes',        href: '/admin/clientes',  icon: Users       },
-          { name: 'Fichas Personal', href: '/admin/personal',  icon: BadgePercent },
+          { name: 'Clientes',        href: '/admin/clientes',  icon: Users     },
+          { name: 'Fichas Personal', href: '/admin/personal',  icon: UserCheck },
         ],
       },
     },

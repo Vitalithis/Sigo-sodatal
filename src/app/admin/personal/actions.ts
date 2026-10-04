@@ -4,14 +4,8 @@ import { prisma } from '../../../../lib/prisma';
 import { Rol } from '../../../../lib/prisma/generated';
 import { revalidatePath } from 'next/cache';
 
-export interface ComisionConfig {
-  tipo: 'MONTO_UNIDAD' | 'PORCENTAJE' | 'PARADA';
-  montoUnidad20L: number;
-  montoUnidad10L: number;
-  montoSoda: number;
-  porcentajeVenta: number;
-  montoParada: number;
-}
+export type { ComisionConfig } from './types';
+import { ComisionConfig, normalizarConfigComision, serializarConfigComision } from './types';
 
 // 1. Obtener todo el personal (repartidores y staff) con sus configuraciones de comisiones
 export async function obtenerPersonalAction() {
@@ -45,7 +39,7 @@ export async function obtenerPersonalAction() {
     configsDb.forEach(cfg => {
       try {
         const uId = cfg.clave.replace('comision_config_', '');
-        configsMap[uId] = JSON.parse(cfg.valor);
+        configsMap[uId] = normalizarConfigComision(JSON.parse(cfg.valor));
       } catch (e) {
         // Fallback si falla el parseo
       }
@@ -62,7 +56,7 @@ export async function obtenerPersonalAction() {
 export async function guardarConfiguracionComisionAction(usuarioId: string, config: ComisionConfig) {
   try {
     const clave = `comision_config_${usuarioId}`;
-    const valorJson = JSON.stringify(config);
+    const valorJson = serializarConfigComision(config);
 
     await prisma.configuracion.upsert({
       where: { clave },
@@ -84,7 +78,7 @@ export async function guardarConfiguracionComisionAction(usuarioId: string, conf
   }
 }
 
-// 3. Calcular comisiones y resumen de entregas en un rango de fechas
+// 3. Calcular comisiones con separación estricta Natural vs Empresa y resumen para gráfico
 export async function calcularComisionesPersonalAction(
   usuarioId: string,
   fechaInicioStr: string,
@@ -99,16 +93,7 @@ export async function calcularComisionesPersonalAction(
       where: { clave: `comision_config_${usuarioId}` }
     });
 
-    const config: ComisionConfig = cfgDb?.valor
-      ? JSON.parse(cfgDb.valor)
-      : {
-          tipo: 'MONTO_UNIDAD',
-          montoUnidad20L: 300,
-          montoUnidad10L: 200,
-          montoSoda: 150,
-          porcentajeVenta: 5,
-          montoParada: 1500
-        };
+    const config: ComisionConfig = normalizarConfigComision(cfgDb?.valor ? JSON.parse(cfgDb.valor) : undefined);
 
     // Consultar rutas completadas en el período
     const rutas = await prisma.rutaDia.findMany({
@@ -124,7 +109,8 @@ export async function calcularComisionesPersonalAction(
             cliente: true,
             pedido: {
               include: {
-                items: { include: { producto: true } }
+                items: { include: { producto: true } },
+                guia: true
               }
             }
           }
@@ -132,102 +118,449 @@ export async function calcularComisionesPersonalAction(
       }
     });
 
-    // Consultar también guías de despacho emitidas en el período por este repartidor
-    const guias = await prisma.guiaDespacho.findMany({
-      where: {
-        usuario_repartidor_id: usuarioId,
-        fecha_emision: { gte: fechaInicio, lte: fechaFin },
-        estado: { not: 'ANULADA' }
-      },
-      include: {
-        cliente: true,
-        items: { include: { producto: true } }
-      }
-    });
+    let totalParadasNatural = 0;
+    let totalParadasEmpresa = 0;
 
-    let totalParadasEntregadas = 0;
-    let totalBot20L = 0;
-    let totalBot10L = 0;
-    let totalSoda = 0;
-    let totalVentasMonto = 0;
+    // Métricas por tipo de producto y medio de pago
+    let bot20EfectivoNat = 0, bot20CreditoNat = 0;
+    let bot20EfectivoEmp = 0, bot20CreditoEmp = 0;
+
+    // Recargas acumuladas
+    let rec20Nat = 0, rec10Nat = 0, recSodaNat = 0, montoRecNat = 0;
+    let rec20Emp = 0, rec10Emp = 0, recSodaEmp = 0, montoRecEmp = 0;
+
+    // Ventas acumuladas
+    let vta20Nat = 0, vta10Nat = 0, vtaSodaNat = 0, vtaOtroNat = 0, montoVtaNat = 0;
+    let vta20Emp = 0, vta10Emp = 0, vtaSodaEmp = 0, vtaOtroEmp = 0, montoVtaEmp = 0;
+
+    let comisionRecargasNatTotal = 0;
+    let comisionRecargasEmpTotal = 0;
+    let comisionVentasNatTotal = 0;
+    let comisionVentasEmpTotal = 0;
 
     const desgloseDias: any[] = [];
 
     rutas.forEach(r => {
       const paradasEntregadas = r.paradas.filter(p => p.estado === 'ENTREGADO');
-      let bot20Ruta = 0;
-      let bot10Ruta = 0;
-      let sodaRuta = 0;
-      let ventasRuta = 0;
+
+      let diaRec20Nat = 0, diaRec10Nat = 0, diaRecSodaNat = 0, diaMontoRecNat = 0;
+      let diaRec20Emp = 0, diaRec10Emp = 0, diaRecSodaEmp = 0, diaMontoRecEmp = 0;
+
+      let diaVta20Nat = 0, diaVta10Nat = 0, diaVtaSodaNat = 0, diaVtaOtroNat = 0, diaMontoVtaNat = 0;
+      let diaVta20Emp = 0, diaVta10Emp = 0, diaVtaSodaEmp = 0, diaVtaOtroEmp = 0, diaMontoVtaEmp = 0;
+
+      let comRecNatDia = 0;
+      let comRecEmpDia = 0;
+
+      let paradasNatDia = 0;
+      let paradasEmpDia = 0;
 
       paradasEntregadas.forEach(p => {
-        if (p.pedido?.items) {
-          p.pedido.items.forEach(it => {
+        const esEmpresa = p.cliente?.tipo === 'EMPRESA';
+        if (esEmpresa) {
+          paradasEmpDia++;
+        } else {
+          paradasNatDia++;
+        }
+
+        // Evaluar medio de pago para la entrega:
+        // Efectivo / Tarjeta ($150 bot 20L) vs Transferencia / Crédito (Factura o Guía: $75 bot 20L)
+        const estadoGuia = p.pedido?.guia?.estado;
+        const metodoWeb = p.pedido?.metodo_pago_web;
+        const modCli = p.cliente?.modalidad_pago;
+        const prefFact = p.cliente?.preferencia_factura;
+
+        let esEfectivoOTarjeta = false;
+        if (estadoGuia === 'ENTREGADA_EFECTIVO' || estadoGuia === 'ENTREGADA_TARJETA') {
+          esEfectivoOTarjeta = true;
+        } else if (estadoGuia === 'ENTREGADA_TRANSFERENCIA' || estadoGuia === 'ENTREGADA_CREDITO') {
+          esEfectivoOTarjeta = false;
+        } else if (metodoWeb === 'EFECTIVO' || metodoWeb === 'TARJETA') {
+          esEfectivoOTarjeta = true;
+        } else if (metodoWeb === 'TRANSFERENCIA' || metodoWeb === 'GUIA_MENSUAL') {
+          esEfectivoOTarjeta = false;
+        } else if (modCli === 'MENSUAL' || prefFact === 'CONSOLIDADO_MES' || esEmpresa) {
+          esEfectivoOTarjeta = false;
+        } else {
+          esEfectivoOTarjeta = true;
+        }
+
+        // Tarifas oficiales:
+        // 20L: $150 (efectivo/tarjeta) ó $75 (transferencia/crédito)
+        // 10L: $75 siempre
+        // Soda: $6 siempre
+        // Misma comisión para venta y recarga
+        const tarifa20L = esEfectivoOTarjeta
+          ? config.monto20L_efectivoTarjeta
+          : config.monto20L_transferenciaCredito;
+        const tarifa10L = config.monto10L;
+        const tarifaSoda = config.montoSoda;
+
+        const tieneItems = p.pedido?.items && p.pedido.items.length > 0;
+
+        if (tieneItems) {
+          p.pedido!.items.forEach(it => {
             const cant = it.cantidad || 0;
             const sub = cant * (it.precio_historico || 0);
-            ventasRuta += sub;
-
             const cat = it.producto?.categoria;
-            if (cat === 'BOTELLON20') bot20Ruta += cant;
-            else if (cat === 'BOTELLON10') bot10Ruta += cant;
-            else if (cat === 'SODA') sodaRuta += cant;
-            else bot20Ruta += cant; // Fallback
+            const esVenta = it.tipo_transaccion === 'VENTA' || cat === 'OTRO';
+
+            // Calcular comisión unitaria por producto (igual para venta y recarga)
+            let comisionItem = 0;
+            if (cat === 'BOTELLON20') {
+              comisionItem = cant * tarifa20L;
+              if (esEmpresa) {
+                if (esEfectivoOTarjeta) bot20EfectivoEmp += cant;
+                else bot20CreditoEmp += cant;
+              } else {
+                if (esEfectivoOTarjeta) bot20EfectivoNat += cant;
+                else bot20CreditoNat += cant;
+              }
+            } else if (cat === 'BOTELLON10') {
+              comisionItem = cant * tarifa10L;
+            } else if (cat === 'SODA') {
+              comisionItem = cant * tarifaSoda;
+            } else {
+              comisionItem = 0;
+            }
+
+            if (esEmpresa) {
+              comRecEmpDia += comisionItem;
+              if (esVenta) {
+                diaMontoVtaEmp += sub;
+                if (cat === 'BOTELLON20') diaVta20Emp += cant;
+                else if (cat === 'BOTELLON10') diaVta10Emp += cant;
+                else if (cat === 'SODA') diaVtaSodaEmp += cant;
+                else diaVtaOtroEmp += cant;
+              } else {
+                diaMontoRecEmp += sub;
+                if (cat === 'BOTELLON20') diaRec20Emp += cant;
+                else if (cat === 'BOTELLON10') diaRec10Emp += cant;
+                else if (cat === 'SODA') diaRecSodaEmp += cant;
+                else diaRec20Emp += cant;
+              }
+            } else {
+              comRecNatDia += comisionItem;
+              if (esVenta) {
+                diaMontoVtaNat += sub;
+                if (cat === 'BOTELLON20') diaVta20Nat += cant;
+                else if (cat === 'BOTELLON10') diaVta10Nat += cant;
+                else if (cat === 'SODA') diaVtaSodaNat += cant;
+                else diaVtaOtroNat += cant;
+              } else {
+                diaMontoRecNat += sub;
+                if (cat === 'BOTELLON20') diaRec20Nat += cant;
+                else if (cat === 'BOTELLON10') diaRec10Nat += cant;
+                else if (cat === 'SODA') diaRecSodaNat += cant;
+                else diaRec20Nat += cant;
+              }
+            }
           });
+        } else {
+          // Si la parada se confirmó registrando directamente bot20_entregado, bot10_entregado, soda_entregada
+          const cant20 = p.bot20_entregado || 0;
+          const cant10 = p.bot10_entregado || 0;
+          const cantSoda = p.soda_entregada || 0;
+
+          const comision20 = cant20 * tarifa20L;
+          const comision10 = cant10 * tarifa10L;
+          const comisionSoda = cantSoda * tarifaSoda;
+          const totalComisionParada = comision20 + comision10 + comisionSoda;
+
+          const precio20 = esEmpresa ? 3000 : 3500;
+          const precio10 = esEmpresa ? 2000 : 2500;
+          const precioSoda = 1200;
+          const subTotalParada = (cant20 * precio20) + (cant10 * precio10) + (cantSoda * precioSoda);
+
+          if (esEmpresa) {
+            if (esEfectivoOTarjeta) bot20EfectivoEmp += cant20;
+            else bot20CreditoEmp += cant20;
+
+            diaRec20Emp += cant20;
+            diaRec10Emp += cant10;
+            diaRecSodaEmp += cantSoda;
+            diaMontoRecEmp += subTotalParada;
+            comRecEmpDia += totalComisionParada;
+          } else {
+            if (esEfectivoOTarjeta) bot20EfectivoNat += cant20;
+            else bot20CreditoNat += cant20;
+
+            diaRec20Nat += cant20;
+            diaRec10Nat += cant10;
+            diaRecSodaNat += cantSoda;
+            diaMontoRecNat += subTotalParada;
+            comRecNatDia += totalComisionParada;
+          }
         }
       });
 
-      // Cálculo de comisión para esta ruta
-      let comisionRuta = 0;
-      if (config.tipo === 'MONTO_UNIDAD') {
-        comisionRuta = (bot20Ruta * config.montoUnidad20L) + (bot10Ruta * config.montoUnidad10L) + (sodaRuta * config.montoSoda);
-      } else if (config.tipo === 'PORCENTAJE') {
-        comisionRuta = ventasRuta * (config.porcentajeVenta / 100);
-      } else if (config.tipo === 'PARADA') {
-        comisionRuta = paradasEntregadas.length * config.montoParada;
-      }
+      // Comisión por Ventas complementaria (% si estuviese configurado)
+      const totalVentasDiaNat = diaMontoRecNat + diaMontoVtaNat;
+      const totalVentasDiaEmp = diaMontoRecEmp + diaMontoVtaEmp;
 
-      totalParadasEntregadas += paradasEntregadas.length;
-      totalBot20L += bot20Ruta;
-      totalBot10L += bot10Ruta;
-      totalSoda += sodaRuta;
-      totalVentasMonto += ventasRuta;
+      const comVtaNatDia = totalVentasDiaNat * ((config.porcentajeVenta_natural || 0) / 100);
+      const comVtaEmpDia = totalVentasDiaEmp * ((config.porcentajeVenta_empresa || 0) / 100);
+
+      const comisionNatDia = comRecNatDia + comVtaNatDia;
+      const comisionEmpDia = comRecEmpDia + comVtaEmpDia;
+      const comisionTotalDia = comisionNatDia + comisionEmpDia;
+
+      // Acumular a totales
+      totalParadasNatural += paradasNatDia;
+      totalParadasEmpresa += paradasEmpDia;
+
+      rec20Nat += diaRec20Nat;
+      rec10Nat += diaRec10Nat;
+      recSodaNat += diaRecSodaNat;
+      montoRecNat += diaMontoRecNat;
+
+      rec20Emp += diaRec20Emp;
+      rec10Emp += diaRec10Emp;
+      recSodaEmp += diaRecSodaEmp;
+      montoRecEmp += diaMontoRecEmp;
+
+      vta20Nat += diaVta20Nat;
+      vta10Nat += diaVta10Nat;
+      vtaSodaNat += diaVtaSodaNat;
+      vtaOtroNat += diaVtaOtroNat;
+      montoVtaNat += diaMontoVtaNat;
+
+      vta20Emp += diaVta20Emp;
+      vta10Emp += diaVta10Emp;
+      vtaSodaEmp += diaVtaSodaEmp;
+      vtaOtroEmp += diaVtaOtroEmp;
+      montoVtaEmp += diaMontoVtaEmp;
+
+      comisionRecargasNatTotal += comRecNatDia;
+      comisionRecargasEmpTotal += comRecEmpDia;
+      comisionVentasNatTotal += comVtaNatDia;
+      comisionVentasEmpTotal += comVtaEmpDia;
 
       desgloseDias.push({
         id: r.id,
         fecha: r.fecha.toISOString().split('T')[0],
-        nombreRuta: r.ruta_base?.nombre || r.ruta_base_id,
+        nombreRuta: r.ruta_base?.nombre || 'Ruta sin nombre',
         paradasTotales: r.paradas.length,
         paradasEntregadas: paradasEntregadas.length,
-        bot20L: bot20Ruta,
-        bot10L: bot10Ruta,
-        soda: sodaRuta,
-        ventasMonto: ventasRuta,
-        comisionCalculada: Math.round(comisionRuta)
+        recargas: {
+          natural: { bot20L: diaRec20Nat, bot10L: diaRec10Nat, soda: diaRecSodaNat, total: diaRec20Nat + diaRec10Nat + diaRecSodaNat, comision: Math.round(comRecNatDia) },
+          empresa: { bot20L: diaRec20Emp, bot10L: diaRec10Emp, soda: diaRecSodaEmp, total: diaRec20Emp + diaRec10Emp + diaRecSodaEmp, comision: Math.round(comRecEmpDia) },
+        },
+        ventas: {
+          natural: { unidades: diaVta20Nat + diaVta10Nat + diaVtaSodaNat + diaVtaOtroNat, monto: Math.round(totalVentasDiaNat), comision: Math.round(comVtaNatDia) },
+          empresa: { unidades: diaVta20Emp + diaVta10Emp + diaVtaSodaEmp + diaVtaOtroEmp, monto: Math.round(totalVentasDiaEmp), comision: Math.round(comVtaEmpDia) },
+        },
+        natural: {
+          paradas: paradasNatDia,
+          bot20L: diaRec20Nat + diaVta20Nat,
+          bot10L: diaRec10Nat + diaVta10Nat,
+          soda: diaRecSodaNat + diaVtaSodaNat,
+          totalUnidades: diaRec20Nat + diaRec10Nat + diaRecSodaNat + diaVta20Nat + diaVta10Nat + diaVtaSodaNat + diaVtaOtroNat,
+          ventas: Math.round(totalVentasDiaNat),
+          comision: Math.round(comisionNatDia)
+        },
+        empresa: {
+          paradas: paradasEmpDia,
+          bot20L: diaRec20Emp + diaVta20Emp,
+          bot10L: diaRec10Emp + diaVta10Emp,
+          soda: diaRecSodaEmp + diaVtaSodaEmp,
+          totalUnidades: diaRec20Emp + diaRec10Emp + diaRecSodaEmp + diaVta20Emp + diaVta10Emp + diaVtaSodaEmp + diaVtaOtroEmp,
+          ventas: Math.round(totalVentasDiaEmp),
+          comision: Math.round(comisionEmpDia)
+        },
+        bot20Total: (diaRec20Nat + diaVta20Nat) + (diaRec20Emp + diaVta20Emp),
+        bot10Total: (diaRec10Nat + diaVta10Nat) + (diaRec10Emp + diaVta10Emp),
+        sodaTotal: (diaRecSodaNat + diaVtaSodaNat) + (diaRecSodaEmp + diaVtaSodaEmp),
+        comisionCalculada: Math.round(comisionTotalDia)
       });
     });
 
-    // Sumar comisión total consolidada
-    let comisionTotalGeneral = 0;
+    // Agrupación de desglose por Mes
+    const mesesMap: Record<string, any> = {};
+    desgloseDias.forEach(d => {
+      const mesKey = d.fecha.substring(0, 7); // 'YYYY-MM'
+      if (!mesesMap[mesKey]) {
+        const [y, m] = mesKey.split('-');
+        const dateObj = new Date(parseInt(y), parseInt(m) - 1, 1);
+        const nombreMes = dateObj.toLocaleDateString('es-CL', { month: 'long', year: 'numeric' });
+        mesesMap[mesKey] = {
+          mesKey,
+          nombreMes: nombreMes.charAt(0).toUpperCase() + nombreMes.slice(1),
+          totalRutas: 0,
+          totalParadasEntregadas: 0,
+          bot20Total: 0,
+          bot20Natural: 0,
+          bot20Empresa: 0,
+          bot10Total: 0,
+          bot10Natural: 0,
+          bot10Empresa: 0,
+          sodaTotal: 0,
+          sodaNatural: 0,
+          sodaEmpresa: 0,
+          totalUnidades: 0,
+          comisionTotal: 0,
+          rutas: []
+        };
+      }
+      const mes = mesesMap[mesKey];
+      mes.totalRutas++;
+      mes.totalParadasEntregadas += d.paradasEntregadas;
+      mes.bot20Total += d.bot20Total;
+      mes.bot20Natural += d.natural.bot20L;
+      mes.bot20Empresa += d.empresa.bot20L;
+      mes.bot10Total += d.bot10Total;
+      mes.bot10Natural += d.natural.bot10L;
+      mes.bot10Empresa += d.empresa.bot10L;
+      mes.sodaTotal += d.sodaTotal;
+      mes.sodaNatural += d.natural.soda;
+      mes.sodaEmpresa += d.empresa.soda;
+      mes.totalUnidades += (d.natural.totalUnidades + d.empresa.totalUnidades);
+      mes.comisionTotal += d.comisionCalculada;
+      mes.rutas.push(d);
+    });
+    const desgloseMeses = Object.values(mesesMap);
+
+    const totalParadas = totalParadasNatural + totalParadasEmpresa;
+
+    const totalRecNat = rec20Nat + rec10Nat + recSodaNat;
+    const totalRecEmp = rec20Emp + rec10Emp + recSodaEmp;
+    const totalRecGeneral = totalRecNat + totalRecEmp;
+
+    const totalVtaCantNat = vta20Nat + vta10Nat + vtaSodaNat + vtaOtroNat;
+    const totalVtaCantEmp = vta20Emp + vta10Emp + vtaSodaEmp + vtaOtroEmp;
+    const totalVtaCantGeneral = totalVtaCantNat + totalVtaCantEmp;
+
+    const totalMontoVentasNat = montoRecNat + montoVtaNat;
+    const totalMontoVentasEmp = montoRecEmp + montoVtaEmp;
+    const totalMontoVentasGeneral = totalMontoVentasNat + totalMontoVentasEmp;
+
+    let comisionTotalNatural = 0;
+    let comisionTotalEmpresa = 0;
+
     if (config.tipo === 'MONTO_UNIDAD') {
-      comisionTotalGeneral = (totalBot20L * config.montoUnidad20L) + (totalBot10L * config.montoUnidad10L) + (totalSoda * config.montoSoda);
+      comisionTotalNatural = comisionRecargasNatTotal;
+      comisionTotalEmpresa = comisionRecargasEmpTotal;
     } else if (config.tipo === 'PORCENTAJE') {
-      comisionTotalGeneral = totalVentasMonto * (config.porcentajeVenta / 100);
-    } else if (config.tipo === 'PARADA') {
-      comisionTotalGeneral = totalParadasEntregadas * config.montoParada;
+      comisionTotalNatural = comisionVentasNatTotal;
+      comisionTotalEmpresa = comisionVentasEmpTotal;
+    } else {
+      // ENTREGAS_Y_VENTAS
+      comisionTotalNatural = comisionRecargasNatTotal + comisionVentasNatTotal;
+      comisionTotalEmpresa = comisionRecargasEmpTotal + comisionVentasEmpTotal;
     }
+
+    const comisionTotalGeneral = comisionTotalNatural + comisionTotalEmpresa;
 
     return {
       success: true,
       config,
       resumen: {
         totalRutas: rutas.length,
-        totalParadasEntregadas,
-        totalBot20L,
-        totalBot10L,
-        totalSoda,
-        totalVentasMonto: Math.round(totalVentasMonto),
-        comisionTotalCalculada: Math.round(comisionTotalGeneral)
+        totalParadasEntregadas: totalParadas,
+
+        // Desglose por Medio de Pago y Producto según reglas de comisión
+        mediosPagoDetalle: {
+          bot20EfectivoTarjeta: bot20EfectivoNat + bot20EfectivoEmp,
+          bot20TransferenciaCredito: bot20CreditoNat + bot20CreditoEmp,
+          bot10L: rec10Nat + rec10Emp + vta10Nat + vta10Emp,
+          soda: recSodaNat + recSodaEmp + vtaSodaNat + vtaSodaEmp,
+          tarifa20Efectivo: config.monto20L_efectivoTarjeta,
+          tarifa20Credito: config.monto20L_transferenciaCredito,
+          tarifa10: config.monto10L,
+          tarifaSoda: config.montoSoda,
+          subtotal20Efectivo: (bot20EfectivoNat + bot20EfectivoEmp) * config.monto20L_efectivoTarjeta,
+          subtotal20Credito: (bot20CreditoNat + bot20CreditoEmp) * config.monto20L_transferenciaCredito,
+          subtotal10: (rec10Nat + rec10Emp + vta10Nat + vta10Emp) * config.monto10L,
+          subtotalSoda: (recSodaNat + recSodaEmp + vtaSodaNat + vtaSodaEmp) * config.montoSoda,
+        },
+
+        // 1. RECARGAS (ENTREGAS)
+        recargas: {
+          totalCantidades: totalRecGeneral,
+          comisionTotal: Math.round(comisionRecargasNatTotal + comisionRecargasEmpTotal),
+          natural: {
+            bot20L: rec20Nat,
+            bot10L: rec10Nat,
+            soda: recSodaNat,
+            total: totalRecNat,
+            monto: Math.round(montoRecNat),
+            comision: Math.round(comisionRecargasNatTotal)
+          },
+          empresa: {
+            bot20L: rec20Emp,
+            bot10L: rec10Emp,
+            soda: recSodaEmp,
+            total: totalRecEmp,
+            monto: Math.round(montoRecEmp),
+            comision: Math.round(comisionRecargasEmpTotal)
+          }
+        },
+
+        // 2. VENTAS (CANTIDADES PRIMERO, DSP MONTO)
+        ventas: {
+          totalCantidades: totalVtaCantGeneral > 0 ? totalVtaCantGeneral : totalRecGeneral,
+          totalMonto: Math.round(totalMontoVentasGeneral),
+          comisionTotal: Math.round(comisionVentasNatTotal + comisionVentasEmpTotal),
+          natural: {
+            bot20L: vta20Nat,
+            bot10L: vta10Nat,
+            soda: vtaSodaNat,
+            otros: vtaOtroNat,
+            totalCantidades: totalVtaCantNat > 0 ? totalVtaCantNat : totalRecNat,
+            monto: Math.round(totalMontoVentasNat),
+            comision: Math.round(comisionVentasNatTotal)
+          },
+          empresa: {
+            bot20L: vta20Emp,
+            bot10L: vta10Emp,
+            soda: vtaSodaEmp,
+            otros: vtaOtroEmp,
+            totalCantidades: totalVtaCantEmp > 0 ? totalVtaCantEmp : totalRecEmp,
+            monto: Math.round(totalMontoVentasEmp),
+            comision: Math.round(comisionVentasEmpTotal)
+          }
+        },
+
+        // Resumen general y retrocompatibilidad
+        totalBot20L: rec20Nat + rec20Emp + vta20Nat + vta20Emp,
+        totalBot10L: rec10Nat + rec10Emp + vta10Nat + vta10Emp,
+        totalSoda: recSodaNat + recSodaEmp + vtaSodaNat + vtaSodaEmp,
+        totalUnidades: totalRecGeneral + totalVtaCantGeneral,
+        totalVentasMonto: Math.round(totalMontoVentasGeneral),
+        comisionTotalCalculada: Math.round(comisionTotalGeneral),
+        comisionRecargasTotal: Math.round(comisionRecargasNatTotal + comisionRecargasEmpTotal),
+        comisionVentasTotal: Math.round(comisionVentasNatTotal + comisionVentasEmpTotal),
+
+        natural: {
+          paradasEntregadas: totalParadasNatural,
+          bot20L: rec20Nat + vta20Nat,
+          bot10L: rec10Nat + vta10Nat,
+          soda: recSodaNat + vtaSodaNat,
+          totalUnidades: totalRecNat + totalVtaCantNat,
+          ventasMonto: Math.round(totalMontoVentasNat),
+          comisionCalculada: Math.round(comisionTotalNatural),
+          comisionRecargas: Math.round(comisionRecargasNatTotal),
+          comisionVentas: Math.round(comisionVentasNatTotal),
+          porcentajeDelTotalComision: comisionTotalGeneral > 0
+            ? Math.round((comisionTotalNatural / comisionTotalGeneral) * 100)
+            : 0
+        },
+        empresa: {
+          paradasEntregadas: totalParadasEmpresa,
+          bot20L: rec20Emp + vta20Emp,
+          bot10L: rec10Emp + vta10Emp,
+          soda: recSodaEmp + vtaSodaEmp,
+          totalUnidades: totalRecEmp + totalVtaCantEmp,
+          ventasMonto: Math.round(totalMontoVentasEmp),
+          comisionCalculada: Math.round(comisionTotalEmpresa),
+          comisionRecargas: Math.round(comisionRecargasEmpTotal),
+          comisionVentas: Math.round(comisionVentasEmpTotal),
+          porcentajeDelTotalComision: comisionTotalGeneral > 0
+            ? Math.round((comisionTotalEmpresa / comisionTotalGeneral) * 100)
+            : 0
+        }
       },
+      desgloseMeses,
       desgloseDias
     };
   } catch (error: any) {
@@ -235,3 +568,250 @@ export async function calcularComisionesPersonalAction(
     return { success: false, message: error.message || 'Error al procesar el cálculo de comisiones.' };
   }
 }
+
+// ── 4. CALENDARIO DE ASISTENCIA ─────────────────────────────────────────────
+
+export interface RegistroAsistenciaDia {
+  estado: 'PRESENTE' | 'AUSENTE' | 'LICENCIA' | 'VACACIONES' | 'LIBRE';
+  nota?: string;
+  esAutoRuta?: boolean;
+  rutaNombre?: string;
+  updated_at?: string;
+}
+
+export async function obtenerAsistenciaMesAction(usuarioId: string, anio: number, mes: number) {
+  try {
+    const clave = `asistencia_${usuarioId}_${anio}_${mes}`;
+    const regDb = await prisma.configuracion.findUnique({
+      where: { clave }
+    });
+
+    let manualMap: Record<string, RegistroAsistenciaDia> = {};
+    if (regDb?.valor) {
+      try {
+        manualMap = JSON.parse(regDb.valor);
+      } catch (e) {
+        manualMap = {};
+      }
+    }
+
+    // Consultar rutas asignadas a este repartidor en este mes
+    const primerDia = new Date(Date.UTC(anio, mes - 1, 1, 0, 0, 0));
+    const ultimoDia = new Date(Date.UTC(anio, mes, 0, 23, 59, 59, 999));
+
+    const rutasMes = await prisma.rutaDia.findMany({
+      where: {
+        usuario_id: usuarioId,
+        fecha: { gte: primerDia, lte: ultimoDia }
+      },
+      include: {
+        ruta_base: true,
+        paradas: {
+          select: { id: true, estado: true }
+        }
+      }
+    });
+
+    // Mapear rutas por fecha YYYY-MM-DD
+    const rutasPorFecha: Record<string, any> = {};
+    rutasMes.forEach(r => {
+      const fStr = r.fecha.toISOString().split('T')[0];
+      rutasPorFecha[fStr] = r;
+    });
+
+    // Construir mapa final del mes
+    const diasEnMes = new Date(anio, mes, 0).getDate();
+    const resultadoDias: Record<string, RegistroAsistenciaDia> = {};
+
+    let totalPresente = 0;
+    let totalAusente = 0;
+    let totalLicencia = 0;
+    let totalVacaciones = 0;
+    let totalLibre = 0;
+
+    for (let d = 1; d <= diasEnMes; d++) {
+      const diaDosDigitos = d < 10 ? `0${d}` : `${d}`;
+      const mesDosDigitos = mes < 10 ? `0${mes}` : `${mes}`;
+      const fechaStr = `${anio}-${mesDosDigitos}-${diaDosDigitos}`;
+
+      // Verificar si hay registro manual
+      if (manualMap[fechaStr]) {
+        const item = manualMap[fechaStr];
+        resultadoDias[fechaStr] = item;
+        if (item.estado === 'PRESENTE') totalPresente++;
+        else if (item.estado === 'AUSENTE') totalAusente++;
+        else if (item.estado === 'LICENCIA') totalLicencia++;
+        else if (item.estado === 'VACACIONES') totalVacaciones++;
+        else if (item.estado === 'LIBRE') totalLibre++;
+      } else if (rutasPorFecha[fechaStr]) {
+        // Detección automática por despacho
+        const ruta = rutasPorFecha[fechaStr];
+        const entregadas = ruta.paradas.filter((p: any) => p.estado === 'ENTREGADO').length;
+        const item: RegistroAsistenciaDia = {
+          estado: 'PRESENTE',
+          esAutoRuta: true,
+          rutaNombre: ruta.ruta_base?.nombre || 'Ruta del Día',
+          nota: `${entregadas}/${ruta.paradas.length} paradas completadas`
+        };
+        resultadoDias[fechaStr] = item;
+        totalPresente++;
+      }
+    }
+
+    const diasLaboralesEvaluados = totalPresente + totalAusente;
+    const porcentajeAsistencia = diasLaboralesEvaluados > 0
+      ? Math.round((totalPresente / diasLaboralesEvaluados) * 100)
+      : 100;
+
+    return {
+      success: true,
+      anio,
+      mes,
+      diasMap: resultadoDias,
+      stats: {
+        totalPresente,
+        totalAusente,
+        totalLicencia,
+        totalVacaciones,
+        totalLibre,
+        porcentajeAsistencia,
+        totalRutasMes: rutasMes.length
+      }
+    };
+  } catch (error: any) {
+    console.error('Error al obtener asistencia mensual:', error);
+    return { success: false, message: error.message || 'Error al cargar calendario de asistencia.' };
+  }
+}
+
+export async function guardarAsistenciaDiaAction(
+  usuarioId: string,
+  anio: number,
+  mes: number,
+  fechaStr: string,
+  estado: 'PRESENTE' | 'AUSENTE' | 'LICENCIA' | 'VACACIONES' | 'LIBRE' | 'RESET',
+  nota?: string
+) {
+  try {
+    const clave = `asistencia_${usuarioId}_${anio}_${mes}`;
+    const regDb = await prisma.configuracion.findUnique({
+      where: { clave }
+    });
+
+    let currentMap: Record<string, RegistroAsistenciaDia> = {};
+    if (regDb?.valor) {
+      try {
+        currentMap = JSON.parse(regDb.valor);
+      } catch (e) {
+        currentMap = {};
+      }
+    }
+
+    if (estado === 'RESET') {
+      delete currentMap[fechaStr];
+    } else {
+      currentMap[fechaStr] = {
+        estado,
+        nota: nota?.trim() || undefined,
+        updated_at: new Date().toISOString()
+      };
+    }
+
+    const valorJson = JSON.stringify(currentMap);
+    await prisma.configuracion.upsert({
+      where: { clave },
+      update: { valor: valorJson },
+      create: { clave, valor: valorJson }
+    });
+
+    revalidatePath('/admin/personal');
+    return { success: true };
+  } catch (error: any) {
+    console.error('Error al guardar asistencia del día:', error);
+    return { success: false, message: error.message || 'Error al guardar la asistencia.' };
+  }
+}
+
+export async function guardarAsistenciaRangoAction(
+  usuarioId: string,
+  fechaDesde: string,
+  fechaHasta: string,
+  estado: 'PRESENTE' | 'AUSENTE' | 'LICENCIA' | 'VACACIONES' | 'LIBRE' | 'RESET',
+  nota?: string
+) {
+  try {
+    const dInicio = new Date(`${fechaDesde}T00:00:00`);
+    const dFin = new Date(`${fechaHasta}T00:00:00`);
+
+    if (isNaN(dInicio.getTime()) || isNaN(dFin.getTime())) {
+      return { success: false, message: 'Fechas inválidas para el rango.' };
+    }
+
+    if (dInicio > dFin) {
+      return { success: false, message: 'La fecha "Desde" no puede ser posterior a la fecha "Hasta".' };
+    }
+
+    // Agrupar fechas por mes YYYY_M
+    const fechasPorMes: Record<string, string[]> = {};
+    const curr = new Date(dInicio);
+    let totalDias = 0;
+
+    while (curr <= dFin) {
+      const y = curr.getFullYear();
+      const m = String(curr.getMonth() + 1).padStart(2, '0');
+      const d = String(curr.getDate()).padStart(2, '0');
+      const mesKey = `${y}_${Number(m)}`;
+      const fStr = `${y}-${m}-${d}`;
+
+      if (!fechasPorMes[mesKey]) fechasPorMes[mesKey] = [];
+      fechasPorMes[mesKey].push(fStr);
+
+      totalDias++;
+      curr.setDate(curr.getDate() + 1);
+    }
+
+    // Actualizar configuración para cada mes involucrado en el rango
+    for (const mesKey of Object.keys(fechasPorMes)) {
+      const clave = `asistencia_${usuarioId}_${mesKey}`;
+      const regDb = await prisma.configuracion.findUnique({
+        where: { clave }
+      });
+
+      let currentMap: Record<string, RegistroAsistenciaDia> = {};
+      if (regDb?.valor) {
+        try {
+          currentMap = JSON.parse(regDb.valor);
+        } catch (e) {
+          currentMap = {};
+        }
+      }
+
+      const fechas = fechasPorMes[mesKey];
+      fechas.forEach(fStr => {
+        if (estado === 'RESET') {
+          delete currentMap[fStr];
+        } else {
+          currentMap[fStr] = {
+            estado,
+            nota: nota?.trim() || undefined,
+            updated_at: new Date().toISOString()
+          };
+        }
+      });
+
+      const valorJson = JSON.stringify(currentMap);
+      await prisma.configuracion.upsert({
+        where: { clave },
+        update: { valor: valorJson },
+        create: { clave, valor: valorJson }
+      });
+    }
+
+    revalidatePath('/admin/personal');
+    return { success: true, diasActualizados: totalDias };
+  } catch (error: any) {
+    console.error('Error al guardar asistencia por rango:', error);
+    return { success: false, message: error.message || 'Error al guardar el rango de asistencia.' };
+  }
+}
+

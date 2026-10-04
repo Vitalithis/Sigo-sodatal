@@ -817,7 +817,7 @@ export default function ClientManager({ initialClientes }: { initialClientes: an
 
       {/* Modal Crear/Editar */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200 !m-0 !top-0 !left-0 !right-0 !bottom-0">
           <div className="bg-white w-full max-w-lg rounded-2xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden border border-slate-100">
             <div className="p-5 border-b border-slate-100 flex justify-between items-center text-white" style={{ backgroundColor: '#013299' }}>
               <div className="flex items-center gap-2.5">

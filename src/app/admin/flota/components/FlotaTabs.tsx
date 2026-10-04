@@ -41,7 +41,10 @@ export default function FlotaTabs({ choferesIniciales, vehiculosIniciales }: Pro
       </div>
 
       {pestana === 'choferes' ? (
-        <ChoferesManager choferesIniciales={choferesIniciales} />
+        <ChoferesManager 
+          choferesIniciales={choferesIniciales} 
+          vehiculosIniciales={vehiculosIniciales} 
+        />
       ) : (
         <VehicleManager initialVehiculos={vehiculosIniciales} />
       )}

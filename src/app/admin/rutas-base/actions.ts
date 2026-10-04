@@ -100,6 +100,7 @@ export async function buscarClientesBaseAction(criterio: string, rutaBaseId?: st
         direccion: true,
         sector: true,
         tipo: true,
+        frecuencia: true,
       }
     });
 

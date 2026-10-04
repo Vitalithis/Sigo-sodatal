@@ -28,7 +28,7 @@ import {
 import { usePopup } from '@/hooks/usePopup';
 import PopupGlobal from '@/components/ui/PopupGlobal';
 
-interface LineaItem {
+export interface LineaItem {
   key: string;
   producto_id: string;
   nombre: string;
@@ -37,14 +37,36 @@ interface LineaItem {
   precio_unitario: number;
 }
 
+export interface CantidadesInicialesGuia {
+  bot20?: number;
+  bot10?: number;
+  soda?: number;
+}
+
+export interface NuevaGuiaInitialData {
+  cliente?: any;
+  direccion_entrega?: string;
+  usuario_repartidor_id?: string;
+  metodo_pago?: 'EFECTIVO' | 'TARJETA' | 'GUIA_MENSUAL';
+  nombre_receptor?: string;
+  rut_receptor?: string;
+  observaciones?: string;
+  items?: LineaItem[];
+  cantidades?: CantidadesInicialesGuia;
+  parada_id?: string;
+  pedido_id?: string;
+}
+
 export default function NuevaGuiaModal({
   isOpen,
   onClose,
   onSuccess,
+  initialData,
 }: {
   isOpen: boolean;
   onClose: () => void;
-  onSuccess: () => void;
+  onSuccess: (guia?: any) => void;
+  initialData?: NuevaGuiaInitialData;
 }) {
   const { popup, showSuccess, showError, close } = usePopup();
 
@@ -82,10 +104,93 @@ export default function NuevaGuiaModal({
         if (res.success) setRepartidores(res.choferes);
       });
       obtenerProductosGuiaAction().then((res) => {
-        if (res.success) setProductos(res.productos);
+        if (res.success) {
+          const prods = res.productos || [];
+          setProductos(prods);
+
+          // Si vienen cantidades iniciales pero no items explícitos, armar los items automáticamente
+          if (initialData?.cantidades && (!initialData.items || initialData.items.length === 0)) {
+            const autoItems: LineaItem[] = [];
+            const c20 = Number(initialData.cantidades.bot20) || 0;
+            const c10 = Number(initialData.cantidades.bot10) || 0;
+            const cSoda = Number(initialData.cantidades.soda) || 0;
+
+            if (c20 > 0) {
+              const p = prods.find((x: any) => x.categoria === 'BOTELLON20');
+              if (p) {
+                autoItems.push({
+                  key: `init-20-${Date.now()}`,
+                  producto_id: p.id,
+                  nombre: p.nombre,
+                  tipo_transaccion: 'RECARGA',
+                  cantidad: c20,
+                  precio_unitario: p.precio_recarga ?? p.precio_venta_nueva ?? 2500,
+                });
+              }
+            }
+            if (c10 > 0) {
+              const p = prods.find((x: any) => x.categoria === 'BOTELLON10');
+              if (p) {
+                autoItems.push({
+                  key: `init-10-${Date.now()}`,
+                  producto_id: p.id,
+                  nombre: p.nombre,
+                  tipo_transaccion: 'RECARGA',
+                  cantidad: c10,
+                  precio_unitario: p.precio_recarga ?? p.precio_venta_nueva ?? 2000,
+                });
+              }
+            }
+            if (cSoda > 0) {
+              const p = prods.find((x: any) => x.categoria === 'SODA');
+              if (p) {
+                autoItems.push({
+                  key: `init-soda-${Date.now()}`,
+                  producto_id: p.id,
+                  nombre: p.nombre,
+                  tipo_transaccion: 'RECARGA',
+                  cantidad: cSoda,
+                  precio_unitario: p.precio_recarga ?? p.precio_venta_nueva ?? 1500,
+                });
+              }
+            }
+            if (autoItems.length > 0) {
+              setItems(autoItems);
+            }
+          }
+        }
       });
+
+      if (initialData) {
+        if (initialData.cliente) {
+          setClienteSeleccionado(initialData.cliente);
+          setCriterioCliente(initialData.cliente.nombre || '');
+          setDireccionEntrega(initialData.direccion_entrega || initialData.cliente.direccion || '');
+        } else if (initialData.direccion_entrega) {
+          setDireccionEntrega(initialData.direccion_entrega);
+        }
+
+        if (initialData.usuario_repartidor_id) {
+          setRepartidorId(initialData.usuario_repartidor_id);
+        }
+        if (initialData.metodo_pago) {
+          setMetodoPago(initialData.metodo_pago);
+        }
+        if (initialData.nombre_receptor) {
+          setNombreReceptor(initialData.nombre_receptor);
+        }
+        if (initialData.rut_receptor) {
+          setRutReceptor(initialData.rut_receptor);
+        }
+        if (initialData.observaciones) {
+          setObservaciones(initialData.observaciones);
+        }
+        if (initialData.items && initialData.items.length > 0) {
+          setItems(initialData.items);
+        }
+      }
     }
-  }, [isOpen]);
+  }, [isOpen, initialData]);
 
   // Búsqueda en vivo (debounced search)
   useEffect(() => {
@@ -232,12 +337,14 @@ export default function NuevaGuiaModal({
       observaciones: observaciones || undefined,
       botellones_prestados_entrega: 0,
       items: payload,
+      pedido_id: initialData?.pedido_id,
+      parada_id: initialData?.parada_id,
     });
     setGuardando(false);
 
     if (res.success) {
       resetForm();
-      onSuccess();
+      onSuccess(res);
     } else {
       showError('Error al Guardar', res.message || 'No se pudo registrar la guía.');
     }

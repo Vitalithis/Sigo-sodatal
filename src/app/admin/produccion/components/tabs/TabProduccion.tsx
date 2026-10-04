@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { Plus, ClipboardList, ChevronLeft, ChevronRight, BarChart3, CalendarDays } from 'lucide-react';
 import { FormProduccion, ProduccionRow, UsuarioLite } from '../hooks/useProduccionCO2';
+import { getHoyHabilStr, handleDateInputSoloHabiles } from '@/lib/fechas';
 
 const ic = 'w-full border border-gray-200 rounded-xl px-3 py-2 text-xs text-gray-800 bg-white focus:outline-none focus:ring-2 focus:ring-[#283289]/20 focus:border-[#283289] transition-colors';
 const lc = 'block text-xs font-bold text-gray-600 mb-1';
@@ -27,7 +28,7 @@ function formatMesLocal(yyyyMm: string) {
   return text.charAt(0).toUpperCase() + text.slice(1);
 }
 
-const maxFechaHoy = new Date().toISOString().split('T')[0];
+const maxFechaHoy = getHoyHabilStr();
 const toNum = (v: string) => v === '' ? '' : Number(v);
 
 interface Props {
@@ -100,7 +101,10 @@ export function TabProduccion({ produccion, form, onChange, onSubmit, usuarios, 
               required 
               max={maxFechaHoy} 
               value={form.fecha}
-              onChange={(e) => onChange({ fecha: e.target.value })} 
+              onChange={(e) => {
+                const ajustada = handleDateInputSoloHabiles(e.target.value);
+                onChange({ fecha: ajustada });
+              }} 
               className={ic} 
             />
           </div>

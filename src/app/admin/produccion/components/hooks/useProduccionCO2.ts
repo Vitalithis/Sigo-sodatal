@@ -8,6 +8,7 @@ import {
   actualizarConfiguracionCO2Action,
   TuboCO2Input,
 } from '../../actions';
+import { getHoyHabilStr } from '@/lib/fechas';
 
 export interface ProduccionRow {
   id: string; fecha: string | Date;
@@ -43,7 +44,7 @@ interface InitialData {
   usuarios: UsuarioLite[];
 }
 
-const hoyISO = () => new Date().toISOString().slice(0, 10);
+const hoyISO = () => getHoyHabilStr();
 
 const FORM_VACIO: Omit<FormProduccion, 'usuario_id'> = {
   fecha: hoyISO(),
