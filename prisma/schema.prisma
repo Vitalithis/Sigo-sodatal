@@ -401,7 +401,7 @@ model CuadraturaGasto {
   cuadratura_id String
   tipo          String // libre: "ESTACIONAMIENTO", "PEAJE", etc.
   monto         Int
-  descripcion   String?
+  descripcion   String?    @db.Text
   cuadratura    Cuadratura @relation(fields: [cuadratura_id], references: [id], onDelete: Cascade)
 }
 

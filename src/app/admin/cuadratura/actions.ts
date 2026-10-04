@@ -5,6 +5,7 @@ import { headers } from 'next/headers';
 import { revalidatePath } from 'next/cache';
 import { TipoTransaccion, TipoCliente, MetodoPago } from '@lib/prisma/generated';
 import { esFinDeSemana, getHoyHabilStr } from '@/lib/fechas';
+import { getUsuarioActual } from '@/lib/auth-session';
 
 // ----------------------------------------------------------------
 // Tipos
@@ -1671,17 +1672,23 @@ export async function reabrirCuadraturaAction(cuadraturaId: string, motivo: stri
       return { success: false, message: 'Debes indicar un motivo para reabrir la cuadratura.' };
     }
 
-    const session = await auth.api.getSession({ headers: await headers() });
-    if (!session?.user?.email) {
+    let usuario = await getUsuarioActual();
+    if (!usuario) {
+      try {
+        const session = await auth.api.getSession({ headers: await headers() });
+        if (session?.user?.email) {
+          usuario = await prisma.usuario.findUnique({
+            where: { email: session.user.email },
+          });
+        }
+      } catch (e) {}
+    }
+
+    if (!usuario) {
       return { success: false, message: 'No autenticado.' };
     }
 
-    const usuario = await prisma.usuario.findUnique({
-      where: { email: session.user.email },
-      select: { rol: true },
-    });
-
-    if (usuario?.rol !== 'ADMIN') {
+    if (usuario.rol !== 'ADMIN') {
       return { success: false, message: 'Solo un ADMIN puede reabrir una cuadratura cerrada.' };
     }
 

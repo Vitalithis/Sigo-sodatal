@@ -43,8 +43,8 @@ export async function obtenerProduccionAction(desde?: string, hasta?: string) {
     const where: any = {};
     if (desde || hasta) {
       where.fecha = {};
-      if (desde) where.fecha.gte = new Date(`${desde}T00:00:00`);
-      if (hasta) where.fecha.lte = new Date(`${hasta}T23:59:59`);
+      if (desde) where.fecha.gte = new Date(`${desde}T00:00:00.000Z`);
+      if (hasta) where.fecha.lte = new Date(`${hasta}T23:59:59.999Z`);
     }
 
     const produccion = await prisma.produccionDiaria.findMany({
