@@ -34,7 +34,7 @@ export async function obtenerRutasPorFechaAction(fechaStr: string) {
             orderBy: { orden: 'asc' },
             include: {
               cliente: {
-                include: { sector: true }
+                include: { sector: { include: { comuna: true } } }
               },
               pedido: {
                 include: { items: { include: { producto: true } } }
@@ -336,7 +336,7 @@ export async function generarRutasDesdeBaseAction(fechaStr: string, diaSemana: D
         where: { ruta_base_id: plantilla.id },
         include: {
           cliente: {
-            include: { sector: true }
+            include: { sector: { include: { comuna: true } } }
           }
         },
         orderBy: { orden: 'asc' }
@@ -559,7 +559,7 @@ export async function obtenerDetalleVisitasFechaAction(fechaStr: string) {
         paradas: {
           orderBy: { orden: 'asc' },
           include: {
-            cliente: { include: { sector: true } },
+            cliente: { include: { sector: { include: { comuna: true } } } },
             pedido: { include: { items: { include: { producto: true } } } }
           }
         }
@@ -639,7 +639,7 @@ export async function obtenerDetalleVisitasFechaAction(fechaStr: string) {
         clientes: {
           orderBy: { orden: 'asc' },
           include: {
-            cliente: { include: { sector: true } }
+            cliente: { include: { sector: { include: { comuna: true } } } }
           }
         }
       }
@@ -1115,6 +1115,22 @@ export async function guardarRutaBaseAction(data: {
   vehiculo_id: string;
 }) {
   try {
+    const rutaExistente = await prisma.rutaBase.findFirst({
+      where: {
+        dia_semana: data.dia_semana,
+        usuario_id: data.usuario_id
+      },
+      include: { usuario: true }
+    });
+
+    if (rutaExistente) {
+      const nombreChofer = `${rutaExistente.usuario?.nombre || ''} ${rutaExistente.usuario?.apellido || ''}`.trim() || 'El repartidor';
+      return {
+        success: false,
+        message: `${nombreChofer} ya tiene asignada la ruta "${rutaExistente.nombre}" el día ${data.dia_semana}. Cada repartidor solo puede tener una ruta base diaria.`
+      };
+    }
+
     const nuevaRuta = await prisma.rutaBase.create({
       data: {
         nombre: data.nombre,

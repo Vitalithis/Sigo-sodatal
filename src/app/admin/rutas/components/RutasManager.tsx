@@ -18,13 +18,14 @@ import {
 import VistaCalendarioRutas from './VistaCalendarioRutas';
 import ModalEliminarParada from './ModalEliminarParada';
 import ModalRutaContencion from './ModalRutaContencion';
-import { Calendar, ListFilter, Shield } from 'lucide-react';
+import { Calendar, ListFilter, Shield, Zap, Users, Plus } from 'lucide-react';
 import { getHoyHabilStr, handleDateInputSoloHabiles } from '@/lib/fechas';
 
 export default function RutasManager() {
   const [vistaModo, setVistaModo] = useState<'despacho' | 'calendario'>('despacho');
   const [fechaSeleccionada, setFechaSeleccionada] = useState(getHoyHabilStr);
   const [rutas, setRutas] = useState<any[]>([]);
+  const [rutaSeleccionadaId, setRutaSeleccionadaId] = useState<string | 'todas'>('todas');
   const [pedidosFlotantes, setPedidosFlotantes] = useState<any[]>([]);
   const [choferes, setChoferes] = useState<any[]>([]);
   const [vehiculos, setVehiculos] = useState<any[]>([]);
@@ -136,86 +137,101 @@ export default function RutasManager() {
   return (
     <div className="space-y-6">
 
-      {/* ── Tabs de Modo de Vista ── */}
-      <div className="flex border-b border-slate-200 bg-white p-1 rounded-2xl shadow-sm gap-1">
-        <button
-          onClick={() => setVistaModo('despacho')}
-          className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs transition-all ${
-            vistaModo === 'despacho'
-              ? 'bg-[#013299] text-white shadow-sm'
-              : 'text-slate-600 hover:bg-slate-100'
-          }`}
-        >
-          <ListFilter className="h-4 w-4" />
-          Hojas de Ruta del Día
-        </button>
-        <button
-          onClick={() => setVistaModo('calendario')}
-          className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs transition-all ${
-            vistaModo === 'calendario'
-              ? 'bg-[#013299] text-white shadow-sm'
-              : 'text-slate-600 hover:bg-slate-100'
-          }`}
-        >
-          <Calendar className="h-4 w-4" />
-          Vista Calendario y Frecuencia de Visita
-        </button>
+      {/* ── Barra Superior Unificada: Pestañas + Día de Despacho y Acciones ── */}
+      <div className="bg-white p-2.5 sm:p-3 rounded-2xl border border-slate-100 shadow-sm flex flex-wrap items-center justify-between gap-3">
+        {/* Pestañas de modo de vista */}
+        <div className="flex bg-slate-100/80 p-1 rounded-xl gap-1">
+          <button
+            type="button"
+            onClick={() => setVistaModo('despacho')}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-xs transition-all ${
+              vistaModo === 'despacho'
+                ? 'bg-[#013299] text-white shadow-xs'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
+            }`}
+          >
+            <ListFilter className="h-3.5 w-3.5" />
+            Hojas de Ruta del Día
+          </button>
+          <button
+            type="button"
+            onClick={() => setVistaModo('calendario')}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-xs transition-all ${
+              vistaModo === 'calendario'
+                ? 'bg-[#013299] text-white shadow-xs'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
+            }`}
+          >
+            <Calendar className="h-3.5 w-3.5" />
+            Vista Calendario y Frecuencia de Visita
+          </button>
+        </div>
+
+        {/* Controles de Día de Despacho y Botones (visibles en modo despacho) */}
+        {vistaModo === 'despacho' && (
+          <div className="flex items-center gap-2 sm:gap-3 flex-wrap ml-auto">
+            {/* Selector de fecha compacto */}
+            <div className="flex items-center gap-2 bg-slate-50 border border-slate-200/80 px-2.5 py-1 rounded-xl shadow-2xs">
+              <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider">Día:</span>
+              <input
+                id="fecha-despacho"
+                name="fecha_despacho"
+                type="date"
+                value={fechaSeleccionada}
+                onChange={(e) => {
+                  const ajustada = handleDateInputSoloHabiles(e.target.value, (msg) => {
+                    setMensajeEstado({ texto: msg, error: false });
+                  });
+                  setFechaSeleccionada(ajustada);
+                }}
+                className="bg-transparent text-xs font-bold text-slate-800 focus:outline-none cursor-pointer"
+              />
+              <span className="bg-blue-50 text-[#013299] border border-blue-200/60 px-2 py-0.5 rounded-md font-black text-[10px] uppercase tracking-wider">
+                {nombreDiaSemana}
+              </span>
+            </div>
+
+            {/* Botones de acción compactos */}
+            <div className="flex items-center gap-2 flex-wrap">
+              <button
+                type="button"
+                onClick={() => setModalContencionAbierto(true)}
+                className="bg-amber-600 hover:bg-amber-700 active:scale-95 text-white text-xs font-bold px-3 py-1.5 rounded-xl shadow-2xs transition-all flex items-center gap-1.5"
+                title="Crear hoja de ruta vacía para emergencias o repartos fuera de horario"
+              >
+                <Zap className="w-3.5 h-3.5" />
+                <span>Ruta Express</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={handleIniciarHojasDelDia}
+                disabled={cargando}
+                className="bg-emerald-600 hover:bg-emerald-700 active:scale-95 disabled:opacity-50 text-white text-xs font-bold px-3 py-1.5 rounded-xl shadow-2xs transition-all flex items-center gap-1.5"
+                title="Cargar rutas base y clientes fijos programados para este día"
+              >
+                <Users className="w-3.5 h-3.5" />
+                <span>{cargando ? 'Cargando...' : 'Clientes Base'}</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setModalAbierto(true)}
+                className="bg-[#013299] hover:bg-blue-900 active:scale-95 text-white text-xs font-bold px-3 py-1.5 rounded-xl shadow-2xs transition-all flex items-center gap-1.5"
+                title="Agendar nuevo pedido de cliente para esta jornada"
+              >
+                <Plus className="w-3.5 h-3.5" />
+                <span>Agendar Pedido</span>
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       {vistaModo === 'calendario' ? (
         <VistaCalendarioRutas />
       ) : (
         <>
-          {/* ── Barra superior ── */}
-          <div className="bg-white p-5 rounded-2xl border border-slate-100 flex flex-wrap items-center justify-between gap-4 shadow-sm">
-            <div className="flex items-center gap-3">
-              <div>
-                <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">
-                  Día de Despacho
-                </label>
-                <input
-                  type="date"
-                  value={fechaSeleccionada}
-                  onChange={(e) => {
-                    const ajustada = handleDateInputSoloHabiles(e.target.value, (msg) => {
-                      setMensajeEstado({ texto: msg, error: false });
-                    });
-                    setFechaSeleccionada(ajustada);
-                  }}
-                  className="border border-slate-200 bg-slate-50 hover:bg-white rounded-xl px-3 py-2 text-xs font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#013299]/20 transition-all cursor-pointer"
-                />
-              </div>
-              <div className="pt-5">
-                <span className="bg-blue-50 text-[#013299] px-3.5 py-2 rounded-xl font-black text-xs border border-blue-200/60 uppercase tracking-wider">
-                  {nombreDiaSemana}
-                </span>
-              </div>
-            </div>
-            <div className="flex items-center gap-2.5 flex-wrap">
-              <button
-                type="button"
-                onClick={() => setModalContencionAbierto(true)}
-                className="bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold px-3.5 py-2.5 rounded-xl shadow-sm transition-all uppercase tracking-wider flex items-center gap-1.5"
-                title="Crear hoja de ruta vacía para emergencias o repartos fuera de horario"
-              >
-                <Shield className="w-3.5 h-3.5" /> + Ruta Contención / Emergencia
-              </button>
-
-              <button
-                onClick={handleIniciarHojasDelDia}
-                disabled={cargando}
-                className="bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-sm transition-all uppercase tracking-wider flex items-center gap-1.5"
-              >
-                {cargando ? 'Procesando...' : '📥 Cargar Ruta Base (Fijos)'}
-              </button>
-              <button
-                onClick={() => setModalAbierto(true)}
-                className="bg-[#013299] hover:bg-blue-900 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-sm transition-all uppercase tracking-wider flex items-center gap-1.5"
-              >
-                ➕ Agendar Pedido
-              </button>
-            </div>
-          </div>
 
       {/* ── Alertas de feedback ── */}
       {mensajeEstado && (
@@ -262,25 +278,92 @@ export default function RutasManager() {
           </div>
         </div>
       ) : (
-        /* ── Una sola columna, ancho completo, TablaSortable es el contenedor ── */
-        <div className="flex flex-col gap-6">
-          {rutas.map((ruta) => (
-            <TablaSortable
-              key={ruta.id}
-              rutaId={ruta.id}
-              ruta={ruta}
-              paradas={ruta.paradas}
-              todasLasRutas={rutas}
-              choferes={choferes}
-              vehiculos={vehiculos}
-              onReorder={handleReorder}
-              onActualizarParada={handleActualizarParada}
-              onActualizarEsperado={handleActualizarEsperado}
-              onEliminarRuta={handleEliminarRuta}
-              onEliminarParada={handleSolicitarEliminarParada}
-              onRutaActualizada={() => cargarDatos(true)}
-            />
-          ))}
+        /* ── Selector de Camiones / Rutas si hay más de 1 ruta ── */
+        <div className="flex flex-col gap-5">
+          {rutas.length > 1 && (
+            <div className="bg-white p-2.5 rounded-2xl border border-slate-100 shadow-xs flex items-center justify-between gap-3 flex-wrap">
+              <div className="flex items-center gap-1.5 flex-wrap">
+                <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider px-2">
+                  Camiones Activos ({rutas.length}):
+                </span>
+
+                <button
+                  type="button"
+                  onClick={() => setRutaSeleccionadaId('todas')}
+                  className={`px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+                    rutaSeleccionadaId === 'todas'
+                      ? 'bg-[#013299] text-white shadow-sm'
+                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                  }`}
+                >
+                  <span>Ver Todas</span>
+                  <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-black ${
+                    rutaSeleccionadaId === 'todas' ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-700'
+                  }`}>
+                    {rutas.reduce((acc, r) => acc + (r.paradas?.length || 0), 0)}
+                  </span>
+                </button>
+
+                {rutas.map((r, idx) => {
+                  const totalP = r.paradas?.length || 0;
+                  const entregadasP = r.paradas?.filter((p: any) => p.estado === 'ENTREGADO').length || 0;
+                  const esActiva = rutaSeleccionadaId === r.id;
+                  return (
+                    <button
+                      key={r.id}
+                      type="button"
+                      onClick={() => setRutaSeleccionadaId(r.id)}
+                      className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer ${
+                        esActiva
+                          ? 'bg-[#013299] text-white shadow-sm ring-2 ring-[#013299]/20'
+                          : 'bg-slate-50 text-slate-700 hover:bg-slate-100 border border-slate-200/80 hover:border-slate-300'
+                      }`}
+                    >
+                      <span className="font-extrabold">🚚 {r.vehiculo?.marca || 'Camión'} {r.vehiculo?.modelo || ''}</span>
+                      <span className={`text-[10px] px-1.5 py-0.5 rounded font-mono font-bold ${
+                        esActiva ? 'bg-white/20 text-white' : 'bg-slate-200/80 text-slate-700'
+                      }`}>
+                        {r.vehiculo?.patente || `#${idx + 1}`}
+                      </span>
+                      <span className="text-[11px] opacity-80 font-medium">· {r.usuario?.nombre || 'Chofer'}</span>
+                      <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-black ${
+                        esActiva ? 'bg-white/20 text-white' : 'bg-blue-100 text-[#013299]'
+                      }`}>
+                        {entregadasP}/{totalP}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              <div className="text-[11px] text-slate-400 font-medium px-2 hidden lg:block">
+                {rutaSeleccionadaId === 'todas' ? 'Mostrando todas las hojas de ruta' : 'Vista enfocada en 1 camión'}
+              </div>
+            </div>
+          )}
+
+          <div className="flex flex-col gap-6">
+            {(rutaSeleccionadaId === 'todas'
+              ? rutas
+              : rutas.filter((r) => r.id === rutaSeleccionadaId)
+            ).map((ruta) => (
+              <TablaSortable
+                key={ruta.id}
+                rutaId={ruta.id}
+                ruta={ruta}
+                paradas={ruta.paradas}
+                todasLasRutas={rutas}
+                choferes={choferes}
+                vehiculos={vehiculos}
+                onReorder={handleReorder}
+                onActualizarParada={handleActualizarParada}
+                onActualizarEsperado={handleActualizarEsperado}
+                onEliminarRuta={handleEliminarRuta}
+                onEliminarParada={handleSolicitarEliminarParada}
+                onRutaActualizada={() => cargarDatos(true)}
+              />
+            ))}
+          </div>
         </div>
       )}
 

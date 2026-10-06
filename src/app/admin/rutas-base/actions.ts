@@ -48,6 +48,25 @@ export async function crearRutaBaseAction(datos: {
   vehiculo_id: string;
 }) {
   try {
+    // Validar que el repartidor no tenga ya una ruta base asignada para este mismo día
+    const rutaExistente = await prisma.rutaBase.findFirst({
+      where: {
+        dia_semana: datos.dia_semana,
+        usuario_id: datos.usuario_id
+      },
+      include: {
+        usuario: true
+      }
+    });
+
+    if (rutaExistente) {
+      const nombreChofer = `${rutaExistente.usuario?.nombre || ''} ${rutaExistente.usuario?.apellido || ''}`.trim() || 'Este repartidor';
+      return {
+        success: false,
+        message: `${nombreChofer} ya tiene asignada la ruta "${rutaExistente.nombre}" para el día ${datos.dia_semana}. Cada repartidor solo puede tener una ruta base diaria.`
+      };
+    }
+
     await prisma.rutaBase.create({
       data: {
         nombre: datos.nombre,
@@ -112,8 +131,29 @@ export async function buscarClientesBaseAction(criterio: string, rutaBaseId?: st
 }
 
 /**
+ * Criterio de ordenación predeterminado para rutas base:
+ * 1º Comuna (A-Z)
+ * 2º Sector (A-Z)
+ * 3º Nombre del Cliente (A-Z)
+ */
+function compararPorComunaYSector(a: any, b: any): number {
+  const comunaA = (a.cliente?.sector?.comuna?.nombre || 'Sin Comuna').trim().toLowerCase();
+  const comunaB = (b.cliente?.sector?.comuna?.nombre || 'Sin Comuna').trim().toLowerCase();
+  if (comunaA !== comunaB) return comunaA.localeCompare(comunaB, 'es');
+
+  const sectorA = (a.cliente?.sector?.nombre || 'Sin Sector').trim().toLowerCase();
+  const sectorB = (b.cliente?.sector?.nombre || 'Sin Sector').trim().toLowerCase();
+  if (sectorA !== sectorB) return sectorA.localeCompare(sectorB, 'es');
+
+  const nombreA = (a.cliente?.nombre || '').trim().toLowerCase();
+  const nombreB = (b.cliente?.nombre || '').trim().toLowerCase();
+  return nombreA.localeCompare(nombreB, 'es');
+}
+
+/**
  * Agrega un cliente a la ruta base, con sus cantidades por defecto
  * (bidones de 20L, 10L y sodas) para esta plantilla.
+ * Aplica el orden predeterminado por Comuna y Sector.
  */
 export async function agregarClienteARutaBaseAction(
   rutaBaseId: string,
@@ -139,6 +179,31 @@ export async function agregarClienteARutaBaseAction(
         soda_default: cantidades.soda_default
       }
     });
+
+    // Reordenar por el orden predeterminado: Comuna y luego Sector
+    const todosClientes = await prisma.clienteRutaBase.findMany({
+      where: { ruta_base_id: rutaBaseId },
+      include: {
+        cliente: {
+          include: {
+            sector: {
+              include: { comuna: true }
+            }
+          }
+        }
+      }
+    });
+
+    todosClientes.sort(compararPorComunaYSector);
+
+    await prisma.$transaction(
+      todosClientes.map((c, idx) =>
+        prisma.clienteRutaBase.update({
+          where: { id: c.id },
+          data: { orden: idx + 1 }
+        })
+      )
+    );
 
     revalidatePath('/admin/rutas-base');
     return { success: true };
@@ -257,6 +322,69 @@ export async function reordenarClienteRutaBaseAction(
     return { success: true };
   } catch (error: any) {
     console.error('Error al reordenar cliente:', error);
+    return { success: false, message: error.message };
+  }
+}
+
+/**
+ * Actualiza en lote el orden de los clientes en una ruta base (Drag & Drop)
+ */
+export async function actualizarOrdenClientesRutaBaseAction(
+  rutaBaseId: string,
+  ordenes: { id: string; orden_nuevo: number }[]
+) {
+  try {
+    await prisma.$transaction(
+      ordenes.map(item =>
+        prisma.clienteRutaBase.update({
+          where: { id: item.id },
+          data: { orden: item.orden_nuevo }
+        })
+      )
+    );
+
+    revalidatePath('/admin/rutas-base');
+    return { success: true };
+  } catch (error: any) {
+    console.error('Error al actualizar orden de clientes en ruta base:', error);
+    return { success: false, message: error.message };
+  }
+}
+
+/**
+ * Reordena todos los clientes de una ruta base por el criterio predeterminado:
+ * 1º Comuna (A-Z) -> 2º Sector (A-Z) -> 3º Nombre del Cliente (A-Z)
+ */
+export async function ordenarRutaBasePorComunaYSectorAction(rutaBaseId: string) {
+  try {
+    const clientes = await prisma.clienteRutaBase.findMany({
+      where: { ruta_base_id: rutaBaseId },
+      include: {
+        cliente: {
+          include: {
+            sector: {
+              include: { comuna: true }
+            }
+          }
+        }
+      }
+    });
+
+    clientes.sort(compararPorComunaYSector);
+
+    await prisma.$transaction(
+      clientes.map((c, idx) =>
+        prisma.clienteRutaBase.update({
+          where: { id: c.id },
+          data: { orden: idx + 1 }
+        })
+      )
+    );
+
+    revalidatePath('/admin/rutas-base');
+    return { success: true };
+  } catch (error: any) {
+    console.error('Error al ordenar ruta base por comuna y sector:', error);
     return { success: false, message: error.message };
   }
 }

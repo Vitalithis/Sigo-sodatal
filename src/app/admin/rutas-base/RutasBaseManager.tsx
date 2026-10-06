@@ -2,18 +2,30 @@
 
 import React, { useState, useRef } from 'react';
 import {
+  DndContext, closestCenter, KeyboardSensor, PointerSensor,
+  useSensor, useSensors, DragEndEvent
+} from '@dnd-kit/core';
+import {
+  arrayMove, SortableContext, sortableKeyboardCoordinates,
+  verticalListSortingStrategy, useSortable
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import {
   crearRutaBaseAction,
   buscarClientesBaseAction,
   agregarClienteARutaBaseAction,
   obtenerRutasBaseAction,
   eliminarClienteDeRutaBaseAction,
-  reordenarClienteRutaBaseAction,
-  actualizarCantidadesClienteRutaBaseAction
+  actualizarCantidadesClienteRutaBaseAction,
+  actualizarOrdenClientesRutaBaseAction,
+  ordenarRutaBasePorComunaYSectorAction
 } from './actions';
 import { DiaSemana } from '@lib/prisma/generated/edge';
 import { 
   Search, Droplet, GlassWater, Calendar, Plus, User, Truck, 
-  MapPin, Phone, Trash2, Edit3, Save, X, ArrowUp, ArrowDown, Layers, Users
+  MapPin, Phone, Trash2, Edit3, Save, X, Layers, Users,
+  ChevronDown, ChevronUp, ChevronsDownUp, ChevronsUpDown, AlertCircle,
+  GripVertical, Building2
 } from 'lucide-react';
 import { usePopup } from '@/hooks/usePopup';
 import PopupGlobal from '@/components/ui/PopupGlobal';
@@ -34,12 +46,214 @@ const CANTIDADES_VACIAS: Cantidades = { bot20_default: 0, bot10_default: 0, soda
 const inputCls = 'w-full border border-slate-200 p-2.5 rounded-xl text-xs text-slate-800 bg-white outline-none focus:ring-2 focus:ring-[#013299]/20 focus:border-[#013299] transition-colors placeholder:text-slate-400';
 const labelCls = 'block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1';
 
+interface SortableRowProps {
+  c: any;
+  indexGlobal: number;
+  enEdicion: boolean;
+  cantidadesEdicion: Cantidades;
+  setCantidadesEdicion: React.Dispatch<React.SetStateAction<Cantidades>>;
+  iniciarEdicion: (c: any) => void;
+  guardarEdicion: (id: string) => void;
+  cancelarEdicion: () => void;
+  eliminarCliente: (id: string, rutaId: string, nombre: string) => void;
+  cargando: boolean;
+  rbId: string;
+}
+
+function SortableClienteRow({
+  c,
+  indexGlobal,
+  enEdicion,
+  cantidadesEdicion,
+  setCantidadesEdicion,
+  iniciarEdicion,
+  guardarEdicion,
+  cancelarEdicion,
+  eliminarCliente,
+  cargando,
+  rbId
+}: SortableRowProps) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: c.id });
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    zIndex: isDragging ? 50 : undefined,
+    position: (isDragging ? 'relative' : undefined) as any,
+  };
+
+  return (
+    <tr
+      ref={setNodeRef}
+      style={style}
+      className={`border-b border-slate-100 transition-colors ${
+        isDragging ? 'bg-blue-50/90 shadow-md ring-2 ring-[#013299]/30' : 'hover:bg-slate-50/80 bg-white'
+      }`}
+    >
+      {/* DRAG & DROP HANDLE + ORDEN */}
+      <td
+        {...attributes}
+        {...listeners}
+        className="px-3 py-3 text-center align-middle cursor-grab active:cursor-grabbing hover:bg-blue-50/60 select-none group w-[65px]"
+        title="Arrastra para reordenar cliente en la ruta"
+      >
+        <div className="flex items-center justify-center gap-1 text-slate-400 group-hover:text-[#013299] transition-colors">
+          <GripVertical className="w-4 h-4 shrink-0" />
+          <span className="font-mono text-xs font-bold text-slate-500 group-hover:text-slate-800">{indexGlobal + 1}</span>
+        </div>
+      </td>
+
+      <td className="px-4 py-3 font-bold text-slate-900 align-middle">
+        {c.cliente?.nombre}
+      </td>
+
+      <td className="px-3 py-3 align-middle">
+        <span className={`text-[9px] font-black px-2.5 py-1 rounded-full tracking-wide ${
+          c.cliente?.tipo === 'EMPRESA'
+            ? 'bg-purple-100 text-purple-700'
+            : 'bg-emerald-100 text-emerald-700'
+        }`}>
+          {c.cliente?.tipo}
+        </span>
+      </td>
+
+      <td className="px-4 py-3 align-middle text-[11px] leading-relaxed">
+        <span className="flex items-center gap-1 text-slate-700 font-medium truncate max-w-[200px]" title={c.cliente?.direccion}>
+          <MapPin className="w-3 h-3 text-slate-400 shrink-0" />
+          <span className="truncate">{c.cliente?.direccion}</span>
+        </span>
+        <span className="flex items-center gap-1 text-slate-500 mt-0.5 font-medium">
+          <Phone className="w-3 h-3 text-slate-400 shrink-0" />
+          <span>{c.cliente?.telefono || 'Sin teléfono'}</span>
+        </span>
+      </td>
+
+      <td className="px-4 py-3 align-middle text-[11px]">
+        <span className="block font-bold text-slate-800">
+          {c.cliente?.sector?.comuna?.nombre || '-'}
+        </span>
+        <span className="block text-slate-500 mt-0.5 truncate max-w-[140px]">
+          {c.cliente?.sector?.nombre || 'General'}
+        </span>
+      </td>
+
+      {/* Cantidades por defecto */}
+      <td className="px-3 py-3 align-middle">
+        {enEdicion ? (
+          <div className="flex items-center justify-center gap-1">
+            <input
+              type="number"
+              min={0}
+              value={cantidadesEdicion.bot20_default}
+              onChange={e => setCantidadesEdicion(prev => ({ ...prev, bot20_default: Math.max(0, Number(e.target.value)) }))}
+              className="w-12 border border-slate-300 rounded-lg p-1.5 text-center text-xs font-bold focus:ring-2 focus:ring-[#013299]/20 outline-none"
+              title="Bidones 20L"
+            />
+            <input
+              type="number"
+              min={0}
+              value={cantidadesEdicion.bot10_default}
+              onChange={e => setCantidadesEdicion(prev => ({ ...prev, bot10_default: Math.max(0, Number(e.target.value)) }))}
+              className="w-12 border border-slate-300 rounded-lg p-1.5 text-center text-xs font-bold focus:ring-2 focus:ring-[#013299]/20 outline-none"
+              title="Bidones 10L"
+            />
+            <input
+              type="number"
+              min={0}
+              value={cantidadesEdicion.soda_default}
+              onChange={e => setCantidadesEdicion(prev => ({ ...prev, soda_default: Math.max(0, Number(e.target.value)) }))}
+              className="w-12 border border-slate-300 rounded-lg p-1.5 text-center text-xs font-bold focus:ring-2 focus:ring-[#013299]/20 outline-none"
+              title="Sodas"
+            />
+          </div>
+        ) : (
+          <button
+            type="button"
+            onClick={() => iniciarEdicion(c)}
+            className="w-full flex items-center justify-center gap-3 text-xs font-bold text-slate-700 hover:text-[#013299] transition-colors py-1 px-2 rounded-lg hover:bg-slate-100"
+            title="Haz clic para editar las cargas programadas"
+          >
+            <span className="flex items-center gap-1" title="20 Litros">
+              <Droplet className="h-3.5 w-3.5 text-blue-600" />
+              <span>{c.bot20_default ?? 0}</span>
+            </span>
+            <span className="flex items-center gap-1" title="10 Litros">
+              <Droplet className="h-3.5 w-3.5 text-sky-500" />
+              <span>{c.bot10_default ?? 0}</span>
+            </span>
+            <span className="flex items-center gap-1" title="Soda">
+              <GlassWater className="h-3.5 w-3.5 text-slate-400" />
+              <span>{c.soda_default ?? 0}</span>
+            </span>
+          </button>
+        )}
+      </td>
+
+      {/* Acciones */}
+      <td className="px-4 py-3 text-center align-middle">
+        {enEdicion ? (
+          <div className="flex items-center justify-center gap-2">
+            <button
+              type="button"
+              onClick={() => guardarEdicion(c.id)}
+              disabled={cargando}
+              className="text-emerald-600 hover:text-emerald-800 disabled:opacity-40 font-bold px-2 py-1 rounded-lg hover:bg-emerald-50 transition-colors text-xs flex items-center gap-1"
+            >
+              <Save className="w-3.5 h-3.5" />
+              <span>Guardar</span>
+            </button>
+            <button
+              type="button"
+              onClick={cancelarEdicion}
+              className="text-slate-400 hover:text-slate-600 font-bold px-2 py-1 rounded-lg hover:bg-slate-100 transition-colors text-xs"
+            >
+              Cancelar
+            </button>
+          </div>
+        ) : (
+          <button
+            type="button"
+            onClick={() => eliminarCliente(c.id, rbId, c.cliente?.nombre || 'este cliente')}
+            disabled={cargando}
+            className="text-rose-500 hover:text-rose-700 disabled:opacity-40 font-bold px-2.5 py-1 rounded-lg hover:bg-rose-50 transition-colors text-xs flex items-center justify-center gap-1 mx-auto"
+            title="Quitar cliente de la plantilla"
+          >
+            <Trash2 className="w-3.5 h-3.5" />
+            <span>Quitar</span>
+          </button>
+        )}
+      </td>
+    </tr>
+  );
+}
+
 export default function RutasBaseManager({ rutasBaseIniciales, choferes, vehiculos }: Props) {
   const [rutasBase, setRutasBase] = useState(rutasBaseIniciales);
   const [cargando, setCargando] = useState(false);
   const [diaFiltro, setDiaFiltro] = useState<DiaSemana | 'TODOS'>('LUNES');
   const [isCrearModalOpen, setIsCrearModalOpen] = useState(false);
   const { popup, showSuccess, showError, showConfirm, close } = usePopup();
+
+  // Paginación, vista completa y colapso por ruta base
+  const [paginasPorRuta, setPaginasPorRuta] = useState<{ [rutaId: string]: number }>({});
+  const [rutasColapsadas, setRutasColapsadas] = useState<{ [rutaId: string]: boolean }>({});
+  const [mostrarTodosPorRuta, setMostrarTodosPorRuta] = useState<{ [rutaId: string]: boolean }>({});
+  const ITEMS_POR_PAGINA = 10;
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
+  );
+
+  const toggleColapsoRuta = (rutaId: string) => {
+    setRutasColapsadas(prev => ({ ...prev, [rutaId]: !prev[rutaId] }));
+  };
+
+  const expandirTodas = () => setRutasColapsadas({});
+  const contraerTodas = () => {
+    const todas: { [key: string]: boolean } = {};
+    rutasBase.forEach((r: any) => { todas[r.id] = true; });
+    setRutasColapsadas(todas);
+  };
 
   // Buscador por ruta
   const [buscando, setBuscando] = useState<{ [key: string]: boolean }>({});
@@ -83,6 +297,21 @@ export default function RutasBaseManager({ rutasBaseIniciales, choferes, vehicul
       showError('Datos incompletos', 'Debes seleccionar Chofer y Camión.');
       return;
     }
+
+    // Validar regla de negocio: el repartidor solo debe tener una ruta base diaria
+    const choferYaAsignado = rutasBase.find(
+      (rb: any) => rb.dia_semana === form.dia_semana && rb.usuario_id === form.usuario_id
+    );
+    if (choferYaAsignado) {
+      const choferObj = choferes.find(c => c.id === form.usuario_id);
+      const nombreChofer = `${choferObj?.nombre || ''} ${choferObj?.apellido || ''}`.trim() || 'Este repartidor';
+      showError(
+        'Repartidor Ocupado',
+        `${nombreChofer} ya tiene asignada la ruta "${choferYaAsignado.nombre}" para el día ${form.dia_semana}. Cada repartidor solo puede tener una ruta base diaria.`
+      );
+      return;
+    }
+
     setCargando(true);
     const res = await crearRutaBaseAction(form);
     if (res.success) {
@@ -126,6 +355,7 @@ export default function RutasBaseManager({ rutasBaseIniciales, choferes, vehicul
     setCantidadesModal(CANTIDADES_VACIAS);
     setBusquedas(prev => ({ ...prev, [rutaId]: '' }));
     setResultadosCli(prev => ({ ...prev, [rutaId]: [] }));
+    setRutasColapsadas(prev => ({ ...prev, [rutaId]: false }));
   };
 
   const cancelarAlta = () => {
@@ -138,6 +368,11 @@ export default function RutasBaseManager({ rutasBaseIniciales, choferes, vehicul
     setCargando(true);
     const res = await agregarClienteARutaBaseAction(pendiente.rutaId, pendiente.cliente.id, cantidadesModal);
     if (res.success) {
+      const rutaActual = rutasBase.find((r: any) => r.id === pendiente.rutaId);
+      const nuevoTotal = (rutaActual?.clientes?.length || 0) + 1;
+      const ultimaPagina = Math.ceil(nuevoTotal / ITEMS_POR_PAGINA);
+      setPaginasPorRuta(prev => ({ ...prev, [pendiente.rutaId]: ultimaPagina }));
+
       setPendiente(null);
       setCantidadesModal(CANTIDADES_VACIAS);
       await refrescar();
@@ -162,13 +397,51 @@ export default function RutasBaseManager({ rutasBaseIniciales, choferes, vehicul
     });
   };
 
-  const moverCliente = async (clienteRutaBaseId: string, rutaBaseId: string, direccion: 'subir' | 'bajar') => {
+  const handleDragEnd = async (rutaId: string, event: DragEndEvent) => {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+
+    const ruta = rutasBase.find((r: any) => r.id === rutaId);
+    if (!ruta || !ruta.clientes) return;
+
+    const oldIndex = ruta.clientes.findIndex((c: any) => c.id === active.id);
+    const newIndex = ruta.clientes.findIndex((c: any) => c.id === over.id);
+
+    if (oldIndex === -1 || newIndex === -1) return;
+
+    const nuevaLista = arrayMove(ruta.clientes, oldIndex, newIndex).map((c: any, idx: number) => ({
+      ...c,
+      orden: idx + 1
+    }));
+
+    // Actualización optimista inmediata en UI
+    setRutasBase(prev =>
+      prev.map((r: any) => (r.id === rutaId ? { ...r, clientes: nuevaLista } : r))
+    );
+
+    const payload = nuevaLista.map((c: any, idx: number) => ({
+      id: c.id,
+      orden_nuevo: idx + 1
+    }));
+
+    const res = await actualizarOrdenClientesRutaBaseAction(rutaId, payload);
+    if (!res.success) {
+      showError('Error al reordenar', res.message || 'No se pudo guardar el nuevo orden.');
+      await refrescar();
+    }
+  };
+
+  const ordenarPorComunaYSector = async (rutaId: string) => {
+    const ruta = rutasBase.find((r: any) => r.id === rutaId);
+    if (!ruta || !ruta.clientes || ruta.clientes.length === 0) return;
+
     setCargando(true);
-    const res = await reordenarClienteRutaBaseAction(clienteRutaBaseId, rutaBaseId, direccion);
+    const res = await ordenarRutaBasePorComunaYSectorAction(rutaId);
     if (res.success) {
+      showSuccess('Orden Actualizado', `Ruta "${ruta.nombre}" ordenada exitosamente por Comuna y luego Sector.`);
       await refrescar();
     } else {
-      showError('Error', res.message || 'No se pudo reordenar.');
+      showError('Error al ordenar', res.message || 'No se pudo reordenar la ruta.');
     }
     setCargando(false);
   };
@@ -253,17 +526,30 @@ export default function RutasBaseManager({ rutasBaseIniciales, choferes, vehicul
           })}
         </div>
 
-        <button
-          onClick={() => {
-            setForm(f => ({ ...f, dia_semana: diaFiltro !== 'TODOS' ? diaFiltro : 'LUNES' }));
-            setIsCrearModalOpen(true);
-          }}
-          className="text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-all shadow-sm flex items-center justify-center gap-2 shrink-0"
-          style={{ backgroundColor: '#013299' }}
-        >
-          <Plus className="w-4 h-4" />
-          <span>Nueva Ruta Base</span>
-        </button>
+        <div className="flex items-center gap-2">
+          {rutasFiltradas.length > 0 && (
+            <button
+              type="button"
+              onClick={Object.keys(rutasColapsadas).length > 0 ? expandirTodas : contraerTodas}
+              className="text-slate-600 hover:text-slate-900 bg-white hover:bg-slate-50 border border-slate-200 text-xs font-bold px-3 py-2.5 rounded-xl shadow-xs transition-all flex items-center gap-1.5"
+              title={Object.keys(rutasColapsadas).length > 0 ? "Expandir todas las listas de clientes" : "Contraer todas las listas"}
+            >
+              {Object.keys(rutasColapsadas).length > 0 ? <ChevronsUpDown className="w-3.5 h-3.5 text-blue-600" /> : <ChevronsDownUp className="w-3.5 h-3.5 text-slate-500" />}
+              <span>{Object.keys(rutasColapsadas).length > 0 ? 'Expandir Todas' : 'Contraer Todas'}</span>
+            </button>
+          )}
+
+          <button
+            onClick={() => {
+              setForm(f => ({ ...f, dia_semana: diaFiltro !== 'TODOS' ? diaFiltro : 'LUNES' }));
+              setIsCrearModalOpen(true);
+            }}
+            className="text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-all shadow-sm flex items-center justify-center gap-2 shrink-0 bg-[#013299] hover:bg-blue-900"
+          >
+            <Plus className="w-4 h-4" />
+            <span>Nueva Ruta Base</span>
+          </button>
+        </div>
       </div>
 
       {/* LISTADO DE TARJETAS DE RUTAS BASE PARA EL DÍA FILTRADO */}
@@ -279,26 +565,69 @@ export default function RutasBaseManager({ rutasBaseIniciales, choferes, vehicul
             const resultados = resultadosCli[rb.id] ?? [];
             const busquedaActual = busquedas[rb.id] ?? '';
             const estaBuscando = buscando[rb.id] ?? false;
+            const isColapsada = !!rutasColapsadas[rb.id];
+            const esMostrarTodos = !!mostrarTodosPorRuta[rb.id];
+            const paginaActual = paginasPorRuta[rb.id] || 1;
+            const totalClientes = rb.clientes?.length || 0;
+            const totalPaginas = Math.max(1, Math.ceil(totalClientes / ITEMS_POR_PAGINA));
+            const indiceInicio = esMostrarTodos ? 0 : (paginaActual - 1) * ITEMS_POR_PAGINA;
+            const clientesAMostrar = esMostrarTodos 
+              ? (rb.clientes || []) 
+              : (rb.clientes || []).slice(indiceInicio, indiceInicio + ITEMS_POR_PAGINA);
 
             const totalBot20 = rb.clientes?.reduce((acc: number, c: any) => acc + (c.bot20_default || 0), 0) || 0;
             const totalBot10 = rb.clientes?.reduce((acc: number, c: any) => acc + (c.bot10_default || 0), 0) || 0;
             const totalSoda = rb.clientes?.reduce((acc: number, c: any) => acc + (c.soda_default || 0), 0) || 0;
 
-            return (
-              <div key={rb.id} className="bg-white border border-slate-100 rounded-2xl shadow-sm overflow-hidden flex flex-col transition-all hover:border-slate-200">
+            const tieneResultadosAbiertos = resultados.length > 0 || (!estaBuscando && busquedaActual.trim().length >= 2);
 
-                {/* CABECERA DE RUTA BASE */}
-                <div className="bg-slate-50/90 p-5 border-b border-slate-100 flex flex-col lg:flex-row justify-between lg:items-center gap-4 relative z-20">
+            return (
+              <div 
+                key={rb.id} 
+                className={`bg-white border border-slate-100 rounded-2xl shadow-sm flex flex-col transition-all hover:border-slate-200 relative ${
+                  tieneResultadosAbiertos ? 'z-40' : 'z-10'
+                }`}
+              >
+
+                {/* CABECERA DE RUTA BASE (CON BOTÓN DE COLAPSO Y ORDENAR) */}
+                <div className={`bg-slate-50/90 p-5 flex flex-col lg:flex-row justify-between lg:items-center gap-4 relative z-20 ${
+                  isColapsada ? 'rounded-2xl' : 'rounded-t-2xl border-b border-slate-100'
+                }`}>
                   <div className="flex flex-col sm:flex-row sm:items-center gap-4">
                     <div>
-                      <div className="flex items-center gap-2.5 mb-1.5">
+                      <div className="flex items-center gap-2.5 mb-1.5 flex-wrap">
+                        <button
+                          type="button"
+                          onClick={() => toggleColapsoRuta(rb.id)}
+                          className="p-1 rounded-lg hover:bg-slate-200 text-slate-500 hover:text-slate-800 transition-colors"
+                          title={isColapsada ? "Expandir lista de clientes" : "Contraer lista de clientes"}
+                        >
+                          {isColapsada ? <ChevronDown className="w-4 h-4 text-[#013299]" /> : <ChevronUp className="w-4 h-4" />}
+                        </button>
                         <span className="bg-[#013299] text-white text-[10px] font-black px-2.5 py-0.5 rounded-md tracking-wider uppercase">
                           {rb.dia_semana}
                         </span>
                         <h3 className="text-base font-black text-slate-900">{rb.nombre}</h3>
                         <span className="bg-blue-50 text-[#013299] border border-blue-100 px-2.5 py-0.5 rounded-full text-[11px] font-bold">
-                          {rb.clientes?.length || 0} Clientes fijos
+                          {totalClientes} {totalClientes === 1 ? 'Cliente fijo' : 'Clientes fijos'}
                         </span>
+                        <button
+                          type="button"
+                          onClick={() => toggleColapsoRuta(rb.id)}
+                          className="text-[11px] font-bold text-slate-500 hover:text-[#013299] underline decoration-dotted ml-1"
+                        >
+                          {isColapsada ? 'Mostrar clientes' : 'Contraer'}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => ordenarPorComunaYSector(rb.id)}
+                          disabled={cargando || totalClientes <= 1}
+                          className="text-[11px] font-bold text-[#013299] bg-blue-50 hover:bg-blue-100 border border-blue-200 px-2.5 py-1 rounded-lg transition-colors flex items-center gap-1.5 ml-2 disabled:opacity-40 disabled:cursor-not-allowed shadow-2xs"
+                          title="Reordenar automáticamente los clientes de esta ruta por Comuna y luego Sector"
+                        >
+                          <Building2 className="w-3.5 h-3.5 text-blue-600" />
+                          <span>Ordenar por Comuna y Sector</span>
+                        </button>
                       </div>
 
                       <div className="flex flex-wrap items-center gap-4 text-xs font-medium text-slate-600 mt-2">
@@ -373,188 +702,108 @@ export default function RutasBaseManager({ rutasBaseIniciales, choferes, vehicul
                   </div>
                 </div>
 
-                {/* TABLA DE CLIENTES FIJOS */}
-                <div className="overflow-x-auto relative z-10">
-                  <table className="w-full text-left text-xs min-w-[760px]">
-                    <thead className="bg-slate-50/50 border-b border-slate-100 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
-                      <tr>
-                        <th className="px-5 py-3 w-[50px] text-center">Orden</th>
-                        <th className="px-4 py-3 min-w-[180px]">Cliente Fijo</th>
-                        <th className="px-3 py-3 w-[90px]">Tipo</th>
-                        <th className="px-4 py-3 min-w-[180px]">Dirección y Contacto</th>
-                        <th className="px-4 py-3 min-w-[140px]">Comuna / Sector</th>
-                        <th className="px-3 py-3 w-[160px] text-center">Bot 20L / Bot 10L / Soda</th>
-                        <th className="px-4 py-3 w-[120px] text-center">Acciones</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-100 bg-white">
-                      {rb.clientes.length === 0 ? (
-                        <tr>
-                          <td colSpan={7} className="px-5 py-10 text-center text-slate-400 italic">
-                            Sin clientes fijos asignados a esta plantilla. Utiliza el buscador para añadir clientes.
-                          </td>
-                        </tr>
-                      ) : (
-                        rb.clientes.map((c: any, index: number) => {
-                          const enEdicion = editando === c.id;
-                          return (
-                            <tr key={c.id} className="hover:bg-slate-50/80 transition-colors">
-                              {/* Reordenamiento */}
-                              <td className="px-3 py-3 text-center align-middle">
-                                <div className="flex flex-col items-center justify-center gap-0.5">
-                                  <span className="font-mono text-xs font-bold text-slate-400">{index + 1}</span>
-                                  <div className="flex items-center gap-0.5">
-                                    {index > 0 && (
-                                      <button
-                                        onClick={() => moverCliente(c.id, rb.id, 'subir')}
-                                        disabled={cargando}
-                                        title="Subir posición"
-                                        className="p-1 hover:bg-slate-200 rounded text-slate-500"
-                                      >
-                                        <ArrowUp className="w-3 h-3" />
-                                      </button>
-                                    )}
-                                    {index < rb.clientes.length - 1 && (
-                                      <button
-                                        onClick={() => moverCliente(c.id, rb.id, 'bajar')}
-                                        disabled={cargando}
-                                        title="Bajar posición"
-                                        className="p-1 hover:bg-slate-200 rounded text-slate-500"
-                                      >
-                                        <ArrowDown className="w-3 h-3" />
-                                      </button>
-                                    )}
-                                  </div>
-                                </div>
-                              </td>
-
-                              <td className="px-4 py-3 font-bold text-slate-900 align-middle">
-                                {c.cliente?.nombre}
-                              </td>
-
-                              <td className="px-3 py-3 align-middle">
-                                <span className={`text-[9px] font-black px-2.5 py-1 rounded-full tracking-wide ${
-                                  c.cliente?.tipo === 'EMPRESA'
-                                    ? 'bg-purple-100 text-purple-700'
-                                    : 'bg-emerald-100 text-emerald-700'
-                                }`}>
-                                  {c.cliente?.tipo}
-                                </span>
-                              </td>
-
-                              <td className="px-4 py-3 align-middle text-[11px] leading-relaxed">
-                                <span className="flex items-center gap-1 text-slate-700 font-medium truncate max-w-[200px]" title={c.cliente?.direccion}>
-                                  <MapPin className="w-3 h-3 text-slate-400 shrink-0" />
-                                  <span className="truncate">{c.cliente?.direccion}</span>
-                                </span>
-                                <span className="flex items-center gap-1 text-slate-500 mt-0.5 font-medium">
-                                  <Phone className="w-3 h-3 text-slate-400 shrink-0" />
-                                  <span>{c.cliente?.telefono || 'Sin teléfono'}</span>
-                                </span>
-                              </td>
-
-                              <td className="px-4 py-3 align-middle text-[11px]">
-                                <span className="block font-bold text-slate-800">
-                                  {c.cliente?.sector?.comuna?.nombre || '-'}
-                                </span>
-                                <span className="block text-slate-500 mt-0.5 truncate max-w-[140px]">
-                                  {c.cliente?.sector?.nombre || 'General'}
-                                </span>
-                              </td>
-
-                              {/* Cantidades por defecto */}
-                              <td className="px-3 py-3 align-middle">
-                                {enEdicion ? (
-                                  <div className="flex items-center justify-center gap-1">
-                                    <input
-                                      type="number"
-                                      min={0}
-                                      value={cantidadesEdicion.bot20_default}
-                                      onChange={e => setCantidadesEdicion(prev => ({ ...prev, bot20_default: Math.max(0, Number(e.target.value)) }))}
-                                      className="w-12 border border-slate-300 rounded-lg p-1.5 text-center text-xs font-bold focus:ring-2 focus:ring-[#013299]/20 outline-none"
-                                      title="Bidones 20L"
-                                    />
-                                    <input
-                                      type="number"
-                                      min={0}
-                                      value={cantidadesEdicion.bot10_default}
-                                      onChange={e => setCantidadesEdicion(prev => ({ ...prev, bot10_default: Math.max(0, Number(e.target.value)) }))}
-                                      className="w-12 border border-slate-300 rounded-lg p-1.5 text-center text-xs font-bold focus:ring-2 focus:ring-[#013299]/20 outline-none"
-                                      title="Bidones 10L"
-                                    />
-                                    <input
-                                      type="number"
-                                      min={0}
-                                      value={cantidadesEdicion.soda_default}
-                                      onChange={e => setCantidadesEdicion(prev => ({ ...prev, soda_default: Math.max(0, Number(e.target.value)) }))}
-                                      className="w-12 border border-slate-300 rounded-lg p-1.5 text-center text-xs font-bold focus:ring-2 focus:ring-[#013299]/20 outline-none"
-                                      title="Sodas"
-                                    />
-                                  </div>
-                                ) : (
-                                  <button
-                                    type="button"
-                                    onClick={() => iniciarEdicion(c)}
-                                    className="w-full flex items-center justify-center gap-3 text-xs font-bold text-slate-700 hover:text-[#013299] transition-colors py-1 px-2 rounded-lg hover:bg-slate-100"
-                                    title="Haz clic para editar las cargas programadas"
-                                  >
-                                    <span className="flex items-center gap-1" title="20 Litros">
-                                      <Droplet className="h-3.5 w-3.5 text-blue-600" />
-                                      <span>{c.bot20_default ?? 0}</span>
-                                    </span>
-                                    <span className="flex items-center gap-1" title="10 Litros">
-                                      <Droplet className="h-3.5 w-3.5 text-sky-500" />
-                                      <span>{c.bot10_default ?? 0}</span>
-                                    </span>
-                                    <span className="flex items-center gap-1" title="Soda">
-                                      <GlassWater className="h-3.5 w-3.5 text-slate-400" />
-                                      <span>{c.soda_default ?? 0}</span>
-                                    </span>
-                                  </button>
-                                )}
-                              </td>
-
-                              {/* Acciones */}
-                              <td className="px-4 py-3 text-center align-middle">
-                                {enEdicion ? (
-                                  <div className="flex items-center justify-center gap-2">
-                                    <button
-                                      type="button"
-                                      onClick={() => guardarEdicion(c.id)}
-                                      disabled={cargando}
-                                      className="text-emerald-600 hover:text-emerald-800 disabled:opacity-40 font-bold px-2 py-1 rounded-lg hover:bg-emerald-50 transition-colors text-xs flex items-center gap-1"
-                                    >
-                                      <Save className="w-3.5 h-3.5" />
-                                      <span>Guardar</span>
-                                    </button>
-                                    <button
-                                      type="button"
-                                      onClick={cancelarEdicion}
-                                      className="text-slate-400 hover:text-slate-600 font-bold px-2 py-1 rounded-lg hover:bg-slate-100 transition-colors text-xs"
-                                    >
-                                      Cancelar
-                                    </button>
-                                  </div>
-                                ) : (
-                                  <button
-                                    type="button"
-                                    onClick={() => eliminarCliente(c.id, rb.id, c.cliente?.nombre || 'este cliente')}
-                                    disabled={cargando}
-                                    className="text-rose-500 hover:text-rose-700 disabled:opacity-40 font-bold px-2.5 py-1 rounded-lg hover:bg-rose-50 transition-colors text-xs flex items-center justify-center gap-1 mx-auto"
-                                    title="Quitar cliente de la plantilla"
-                                  >
-                                    <Trash2 className="w-3.5 h-3.5" />
-                                    <span>Quitar</span>
-                                  </button>
-                                )}
+                {/* TABLA DE CLIENTES FIJOS (DRAG & DROP, CONTRAÍBLE Y PAGINADA) */}
+                {!isColapsada && (
+                  <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={(e) => handleDragEnd(rb.id, e)}>
+                    <div className="overflow-x-auto relative z-10">
+                      <table className="w-full text-left text-xs min-w-[760px]">
+                        <thead className="bg-slate-50/50 border-b border-slate-100 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                          <tr>
+                            <th className="px-3 py-3 w-[65px] text-center" title="Arrastra el icono para reordenar">Orden</th>
+                            <th className="px-4 py-3 min-w-[180px]">Cliente Fijo</th>
+                            <th className="px-3 py-3 w-[90px]">Tipo</th>
+                            <th className="px-4 py-3 min-w-[180px]">Dirección y Contacto</th>
+                            <th className="px-4 py-3 min-w-[140px]">Comuna / Sector</th>
+                            <th className="px-3 py-3 w-[160px] text-center">Bot 20L / Bot 10L / Soda</th>
+                            <th className="px-4 py-3 w-[120px] text-center">Acciones</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100 bg-white">
+                          {totalClientes === 0 ? (
+                            <tr>
+                              <td colSpan={7} className="px-5 py-10 text-center text-slate-400 italic">
+                                Sin clientes fijos asignados a esta plantilla. Utiliza el buscador para añadir clientes.
                               </td>
                             </tr>
-                          );
-                        })
+                          ) : (
+                            <SortableContext items={clientesAMostrar.map((c: any) => c.id)} strategy={verticalListSortingStrategy}>
+                              {clientesAMostrar.map((c: any, indexEnPagina: number) => {
+                                const indexGlobal = esMostrarTodos ? indexEnPagina : indiceInicio + indexEnPagina;
+                                return (
+                                  <SortableClienteRow
+                                    key={c.id}
+                                    c={c}
+                                    indexGlobal={indexGlobal}
+                                    enEdicion={editando === c.id}
+                                    cantidadesEdicion={cantidadesEdicion}
+                                    setCantidadesEdicion={setCantidadesEdicion}
+                                    iniciarEdicion={iniciarEdicion}
+                                    guardarEdicion={guardarEdicion}
+                                    cancelarEdicion={cancelarEdicion}
+                                    eliminarCliente={eliminarCliente}
+                                    cargando={cargando}
+                                    rbId={rb.id}
+                                  />
+                                );
+                              })}
+                            </SortableContext>
+                          )}
+                        </tbody>
+                      </table>
+                    </div>
+
+                    {/* BARRA DE PAGINACIÓN */}
+                    <div className="bg-slate-50/70 border-t border-slate-100 px-5 py-2.5 rounded-b-2xl flex flex-col sm:flex-row items-center justify-between gap-3">
+                      <div className="flex items-center gap-3">
+                        <span className="text-xs text-slate-500 font-medium">
+                          {totalClientes === 0 ? (
+                            '0 clientes fijos'
+                          ) : esMostrarTodos ? (
+                            <>
+                              Mostrando todos los <b className="text-[#013299]">{totalClientes}</b> clientes fijos (Drag & Drop activo)
+                            </>
+                          ) : (
+                            <>
+                              Mostrando <b className="text-slate-800">{indiceInicio + 1}</b> a <b className="text-slate-800">{Math.min(indiceInicio + ITEMS_POR_PAGINA, totalClientes)}</b> de <b className="text-[#013299]">{totalClientes}</b> clientes fijos
+                            </>
+                          )}
+                        </span>
+                        {totalClientes > ITEMS_POR_PAGINA && (
+                          <button
+                            type="button"
+                            onClick={() => setMostrarTodosPorRuta(prev => ({ ...prev, [rb.id]: !prev[rb.id] }))}
+                            className="text-[11px] font-bold text-[#013299] hover:underline bg-white px-2.5 py-0.5 rounded-lg border border-slate-200 transition-colors shadow-2xs"
+                          >
+                            {esMostrarTodos ? 'Ver 10 por página' : `Ver todos (${totalClientes})`}
+                          </button>
+                        )}
+                      </div>
+                      {!esMostrarTodos && totalPaginas > 1 && (
+                        <div className="flex items-center gap-1.5">
+                          <button
+                            type="button"
+                            onClick={() => setPaginasPorRuta(prev => ({ ...prev, [rb.id]: Math.max(1, paginaActual - 1) }))}
+                            disabled={paginaActual === 1 || cargando}
+                            className="px-3 py-1 text-xs font-bold rounded-lg border border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed text-slate-700 shadow-2xs transition-colors"
+                          >
+                            ◀ Anterior
+                          </button>
+                          <span className="text-xs font-bold text-slate-600 px-2">
+                            Página {paginaActual} de {totalPaginas}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => setPaginasPorRuta(prev => ({ ...prev, [rb.id]: Math.min(totalPaginas, paginaActual + 1) }))}
+                            disabled={paginaActual === totalPaginas || cargando}
+                            className="px-3 py-1 text-xs font-bold rounded-lg border border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed text-slate-700 shadow-2xs transition-colors"
+                          >
+                            Siguiente ▶
+                          </button>
+                        </div>
                       )}
-                    </tbody>
-                  </table>
-                </div>
+                    </div>
+                  </DndContext>
+                )}
               </div>
             );
           })
@@ -613,13 +862,42 @@ export default function RutasBaseManager({ rutasBaseIniciales, choferes, vehicul
                   required
                 >
                   <option value="">-- Seleccionar Chofer --</option>
-                  {choferes.map(c => (
-                    <option key={c.id} value={c.id}>
-                      {c.nombre} {c.apellido}
-                      {c.vehiculo ? ` (Habitual: ${c.vehiculo.patente})` : ''}
-                    </option>
-                  ))}
+                  {choferes.map(c => {
+                    const rutaExistente = rutasBase.find(
+                      (rb: any) => rb.dia_semana === form.dia_semana && rb.usuario_id === c.id
+                    );
+                    return (
+                      <option 
+                        key={c.id} 
+                        value={c.id} 
+                        disabled={Boolean(rutaExistente)}
+                        className={rutaExistente ? 'text-slate-400 bg-slate-50' : ''}
+                      >
+                        {c.nombre} {c.apellido}
+                        {rutaExistente 
+                          ? ` ⛔ Ya tiene ruta el ${form.dia_semana} ("${rutaExistente.nombre}")` 
+                          : (c.vehiculo ? ` (Habitual: ${c.vehiculo.patente})` : '')}
+                      </option>
+                    );
+                  })}
                 </select>
+
+                {(() => {
+                  const conflicto = rutasBase.find(
+                    (rb: any) => rb.dia_semana === form.dia_semana && rb.usuario_id === form.usuario_id
+                  );
+                  if (!conflicto) return null;
+                  const choferObj = choferes.find(c => c.id === form.usuario_id);
+                  const nombreChofer = `${choferObj?.nombre || ''} ${choferObj?.apellido || ''}`.trim() || 'Este repartidor';
+                  return (
+                    <div className="mt-2 p-2.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-[11px] leading-relaxed flex items-start gap-2">
+                      <AlertCircle className="w-4 h-4 text-amber-600 mt-0.5 shrink-0" />
+                      <div>
+                        <b>{nombreChofer}</b> ya tiene asignada la ruta <b>&quot;{conflicto.nombre}&quot;</b> para el día <b>{form.dia_semana}</b>. Cada repartidor solo puede tener una ruta base diaria.
+                      </div>
+                    </div>
+                  );
+                })()}
               </div>
               <div>
                 <label className={labelCls}>Camión Habitual *</label>
@@ -643,15 +921,22 @@ export default function RutasBaseManager({ rutasBaseIniciales, choferes, vehicul
               >
                 Cancelar
               </button>
-              <button
-                type="submit"
-                disabled={cargando}
-                className="text-white font-bold text-xs px-5 py-2.5 rounded-xl transition-all shadow-sm flex items-center gap-1.5"
-                style={{ backgroundColor: '#013299' }}
-              >
-                <Save className="w-4 h-4" />
-                <span>{cargando ? 'Guardando...' : 'Crear Plantilla'}</span>
-              </button>
+              {(() => {
+                const tieneConflicto = Boolean(
+                  rutasBase.find((rb: any) => rb.dia_semana === form.dia_semana && rb.usuario_id === form.usuario_id)
+                );
+                return (
+                  <button
+                    type="submit"
+                    disabled={cargando || tieneConflicto}
+                    className="text-white font-bold text-xs px-5 py-2.5 rounded-xl transition-all shadow-sm flex items-center gap-1.5 disabled:opacity-40 disabled:cursor-not-allowed"
+                    style={{ backgroundColor: '#013299' }}
+                  >
+                    <Save className="w-4 h-4" />
+                    <span>{cargando ? 'Guardando...' : 'Crear Plantilla'}</span>
+                  </button>
+                );
+              })()}
             </div>
           </form>
         </div>
