@@ -316,6 +316,7 @@ model GuiaDespacho {
   observaciones                String?
   total                        Float
   motivo_anulacion             String?
+  firma_digital                String?           @db.LongText
   botellones_prestados_entrega Int               @default(0)
   incluida_en_cierre           Boolean           @default(false)
   fecha_cierre                 DateTime?
@@ -403,7 +404,7 @@ model CuadraturaGasto {
   cuadratura_id String
   tipo          String // libre: "ESTACIONAMIENTO", "PEAJE", etc.
   monto         Int
-  descripcion   String?
+  descripcion   String?    @db.Text
   cuadratura    Cuadratura @relation(fields: [cuadratura_id], references: [id], onDelete: Cascade)
 }
 
@@ -474,7 +475,7 @@ model StockCamion {
 model Configuracion {
   id    String @id @default(uuid())
   clave String @unique
-  valor String
+  valor String @db.Text
 }
 
 model LogAcceso {

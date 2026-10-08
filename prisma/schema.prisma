@@ -314,6 +314,7 @@ model GuiaDespacho {
   observaciones                String?
   total                        Float
   motivo_anulacion             String?
+  firma_digital                String?           @db.LongText
   botellones_prestados_entrega Int               @default(0)
   incluida_en_cierre           Boolean           @default(false)
   fecha_cierre                 DateTime?

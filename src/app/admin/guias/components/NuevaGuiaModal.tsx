@@ -23,8 +23,10 @@ import {
   DollarSign, 
   Package, 
   Phone,
-  Loader2
+  Loader2,
+  PenTool
 } from 'lucide-react';
+import FirmaCanvas from './FirmaCanvas';
 import { usePopup } from '@/hooks/usePopup';
 import PopupGlobal from '@/components/ui/PopupGlobal';
 
@@ -93,6 +95,7 @@ export default function NuevaGuiaModal({
   const [nombreReceptor, setNombreReceptor] = useState('');
   const [rutReceptor, setRutReceptor] = useState('');
   const [observaciones, setObservaciones] = useState('');
+  const [firmaDigital, setFirmaDigital] = useState<string | null>(null);
 
   const [buscando, setBuscando] = useState(false);
   const [guardando, setGuardando] = useState(false);
@@ -298,6 +301,7 @@ export default function NuevaGuiaModal({
     setObservaciones('');
     setNombreReceptor('');
     setRutReceptor('');
+    setFirmaDigital(null);
   };
 
   const guardarGuia = async (e: React.FormEvent) => {
@@ -335,6 +339,7 @@ export default function NuevaGuiaModal({
       nombre_receptor: nombreReceptor.trim(),
       rut_receptor: rutReceptor.trim() || undefined,
       observaciones: observaciones || undefined,
+      firma_digital: firmaDigital || undefined,
       botellones_prestados_entrega: 0,
       items: payload,
       pedido_id: initialData?.pedido_id,
@@ -733,6 +738,24 @@ export default function NuevaGuiaModal({
                 rows={2}
                 placeholder="Comentarios o notas adicionales..."
                 className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-[#013299] focus:ring-2 focus:ring-[#013299]/20 transition-all"
+              />
+            </div>
+
+            {/* Recuadro de Firma Digital */}
+            <div className="pt-1">
+              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5 flex items-center justify-between">
+                <span className="flex items-center gap-1.5">
+                  <PenTool className="w-3.5 h-3.5 text-[#013299]" />
+                  Firma Digital del Receptor
+                </span>
+                <span className="text-[10px] text-slate-400 font-medium lowercase">
+                  (respaldo digital para recepción)
+                </span>
+              </label>
+              <FirmaCanvas
+                value={firmaDigital}
+                onChange={(dataUrl) => setFirmaDigital(dataUrl)}
+                height={140}
               />
             </div>
           </div>

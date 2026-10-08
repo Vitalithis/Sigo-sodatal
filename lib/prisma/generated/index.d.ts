@@ -25447,6 +25447,7 @@ export namespace Prisma {
     observaciones: string | null
     total: number | null
     motivo_anulacion: string | null
+    firma_digital: string | null
     botellones_prestados_entrega: number | null
     incluida_en_cierre: boolean | null
     fecha_cierre: Date | null
@@ -25467,6 +25468,7 @@ export namespace Prisma {
     observaciones: string | null
     total: number | null
     motivo_anulacion: string | null
+    firma_digital: string | null
     botellones_prestados_entrega: number | null
     incluida_en_cierre: boolean | null
     fecha_cierre: Date | null
@@ -25487,6 +25489,7 @@ export namespace Prisma {
     observaciones: number
     total: number
     motivo_anulacion: number
+    firma_digital: number
     botellones_prestados_entrega: number
     incluida_en_cierre: number
     fecha_cierre: number
@@ -25521,6 +25524,7 @@ export namespace Prisma {
     observaciones?: true
     total?: true
     motivo_anulacion?: true
+    firma_digital?: true
     botellones_prestados_entrega?: true
     incluida_en_cierre?: true
     fecha_cierre?: true
@@ -25541,6 +25545,7 @@ export namespace Prisma {
     observaciones?: true
     total?: true
     motivo_anulacion?: true
+    firma_digital?: true
     botellones_prestados_entrega?: true
     incluida_en_cierre?: true
     fecha_cierre?: true
@@ -25561,6 +25566,7 @@ export namespace Prisma {
     observaciones?: true
     total?: true
     motivo_anulacion?: true
+    firma_digital?: true
     botellones_prestados_entrega?: true
     incluida_en_cierre?: true
     fecha_cierre?: true
@@ -25668,6 +25674,7 @@ export namespace Prisma {
     observaciones: string | null
     total: number
     motivo_anulacion: string | null
+    firma_digital: string | null
     botellones_prestados_entrega: number
     incluida_en_cierre: boolean
     fecha_cierre: Date | null
@@ -25707,6 +25714,7 @@ export namespace Prisma {
     observaciones?: boolean
     total?: boolean
     motivo_anulacion?: boolean
+    firma_digital?: boolean
     botellones_prestados_entrega?: boolean
     incluida_en_cierre?: boolean
     fecha_cierre?: boolean
@@ -25735,12 +25743,13 @@ export namespace Prisma {
     observaciones?: boolean
     total?: boolean
     motivo_anulacion?: boolean
+    firma_digital?: boolean
     botellones_prestados_entrega?: boolean
     incluida_en_cierre?: boolean
     fecha_cierre?: boolean
   }
 
-  export type GuiaDespachoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "numero_correlativo" | "fecha_emision" | "cliente_id" | "pedido_id" | "direccion_entrega" | "usuario_repartidor_id" | "estado" | "nombre_receptor" | "rut_receptor" | "hora_entrega" | "observaciones" | "total" | "motivo_anulacion" | "botellones_prestados_entrega" | "incluida_en_cierre" | "fecha_cierre", ExtArgs["result"]["guiaDespacho"]>
+  export type GuiaDespachoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "numero_correlativo" | "fecha_emision" | "cliente_id" | "pedido_id" | "direccion_entrega" | "usuario_repartidor_id" | "estado" | "nombre_receptor" | "rut_receptor" | "hora_entrega" | "observaciones" | "total" | "motivo_anulacion" | "firma_digital" | "botellones_prestados_entrega" | "incluida_en_cierre" | "fecha_cierre", ExtArgs["result"]["guiaDespacho"]>
   export type GuiaDespachoInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     cuadratura_ventas?: boolean | GuiaDespacho$cuadratura_ventasArgs<ExtArgs>
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
@@ -25774,6 +25783,7 @@ export namespace Prisma {
       observaciones: string | null
       total: number
       motivo_anulacion: string | null
+      firma_digital: string | null
       botellones_prestados_entrega: number
       incluida_en_cierre: boolean
       fecha_cierre: Date | null
@@ -26165,6 +26175,7 @@ export namespace Prisma {
     readonly observaciones: FieldRef<"GuiaDespacho", 'String'>
     readonly total: FieldRef<"GuiaDespacho", 'Float'>
     readonly motivo_anulacion: FieldRef<"GuiaDespacho", 'String'>
+    readonly firma_digital: FieldRef<"GuiaDespacho", 'String'>
     readonly botellones_prestados_entrega: FieldRef<"GuiaDespacho", 'Int'>
     readonly incluida_en_cierre: FieldRef<"GuiaDespacho", 'Boolean'>
     readonly fecha_cierre: FieldRef<"GuiaDespacho", 'DateTime'>
@@ -55775,6 +55786,7 @@ export namespace Prisma {
     observaciones: 'observaciones',
     total: 'total',
     motivo_anulacion: 'motivo_anulacion',
+    firma_digital: 'firma_digital',
     botellones_prestados_entrega: 'botellones_prestados_entrega',
     incluida_en_cierre: 'incluida_en_cierre',
     fecha_cierre: 'fecha_cierre'
@@ -56391,7 +56403,8 @@ export namespace Prisma {
     nombre_receptor: 'nombre_receptor',
     rut_receptor: 'rut_receptor',
     observaciones: 'observaciones',
-    motivo_anulacion: 'motivo_anulacion'
+    motivo_anulacion: 'motivo_anulacion',
+    firma_digital: 'firma_digital'
   };
 
   export type GuiaDespachoOrderByRelevanceFieldEnum = (typeof GuiaDespachoOrderByRelevanceFieldEnum)[keyof typeof GuiaDespachoOrderByRelevanceFieldEnum]
@@ -58462,6 +58475,7 @@ export namespace Prisma {
     observaciones?: StringNullableFilter<"GuiaDespacho"> | string | null
     total?: FloatFilter<"GuiaDespacho"> | number
     motivo_anulacion?: StringNullableFilter<"GuiaDespacho"> | string | null
+    firma_digital?: StringNullableFilter<"GuiaDespacho"> | string | null
     botellones_prestados_entrega?: IntFilter<"GuiaDespacho"> | number
     incluida_en_cierre?: BoolFilter<"GuiaDespacho"> | boolean
     fecha_cierre?: DateTimeNullableFilter<"GuiaDespacho"> | Date | string | null
@@ -58487,6 +58501,7 @@ export namespace Prisma {
     observaciones?: SortOrderInput | SortOrder
     total?: SortOrder
     motivo_anulacion?: SortOrderInput | SortOrder
+    firma_digital?: SortOrderInput | SortOrder
     botellones_prestados_entrega?: SortOrder
     incluida_en_cierre?: SortOrder
     fecha_cierre?: SortOrderInput | SortOrder
@@ -58516,6 +58531,7 @@ export namespace Prisma {
     observaciones?: StringNullableFilter<"GuiaDespacho"> | string | null
     total?: FloatFilter<"GuiaDespacho"> | number
     motivo_anulacion?: StringNullableFilter<"GuiaDespacho"> | string | null
+    firma_digital?: StringNullableFilter<"GuiaDespacho"> | string | null
     botellones_prestados_entrega?: IntFilter<"GuiaDespacho"> | number
     incluida_en_cierre?: BoolFilter<"GuiaDespacho"> | boolean
     fecha_cierre?: DateTimeNullableFilter<"GuiaDespacho"> | Date | string | null
@@ -58541,6 +58557,7 @@ export namespace Prisma {
     observaciones?: SortOrderInput | SortOrder
     total?: SortOrder
     motivo_anulacion?: SortOrderInput | SortOrder
+    firma_digital?: SortOrderInput | SortOrder
     botellones_prestados_entrega?: SortOrder
     incluida_en_cierre?: SortOrder
     fecha_cierre?: SortOrderInput | SortOrder
@@ -58569,6 +58586,7 @@ export namespace Prisma {
     observaciones?: StringNullableWithAggregatesFilter<"GuiaDespacho"> | string | null
     total?: FloatWithAggregatesFilter<"GuiaDespacho"> | number
     motivo_anulacion?: StringNullableWithAggregatesFilter<"GuiaDespacho"> | string | null
+    firma_digital?: StringNullableWithAggregatesFilter<"GuiaDespacho"> | string | null
     botellones_prestados_entrega?: IntWithAggregatesFilter<"GuiaDespacho"> | number
     incluida_en_cierre?: BoolWithAggregatesFilter<"GuiaDespacho"> | boolean
     fecha_cierre?: DateTimeNullableWithAggregatesFilter<"GuiaDespacho"> | Date | string | null
@@ -62279,6 +62297,7 @@ export namespace Prisma {
     observaciones?: string | null
     total: number
     motivo_anulacion?: string | null
+    firma_digital?: string | null
     botellones_prestados_entrega?: number
     incluida_en_cierre?: boolean
     fecha_cierre?: Date | string | null
@@ -62304,6 +62323,7 @@ export namespace Prisma {
     observaciones?: string | null
     total: number
     motivo_anulacion?: string | null
+    firma_digital?: string | null
     botellones_prestados_entrega?: number
     incluida_en_cierre?: boolean
     fecha_cierre?: Date | string | null
@@ -62322,6 +62342,7 @@ export namespace Prisma {
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     total?: FloatFieldUpdateOperationsInput | number
     motivo_anulacion?: NullableStringFieldUpdateOperationsInput | string | null
+    firma_digital?: NullableStringFieldUpdateOperationsInput | string | null
     botellones_prestados_entrega?: IntFieldUpdateOperationsInput | number
     incluida_en_cierre?: BoolFieldUpdateOperationsInput | boolean
     fecha_cierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -62347,6 +62368,7 @@ export namespace Prisma {
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     total?: FloatFieldUpdateOperationsInput | number
     motivo_anulacion?: NullableStringFieldUpdateOperationsInput | string | null
+    firma_digital?: NullableStringFieldUpdateOperationsInput | string | null
     botellones_prestados_entrega?: IntFieldUpdateOperationsInput | number
     incluida_en_cierre?: BoolFieldUpdateOperationsInput | boolean
     fecha_cierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -62369,6 +62391,7 @@ export namespace Prisma {
     observaciones?: string | null
     total: number
     motivo_anulacion?: string | null
+    firma_digital?: string | null
     botellones_prestados_entrega?: number
     incluida_en_cierre?: boolean
     fecha_cierre?: Date | string | null
@@ -62385,6 +62408,7 @@ export namespace Prisma {
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     total?: FloatFieldUpdateOperationsInput | number
     motivo_anulacion?: NullableStringFieldUpdateOperationsInput | string | null
+    firma_digital?: NullableStringFieldUpdateOperationsInput | string | null
     botellones_prestados_entrega?: IntFieldUpdateOperationsInput | number
     incluida_en_cierre?: BoolFieldUpdateOperationsInput | boolean
     fecha_cierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -62405,6 +62429,7 @@ export namespace Prisma {
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     total?: FloatFieldUpdateOperationsInput | number
     motivo_anulacion?: NullableStringFieldUpdateOperationsInput | string | null
+    firma_digital?: NullableStringFieldUpdateOperationsInput | string | null
     botellones_prestados_entrega?: IntFieldUpdateOperationsInput | number
     incluida_en_cierre?: BoolFieldUpdateOperationsInput | boolean
     fecha_cierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -66373,6 +66398,7 @@ export namespace Prisma {
     observaciones?: SortOrder
     total?: SortOrder
     motivo_anulacion?: SortOrder
+    firma_digital?: SortOrder
     botellones_prestados_entrega?: SortOrder
     incluida_en_cierre?: SortOrder
     fecha_cierre?: SortOrder
@@ -66399,6 +66425,7 @@ export namespace Prisma {
     observaciones?: SortOrder
     total?: SortOrder
     motivo_anulacion?: SortOrder
+    firma_digital?: SortOrder
     botellones_prestados_entrega?: SortOrder
     incluida_en_cierre?: SortOrder
     fecha_cierre?: SortOrder
@@ -66419,6 +66446,7 @@ export namespace Prisma {
     observaciones?: SortOrder
     total?: SortOrder
     motivo_anulacion?: SortOrder
+    firma_digital?: SortOrder
     botellones_prestados_entrega?: SortOrder
     incluida_en_cierre?: SortOrder
     fecha_cierre?: SortOrder
@@ -72687,6 +72715,7 @@ export namespace Prisma {
     observaciones?: string | null
     total: number
     motivo_anulacion?: string | null
+    firma_digital?: string | null
     botellones_prestados_entrega?: number
     incluida_en_cierre?: boolean
     fecha_cierre?: Date | string | null
@@ -72710,6 +72739,7 @@ export namespace Prisma {
     observaciones?: string | null
     total: number
     motivo_anulacion?: string | null
+    firma_digital?: string | null
     botellones_prestados_entrega?: number
     incluida_en_cierre?: boolean
     fecha_cierre?: Date | string | null
@@ -73212,6 +73242,7 @@ export namespace Prisma {
     observaciones?: StringNullableFilter<"GuiaDespacho"> | string | null
     total?: FloatFilter<"GuiaDespacho"> | number
     motivo_anulacion?: StringNullableFilter<"GuiaDespacho"> | string | null
+    firma_digital?: StringNullableFilter<"GuiaDespacho"> | string | null
     botellones_prestados_entrega?: IntFilter<"GuiaDespacho"> | number
     incluida_en_cierre?: BoolFilter<"GuiaDespacho"> | boolean
     fecha_cierre?: DateTimeNullableFilter<"GuiaDespacho"> | Date | string | null
@@ -75304,6 +75335,7 @@ export namespace Prisma {
     observaciones?: string | null
     total: number
     motivo_anulacion?: string | null
+    firma_digital?: string | null
     botellones_prestados_entrega?: number
     incluida_en_cierre?: boolean
     fecha_cierre?: Date | string | null
@@ -75327,6 +75359,7 @@ export namespace Prisma {
     observaciones?: string | null
     total: number
     motivo_anulacion?: string | null
+    firma_digital?: string | null
     botellones_prestados_entrega?: number
     incluida_en_cierre?: boolean
     fecha_cierre?: Date | string | null
@@ -77439,6 +77472,7 @@ export namespace Prisma {
     observaciones?: string | null
     total: number
     motivo_anulacion?: string | null
+    firma_digital?: string | null
     botellones_prestados_entrega?: number
     incluida_en_cierre?: boolean
     fecha_cierre?: Date | string | null
@@ -77462,6 +77496,7 @@ export namespace Prisma {
     observaciones?: string | null
     total: number
     motivo_anulacion?: string | null
+    firma_digital?: string | null
     botellones_prestados_entrega?: number
     incluida_en_cierre?: boolean
     fecha_cierre?: Date | string | null
@@ -77595,6 +77630,7 @@ export namespace Prisma {
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     total?: FloatFieldUpdateOperationsInput | number
     motivo_anulacion?: NullableStringFieldUpdateOperationsInput | string | null
+    firma_digital?: NullableStringFieldUpdateOperationsInput | string | null
     botellones_prestados_entrega?: IntFieldUpdateOperationsInput | number
     incluida_en_cierre?: BoolFieldUpdateOperationsInput | boolean
     fecha_cierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -77618,6 +77654,7 @@ export namespace Prisma {
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     total?: FloatFieldUpdateOperationsInput | number
     motivo_anulacion?: NullableStringFieldUpdateOperationsInput | string | null
+    firma_digital?: NullableStringFieldUpdateOperationsInput | string | null
     botellones_prestados_entrega?: IntFieldUpdateOperationsInput | number
     incluida_en_cierre?: BoolFieldUpdateOperationsInput | boolean
     fecha_cierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -78245,6 +78282,7 @@ export namespace Prisma {
     observaciones?: string | null
     total: number
     motivo_anulacion?: string | null
+    firma_digital?: string | null
     botellones_prestados_entrega?: number
     incluida_en_cierre?: boolean
     fecha_cierre?: Date | string | null
@@ -78269,6 +78307,7 @@ export namespace Prisma {
     observaciones?: string | null
     total: number
     motivo_anulacion?: string | null
+    firma_digital?: string | null
     botellones_prestados_entrega?: number
     incluida_en_cierre?: boolean
     fecha_cierre?: Date | string | null
@@ -78345,6 +78384,7 @@ export namespace Prisma {
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     total?: FloatFieldUpdateOperationsInput | number
     motivo_anulacion?: NullableStringFieldUpdateOperationsInput | string | null
+    firma_digital?: NullableStringFieldUpdateOperationsInput | string | null
     botellones_prestados_entrega?: IntFieldUpdateOperationsInput | number
     incluida_en_cierre?: BoolFieldUpdateOperationsInput | boolean
     fecha_cierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -78369,6 +78409,7 @@ export namespace Prisma {
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     total?: FloatFieldUpdateOperationsInput | number
     motivo_anulacion?: NullableStringFieldUpdateOperationsInput | string | null
+    firma_digital?: NullableStringFieldUpdateOperationsInput | string | null
     botellones_prestados_entrega?: IntFieldUpdateOperationsInput | number
     incluida_en_cierre?: BoolFieldUpdateOperationsInput | boolean
     fecha_cierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -79088,6 +79129,7 @@ export namespace Prisma {
     observaciones?: string | null
     total: number
     motivo_anulacion?: string | null
+    firma_digital?: string | null
     botellones_prestados_entrega?: number
     incluida_en_cierre?: boolean
     fecha_cierre?: Date | string | null
@@ -79112,6 +79154,7 @@ export namespace Prisma {
     observaciones?: string | null
     total: number
     motivo_anulacion?: string | null
+    firma_digital?: string | null
     botellones_prestados_entrega?: number
     incluida_en_cierre?: boolean
     fecha_cierre?: Date | string | null
@@ -79243,6 +79286,7 @@ export namespace Prisma {
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     total?: FloatFieldUpdateOperationsInput | number
     motivo_anulacion?: NullableStringFieldUpdateOperationsInput | string | null
+    firma_digital?: NullableStringFieldUpdateOperationsInput | string | null
     botellones_prestados_entrega?: IntFieldUpdateOperationsInput | number
     incluida_en_cierre?: BoolFieldUpdateOperationsInput | boolean
     fecha_cierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -79267,6 +79311,7 @@ export namespace Prisma {
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     total?: FloatFieldUpdateOperationsInput | number
     motivo_anulacion?: NullableStringFieldUpdateOperationsInput | string | null
+    firma_digital?: NullableStringFieldUpdateOperationsInput | string | null
     botellones_prestados_entrega?: IntFieldUpdateOperationsInput | number
     incluida_en_cierre?: BoolFieldUpdateOperationsInput | boolean
     fecha_cierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -82864,6 +82909,7 @@ export namespace Prisma {
     observaciones?: string | null
     total: number
     motivo_anulacion?: string | null
+    firma_digital?: string | null
     botellones_prestados_entrega?: number
     incluida_en_cierre?: boolean
     fecha_cierre?: Date | string | null
@@ -83094,6 +83140,7 @@ export namespace Prisma {
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     total?: FloatFieldUpdateOperationsInput | number
     motivo_anulacion?: NullableStringFieldUpdateOperationsInput | string | null
+    firma_digital?: NullableStringFieldUpdateOperationsInput | string | null
     botellones_prestados_entrega?: IntFieldUpdateOperationsInput | number
     incluida_en_cierre?: BoolFieldUpdateOperationsInput | boolean
     fecha_cierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -83117,6 +83164,7 @@ export namespace Prisma {
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     total?: FloatFieldUpdateOperationsInput | number
     motivo_anulacion?: NullableStringFieldUpdateOperationsInput | string | null
+    firma_digital?: NullableStringFieldUpdateOperationsInput | string | null
     botellones_prestados_entrega?: IntFieldUpdateOperationsInput | number
     incluida_en_cierre?: BoolFieldUpdateOperationsInput | boolean
     fecha_cierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -83138,6 +83186,7 @@ export namespace Prisma {
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     total?: FloatFieldUpdateOperationsInput | number
     motivo_anulacion?: NullableStringFieldUpdateOperationsInput | string | null
+    firma_digital?: NullableStringFieldUpdateOperationsInput | string | null
     botellones_prestados_entrega?: IntFieldUpdateOperationsInput | number
     incluida_en_cierre?: BoolFieldUpdateOperationsInput | boolean
     fecha_cierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -84110,6 +84159,7 @@ export namespace Prisma {
     observaciones?: string | null
     total: number
     motivo_anulacion?: string | null
+    firma_digital?: string | null
     botellones_prestados_entrega?: number
     incluida_en_cierre?: boolean
     fecha_cierre?: Date | string | null
@@ -84272,6 +84322,7 @@ export namespace Prisma {
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     total?: FloatFieldUpdateOperationsInput | number
     motivo_anulacion?: NullableStringFieldUpdateOperationsInput | string | null
+    firma_digital?: NullableStringFieldUpdateOperationsInput | string | null
     botellones_prestados_entrega?: IntFieldUpdateOperationsInput | number
     incluida_en_cierre?: BoolFieldUpdateOperationsInput | boolean
     fecha_cierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -84295,6 +84346,7 @@ export namespace Prisma {
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     total?: FloatFieldUpdateOperationsInput | number
     motivo_anulacion?: NullableStringFieldUpdateOperationsInput | string | null
+    firma_digital?: NullableStringFieldUpdateOperationsInput | string | null
     botellones_prestados_entrega?: IntFieldUpdateOperationsInput | number
     incluida_en_cierre?: BoolFieldUpdateOperationsInput | boolean
     fecha_cierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -84316,6 +84368,7 @@ export namespace Prisma {
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     total?: FloatFieldUpdateOperationsInput | number
     motivo_anulacion?: NullableStringFieldUpdateOperationsInput | string | null
+    firma_digital?: NullableStringFieldUpdateOperationsInput | string | null
     botellones_prestados_entrega?: IntFieldUpdateOperationsInput | number
     incluida_en_cierre?: BoolFieldUpdateOperationsInput | boolean
     fecha_cierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
