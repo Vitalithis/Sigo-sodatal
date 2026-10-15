@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useTransition } from 'react';
+import React, { useState, useEffect, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { 
   Plus, Truck, Wrench, Fuel, AlertTriangle, FileSpreadsheet, Edit3, Calendar, 
@@ -17,6 +17,8 @@ import {
   registrarCargaCombustibleAction
 } from '../actions';
 import { getHoyHabilStr, handleDateInputSoloHabiles } from '@/lib/fechas';
+import { usePopup } from '@/hooks/usePopup';
+import PopupGlobal from '@/components/ui/PopupGlobal';
 
 interface VehicleManagerProps {
   initialVehiculos: any[];
@@ -25,6 +27,7 @@ interface VehicleManagerProps {
 export default function VehicleManager({ initialVehiculos }: VehicleManagerProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
+  const { popup, showSuccess, showError, close } = usePopup();
   
   const [vehiculoSeleccionadoId, setVehiculoSeleccionadoId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'historial' | 'nueva-mantencion' | 'alertas' | 'combustible'>('historial');
@@ -38,6 +41,19 @@ export default function VehicleManager({ initialVehiculos }: VehicleManagerProps
   const [vehicleForm, setVehicleForm] = useState<VehiculoInput>({
     patente: '', marca: '', modelo: '', anio: 2026, kilometraje_actual: 0, estado: 'ACTIVO'
   });
+
+  // Cerrar modal con tecla Escape
+  useEffect(() => {
+    if (!isModalOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && !isPending) {
+        setIsModalOpen(false);
+        setEditandoVehiculoId(null);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isModalOpen, isPending]);
 
   // Formulario Mantención
   const [mantencionForm, setMantencionForm] = useState({
@@ -72,7 +88,10 @@ export default function VehicleManager({ initialVehiculos }: VehicleManagerProps
   const exportarCombustibleCSV = () => {
     if (!vehiculoSeleccionado) return;
     const cargas = vehiculoSeleccionado.cargas_combustible || vehiculoSeleccionado.cargasCombustible || [];
-    if (cargas.length === 0) return alert('No hay registros de combustible para exportar.');
+    if (cargas.length === 0) {
+      showError('Sin registros', 'No hay registros de combustible para exportar.');
+      return;
+    }
 
     const headers = ['Fecha', 'Patente', 'Estacion_Bencinera', 'Numero_Factura', 'Odometro_KM', 'Litros', 'Monto_Total_CLP'];
     const rows = cargas.map((c: any) => [
@@ -87,12 +106,16 @@ export default function VehicleManager({ initialVehiculos }: VehicleManagerProps
 
     const csvContent = [headers.join(';'), ...rows.map((e: any[]) => e.join(';'))].join('\n');
     descargarArchivoCSV(csvContent, `combustible_${vehiculoSeleccionado.patente}.csv`);
+    showSuccess('Descarga Completa', `Archivo combustible_${vehiculoSeleccionado.patente}.csv generado.`);
   };
 
   const exportarMantencionesCSV = () => {
     if (!vehiculoSeleccionado) return;
     const mantenciones = vehiculoSeleccionado.mantenciones || [];
-    if (mantenciones.length === 0) return alert('No hay registros de taller para exportar.');
+    if (mantenciones.length === 0) {
+      showError('Sin registros', 'No hay registros de taller para exportar.');
+      return;
+    }
 
     const headers = ['Fecha', 'Patente', 'Tipo_Mantencion', 'Taller', 'Odometro_KM', 'Costo_Total_CLP', 'Observaciones'];
     const rows = mantenciones.map((m: any) => [
@@ -107,6 +130,7 @@ export default function VehicleManager({ initialVehiculos }: VehicleManagerProps
 
     const csvContent = [headers.join(';'), ...rows.map((e: any[]) => e.join(';'))].join('\n');
     descargarArchivoCSV(csvContent, `taller_${vehiculoSeleccionado.patente}.csv`);
+    showSuccess('Descarga Completa', `Archivo taller_${vehiculoSeleccionado.patente}.csv generado.`);
   };
 
   const descargarArchivoCSV = (content: string, fileName: string) => {
@@ -259,6 +283,7 @@ export default function VehicleManager({ initialVehiculos }: VehicleManagerProps
 
   return (
     <div className="flex flex-col gap-6">
+      <PopupGlobal popup={popup} onClose={close} />
       {/* Encabezado de la Sección de Vehículos */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-slate-100">
         <div>
@@ -373,7 +398,15 @@ export default function VehicleManager({ initialVehiculos }: VehicleManagerProps
 
       {/* Modal Alta/Edición de Vehículo */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+        <div
+          onClick={(e) => {
+            if (e.target === e.currentTarget && !isPending) {
+              setIsModalOpen(false);
+              setEditandoVehiculoId(null);
+            }
+          }}
+          className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4 z-50"
+        >
           <form onSubmit={handleSaveVehicle} className="bg-white rounded-2xl shadow-2xl border border-slate-100 w-full max-w-md p-6 space-y-4">
             <div className="flex justify-between items-center border-b border-slate-100 pb-3">
               <h2 className="text-base font-bold text-slate-900">

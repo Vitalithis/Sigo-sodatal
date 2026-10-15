@@ -5101,6 +5101,7 @@ export namespace Prisma {
     cargas_combustible: number
     cuadraturas: number
     guias: number
+    guias_anuladas: number
     log_accesos: number
     mantenciones: number
     produccion: number
@@ -5117,6 +5118,7 @@ export namespace Prisma {
     cargas_combustible?: boolean | UsuarioCountOutputTypeCountCargas_combustibleArgs
     cuadraturas?: boolean | UsuarioCountOutputTypeCountCuadraturasArgs
     guias?: boolean | UsuarioCountOutputTypeCountGuiasArgs
+    guias_anuladas?: boolean | UsuarioCountOutputTypeCountGuias_anuladasArgs
     log_accesos?: boolean | UsuarioCountOutputTypeCountLog_accesosArgs
     mantenciones?: boolean | UsuarioCountOutputTypeCountMantencionesArgs
     produccion?: boolean | UsuarioCountOutputTypeCountProduccionArgs
@@ -5164,6 +5166,13 @@ export namespace Prisma {
    * UsuarioCountOutputType without action
    */
   export type UsuarioCountOutputTypeCountGuiasArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GuiaDespachoWhereInput
+  }
+
+  /**
+   * UsuarioCountOutputType without action
+   */
+  export type UsuarioCountOutputTypeCountGuias_anuladasArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: GuiaDespachoWhereInput
   }
 
@@ -5763,11 +5772,15 @@ export namespace Prisma {
 
   export type GuiaDespachoCountOutputType = {
     cuadratura_ventas: number
+    guias_que_reemplazan_a_esta: number
+    guias_reemplazadas_por_esta: number
     items: number
   }
 
   export type GuiaDespachoCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     cuadratura_ventas?: boolean | GuiaDespachoCountOutputTypeCountCuadratura_ventasArgs
+    guias_que_reemplazan_a_esta?: boolean | GuiaDespachoCountOutputTypeCountGuias_que_reemplazan_a_estaArgs
+    guias_reemplazadas_por_esta?: boolean | GuiaDespachoCountOutputTypeCountGuias_reemplazadas_por_estaArgs
     items?: boolean | GuiaDespachoCountOutputTypeCountItemsArgs
   }
 
@@ -5787,6 +5800,20 @@ export namespace Prisma {
    */
   export type GuiaDespachoCountOutputTypeCountCuadratura_ventasArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: CuadraturaVentaWhereInput
+  }
+
+  /**
+   * GuiaDespachoCountOutputType without action
+   */
+  export type GuiaDespachoCountOutputTypeCountGuias_que_reemplazan_a_estaArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GuiaDespachoWhereInput
+  }
+
+  /**
+   * GuiaDespachoCountOutputType without action
+   */
+  export type GuiaDespachoCountOutputTypeCountGuias_reemplazadas_por_estaArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GuiaDespachoWhereInput
   }
 
   /**
@@ -6298,6 +6325,7 @@ export namespace Prisma {
     cargas_combustible?: boolean | Usuario$cargas_combustibleArgs<ExtArgs>
     cuadraturas?: boolean | Usuario$cuadraturasArgs<ExtArgs>
     guias?: boolean | Usuario$guiasArgs<ExtArgs>
+    guias_anuladas?: boolean | Usuario$guias_anuladasArgs<ExtArgs>
     log_accesos?: boolean | Usuario$log_accesosArgs<ExtArgs>
     mantenciones?: boolean | Usuario$mantencionesArgs<ExtArgs>
     produccion?: boolean | Usuario$produccionArgs<ExtArgs>
@@ -6338,6 +6366,7 @@ export namespace Prisma {
     cargas_combustible?: boolean | Usuario$cargas_combustibleArgs<ExtArgs>
     cuadraturas?: boolean | Usuario$cuadraturasArgs<ExtArgs>
     guias?: boolean | Usuario$guiasArgs<ExtArgs>
+    guias_anuladas?: boolean | Usuario$guias_anuladasArgs<ExtArgs>
     log_accesos?: boolean | Usuario$log_accesosArgs<ExtArgs>
     mantenciones?: boolean | Usuario$mantencionesArgs<ExtArgs>
     produccion?: boolean | Usuario$produccionArgs<ExtArgs>
@@ -6359,6 +6388,7 @@ export namespace Prisma {
       cargas_combustible: Prisma.$CargaCombustiblePayload<ExtArgs>[]
       cuadraturas: Prisma.$CuadraturaPayload<ExtArgs>[]
       guias: Prisma.$GuiaDespachoPayload<ExtArgs>[]
+      guias_anuladas: Prisma.$GuiaDespachoPayload<ExtArgs>[]
       log_accesos: Prisma.$LogAccesoPayload<ExtArgs>[]
       mantenciones: Prisma.$MantencionPayload<ExtArgs>[]
       produccion: Prisma.$ProduccionDiariaPayload<ExtArgs>[]
@@ -6731,6 +6761,7 @@ export namespace Prisma {
     cargas_combustible<T extends Usuario$cargas_combustibleArgs<ExtArgs> = {}>(args?: Subset<T, Usuario$cargas_combustibleArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CargaCombustiblePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     cuadraturas<T extends Usuario$cuadraturasArgs<ExtArgs> = {}>(args?: Subset<T, Usuario$cuadraturasArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CuadraturaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     guias<T extends Usuario$guiasArgs<ExtArgs> = {}>(args?: Subset<T, Usuario$guiasArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GuiaDespachoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    guias_anuladas<T extends Usuario$guias_anuladasArgs<ExtArgs> = {}>(args?: Subset<T, Usuario$guias_anuladasArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GuiaDespachoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     log_accesos<T extends Usuario$log_accesosArgs<ExtArgs> = {}>(args?: Subset<T, Usuario$log_accesosArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LogAccesoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     mantenciones<T extends Usuario$mantencionesArgs<ExtArgs> = {}>(args?: Subset<T, Usuario$mantencionesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MantencionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     produccion<T extends Usuario$produccionArgs<ExtArgs> = {}>(args?: Subset<T, Usuario$produccionArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProduccionDiariaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -7204,6 +7235,30 @@ export namespace Prisma {
    * Usuario.guias
    */
   export type Usuario$guiasArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GuiaDespacho
+     */
+    select?: GuiaDespachoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GuiaDespacho
+     */
+    omit?: GuiaDespachoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GuiaDespachoInclude<ExtArgs> | null
+    where?: GuiaDespachoWhereInput
+    orderBy?: GuiaDespachoOrderByWithRelationInput | GuiaDespachoOrderByWithRelationInput[]
+    cursor?: GuiaDespachoWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: GuiaDespachoScalarFieldEnum | GuiaDespachoScalarFieldEnum[]
+  }
+
+  /**
+   * Usuario.guias_anuladas
+   */
+  export type Usuario$guias_anuladasArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the GuiaDespacho
      */
@@ -25441,12 +25496,20 @@ export namespace Prisma {
     direccion_entrega: string | null
     usuario_repartidor_id: string | null
     estado: $Enums.EstadoGuia | null
+    estado_documento: string | null
+    forma_pago: string | null
+    numero_factura: string | null
     nombre_receptor: string | null
     rut_receptor: string | null
     hora_entrega: Date | null
     observaciones: string | null
     total: number | null
     motivo_anulacion: string | null
+    anulada_motivo: string | null
+    anulada_at: Date | null
+    anulada_por_id: string | null
+    reemplaza_a_guia_id: string | null
+    reemplazada_por_guia_id: string | null
     firma_digital: string | null
     botellones_prestados_entrega: number | null
     incluida_en_cierre: boolean | null
@@ -25462,12 +25525,20 @@ export namespace Prisma {
     direccion_entrega: string | null
     usuario_repartidor_id: string | null
     estado: $Enums.EstadoGuia | null
+    estado_documento: string | null
+    forma_pago: string | null
+    numero_factura: string | null
     nombre_receptor: string | null
     rut_receptor: string | null
     hora_entrega: Date | null
     observaciones: string | null
     total: number | null
     motivo_anulacion: string | null
+    anulada_motivo: string | null
+    anulada_at: Date | null
+    anulada_por_id: string | null
+    reemplaza_a_guia_id: string | null
+    reemplazada_por_guia_id: string | null
     firma_digital: string | null
     botellones_prestados_entrega: number | null
     incluida_en_cierre: boolean | null
@@ -25483,12 +25554,20 @@ export namespace Prisma {
     direccion_entrega: number
     usuario_repartidor_id: number
     estado: number
+    estado_documento: number
+    forma_pago: number
+    numero_factura: number
     nombre_receptor: number
     rut_receptor: number
     hora_entrega: number
     observaciones: number
     total: number
     motivo_anulacion: number
+    anulada_motivo: number
+    anulada_at: number
+    anulada_por_id: number
+    reemplaza_a_guia_id: number
+    reemplazada_por_guia_id: number
     firma_digital: number
     botellones_prestados_entrega: number
     incluida_en_cierre: number
@@ -25518,12 +25597,20 @@ export namespace Prisma {
     direccion_entrega?: true
     usuario_repartidor_id?: true
     estado?: true
+    estado_documento?: true
+    forma_pago?: true
+    numero_factura?: true
     nombre_receptor?: true
     rut_receptor?: true
     hora_entrega?: true
     observaciones?: true
     total?: true
     motivo_anulacion?: true
+    anulada_motivo?: true
+    anulada_at?: true
+    anulada_por_id?: true
+    reemplaza_a_guia_id?: true
+    reemplazada_por_guia_id?: true
     firma_digital?: true
     botellones_prestados_entrega?: true
     incluida_en_cierre?: true
@@ -25539,12 +25626,20 @@ export namespace Prisma {
     direccion_entrega?: true
     usuario_repartidor_id?: true
     estado?: true
+    estado_documento?: true
+    forma_pago?: true
+    numero_factura?: true
     nombre_receptor?: true
     rut_receptor?: true
     hora_entrega?: true
     observaciones?: true
     total?: true
     motivo_anulacion?: true
+    anulada_motivo?: true
+    anulada_at?: true
+    anulada_por_id?: true
+    reemplaza_a_guia_id?: true
+    reemplazada_por_guia_id?: true
     firma_digital?: true
     botellones_prestados_entrega?: true
     incluida_en_cierre?: true
@@ -25560,12 +25655,20 @@ export namespace Prisma {
     direccion_entrega?: true
     usuario_repartidor_id?: true
     estado?: true
+    estado_documento?: true
+    forma_pago?: true
+    numero_factura?: true
     nombre_receptor?: true
     rut_receptor?: true
     hora_entrega?: true
     observaciones?: true
     total?: true
     motivo_anulacion?: true
+    anulada_motivo?: true
+    anulada_at?: true
+    anulada_por_id?: true
+    reemplaza_a_guia_id?: true
+    reemplazada_por_guia_id?: true
     firma_digital?: true
     botellones_prestados_entrega?: true
     incluida_en_cierre?: true
@@ -25668,12 +25771,20 @@ export namespace Prisma {
     direccion_entrega: string
     usuario_repartidor_id: string
     estado: $Enums.EstadoGuia
+    estado_documento: string | null
+    forma_pago: string | null
+    numero_factura: string | null
     nombre_receptor: string | null
     rut_receptor: string | null
     hora_entrega: Date | null
     observaciones: string | null
     total: number
     motivo_anulacion: string | null
+    anulada_motivo: string | null
+    anulada_at: Date | null
+    anulada_por_id: string | null
+    reemplaza_a_guia_id: string | null
+    reemplazada_por_guia_id: string | null
     firma_digital: string | null
     botellones_prestados_entrega: number
     incluida_en_cierre: boolean
@@ -25708,12 +25819,20 @@ export namespace Prisma {
     direccion_entrega?: boolean
     usuario_repartidor_id?: boolean
     estado?: boolean
+    estado_documento?: boolean
+    forma_pago?: boolean
+    numero_factura?: boolean
     nombre_receptor?: boolean
     rut_receptor?: boolean
     hora_entrega?: boolean
     observaciones?: boolean
     total?: boolean
     motivo_anulacion?: boolean
+    anulada_motivo?: boolean
+    anulada_at?: boolean
+    anulada_por_id?: boolean
+    reemplaza_a_guia_id?: boolean
+    reemplazada_por_guia_id?: boolean
     firma_digital?: boolean
     botellones_prestados_entrega?: boolean
     incluida_en_cierre?: boolean
@@ -25721,6 +25840,11 @@ export namespace Prisma {
     cuadratura_ventas?: boolean | GuiaDespacho$cuadratura_ventasArgs<ExtArgs>
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
     usuario_repartidor?: boolean | UsuarioDefaultArgs<ExtArgs>
+    anulada_por?: boolean | GuiaDespacho$anulada_porArgs<ExtArgs>
+    reemplaza_a?: boolean | GuiaDespacho$reemplaza_aArgs<ExtArgs>
+    guias_que_reemplazan_a_esta?: boolean | GuiaDespacho$guias_que_reemplazan_a_estaArgs<ExtArgs>
+    reemplazada_por?: boolean | GuiaDespacho$reemplazada_porArgs<ExtArgs>
+    guias_reemplazadas_por_esta?: boolean | GuiaDespacho$guias_reemplazadas_por_estaArgs<ExtArgs>
     pedido?: boolean | GuiaDespacho$pedidoArgs<ExtArgs>
     items?: boolean | GuiaDespacho$itemsArgs<ExtArgs>
     _count?: boolean | GuiaDespachoCountOutputTypeDefaultArgs<ExtArgs>
@@ -25737,23 +25861,36 @@ export namespace Prisma {
     direccion_entrega?: boolean
     usuario_repartidor_id?: boolean
     estado?: boolean
+    estado_documento?: boolean
+    forma_pago?: boolean
+    numero_factura?: boolean
     nombre_receptor?: boolean
     rut_receptor?: boolean
     hora_entrega?: boolean
     observaciones?: boolean
     total?: boolean
     motivo_anulacion?: boolean
+    anulada_motivo?: boolean
+    anulada_at?: boolean
+    anulada_por_id?: boolean
+    reemplaza_a_guia_id?: boolean
+    reemplazada_por_guia_id?: boolean
     firma_digital?: boolean
     botellones_prestados_entrega?: boolean
     incluida_en_cierre?: boolean
     fecha_cierre?: boolean
   }
 
-  export type GuiaDespachoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "numero_correlativo" | "fecha_emision" | "cliente_id" | "pedido_id" | "direccion_entrega" | "usuario_repartidor_id" | "estado" | "nombre_receptor" | "rut_receptor" | "hora_entrega" | "observaciones" | "total" | "motivo_anulacion" | "firma_digital" | "botellones_prestados_entrega" | "incluida_en_cierre" | "fecha_cierre", ExtArgs["result"]["guiaDespacho"]>
+  export type GuiaDespachoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "numero_correlativo" | "fecha_emision" | "cliente_id" | "pedido_id" | "direccion_entrega" | "usuario_repartidor_id" | "estado" | "estado_documento" | "forma_pago" | "numero_factura" | "nombre_receptor" | "rut_receptor" | "hora_entrega" | "observaciones" | "total" | "motivo_anulacion" | "anulada_motivo" | "anulada_at" | "anulada_por_id" | "reemplaza_a_guia_id" | "reemplazada_por_guia_id" | "firma_digital" | "botellones_prestados_entrega" | "incluida_en_cierre" | "fecha_cierre", ExtArgs["result"]["guiaDespacho"]>
   export type GuiaDespachoInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     cuadratura_ventas?: boolean | GuiaDespacho$cuadratura_ventasArgs<ExtArgs>
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
     usuario_repartidor?: boolean | UsuarioDefaultArgs<ExtArgs>
+    anulada_por?: boolean | GuiaDespacho$anulada_porArgs<ExtArgs>
+    reemplaza_a?: boolean | GuiaDespacho$reemplaza_aArgs<ExtArgs>
+    guias_que_reemplazan_a_esta?: boolean | GuiaDespacho$guias_que_reemplazan_a_estaArgs<ExtArgs>
+    reemplazada_por?: boolean | GuiaDespacho$reemplazada_porArgs<ExtArgs>
+    guias_reemplazadas_por_esta?: boolean | GuiaDespacho$guias_reemplazadas_por_estaArgs<ExtArgs>
     pedido?: boolean | GuiaDespacho$pedidoArgs<ExtArgs>
     items?: boolean | GuiaDespacho$itemsArgs<ExtArgs>
     _count?: boolean | GuiaDespachoCountOutputTypeDefaultArgs<ExtArgs>
@@ -25765,6 +25902,11 @@ export namespace Prisma {
       cuadratura_ventas: Prisma.$CuadraturaVentaPayload<ExtArgs>[]
       cliente: Prisma.$ClientePayload<ExtArgs>
       usuario_repartidor: Prisma.$UsuarioPayload<ExtArgs>
+      anulada_por: Prisma.$UsuarioPayload<ExtArgs> | null
+      reemplaza_a: Prisma.$GuiaDespachoPayload<ExtArgs> | null
+      guias_que_reemplazan_a_esta: Prisma.$GuiaDespachoPayload<ExtArgs>[]
+      reemplazada_por: Prisma.$GuiaDespachoPayload<ExtArgs> | null
+      guias_reemplazadas_por_esta: Prisma.$GuiaDespachoPayload<ExtArgs>[]
       pedido: Prisma.$PedidoPayload<ExtArgs> | null
       items: Prisma.$ItemGuiaPayload<ExtArgs>[]
     }
@@ -25777,12 +25919,20 @@ export namespace Prisma {
       direccion_entrega: string
       usuario_repartidor_id: string
       estado: $Enums.EstadoGuia
+      estado_documento: string | null
+      forma_pago: string | null
+      numero_factura: string | null
       nombre_receptor: string | null
       rut_receptor: string | null
       hora_entrega: Date | null
       observaciones: string | null
       total: number
       motivo_anulacion: string | null
+      anulada_motivo: string | null
+      anulada_at: Date | null
+      anulada_por_id: string | null
+      reemplaza_a_guia_id: string | null
+      reemplazada_por_guia_id: string | null
       firma_digital: string | null
       botellones_prestados_entrega: number
       incluida_en_cierre: boolean
@@ -26130,6 +26280,11 @@ export namespace Prisma {
     cuadratura_ventas<T extends GuiaDespacho$cuadratura_ventasArgs<ExtArgs> = {}>(args?: Subset<T, GuiaDespacho$cuadratura_ventasArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CuadraturaVentaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     cliente<T extends ClienteDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ClienteDefaultArgs<ExtArgs>>): Prisma__ClienteClient<$Result.GetResult<Prisma.$ClientePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     usuario_repartidor<T extends UsuarioDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UsuarioDefaultArgs<ExtArgs>>): Prisma__UsuarioClient<$Result.GetResult<Prisma.$UsuarioPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    anulada_por<T extends GuiaDespacho$anulada_porArgs<ExtArgs> = {}>(args?: Subset<T, GuiaDespacho$anulada_porArgs<ExtArgs>>): Prisma__UsuarioClient<$Result.GetResult<Prisma.$UsuarioPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    reemplaza_a<T extends GuiaDespacho$reemplaza_aArgs<ExtArgs> = {}>(args?: Subset<T, GuiaDespacho$reemplaza_aArgs<ExtArgs>>): Prisma__GuiaDespachoClient<$Result.GetResult<Prisma.$GuiaDespachoPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    guias_que_reemplazan_a_esta<T extends GuiaDespacho$guias_que_reemplazan_a_estaArgs<ExtArgs> = {}>(args?: Subset<T, GuiaDespacho$guias_que_reemplazan_a_estaArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GuiaDespachoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    reemplazada_por<T extends GuiaDespacho$reemplazada_porArgs<ExtArgs> = {}>(args?: Subset<T, GuiaDespacho$reemplazada_porArgs<ExtArgs>>): Prisma__GuiaDespachoClient<$Result.GetResult<Prisma.$GuiaDespachoPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    guias_reemplazadas_por_esta<T extends GuiaDespacho$guias_reemplazadas_por_estaArgs<ExtArgs> = {}>(args?: Subset<T, GuiaDespacho$guias_reemplazadas_por_estaArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GuiaDespachoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     pedido<T extends GuiaDespacho$pedidoArgs<ExtArgs> = {}>(args?: Subset<T, GuiaDespacho$pedidoArgs<ExtArgs>>): Prisma__PedidoClient<$Result.GetResult<Prisma.$PedidoPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     items<T extends GuiaDespacho$itemsArgs<ExtArgs> = {}>(args?: Subset<T, GuiaDespacho$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ItemGuiaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
@@ -26169,12 +26324,20 @@ export namespace Prisma {
     readonly direccion_entrega: FieldRef<"GuiaDespacho", 'String'>
     readonly usuario_repartidor_id: FieldRef<"GuiaDespacho", 'String'>
     readonly estado: FieldRef<"GuiaDespacho", 'EstadoGuia'>
+    readonly estado_documento: FieldRef<"GuiaDespacho", 'String'>
+    readonly forma_pago: FieldRef<"GuiaDespacho", 'String'>
+    readonly numero_factura: FieldRef<"GuiaDespacho", 'String'>
     readonly nombre_receptor: FieldRef<"GuiaDespacho", 'String'>
     readonly rut_receptor: FieldRef<"GuiaDespacho", 'String'>
     readonly hora_entrega: FieldRef<"GuiaDespacho", 'DateTime'>
     readonly observaciones: FieldRef<"GuiaDespacho", 'String'>
     readonly total: FieldRef<"GuiaDespacho", 'Float'>
     readonly motivo_anulacion: FieldRef<"GuiaDespacho", 'String'>
+    readonly anulada_motivo: FieldRef<"GuiaDespacho", 'String'>
+    readonly anulada_at: FieldRef<"GuiaDespacho", 'DateTime'>
+    readonly anulada_por_id: FieldRef<"GuiaDespacho", 'String'>
+    readonly reemplaza_a_guia_id: FieldRef<"GuiaDespacho", 'String'>
+    readonly reemplazada_por_guia_id: FieldRef<"GuiaDespacho", 'String'>
     readonly firma_digital: FieldRef<"GuiaDespacho", 'String'>
     readonly botellones_prestados_entrega: FieldRef<"GuiaDespacho", 'Int'>
     readonly incluida_en_cierre: FieldRef<"GuiaDespacho", 'Boolean'>
@@ -26543,6 +26706,111 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: CuadraturaVentaScalarFieldEnum | CuadraturaVentaScalarFieldEnum[]
+  }
+
+  /**
+   * GuiaDespacho.anulada_por
+   */
+  export type GuiaDespacho$anulada_porArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Usuario
+     */
+    select?: UsuarioSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Usuario
+     */
+    omit?: UsuarioOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UsuarioInclude<ExtArgs> | null
+    where?: UsuarioWhereInput
+  }
+
+  /**
+   * GuiaDespacho.reemplaza_a
+   */
+  export type GuiaDespacho$reemplaza_aArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GuiaDespacho
+     */
+    select?: GuiaDespachoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GuiaDespacho
+     */
+    omit?: GuiaDespachoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GuiaDespachoInclude<ExtArgs> | null
+    where?: GuiaDespachoWhereInput
+  }
+
+  /**
+   * GuiaDespacho.guias_que_reemplazan_a_esta
+   */
+  export type GuiaDespacho$guias_que_reemplazan_a_estaArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GuiaDespacho
+     */
+    select?: GuiaDespachoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GuiaDespacho
+     */
+    omit?: GuiaDespachoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GuiaDespachoInclude<ExtArgs> | null
+    where?: GuiaDespachoWhereInput
+    orderBy?: GuiaDespachoOrderByWithRelationInput | GuiaDespachoOrderByWithRelationInput[]
+    cursor?: GuiaDespachoWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: GuiaDespachoScalarFieldEnum | GuiaDespachoScalarFieldEnum[]
+  }
+
+  /**
+   * GuiaDespacho.reemplazada_por
+   */
+  export type GuiaDespacho$reemplazada_porArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GuiaDespacho
+     */
+    select?: GuiaDespachoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GuiaDespacho
+     */
+    omit?: GuiaDespachoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GuiaDespachoInclude<ExtArgs> | null
+    where?: GuiaDespachoWhereInput
+  }
+
+  /**
+   * GuiaDespacho.guias_reemplazadas_por_esta
+   */
+  export type GuiaDespacho$guias_reemplazadas_por_estaArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GuiaDespacho
+     */
+    select?: GuiaDespachoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GuiaDespacho
+     */
+    omit?: GuiaDespachoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GuiaDespachoInclude<ExtArgs> | null
+    where?: GuiaDespachoWhereInput
+    orderBy?: GuiaDespachoOrderByWithRelationInput | GuiaDespachoOrderByWithRelationInput[]
+    cursor?: GuiaDespachoWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: GuiaDespachoScalarFieldEnum | GuiaDespachoScalarFieldEnum[]
   }
 
   /**
@@ -55780,12 +56048,20 @@ export namespace Prisma {
     direccion_entrega: 'direccion_entrega',
     usuario_repartidor_id: 'usuario_repartidor_id',
     estado: 'estado',
+    estado_documento: 'estado_documento',
+    forma_pago: 'forma_pago',
+    numero_factura: 'numero_factura',
     nombre_receptor: 'nombre_receptor',
     rut_receptor: 'rut_receptor',
     hora_entrega: 'hora_entrega',
     observaciones: 'observaciones',
     total: 'total',
     motivo_anulacion: 'motivo_anulacion',
+    anulada_motivo: 'anulada_motivo',
+    anulada_at: 'anulada_at',
+    anulada_por_id: 'anulada_por_id',
+    reemplaza_a_guia_id: 'reemplaza_a_guia_id',
+    reemplazada_por_guia_id: 'reemplazada_por_guia_id',
     firma_digital: 'firma_digital',
     botellones_prestados_entrega: 'botellones_prestados_entrega',
     incluida_en_cierre: 'incluida_en_cierre',
@@ -56400,10 +56676,17 @@ export namespace Prisma {
     pedido_id: 'pedido_id',
     direccion_entrega: 'direccion_entrega',
     usuario_repartidor_id: 'usuario_repartidor_id',
+    estado_documento: 'estado_documento',
+    forma_pago: 'forma_pago',
+    numero_factura: 'numero_factura',
     nombre_receptor: 'nombre_receptor',
     rut_receptor: 'rut_receptor',
     observaciones: 'observaciones',
     motivo_anulacion: 'motivo_anulacion',
+    anulada_motivo: 'anulada_motivo',
+    anulada_por_id: 'anulada_por_id',
+    reemplaza_a_guia_id: 'reemplaza_a_guia_id',
+    reemplazada_por_guia_id: 'reemplazada_por_guia_id',
     firma_digital: 'firma_digital'
   };
 
@@ -56972,6 +57255,7 @@ export namespace Prisma {
     cargas_combustible?: CargaCombustibleListRelationFilter
     cuadraturas?: CuadraturaListRelationFilter
     guias?: GuiaDespachoListRelationFilter
+    guias_anuladas?: GuiaDespachoListRelationFilter
     log_accesos?: LogAccesoListRelationFilter
     mantenciones?: MantencionListRelationFilter
     produccion?: ProduccionDiariaListRelationFilter
@@ -57005,6 +57289,7 @@ export namespace Prisma {
     cargas_combustible?: CargaCombustibleOrderByRelationAggregateInput
     cuadraturas?: CuadraturaOrderByRelationAggregateInput
     guias?: GuiaDespachoOrderByRelationAggregateInput
+    guias_anuladas?: GuiaDespachoOrderByRelationAggregateInput
     log_accesos?: LogAccesoOrderByRelationAggregateInput
     mantenciones?: MantencionOrderByRelationAggregateInput
     produccion?: ProduccionDiariaOrderByRelationAggregateInput
@@ -57042,6 +57327,7 @@ export namespace Prisma {
     cargas_combustible?: CargaCombustibleListRelationFilter
     cuadraturas?: CuadraturaListRelationFilter
     guias?: GuiaDespachoListRelationFilter
+    guias_anuladas?: GuiaDespachoListRelationFilter
     log_accesos?: LogAccesoListRelationFilter
     mantenciones?: MantencionListRelationFilter
     produccion?: ProduccionDiariaListRelationFilter
@@ -58469,12 +58755,20 @@ export namespace Prisma {
     direccion_entrega?: StringFilter<"GuiaDespacho"> | string
     usuario_repartidor_id?: StringFilter<"GuiaDespacho"> | string
     estado?: EnumEstadoGuiaFilter<"GuiaDespacho"> | $Enums.EstadoGuia
+    estado_documento?: StringNullableFilter<"GuiaDespacho"> | string | null
+    forma_pago?: StringNullableFilter<"GuiaDespacho"> | string | null
+    numero_factura?: StringNullableFilter<"GuiaDespacho"> | string | null
     nombre_receptor?: StringNullableFilter<"GuiaDespacho"> | string | null
     rut_receptor?: StringNullableFilter<"GuiaDespacho"> | string | null
     hora_entrega?: DateTimeNullableFilter<"GuiaDespacho"> | Date | string | null
     observaciones?: StringNullableFilter<"GuiaDespacho"> | string | null
     total?: FloatFilter<"GuiaDespacho"> | number
     motivo_anulacion?: StringNullableFilter<"GuiaDespacho"> | string | null
+    anulada_motivo?: StringNullableFilter<"GuiaDespacho"> | string | null
+    anulada_at?: DateTimeNullableFilter<"GuiaDespacho"> | Date | string | null
+    anulada_por_id?: StringNullableFilter<"GuiaDespacho"> | string | null
+    reemplaza_a_guia_id?: StringNullableFilter<"GuiaDespacho"> | string | null
+    reemplazada_por_guia_id?: StringNullableFilter<"GuiaDespacho"> | string | null
     firma_digital?: StringNullableFilter<"GuiaDespacho"> | string | null
     botellones_prestados_entrega?: IntFilter<"GuiaDespacho"> | number
     incluida_en_cierre?: BoolFilter<"GuiaDespacho"> | boolean
@@ -58482,6 +58776,11 @@ export namespace Prisma {
     cuadratura_ventas?: CuadraturaVentaListRelationFilter
     cliente?: XOR<ClienteScalarRelationFilter, ClienteWhereInput>
     usuario_repartidor?: XOR<UsuarioScalarRelationFilter, UsuarioWhereInput>
+    anulada_por?: XOR<UsuarioNullableScalarRelationFilter, UsuarioWhereInput> | null
+    reemplaza_a?: XOR<GuiaDespachoNullableScalarRelationFilter, GuiaDespachoWhereInput> | null
+    guias_que_reemplazan_a_esta?: GuiaDespachoListRelationFilter
+    reemplazada_por?: XOR<GuiaDespachoNullableScalarRelationFilter, GuiaDespachoWhereInput> | null
+    guias_reemplazadas_por_esta?: GuiaDespachoListRelationFilter
     pedido?: XOR<PedidoNullableScalarRelationFilter, PedidoWhereInput> | null
     items?: ItemGuiaListRelationFilter
   }
@@ -58495,12 +58794,20 @@ export namespace Prisma {
     direccion_entrega?: SortOrder
     usuario_repartidor_id?: SortOrder
     estado?: SortOrder
+    estado_documento?: SortOrderInput | SortOrder
+    forma_pago?: SortOrderInput | SortOrder
+    numero_factura?: SortOrderInput | SortOrder
     nombre_receptor?: SortOrderInput | SortOrder
     rut_receptor?: SortOrderInput | SortOrder
     hora_entrega?: SortOrderInput | SortOrder
     observaciones?: SortOrderInput | SortOrder
     total?: SortOrder
     motivo_anulacion?: SortOrderInput | SortOrder
+    anulada_motivo?: SortOrderInput | SortOrder
+    anulada_at?: SortOrderInput | SortOrder
+    anulada_por_id?: SortOrderInput | SortOrder
+    reemplaza_a_guia_id?: SortOrderInput | SortOrder
+    reemplazada_por_guia_id?: SortOrderInput | SortOrder
     firma_digital?: SortOrderInput | SortOrder
     botellones_prestados_entrega?: SortOrder
     incluida_en_cierre?: SortOrder
@@ -58508,6 +58815,11 @@ export namespace Prisma {
     cuadratura_ventas?: CuadraturaVentaOrderByRelationAggregateInput
     cliente?: ClienteOrderByWithRelationInput
     usuario_repartidor?: UsuarioOrderByWithRelationInput
+    anulada_por?: UsuarioOrderByWithRelationInput
+    reemplaza_a?: GuiaDespachoOrderByWithRelationInput
+    guias_que_reemplazan_a_esta?: GuiaDespachoOrderByRelationAggregateInput
+    reemplazada_por?: GuiaDespachoOrderByWithRelationInput
+    guias_reemplazadas_por_esta?: GuiaDespachoOrderByRelationAggregateInput
     pedido?: PedidoOrderByWithRelationInput
     items?: ItemGuiaOrderByRelationAggregateInput
     _relevance?: GuiaDespachoOrderByRelevanceInput
@@ -58525,12 +58837,20 @@ export namespace Prisma {
     direccion_entrega?: StringFilter<"GuiaDespacho"> | string
     usuario_repartidor_id?: StringFilter<"GuiaDespacho"> | string
     estado?: EnumEstadoGuiaFilter<"GuiaDespacho"> | $Enums.EstadoGuia
+    estado_documento?: StringNullableFilter<"GuiaDespacho"> | string | null
+    forma_pago?: StringNullableFilter<"GuiaDespacho"> | string | null
+    numero_factura?: StringNullableFilter<"GuiaDespacho"> | string | null
     nombre_receptor?: StringNullableFilter<"GuiaDespacho"> | string | null
     rut_receptor?: StringNullableFilter<"GuiaDespacho"> | string | null
     hora_entrega?: DateTimeNullableFilter<"GuiaDespacho"> | Date | string | null
     observaciones?: StringNullableFilter<"GuiaDespacho"> | string | null
     total?: FloatFilter<"GuiaDespacho"> | number
     motivo_anulacion?: StringNullableFilter<"GuiaDespacho"> | string | null
+    anulada_motivo?: StringNullableFilter<"GuiaDespacho"> | string | null
+    anulada_at?: DateTimeNullableFilter<"GuiaDespacho"> | Date | string | null
+    anulada_por_id?: StringNullableFilter<"GuiaDespacho"> | string | null
+    reemplaza_a_guia_id?: StringNullableFilter<"GuiaDespacho"> | string | null
+    reemplazada_por_guia_id?: StringNullableFilter<"GuiaDespacho"> | string | null
     firma_digital?: StringNullableFilter<"GuiaDespacho"> | string | null
     botellones_prestados_entrega?: IntFilter<"GuiaDespacho"> | number
     incluida_en_cierre?: BoolFilter<"GuiaDespacho"> | boolean
@@ -58538,6 +58858,11 @@ export namespace Prisma {
     cuadratura_ventas?: CuadraturaVentaListRelationFilter
     cliente?: XOR<ClienteScalarRelationFilter, ClienteWhereInput>
     usuario_repartidor?: XOR<UsuarioScalarRelationFilter, UsuarioWhereInput>
+    anulada_por?: XOR<UsuarioNullableScalarRelationFilter, UsuarioWhereInput> | null
+    reemplaza_a?: XOR<GuiaDespachoNullableScalarRelationFilter, GuiaDespachoWhereInput> | null
+    guias_que_reemplazan_a_esta?: GuiaDespachoListRelationFilter
+    reemplazada_por?: XOR<GuiaDespachoNullableScalarRelationFilter, GuiaDespachoWhereInput> | null
+    guias_reemplazadas_por_esta?: GuiaDespachoListRelationFilter
     pedido?: XOR<PedidoNullableScalarRelationFilter, PedidoWhereInput> | null
     items?: ItemGuiaListRelationFilter
   }, "id" | "numero_correlativo" | "pedido_id">
@@ -58551,12 +58876,20 @@ export namespace Prisma {
     direccion_entrega?: SortOrder
     usuario_repartidor_id?: SortOrder
     estado?: SortOrder
+    estado_documento?: SortOrderInput | SortOrder
+    forma_pago?: SortOrderInput | SortOrder
+    numero_factura?: SortOrderInput | SortOrder
     nombre_receptor?: SortOrderInput | SortOrder
     rut_receptor?: SortOrderInput | SortOrder
     hora_entrega?: SortOrderInput | SortOrder
     observaciones?: SortOrderInput | SortOrder
     total?: SortOrder
     motivo_anulacion?: SortOrderInput | SortOrder
+    anulada_motivo?: SortOrderInput | SortOrder
+    anulada_at?: SortOrderInput | SortOrder
+    anulada_por_id?: SortOrderInput | SortOrder
+    reemplaza_a_guia_id?: SortOrderInput | SortOrder
+    reemplazada_por_guia_id?: SortOrderInput | SortOrder
     firma_digital?: SortOrderInput | SortOrder
     botellones_prestados_entrega?: SortOrder
     incluida_en_cierre?: SortOrder
@@ -58580,12 +58913,20 @@ export namespace Prisma {
     direccion_entrega?: StringWithAggregatesFilter<"GuiaDespacho"> | string
     usuario_repartidor_id?: StringWithAggregatesFilter<"GuiaDespacho"> | string
     estado?: EnumEstadoGuiaWithAggregatesFilter<"GuiaDespacho"> | $Enums.EstadoGuia
+    estado_documento?: StringNullableWithAggregatesFilter<"GuiaDespacho"> | string | null
+    forma_pago?: StringNullableWithAggregatesFilter<"GuiaDespacho"> | string | null
+    numero_factura?: StringNullableWithAggregatesFilter<"GuiaDespacho"> | string | null
     nombre_receptor?: StringNullableWithAggregatesFilter<"GuiaDespacho"> | string | null
     rut_receptor?: StringNullableWithAggregatesFilter<"GuiaDespacho"> | string | null
     hora_entrega?: DateTimeNullableWithAggregatesFilter<"GuiaDespacho"> | Date | string | null
     observaciones?: StringNullableWithAggregatesFilter<"GuiaDespacho"> | string | null
     total?: FloatWithAggregatesFilter<"GuiaDespacho"> | number
     motivo_anulacion?: StringNullableWithAggregatesFilter<"GuiaDespacho"> | string | null
+    anulada_motivo?: StringNullableWithAggregatesFilter<"GuiaDespacho"> | string | null
+    anulada_at?: DateTimeNullableWithAggregatesFilter<"GuiaDespacho"> | Date | string | null
+    anulada_por_id?: StringNullableWithAggregatesFilter<"GuiaDespacho"> | string | null
+    reemplaza_a_guia_id?: StringNullableWithAggregatesFilter<"GuiaDespacho"> | string | null
+    reemplazada_por_guia_id?: StringNullableWithAggregatesFilter<"GuiaDespacho"> | string | null
     firma_digital?: StringNullableWithAggregatesFilter<"GuiaDespacho"> | string | null
     botellones_prestados_entrega?: IntWithAggregatesFilter<"GuiaDespacho"> | number
     incluida_en_cierre?: BoolWithAggregatesFilter<"GuiaDespacho"> | boolean
@@ -60698,6 +61039,7 @@ export namespace Prisma {
     cargas_combustible?: CargaCombustibleCreateNestedManyWithoutUsuarioInput
     cuadraturas?: CuadraturaCreateNestedManyWithoutUsuarioInput
     guias?: GuiaDespachoCreateNestedManyWithoutUsuario_repartidorInput
+    guias_anuladas?: GuiaDespachoCreateNestedManyWithoutAnulada_porInput
     log_accesos?: LogAccesoCreateNestedManyWithoutUsuarioInput
     mantenciones?: MantencionCreateNestedManyWithoutUsuarioInput
     produccion?: ProduccionDiariaCreateNestedManyWithoutUsuarioInput
@@ -60731,6 +61073,7 @@ export namespace Prisma {
     cargas_combustible?: CargaCombustibleUncheckedCreateNestedManyWithoutUsuarioInput
     cuadraturas?: CuadraturaUncheckedCreateNestedManyWithoutUsuarioInput
     guias?: GuiaDespachoUncheckedCreateNestedManyWithoutUsuario_repartidorInput
+    guias_anuladas?: GuiaDespachoUncheckedCreateNestedManyWithoutAnulada_porInput
     log_accesos?: LogAccesoUncheckedCreateNestedManyWithoutUsuarioInput
     mantenciones?: MantencionUncheckedCreateNestedManyWithoutUsuarioInput
     produccion?: ProduccionDiariaUncheckedCreateNestedManyWithoutUsuarioInput
@@ -60760,6 +61103,7 @@ export namespace Prisma {
     cargas_combustible?: CargaCombustibleUpdateManyWithoutUsuarioNestedInput
     cuadraturas?: CuadraturaUpdateManyWithoutUsuarioNestedInput
     guias?: GuiaDespachoUpdateManyWithoutUsuario_repartidorNestedInput
+    guias_anuladas?: GuiaDespachoUpdateManyWithoutAnulada_porNestedInput
     log_accesos?: LogAccesoUpdateManyWithoutUsuarioNestedInput
     mantenciones?: MantencionUpdateManyWithoutUsuarioNestedInput
     produccion?: ProduccionDiariaUpdateManyWithoutUsuarioNestedInput
@@ -60793,6 +61137,7 @@ export namespace Prisma {
     cargas_combustible?: CargaCombustibleUncheckedUpdateManyWithoutUsuarioNestedInput
     cuadraturas?: CuadraturaUncheckedUpdateManyWithoutUsuarioNestedInput
     guias?: GuiaDespachoUncheckedUpdateManyWithoutUsuario_repartidorNestedInput
+    guias_anuladas?: GuiaDespachoUncheckedUpdateManyWithoutAnulada_porNestedInput
     log_accesos?: LogAccesoUncheckedUpdateManyWithoutUsuarioNestedInput
     mantenciones?: MantencionUncheckedUpdateManyWithoutUsuarioNestedInput
     produccion?: ProduccionDiariaUncheckedUpdateManyWithoutUsuarioNestedInput
@@ -62291,12 +62636,17 @@ export namespace Prisma {
     fecha_emision?: Date | string
     direccion_entrega: string
     estado: $Enums.EstadoGuia
+    estado_documento?: string | null
+    forma_pago?: string | null
+    numero_factura?: string | null
     nombre_receptor?: string | null
     rut_receptor?: string | null
     hora_entrega?: Date | string | null
     observaciones?: string | null
     total: number
     motivo_anulacion?: string | null
+    anulada_motivo?: string | null
+    anulada_at?: Date | string | null
     firma_digital?: string | null
     botellones_prestados_entrega?: number
     incluida_en_cierre?: boolean
@@ -62304,6 +62654,11 @@ export namespace Prisma {
     cuadratura_ventas?: CuadraturaVentaCreateNestedManyWithoutGuiaInput
     cliente: ClienteCreateNestedOneWithoutGuiasInput
     usuario_repartidor: UsuarioCreateNestedOneWithoutGuiasInput
+    anulada_por?: UsuarioCreateNestedOneWithoutGuias_anuladasInput
+    reemplaza_a?: GuiaDespachoCreateNestedOneWithoutGuias_que_reemplazan_a_estaInput
+    guias_que_reemplazan_a_esta?: GuiaDespachoCreateNestedManyWithoutReemplaza_aInput
+    reemplazada_por?: GuiaDespachoCreateNestedOneWithoutGuias_reemplazadas_por_estaInput
+    guias_reemplazadas_por_esta?: GuiaDespachoCreateNestedManyWithoutReemplazada_porInput
     pedido?: PedidoCreateNestedOneWithoutGuiaInput
     items?: ItemGuiaCreateNestedManyWithoutGuiaInput
   }
@@ -62317,17 +62672,27 @@ export namespace Prisma {
     direccion_entrega: string
     usuario_repartidor_id: string
     estado: $Enums.EstadoGuia
+    estado_documento?: string | null
+    forma_pago?: string | null
+    numero_factura?: string | null
     nombre_receptor?: string | null
     rut_receptor?: string | null
     hora_entrega?: Date | string | null
     observaciones?: string | null
     total: number
     motivo_anulacion?: string | null
+    anulada_motivo?: string | null
+    anulada_at?: Date | string | null
+    anulada_por_id?: string | null
+    reemplaza_a_guia_id?: string | null
+    reemplazada_por_guia_id?: string | null
     firma_digital?: string | null
     botellones_prestados_entrega?: number
     incluida_en_cierre?: boolean
     fecha_cierre?: Date | string | null
     cuadratura_ventas?: CuadraturaVentaUncheckedCreateNestedManyWithoutGuiaInput
+    guias_que_reemplazan_a_esta?: GuiaDespachoUncheckedCreateNestedManyWithoutReemplaza_aInput
+    guias_reemplazadas_por_esta?: GuiaDespachoUncheckedCreateNestedManyWithoutReemplazada_porInput
     items?: ItemGuiaUncheckedCreateNestedManyWithoutGuiaInput
   }
 
@@ -62336,12 +62701,17 @@ export namespace Prisma {
     fecha_emision?: DateTimeFieldUpdateOperationsInput | Date | string
     direccion_entrega?: StringFieldUpdateOperationsInput | string
     estado?: EnumEstadoGuiaFieldUpdateOperationsInput | $Enums.EstadoGuia
+    estado_documento?: NullableStringFieldUpdateOperationsInput | string | null
+    forma_pago?: NullableStringFieldUpdateOperationsInput | string | null
+    numero_factura?: NullableStringFieldUpdateOperationsInput | string | null
     nombre_receptor?: NullableStringFieldUpdateOperationsInput | string | null
     rut_receptor?: NullableStringFieldUpdateOperationsInput | string | null
     hora_entrega?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     total?: FloatFieldUpdateOperationsInput | number
     motivo_anulacion?: NullableStringFieldUpdateOperationsInput | string | null
+    anulada_motivo?: NullableStringFieldUpdateOperationsInput | string | null
+    anulada_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     firma_digital?: NullableStringFieldUpdateOperationsInput | string | null
     botellones_prestados_entrega?: IntFieldUpdateOperationsInput | number
     incluida_en_cierre?: BoolFieldUpdateOperationsInput | boolean
@@ -62349,6 +62719,11 @@ export namespace Prisma {
     cuadratura_ventas?: CuadraturaVentaUpdateManyWithoutGuiaNestedInput
     cliente?: ClienteUpdateOneRequiredWithoutGuiasNestedInput
     usuario_repartidor?: UsuarioUpdateOneRequiredWithoutGuiasNestedInput
+    anulada_por?: UsuarioUpdateOneWithoutGuias_anuladasNestedInput
+    reemplaza_a?: GuiaDespachoUpdateOneWithoutGuias_que_reemplazan_a_estaNestedInput
+    guias_que_reemplazan_a_esta?: GuiaDespachoUpdateManyWithoutReemplaza_aNestedInput
+    reemplazada_por?: GuiaDespachoUpdateOneWithoutGuias_reemplazadas_por_estaNestedInput
+    guias_reemplazadas_por_esta?: GuiaDespachoUpdateManyWithoutReemplazada_porNestedInput
     pedido?: PedidoUpdateOneWithoutGuiaNestedInput
     items?: ItemGuiaUpdateManyWithoutGuiaNestedInput
   }
@@ -62362,17 +62737,27 @@ export namespace Prisma {
     direccion_entrega?: StringFieldUpdateOperationsInput | string
     usuario_repartidor_id?: StringFieldUpdateOperationsInput | string
     estado?: EnumEstadoGuiaFieldUpdateOperationsInput | $Enums.EstadoGuia
+    estado_documento?: NullableStringFieldUpdateOperationsInput | string | null
+    forma_pago?: NullableStringFieldUpdateOperationsInput | string | null
+    numero_factura?: NullableStringFieldUpdateOperationsInput | string | null
     nombre_receptor?: NullableStringFieldUpdateOperationsInput | string | null
     rut_receptor?: NullableStringFieldUpdateOperationsInput | string | null
     hora_entrega?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     total?: FloatFieldUpdateOperationsInput | number
     motivo_anulacion?: NullableStringFieldUpdateOperationsInput | string | null
+    anulada_motivo?: NullableStringFieldUpdateOperationsInput | string | null
+    anulada_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    anulada_por_id?: NullableStringFieldUpdateOperationsInput | string | null
+    reemplaza_a_guia_id?: NullableStringFieldUpdateOperationsInput | string | null
+    reemplazada_por_guia_id?: NullableStringFieldUpdateOperationsInput | string | null
     firma_digital?: NullableStringFieldUpdateOperationsInput | string | null
     botellones_prestados_entrega?: IntFieldUpdateOperationsInput | number
     incluida_en_cierre?: BoolFieldUpdateOperationsInput | boolean
     fecha_cierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     cuadratura_ventas?: CuadraturaVentaUncheckedUpdateManyWithoutGuiaNestedInput
+    guias_que_reemplazan_a_esta?: GuiaDespachoUncheckedUpdateManyWithoutReemplaza_aNestedInput
+    guias_reemplazadas_por_esta?: GuiaDespachoUncheckedUpdateManyWithoutReemplazada_porNestedInput
     items?: ItemGuiaUncheckedUpdateManyWithoutGuiaNestedInput
   }
 
@@ -62385,12 +62770,20 @@ export namespace Prisma {
     direccion_entrega: string
     usuario_repartidor_id: string
     estado: $Enums.EstadoGuia
+    estado_documento?: string | null
+    forma_pago?: string | null
+    numero_factura?: string | null
     nombre_receptor?: string | null
     rut_receptor?: string | null
     hora_entrega?: Date | string | null
     observaciones?: string | null
     total: number
     motivo_anulacion?: string | null
+    anulada_motivo?: string | null
+    anulada_at?: Date | string | null
+    anulada_por_id?: string | null
+    reemplaza_a_guia_id?: string | null
+    reemplazada_por_guia_id?: string | null
     firma_digital?: string | null
     botellones_prestados_entrega?: number
     incluida_en_cierre?: boolean
@@ -62402,12 +62795,17 @@ export namespace Prisma {
     fecha_emision?: DateTimeFieldUpdateOperationsInput | Date | string
     direccion_entrega?: StringFieldUpdateOperationsInput | string
     estado?: EnumEstadoGuiaFieldUpdateOperationsInput | $Enums.EstadoGuia
+    estado_documento?: NullableStringFieldUpdateOperationsInput | string | null
+    forma_pago?: NullableStringFieldUpdateOperationsInput | string | null
+    numero_factura?: NullableStringFieldUpdateOperationsInput | string | null
     nombre_receptor?: NullableStringFieldUpdateOperationsInput | string | null
     rut_receptor?: NullableStringFieldUpdateOperationsInput | string | null
     hora_entrega?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     total?: FloatFieldUpdateOperationsInput | number
     motivo_anulacion?: NullableStringFieldUpdateOperationsInput | string | null
+    anulada_motivo?: NullableStringFieldUpdateOperationsInput | string | null
+    anulada_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     firma_digital?: NullableStringFieldUpdateOperationsInput | string | null
     botellones_prestados_entrega?: IntFieldUpdateOperationsInput | number
     incluida_en_cierre?: BoolFieldUpdateOperationsInput | boolean
@@ -62423,12 +62821,20 @@ export namespace Prisma {
     direccion_entrega?: StringFieldUpdateOperationsInput | string
     usuario_repartidor_id?: StringFieldUpdateOperationsInput | string
     estado?: EnumEstadoGuiaFieldUpdateOperationsInput | $Enums.EstadoGuia
+    estado_documento?: NullableStringFieldUpdateOperationsInput | string | null
+    forma_pago?: NullableStringFieldUpdateOperationsInput | string | null
+    numero_factura?: NullableStringFieldUpdateOperationsInput | string | null
     nombre_receptor?: NullableStringFieldUpdateOperationsInput | string | null
     rut_receptor?: NullableStringFieldUpdateOperationsInput | string | null
     hora_entrega?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     total?: FloatFieldUpdateOperationsInput | number
     motivo_anulacion?: NullableStringFieldUpdateOperationsInput | string | null
+    anulada_motivo?: NullableStringFieldUpdateOperationsInput | string | null
+    anulada_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    anulada_por_id?: NullableStringFieldUpdateOperationsInput | string | null
+    reemplaza_a_guia_id?: NullableStringFieldUpdateOperationsInput | string | null
+    reemplazada_por_guia_id?: NullableStringFieldUpdateOperationsInput | string | null
     firma_digital?: NullableStringFieldUpdateOperationsInput | string | null
     botellones_prestados_entrega?: IntFieldUpdateOperationsInput | number
     incluida_en_cierre?: BoolFieldUpdateOperationsInput | boolean
@@ -66392,12 +66798,20 @@ export namespace Prisma {
     direccion_entrega?: SortOrder
     usuario_repartidor_id?: SortOrder
     estado?: SortOrder
+    estado_documento?: SortOrder
+    forma_pago?: SortOrder
+    numero_factura?: SortOrder
     nombre_receptor?: SortOrder
     rut_receptor?: SortOrder
     hora_entrega?: SortOrder
     observaciones?: SortOrder
     total?: SortOrder
     motivo_anulacion?: SortOrder
+    anulada_motivo?: SortOrder
+    anulada_at?: SortOrder
+    anulada_por_id?: SortOrder
+    reemplaza_a_guia_id?: SortOrder
+    reemplazada_por_guia_id?: SortOrder
     firma_digital?: SortOrder
     botellones_prestados_entrega?: SortOrder
     incluida_en_cierre?: SortOrder
@@ -66419,12 +66833,20 @@ export namespace Prisma {
     direccion_entrega?: SortOrder
     usuario_repartidor_id?: SortOrder
     estado?: SortOrder
+    estado_documento?: SortOrder
+    forma_pago?: SortOrder
+    numero_factura?: SortOrder
     nombre_receptor?: SortOrder
     rut_receptor?: SortOrder
     hora_entrega?: SortOrder
     observaciones?: SortOrder
     total?: SortOrder
     motivo_anulacion?: SortOrder
+    anulada_motivo?: SortOrder
+    anulada_at?: SortOrder
+    anulada_por_id?: SortOrder
+    reemplaza_a_guia_id?: SortOrder
+    reemplazada_por_guia_id?: SortOrder
     firma_digital?: SortOrder
     botellones_prestados_entrega?: SortOrder
     incluida_en_cierre?: SortOrder
@@ -66440,12 +66862,20 @@ export namespace Prisma {
     direccion_entrega?: SortOrder
     usuario_repartidor_id?: SortOrder
     estado?: SortOrder
+    estado_documento?: SortOrder
+    forma_pago?: SortOrder
+    numero_factura?: SortOrder
     nombre_receptor?: SortOrder
     rut_receptor?: SortOrder
     hora_entrega?: SortOrder
     observaciones?: SortOrder
     total?: SortOrder
     motivo_anulacion?: SortOrder
+    anulada_motivo?: SortOrder
+    anulada_at?: SortOrder
+    anulada_por_id?: SortOrder
+    reemplaza_a_guia_id?: SortOrder
+    reemplazada_por_guia_id?: SortOrder
     firma_digital?: SortOrder
     botellones_prestados_entrega?: SortOrder
     incluida_en_cierre?: SortOrder
@@ -68121,6 +68551,13 @@ export namespace Prisma {
     connect?: GuiaDespachoWhereUniqueInput | GuiaDespachoWhereUniqueInput[]
   }
 
+  export type GuiaDespachoCreateNestedManyWithoutAnulada_porInput = {
+    create?: XOR<GuiaDespachoCreateWithoutAnulada_porInput, GuiaDespachoUncheckedCreateWithoutAnulada_porInput> | GuiaDespachoCreateWithoutAnulada_porInput[] | GuiaDespachoUncheckedCreateWithoutAnulada_porInput[]
+    connectOrCreate?: GuiaDespachoCreateOrConnectWithoutAnulada_porInput | GuiaDespachoCreateOrConnectWithoutAnulada_porInput[]
+    createMany?: GuiaDespachoCreateManyAnulada_porInputEnvelope
+    connect?: GuiaDespachoWhereUniqueInput | GuiaDespachoWhereUniqueInput[]
+  }
+
   export type LogAccesoCreateNestedManyWithoutUsuarioInput = {
     create?: XOR<LogAccesoCreateWithoutUsuarioInput, LogAccesoUncheckedCreateWithoutUsuarioInput> | LogAccesoCreateWithoutUsuarioInput[] | LogAccesoUncheckedCreateWithoutUsuarioInput[]
     connectOrCreate?: LogAccesoCreateOrConnectWithoutUsuarioInput | LogAccesoCreateOrConnectWithoutUsuarioInput[]
@@ -68221,6 +68658,13 @@ export namespace Prisma {
     create?: XOR<GuiaDespachoCreateWithoutUsuario_repartidorInput, GuiaDespachoUncheckedCreateWithoutUsuario_repartidorInput> | GuiaDespachoCreateWithoutUsuario_repartidorInput[] | GuiaDespachoUncheckedCreateWithoutUsuario_repartidorInput[]
     connectOrCreate?: GuiaDespachoCreateOrConnectWithoutUsuario_repartidorInput | GuiaDespachoCreateOrConnectWithoutUsuario_repartidorInput[]
     createMany?: GuiaDespachoCreateManyUsuario_repartidorInputEnvelope
+    connect?: GuiaDespachoWhereUniqueInput | GuiaDespachoWhereUniqueInput[]
+  }
+
+  export type GuiaDespachoUncheckedCreateNestedManyWithoutAnulada_porInput = {
+    create?: XOR<GuiaDespachoCreateWithoutAnulada_porInput, GuiaDespachoUncheckedCreateWithoutAnulada_porInput> | GuiaDespachoCreateWithoutAnulada_porInput[] | GuiaDespachoUncheckedCreateWithoutAnulada_porInput[]
+    connectOrCreate?: GuiaDespachoCreateOrConnectWithoutAnulada_porInput | GuiaDespachoCreateOrConnectWithoutAnulada_porInput[]
+    createMany?: GuiaDespachoCreateManyAnulada_porInputEnvelope
     connect?: GuiaDespachoWhereUniqueInput | GuiaDespachoWhereUniqueInput[]
   }
 
@@ -68364,6 +68808,20 @@ export namespace Prisma {
     connect?: GuiaDespachoWhereUniqueInput | GuiaDespachoWhereUniqueInput[]
     update?: GuiaDespachoUpdateWithWhereUniqueWithoutUsuario_repartidorInput | GuiaDespachoUpdateWithWhereUniqueWithoutUsuario_repartidorInput[]
     updateMany?: GuiaDespachoUpdateManyWithWhereWithoutUsuario_repartidorInput | GuiaDespachoUpdateManyWithWhereWithoutUsuario_repartidorInput[]
+    deleteMany?: GuiaDespachoScalarWhereInput | GuiaDespachoScalarWhereInput[]
+  }
+
+  export type GuiaDespachoUpdateManyWithoutAnulada_porNestedInput = {
+    create?: XOR<GuiaDespachoCreateWithoutAnulada_porInput, GuiaDespachoUncheckedCreateWithoutAnulada_porInput> | GuiaDespachoCreateWithoutAnulada_porInput[] | GuiaDespachoUncheckedCreateWithoutAnulada_porInput[]
+    connectOrCreate?: GuiaDespachoCreateOrConnectWithoutAnulada_porInput | GuiaDespachoCreateOrConnectWithoutAnulada_porInput[]
+    upsert?: GuiaDespachoUpsertWithWhereUniqueWithoutAnulada_porInput | GuiaDespachoUpsertWithWhereUniqueWithoutAnulada_porInput[]
+    createMany?: GuiaDespachoCreateManyAnulada_porInputEnvelope
+    set?: GuiaDespachoWhereUniqueInput | GuiaDespachoWhereUniqueInput[]
+    disconnect?: GuiaDespachoWhereUniqueInput | GuiaDespachoWhereUniqueInput[]
+    delete?: GuiaDespachoWhereUniqueInput | GuiaDespachoWhereUniqueInput[]
+    connect?: GuiaDespachoWhereUniqueInput | GuiaDespachoWhereUniqueInput[]
+    update?: GuiaDespachoUpdateWithWhereUniqueWithoutAnulada_porInput | GuiaDespachoUpdateWithWhereUniqueWithoutAnulada_porInput[]
+    updateMany?: GuiaDespachoUpdateManyWithWhereWithoutAnulada_porInput | GuiaDespachoUpdateManyWithWhereWithoutAnulada_porInput[]
     deleteMany?: GuiaDespachoScalarWhereInput | GuiaDespachoScalarWhereInput[]
   }
 
@@ -68566,6 +69024,20 @@ export namespace Prisma {
     connect?: GuiaDespachoWhereUniqueInput | GuiaDespachoWhereUniqueInput[]
     update?: GuiaDespachoUpdateWithWhereUniqueWithoutUsuario_repartidorInput | GuiaDespachoUpdateWithWhereUniqueWithoutUsuario_repartidorInput[]
     updateMany?: GuiaDespachoUpdateManyWithWhereWithoutUsuario_repartidorInput | GuiaDespachoUpdateManyWithWhereWithoutUsuario_repartidorInput[]
+    deleteMany?: GuiaDespachoScalarWhereInput | GuiaDespachoScalarWhereInput[]
+  }
+
+  export type GuiaDespachoUncheckedUpdateManyWithoutAnulada_porNestedInput = {
+    create?: XOR<GuiaDespachoCreateWithoutAnulada_porInput, GuiaDespachoUncheckedCreateWithoutAnulada_porInput> | GuiaDespachoCreateWithoutAnulada_porInput[] | GuiaDespachoUncheckedCreateWithoutAnulada_porInput[]
+    connectOrCreate?: GuiaDespachoCreateOrConnectWithoutAnulada_porInput | GuiaDespachoCreateOrConnectWithoutAnulada_porInput[]
+    upsert?: GuiaDespachoUpsertWithWhereUniqueWithoutAnulada_porInput | GuiaDespachoUpsertWithWhereUniqueWithoutAnulada_porInput[]
+    createMany?: GuiaDespachoCreateManyAnulada_porInputEnvelope
+    set?: GuiaDespachoWhereUniqueInput | GuiaDespachoWhereUniqueInput[]
+    disconnect?: GuiaDespachoWhereUniqueInput | GuiaDespachoWhereUniqueInput[]
+    delete?: GuiaDespachoWhereUniqueInput | GuiaDespachoWhereUniqueInput[]
+    connect?: GuiaDespachoWhereUniqueInput | GuiaDespachoWhereUniqueInput[]
+    update?: GuiaDespachoUpdateWithWhereUniqueWithoutAnulada_porInput | GuiaDespachoUpdateWithWhereUniqueWithoutAnulada_porInput[]
+    updateMany?: GuiaDespachoUpdateManyWithWhereWithoutAnulada_porInput | GuiaDespachoUpdateManyWithWhereWithoutAnulada_porInput[]
     deleteMany?: GuiaDespachoScalarWhereInput | GuiaDespachoScalarWhereInput[]
   }
 
@@ -70644,6 +71116,38 @@ export namespace Prisma {
     connect?: UsuarioWhereUniqueInput
   }
 
+  export type UsuarioCreateNestedOneWithoutGuias_anuladasInput = {
+    create?: XOR<UsuarioCreateWithoutGuias_anuladasInput, UsuarioUncheckedCreateWithoutGuias_anuladasInput>
+    connectOrCreate?: UsuarioCreateOrConnectWithoutGuias_anuladasInput
+    connect?: UsuarioWhereUniqueInput
+  }
+
+  export type GuiaDespachoCreateNestedOneWithoutGuias_que_reemplazan_a_estaInput = {
+    create?: XOR<GuiaDespachoCreateWithoutGuias_que_reemplazan_a_estaInput, GuiaDespachoUncheckedCreateWithoutGuias_que_reemplazan_a_estaInput>
+    connectOrCreate?: GuiaDespachoCreateOrConnectWithoutGuias_que_reemplazan_a_estaInput
+    connect?: GuiaDespachoWhereUniqueInput
+  }
+
+  export type GuiaDespachoCreateNestedManyWithoutReemplaza_aInput = {
+    create?: XOR<GuiaDespachoCreateWithoutReemplaza_aInput, GuiaDespachoUncheckedCreateWithoutReemplaza_aInput> | GuiaDespachoCreateWithoutReemplaza_aInput[] | GuiaDespachoUncheckedCreateWithoutReemplaza_aInput[]
+    connectOrCreate?: GuiaDespachoCreateOrConnectWithoutReemplaza_aInput | GuiaDespachoCreateOrConnectWithoutReemplaza_aInput[]
+    createMany?: GuiaDespachoCreateManyReemplaza_aInputEnvelope
+    connect?: GuiaDespachoWhereUniqueInput | GuiaDespachoWhereUniqueInput[]
+  }
+
+  export type GuiaDespachoCreateNestedOneWithoutGuias_reemplazadas_por_estaInput = {
+    create?: XOR<GuiaDespachoCreateWithoutGuias_reemplazadas_por_estaInput, GuiaDespachoUncheckedCreateWithoutGuias_reemplazadas_por_estaInput>
+    connectOrCreate?: GuiaDespachoCreateOrConnectWithoutGuias_reemplazadas_por_estaInput
+    connect?: GuiaDespachoWhereUniqueInput
+  }
+
+  export type GuiaDespachoCreateNestedManyWithoutReemplazada_porInput = {
+    create?: XOR<GuiaDespachoCreateWithoutReemplazada_porInput, GuiaDespachoUncheckedCreateWithoutReemplazada_porInput> | GuiaDespachoCreateWithoutReemplazada_porInput[] | GuiaDespachoUncheckedCreateWithoutReemplazada_porInput[]
+    connectOrCreate?: GuiaDespachoCreateOrConnectWithoutReemplazada_porInput | GuiaDespachoCreateOrConnectWithoutReemplazada_porInput[]
+    createMany?: GuiaDespachoCreateManyReemplazada_porInputEnvelope
+    connect?: GuiaDespachoWhereUniqueInput | GuiaDespachoWhereUniqueInput[]
+  }
+
   export type PedidoCreateNestedOneWithoutGuiaInput = {
     create?: XOR<PedidoCreateWithoutGuiaInput, PedidoUncheckedCreateWithoutGuiaInput>
     connectOrCreate?: PedidoCreateOrConnectWithoutGuiaInput
@@ -70662,6 +71166,20 @@ export namespace Prisma {
     connectOrCreate?: CuadraturaVentaCreateOrConnectWithoutGuiaInput | CuadraturaVentaCreateOrConnectWithoutGuiaInput[]
     createMany?: CuadraturaVentaCreateManyGuiaInputEnvelope
     connect?: CuadraturaVentaWhereUniqueInput | CuadraturaVentaWhereUniqueInput[]
+  }
+
+  export type GuiaDespachoUncheckedCreateNestedManyWithoutReemplaza_aInput = {
+    create?: XOR<GuiaDespachoCreateWithoutReemplaza_aInput, GuiaDespachoUncheckedCreateWithoutReemplaza_aInput> | GuiaDespachoCreateWithoutReemplaza_aInput[] | GuiaDespachoUncheckedCreateWithoutReemplaza_aInput[]
+    connectOrCreate?: GuiaDespachoCreateOrConnectWithoutReemplaza_aInput | GuiaDespachoCreateOrConnectWithoutReemplaza_aInput[]
+    createMany?: GuiaDespachoCreateManyReemplaza_aInputEnvelope
+    connect?: GuiaDespachoWhereUniqueInput | GuiaDespachoWhereUniqueInput[]
+  }
+
+  export type GuiaDespachoUncheckedCreateNestedManyWithoutReemplazada_porInput = {
+    create?: XOR<GuiaDespachoCreateWithoutReemplazada_porInput, GuiaDespachoUncheckedCreateWithoutReemplazada_porInput> | GuiaDespachoCreateWithoutReemplazada_porInput[] | GuiaDespachoUncheckedCreateWithoutReemplazada_porInput[]
+    connectOrCreate?: GuiaDespachoCreateOrConnectWithoutReemplazada_porInput | GuiaDespachoCreateOrConnectWithoutReemplazada_porInput[]
+    createMany?: GuiaDespachoCreateManyReemplazada_porInputEnvelope
+    connect?: GuiaDespachoWhereUniqueInput | GuiaDespachoWhereUniqueInput[]
   }
 
   export type ItemGuiaUncheckedCreateNestedManyWithoutGuiaInput = {
@@ -70705,6 +71223,64 @@ export namespace Prisma {
     update?: XOR<XOR<UsuarioUpdateToOneWithWhereWithoutGuiasInput, UsuarioUpdateWithoutGuiasInput>, UsuarioUncheckedUpdateWithoutGuiasInput>
   }
 
+  export type UsuarioUpdateOneWithoutGuias_anuladasNestedInput = {
+    create?: XOR<UsuarioCreateWithoutGuias_anuladasInput, UsuarioUncheckedCreateWithoutGuias_anuladasInput>
+    connectOrCreate?: UsuarioCreateOrConnectWithoutGuias_anuladasInput
+    upsert?: UsuarioUpsertWithoutGuias_anuladasInput
+    disconnect?: UsuarioWhereInput | boolean
+    delete?: UsuarioWhereInput | boolean
+    connect?: UsuarioWhereUniqueInput
+    update?: XOR<XOR<UsuarioUpdateToOneWithWhereWithoutGuias_anuladasInput, UsuarioUpdateWithoutGuias_anuladasInput>, UsuarioUncheckedUpdateWithoutGuias_anuladasInput>
+  }
+
+  export type GuiaDespachoUpdateOneWithoutGuias_que_reemplazan_a_estaNestedInput = {
+    create?: XOR<GuiaDespachoCreateWithoutGuias_que_reemplazan_a_estaInput, GuiaDespachoUncheckedCreateWithoutGuias_que_reemplazan_a_estaInput>
+    connectOrCreate?: GuiaDespachoCreateOrConnectWithoutGuias_que_reemplazan_a_estaInput
+    upsert?: GuiaDespachoUpsertWithoutGuias_que_reemplazan_a_estaInput
+    disconnect?: GuiaDespachoWhereInput | boolean
+    delete?: GuiaDespachoWhereInput | boolean
+    connect?: GuiaDespachoWhereUniqueInput
+    update?: XOR<XOR<GuiaDespachoUpdateToOneWithWhereWithoutGuias_que_reemplazan_a_estaInput, GuiaDespachoUpdateWithoutGuias_que_reemplazan_a_estaInput>, GuiaDespachoUncheckedUpdateWithoutGuias_que_reemplazan_a_estaInput>
+  }
+
+  export type GuiaDespachoUpdateManyWithoutReemplaza_aNestedInput = {
+    create?: XOR<GuiaDespachoCreateWithoutReemplaza_aInput, GuiaDespachoUncheckedCreateWithoutReemplaza_aInput> | GuiaDespachoCreateWithoutReemplaza_aInput[] | GuiaDespachoUncheckedCreateWithoutReemplaza_aInput[]
+    connectOrCreate?: GuiaDespachoCreateOrConnectWithoutReemplaza_aInput | GuiaDespachoCreateOrConnectWithoutReemplaza_aInput[]
+    upsert?: GuiaDespachoUpsertWithWhereUniqueWithoutReemplaza_aInput | GuiaDespachoUpsertWithWhereUniqueWithoutReemplaza_aInput[]
+    createMany?: GuiaDespachoCreateManyReemplaza_aInputEnvelope
+    set?: GuiaDespachoWhereUniqueInput | GuiaDespachoWhereUniqueInput[]
+    disconnect?: GuiaDespachoWhereUniqueInput | GuiaDespachoWhereUniqueInput[]
+    delete?: GuiaDespachoWhereUniqueInput | GuiaDespachoWhereUniqueInput[]
+    connect?: GuiaDespachoWhereUniqueInput | GuiaDespachoWhereUniqueInput[]
+    update?: GuiaDespachoUpdateWithWhereUniqueWithoutReemplaza_aInput | GuiaDespachoUpdateWithWhereUniqueWithoutReemplaza_aInput[]
+    updateMany?: GuiaDespachoUpdateManyWithWhereWithoutReemplaza_aInput | GuiaDespachoUpdateManyWithWhereWithoutReemplaza_aInput[]
+    deleteMany?: GuiaDespachoScalarWhereInput | GuiaDespachoScalarWhereInput[]
+  }
+
+  export type GuiaDespachoUpdateOneWithoutGuias_reemplazadas_por_estaNestedInput = {
+    create?: XOR<GuiaDespachoCreateWithoutGuias_reemplazadas_por_estaInput, GuiaDespachoUncheckedCreateWithoutGuias_reemplazadas_por_estaInput>
+    connectOrCreate?: GuiaDespachoCreateOrConnectWithoutGuias_reemplazadas_por_estaInput
+    upsert?: GuiaDespachoUpsertWithoutGuias_reemplazadas_por_estaInput
+    disconnect?: GuiaDespachoWhereInput | boolean
+    delete?: GuiaDespachoWhereInput | boolean
+    connect?: GuiaDespachoWhereUniqueInput
+    update?: XOR<XOR<GuiaDespachoUpdateToOneWithWhereWithoutGuias_reemplazadas_por_estaInput, GuiaDespachoUpdateWithoutGuias_reemplazadas_por_estaInput>, GuiaDespachoUncheckedUpdateWithoutGuias_reemplazadas_por_estaInput>
+  }
+
+  export type GuiaDespachoUpdateManyWithoutReemplazada_porNestedInput = {
+    create?: XOR<GuiaDespachoCreateWithoutReemplazada_porInput, GuiaDespachoUncheckedCreateWithoutReemplazada_porInput> | GuiaDespachoCreateWithoutReemplazada_porInput[] | GuiaDespachoUncheckedCreateWithoutReemplazada_porInput[]
+    connectOrCreate?: GuiaDespachoCreateOrConnectWithoutReemplazada_porInput | GuiaDespachoCreateOrConnectWithoutReemplazada_porInput[]
+    upsert?: GuiaDespachoUpsertWithWhereUniqueWithoutReemplazada_porInput | GuiaDespachoUpsertWithWhereUniqueWithoutReemplazada_porInput[]
+    createMany?: GuiaDespachoCreateManyReemplazada_porInputEnvelope
+    set?: GuiaDespachoWhereUniqueInput | GuiaDespachoWhereUniqueInput[]
+    disconnect?: GuiaDespachoWhereUniqueInput | GuiaDespachoWhereUniqueInput[]
+    delete?: GuiaDespachoWhereUniqueInput | GuiaDespachoWhereUniqueInput[]
+    connect?: GuiaDespachoWhereUniqueInput | GuiaDespachoWhereUniqueInput[]
+    update?: GuiaDespachoUpdateWithWhereUniqueWithoutReemplazada_porInput | GuiaDespachoUpdateWithWhereUniqueWithoutReemplazada_porInput[]
+    updateMany?: GuiaDespachoUpdateManyWithWhereWithoutReemplazada_porInput | GuiaDespachoUpdateManyWithWhereWithoutReemplazada_porInput[]
+    deleteMany?: GuiaDespachoScalarWhereInput | GuiaDespachoScalarWhereInput[]
+  }
+
   export type PedidoUpdateOneWithoutGuiaNestedInput = {
     create?: XOR<PedidoCreateWithoutGuiaInput, PedidoUncheckedCreateWithoutGuiaInput>
     connectOrCreate?: PedidoCreateOrConnectWithoutGuiaInput
@@ -70741,6 +71317,34 @@ export namespace Prisma {
     update?: CuadraturaVentaUpdateWithWhereUniqueWithoutGuiaInput | CuadraturaVentaUpdateWithWhereUniqueWithoutGuiaInput[]
     updateMany?: CuadraturaVentaUpdateManyWithWhereWithoutGuiaInput | CuadraturaVentaUpdateManyWithWhereWithoutGuiaInput[]
     deleteMany?: CuadraturaVentaScalarWhereInput | CuadraturaVentaScalarWhereInput[]
+  }
+
+  export type GuiaDespachoUncheckedUpdateManyWithoutReemplaza_aNestedInput = {
+    create?: XOR<GuiaDespachoCreateWithoutReemplaza_aInput, GuiaDespachoUncheckedCreateWithoutReemplaza_aInput> | GuiaDespachoCreateWithoutReemplaza_aInput[] | GuiaDespachoUncheckedCreateWithoutReemplaza_aInput[]
+    connectOrCreate?: GuiaDespachoCreateOrConnectWithoutReemplaza_aInput | GuiaDespachoCreateOrConnectWithoutReemplaza_aInput[]
+    upsert?: GuiaDespachoUpsertWithWhereUniqueWithoutReemplaza_aInput | GuiaDespachoUpsertWithWhereUniqueWithoutReemplaza_aInput[]
+    createMany?: GuiaDespachoCreateManyReemplaza_aInputEnvelope
+    set?: GuiaDespachoWhereUniqueInput | GuiaDespachoWhereUniqueInput[]
+    disconnect?: GuiaDespachoWhereUniqueInput | GuiaDespachoWhereUniqueInput[]
+    delete?: GuiaDespachoWhereUniqueInput | GuiaDespachoWhereUniqueInput[]
+    connect?: GuiaDespachoWhereUniqueInput | GuiaDespachoWhereUniqueInput[]
+    update?: GuiaDespachoUpdateWithWhereUniqueWithoutReemplaza_aInput | GuiaDespachoUpdateWithWhereUniqueWithoutReemplaza_aInput[]
+    updateMany?: GuiaDespachoUpdateManyWithWhereWithoutReemplaza_aInput | GuiaDespachoUpdateManyWithWhereWithoutReemplaza_aInput[]
+    deleteMany?: GuiaDespachoScalarWhereInput | GuiaDespachoScalarWhereInput[]
+  }
+
+  export type GuiaDespachoUncheckedUpdateManyWithoutReemplazada_porNestedInput = {
+    create?: XOR<GuiaDespachoCreateWithoutReemplazada_porInput, GuiaDespachoUncheckedCreateWithoutReemplazada_porInput> | GuiaDespachoCreateWithoutReemplazada_porInput[] | GuiaDespachoUncheckedCreateWithoutReemplazada_porInput[]
+    connectOrCreate?: GuiaDespachoCreateOrConnectWithoutReemplazada_porInput | GuiaDespachoCreateOrConnectWithoutReemplazada_porInput[]
+    upsert?: GuiaDespachoUpsertWithWhereUniqueWithoutReemplazada_porInput | GuiaDespachoUpsertWithWhereUniqueWithoutReemplazada_porInput[]
+    createMany?: GuiaDespachoCreateManyReemplazada_porInputEnvelope
+    set?: GuiaDespachoWhereUniqueInput | GuiaDespachoWhereUniqueInput[]
+    disconnect?: GuiaDespachoWhereUniqueInput | GuiaDespachoWhereUniqueInput[]
+    delete?: GuiaDespachoWhereUniqueInput | GuiaDespachoWhereUniqueInput[]
+    connect?: GuiaDespachoWhereUniqueInput | GuiaDespachoWhereUniqueInput[]
+    update?: GuiaDespachoUpdateWithWhereUniqueWithoutReemplazada_porInput | GuiaDespachoUpdateWithWhereUniqueWithoutReemplazada_porInput[]
+    updateMany?: GuiaDespachoUpdateManyWithWhereWithoutReemplazada_porInput | GuiaDespachoUpdateManyWithWhereWithoutReemplazada_porInput[]
+    deleteMany?: GuiaDespachoScalarWhereInput | GuiaDespachoScalarWhereInput[]
   }
 
   export type ItemGuiaUncheckedUpdateManyWithoutGuiaNestedInput = {
@@ -72709,18 +73313,28 @@ export namespace Prisma {
     fecha_emision?: Date | string
     direccion_entrega: string
     estado: $Enums.EstadoGuia
+    estado_documento?: string | null
+    forma_pago?: string | null
+    numero_factura?: string | null
     nombre_receptor?: string | null
     rut_receptor?: string | null
     hora_entrega?: Date | string | null
     observaciones?: string | null
     total: number
     motivo_anulacion?: string | null
+    anulada_motivo?: string | null
+    anulada_at?: Date | string | null
     firma_digital?: string | null
     botellones_prestados_entrega?: number
     incluida_en_cierre?: boolean
     fecha_cierre?: Date | string | null
     cuadratura_ventas?: CuadraturaVentaCreateNestedManyWithoutGuiaInput
     cliente: ClienteCreateNestedOneWithoutGuiasInput
+    anulada_por?: UsuarioCreateNestedOneWithoutGuias_anuladasInput
+    reemplaza_a?: GuiaDespachoCreateNestedOneWithoutGuias_que_reemplazan_a_estaInput
+    guias_que_reemplazan_a_esta?: GuiaDespachoCreateNestedManyWithoutReemplaza_aInput
+    reemplazada_por?: GuiaDespachoCreateNestedOneWithoutGuias_reemplazadas_por_estaInput
+    guias_reemplazadas_por_esta?: GuiaDespachoCreateNestedManyWithoutReemplazada_porInput
     pedido?: PedidoCreateNestedOneWithoutGuiaInput
     items?: ItemGuiaCreateNestedManyWithoutGuiaInput
   }
@@ -72733,17 +73347,27 @@ export namespace Prisma {
     pedido_id?: string | null
     direccion_entrega: string
     estado: $Enums.EstadoGuia
+    estado_documento?: string | null
+    forma_pago?: string | null
+    numero_factura?: string | null
     nombre_receptor?: string | null
     rut_receptor?: string | null
     hora_entrega?: Date | string | null
     observaciones?: string | null
     total: number
     motivo_anulacion?: string | null
+    anulada_motivo?: string | null
+    anulada_at?: Date | string | null
+    anulada_por_id?: string | null
+    reemplaza_a_guia_id?: string | null
+    reemplazada_por_guia_id?: string | null
     firma_digital?: string | null
     botellones_prestados_entrega?: number
     incluida_en_cierre?: boolean
     fecha_cierre?: Date | string | null
     cuadratura_ventas?: CuadraturaVentaUncheckedCreateNestedManyWithoutGuiaInput
+    guias_que_reemplazan_a_esta?: GuiaDespachoUncheckedCreateNestedManyWithoutReemplaza_aInput
+    guias_reemplazadas_por_esta?: GuiaDespachoUncheckedCreateNestedManyWithoutReemplazada_porInput
     items?: ItemGuiaUncheckedCreateNestedManyWithoutGuiaInput
   }
 
@@ -72754,6 +73378,80 @@ export namespace Prisma {
 
   export type GuiaDespachoCreateManyUsuario_repartidorInputEnvelope = {
     data: GuiaDespachoCreateManyUsuario_repartidorInput | GuiaDespachoCreateManyUsuario_repartidorInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type GuiaDespachoCreateWithoutAnulada_porInput = {
+    id?: string
+    numero_correlativo?: number
+    fecha_emision?: Date | string
+    direccion_entrega: string
+    estado: $Enums.EstadoGuia
+    estado_documento?: string | null
+    forma_pago?: string | null
+    numero_factura?: string | null
+    nombre_receptor?: string | null
+    rut_receptor?: string | null
+    hora_entrega?: Date | string | null
+    observaciones?: string | null
+    total: number
+    motivo_anulacion?: string | null
+    anulada_motivo?: string | null
+    anulada_at?: Date | string | null
+    firma_digital?: string | null
+    botellones_prestados_entrega?: number
+    incluida_en_cierre?: boolean
+    fecha_cierre?: Date | string | null
+    cuadratura_ventas?: CuadraturaVentaCreateNestedManyWithoutGuiaInput
+    cliente: ClienteCreateNestedOneWithoutGuiasInput
+    usuario_repartidor: UsuarioCreateNestedOneWithoutGuiasInput
+    reemplaza_a?: GuiaDespachoCreateNestedOneWithoutGuias_que_reemplazan_a_estaInput
+    guias_que_reemplazan_a_esta?: GuiaDespachoCreateNestedManyWithoutReemplaza_aInput
+    reemplazada_por?: GuiaDespachoCreateNestedOneWithoutGuias_reemplazadas_por_estaInput
+    guias_reemplazadas_por_esta?: GuiaDespachoCreateNestedManyWithoutReemplazada_porInput
+    pedido?: PedidoCreateNestedOneWithoutGuiaInput
+    items?: ItemGuiaCreateNestedManyWithoutGuiaInput
+  }
+
+  export type GuiaDespachoUncheckedCreateWithoutAnulada_porInput = {
+    id?: string
+    numero_correlativo?: number
+    fecha_emision?: Date | string
+    cliente_id: string
+    pedido_id?: string | null
+    direccion_entrega: string
+    usuario_repartidor_id: string
+    estado: $Enums.EstadoGuia
+    estado_documento?: string | null
+    forma_pago?: string | null
+    numero_factura?: string | null
+    nombre_receptor?: string | null
+    rut_receptor?: string | null
+    hora_entrega?: Date | string | null
+    observaciones?: string | null
+    total: number
+    motivo_anulacion?: string | null
+    anulada_motivo?: string | null
+    anulada_at?: Date | string | null
+    reemplaza_a_guia_id?: string | null
+    reemplazada_por_guia_id?: string | null
+    firma_digital?: string | null
+    botellones_prestados_entrega?: number
+    incluida_en_cierre?: boolean
+    fecha_cierre?: Date | string | null
+    cuadratura_ventas?: CuadraturaVentaUncheckedCreateNestedManyWithoutGuiaInput
+    guias_que_reemplazan_a_esta?: GuiaDespachoUncheckedCreateNestedManyWithoutReemplaza_aInput
+    guias_reemplazadas_por_esta?: GuiaDespachoUncheckedCreateNestedManyWithoutReemplazada_porInput
+    items?: ItemGuiaUncheckedCreateNestedManyWithoutGuiaInput
+  }
+
+  export type GuiaDespachoCreateOrConnectWithoutAnulada_porInput = {
+    where: GuiaDespachoWhereUniqueInput
+    create: XOR<GuiaDespachoCreateWithoutAnulada_porInput, GuiaDespachoUncheckedCreateWithoutAnulada_porInput>
+  }
+
+  export type GuiaDespachoCreateManyAnulada_porInputEnvelope = {
+    data: GuiaDespachoCreateManyAnulada_porInput | GuiaDespachoCreateManyAnulada_porInput[]
     skipDuplicates?: boolean
   }
 
@@ -73236,16 +73934,40 @@ export namespace Prisma {
     direccion_entrega?: StringFilter<"GuiaDespacho"> | string
     usuario_repartidor_id?: StringFilter<"GuiaDespacho"> | string
     estado?: EnumEstadoGuiaFilter<"GuiaDespacho"> | $Enums.EstadoGuia
+    estado_documento?: StringNullableFilter<"GuiaDespacho"> | string | null
+    forma_pago?: StringNullableFilter<"GuiaDespacho"> | string | null
+    numero_factura?: StringNullableFilter<"GuiaDespacho"> | string | null
     nombre_receptor?: StringNullableFilter<"GuiaDespacho"> | string | null
     rut_receptor?: StringNullableFilter<"GuiaDespacho"> | string | null
     hora_entrega?: DateTimeNullableFilter<"GuiaDespacho"> | Date | string | null
     observaciones?: StringNullableFilter<"GuiaDespacho"> | string | null
     total?: FloatFilter<"GuiaDespacho"> | number
     motivo_anulacion?: StringNullableFilter<"GuiaDespacho"> | string | null
+    anulada_motivo?: StringNullableFilter<"GuiaDespacho"> | string | null
+    anulada_at?: DateTimeNullableFilter<"GuiaDespacho"> | Date | string | null
+    anulada_por_id?: StringNullableFilter<"GuiaDespacho"> | string | null
+    reemplaza_a_guia_id?: StringNullableFilter<"GuiaDespacho"> | string | null
+    reemplazada_por_guia_id?: StringNullableFilter<"GuiaDespacho"> | string | null
     firma_digital?: StringNullableFilter<"GuiaDespacho"> | string | null
     botellones_prestados_entrega?: IntFilter<"GuiaDespacho"> | number
     incluida_en_cierre?: BoolFilter<"GuiaDespacho"> | boolean
     fecha_cierre?: DateTimeNullableFilter<"GuiaDespacho"> | Date | string | null
+  }
+
+  export type GuiaDespachoUpsertWithWhereUniqueWithoutAnulada_porInput = {
+    where: GuiaDespachoWhereUniqueInput
+    update: XOR<GuiaDespachoUpdateWithoutAnulada_porInput, GuiaDespachoUncheckedUpdateWithoutAnulada_porInput>
+    create: XOR<GuiaDespachoCreateWithoutAnulada_porInput, GuiaDespachoUncheckedCreateWithoutAnulada_porInput>
+  }
+
+  export type GuiaDespachoUpdateWithWhereUniqueWithoutAnulada_porInput = {
+    where: GuiaDespachoWhereUniqueInput
+    data: XOR<GuiaDespachoUpdateWithoutAnulada_porInput, GuiaDespachoUncheckedUpdateWithoutAnulada_porInput>
+  }
+
+  export type GuiaDespachoUpdateManyWithWhereWithoutAnulada_porInput = {
+    where: GuiaDespachoScalarWhereInput
+    data: XOR<GuiaDespachoUpdateManyMutationInput, GuiaDespachoUncheckedUpdateManyWithoutAnulada_porInput>
   }
 
   export type LogAccesoUpsertWithWhereUniqueWithoutUsuarioInput = {
@@ -73777,6 +74499,7 @@ export namespace Prisma {
     cargas_combustible?: CargaCombustibleCreateNestedManyWithoutUsuarioInput
     cuadraturas?: CuadraturaCreateNestedManyWithoutUsuarioInput
     guias?: GuiaDespachoCreateNestedManyWithoutUsuario_repartidorInput
+    guias_anuladas?: GuiaDespachoCreateNestedManyWithoutAnulada_porInput
     log_accesos?: LogAccesoCreateNestedManyWithoutUsuarioInput
     mantenciones?: MantencionCreateNestedManyWithoutUsuarioInput
     produccion?: ProduccionDiariaCreateNestedManyWithoutUsuarioInput
@@ -73808,6 +74531,7 @@ export namespace Prisma {
     cargas_combustible?: CargaCombustibleUncheckedCreateNestedManyWithoutUsuarioInput
     cuadraturas?: CuadraturaUncheckedCreateNestedManyWithoutUsuarioInput
     guias?: GuiaDespachoUncheckedCreateNestedManyWithoutUsuario_repartidorInput
+    guias_anuladas?: GuiaDespachoUncheckedCreateNestedManyWithoutAnulada_porInput
     log_accesos?: LogAccesoUncheckedCreateNestedManyWithoutUsuarioInput
     mantenciones?: MantencionUncheckedCreateNestedManyWithoutUsuarioInput
     produccion?: ProduccionDiariaUncheckedCreateNestedManyWithoutUsuarioInput
@@ -73976,6 +74700,7 @@ export namespace Prisma {
     cargas_combustible?: CargaCombustibleCreateNestedManyWithoutUsuarioInput
     cuadraturas?: CuadraturaCreateNestedManyWithoutUsuarioInput
     guias?: GuiaDespachoCreateNestedManyWithoutUsuario_repartidorInput
+    guias_anuladas?: GuiaDespachoCreateNestedManyWithoutAnulada_porInput
     log_accesos?: LogAccesoCreateNestedManyWithoutUsuarioInput
     produccion?: ProduccionDiariaCreateNestedManyWithoutUsuarioInput
     rutas_base?: RutaBaseCreateNestedManyWithoutUsuarioInput
@@ -74008,6 +74733,7 @@ export namespace Prisma {
     cargas_combustible?: CargaCombustibleUncheckedCreateNestedManyWithoutUsuarioInput
     cuadraturas?: CuadraturaUncheckedCreateNestedManyWithoutUsuarioInput
     guias?: GuiaDespachoUncheckedCreateNestedManyWithoutUsuario_repartidorInput
+    guias_anuladas?: GuiaDespachoUncheckedCreateNestedManyWithoutAnulada_porInput
     log_accesos?: LogAccesoUncheckedCreateNestedManyWithoutUsuarioInput
     produccion?: ProduccionDiariaUncheckedCreateNestedManyWithoutUsuarioInput
     rutas_base?: RutaBaseUncheckedCreateNestedManyWithoutUsuarioInput
@@ -74113,6 +74839,7 @@ export namespace Prisma {
     cargas_combustible?: CargaCombustibleUpdateManyWithoutUsuarioNestedInput
     cuadraturas?: CuadraturaUpdateManyWithoutUsuarioNestedInput
     guias?: GuiaDespachoUpdateManyWithoutUsuario_repartidorNestedInput
+    guias_anuladas?: GuiaDespachoUpdateManyWithoutAnulada_porNestedInput
     log_accesos?: LogAccesoUpdateManyWithoutUsuarioNestedInput
     produccion?: ProduccionDiariaUpdateManyWithoutUsuarioNestedInput
     rutas_base?: RutaBaseUpdateManyWithoutUsuarioNestedInput
@@ -74145,6 +74872,7 @@ export namespace Prisma {
     cargas_combustible?: CargaCombustibleUncheckedUpdateManyWithoutUsuarioNestedInput
     cuadraturas?: CuadraturaUncheckedUpdateManyWithoutUsuarioNestedInput
     guias?: GuiaDespachoUncheckedUpdateManyWithoutUsuario_repartidorNestedInput
+    guias_anuladas?: GuiaDespachoUncheckedUpdateManyWithoutAnulada_porNestedInput
     log_accesos?: LogAccesoUncheckedUpdateManyWithoutUsuarioNestedInput
     produccion?: ProduccionDiariaUncheckedUpdateManyWithoutUsuarioNestedInput
     rutas_base?: RutaBaseUncheckedUpdateManyWithoutUsuarioNestedInput
@@ -74951,6 +75679,7 @@ export namespace Prisma {
     cargas_combustible?: CargaCombustibleCreateNestedManyWithoutUsuarioInput
     cuadraturas?: CuadraturaCreateNestedManyWithoutUsuarioInput
     guias?: GuiaDespachoCreateNestedManyWithoutUsuario_repartidorInput
+    guias_anuladas?: GuiaDespachoCreateNestedManyWithoutAnulada_porInput
     log_accesos?: LogAccesoCreateNestedManyWithoutUsuarioInput
     mantenciones?: MantencionCreateNestedManyWithoutUsuarioInput
     produccion?: ProduccionDiariaCreateNestedManyWithoutUsuarioInput
@@ -74983,6 +75712,7 @@ export namespace Prisma {
     cargas_combustible?: CargaCombustibleUncheckedCreateNestedManyWithoutUsuarioInput
     cuadraturas?: CuadraturaUncheckedCreateNestedManyWithoutUsuarioInput
     guias?: GuiaDespachoUncheckedCreateNestedManyWithoutUsuario_repartidorInput
+    guias_anuladas?: GuiaDespachoUncheckedCreateNestedManyWithoutAnulada_porInput
     log_accesos?: LogAccesoUncheckedCreateNestedManyWithoutUsuarioInput
     mantenciones?: MantencionUncheckedCreateNestedManyWithoutUsuarioInput
     produccion?: ProduccionDiariaUncheckedCreateNestedManyWithoutUsuarioInput
@@ -75076,6 +75806,7 @@ export namespace Prisma {
     cargas_combustible?: CargaCombustibleUpdateManyWithoutUsuarioNestedInput
     cuadraturas?: CuadraturaUpdateManyWithoutUsuarioNestedInput
     guias?: GuiaDespachoUpdateManyWithoutUsuario_repartidorNestedInput
+    guias_anuladas?: GuiaDespachoUpdateManyWithoutAnulada_porNestedInput
     log_accesos?: LogAccesoUpdateManyWithoutUsuarioNestedInput
     mantenciones?: MantencionUpdateManyWithoutUsuarioNestedInput
     produccion?: ProduccionDiariaUpdateManyWithoutUsuarioNestedInput
@@ -75108,6 +75839,7 @@ export namespace Prisma {
     cargas_combustible?: CargaCombustibleUncheckedUpdateManyWithoutUsuarioNestedInput
     cuadraturas?: CuadraturaUncheckedUpdateManyWithoutUsuarioNestedInput
     guias?: GuiaDespachoUncheckedUpdateManyWithoutUsuario_repartidorNestedInput
+    guias_anuladas?: GuiaDespachoUncheckedUpdateManyWithoutAnulada_porNestedInput
     log_accesos?: LogAccesoUncheckedUpdateManyWithoutUsuarioNestedInput
     mantenciones?: MantencionUncheckedUpdateManyWithoutUsuarioNestedInput
     produccion?: ProduccionDiariaUncheckedUpdateManyWithoutUsuarioNestedInput
@@ -75329,18 +76061,28 @@ export namespace Prisma {
     fecha_emision?: Date | string
     direccion_entrega: string
     estado: $Enums.EstadoGuia
+    estado_documento?: string | null
+    forma_pago?: string | null
+    numero_factura?: string | null
     nombre_receptor?: string | null
     rut_receptor?: string | null
     hora_entrega?: Date | string | null
     observaciones?: string | null
     total: number
     motivo_anulacion?: string | null
+    anulada_motivo?: string | null
+    anulada_at?: Date | string | null
     firma_digital?: string | null
     botellones_prestados_entrega?: number
     incluida_en_cierre?: boolean
     fecha_cierre?: Date | string | null
     cuadratura_ventas?: CuadraturaVentaCreateNestedManyWithoutGuiaInput
     usuario_repartidor: UsuarioCreateNestedOneWithoutGuiasInput
+    anulada_por?: UsuarioCreateNestedOneWithoutGuias_anuladasInput
+    reemplaza_a?: GuiaDespachoCreateNestedOneWithoutGuias_que_reemplazan_a_estaInput
+    guias_que_reemplazan_a_esta?: GuiaDespachoCreateNestedManyWithoutReemplaza_aInput
+    reemplazada_por?: GuiaDespachoCreateNestedOneWithoutGuias_reemplazadas_por_estaInput
+    guias_reemplazadas_por_esta?: GuiaDespachoCreateNestedManyWithoutReemplazada_porInput
     pedido?: PedidoCreateNestedOneWithoutGuiaInput
     items?: ItemGuiaCreateNestedManyWithoutGuiaInput
   }
@@ -75353,17 +76095,27 @@ export namespace Prisma {
     direccion_entrega: string
     usuario_repartidor_id: string
     estado: $Enums.EstadoGuia
+    estado_documento?: string | null
+    forma_pago?: string | null
+    numero_factura?: string | null
     nombre_receptor?: string | null
     rut_receptor?: string | null
     hora_entrega?: Date | string | null
     observaciones?: string | null
     total: number
     motivo_anulacion?: string | null
+    anulada_motivo?: string | null
+    anulada_at?: Date | string | null
+    anulada_por_id?: string | null
+    reemplaza_a_guia_id?: string | null
+    reemplazada_por_guia_id?: string | null
     firma_digital?: string | null
     botellones_prestados_entrega?: number
     incluida_en_cierre?: boolean
     fecha_cierre?: Date | string | null
     cuadratura_ventas?: CuadraturaVentaUncheckedCreateNestedManyWithoutGuiaInput
+    guias_que_reemplazan_a_esta?: GuiaDespachoUncheckedCreateNestedManyWithoutReemplaza_aInput
+    guias_reemplazadas_por_esta?: GuiaDespachoUncheckedCreateNestedManyWithoutReemplazada_porInput
     items?: ItemGuiaUncheckedCreateNestedManyWithoutGuiaInput
   }
 
@@ -75842,6 +76594,7 @@ export namespace Prisma {
     cargas_combustible?: CargaCombustibleCreateNestedManyWithoutUsuarioInput
     cuadraturas?: CuadraturaCreateNestedManyWithoutUsuarioInput
     guias?: GuiaDespachoCreateNestedManyWithoutUsuario_repartidorInput
+    guias_anuladas?: GuiaDespachoCreateNestedManyWithoutAnulada_porInput
     log_accesos?: LogAccesoCreateNestedManyWithoutUsuarioInput
     mantenciones?: MantencionCreateNestedManyWithoutUsuarioInput
     produccion?: ProduccionDiariaCreateNestedManyWithoutUsuarioInput
@@ -75874,6 +76627,7 @@ export namespace Prisma {
     cargas_combustible?: CargaCombustibleUncheckedCreateNestedManyWithoutUsuarioInput
     cuadraturas?: CuadraturaUncheckedCreateNestedManyWithoutUsuarioInput
     guias?: GuiaDespachoUncheckedCreateNestedManyWithoutUsuario_repartidorInput
+    guias_anuladas?: GuiaDespachoUncheckedCreateNestedManyWithoutAnulada_porInput
     log_accesos?: LogAccesoUncheckedCreateNestedManyWithoutUsuarioInput
     mantenciones?: MantencionUncheckedCreateNestedManyWithoutUsuarioInput
     produccion?: ProduccionDiariaUncheckedCreateNestedManyWithoutUsuarioInput
@@ -76024,6 +76778,7 @@ export namespace Prisma {
     cargas_combustible?: CargaCombustibleUpdateManyWithoutUsuarioNestedInput
     cuadraturas?: CuadraturaUpdateManyWithoutUsuarioNestedInput
     guias?: GuiaDespachoUpdateManyWithoutUsuario_repartidorNestedInput
+    guias_anuladas?: GuiaDespachoUpdateManyWithoutAnulada_porNestedInput
     log_accesos?: LogAccesoUpdateManyWithoutUsuarioNestedInput
     mantenciones?: MantencionUpdateManyWithoutUsuarioNestedInput
     produccion?: ProduccionDiariaUpdateManyWithoutUsuarioNestedInput
@@ -76056,6 +76811,7 @@ export namespace Prisma {
     cargas_combustible?: CargaCombustibleUncheckedUpdateManyWithoutUsuarioNestedInput
     cuadraturas?: CuadraturaUncheckedUpdateManyWithoutUsuarioNestedInput
     guias?: GuiaDespachoUncheckedUpdateManyWithoutUsuario_repartidorNestedInput
+    guias_anuladas?: GuiaDespachoUncheckedUpdateManyWithoutAnulada_porNestedInput
     log_accesos?: LogAccesoUncheckedUpdateManyWithoutUsuarioNestedInput
     mantenciones?: MantencionUncheckedUpdateManyWithoutUsuarioNestedInput
     produccion?: ProduccionDiariaUncheckedUpdateManyWithoutUsuarioNestedInput
@@ -76762,6 +77518,7 @@ export namespace Prisma {
     cargas_combustible?: CargaCombustibleCreateNestedManyWithoutUsuarioInput
     cuadraturas?: CuadraturaCreateNestedManyWithoutUsuarioInput
     guias?: GuiaDespachoCreateNestedManyWithoutUsuario_repartidorInput
+    guias_anuladas?: GuiaDespachoCreateNestedManyWithoutAnulada_porInput
     log_accesos?: LogAccesoCreateNestedManyWithoutUsuarioInput
     mantenciones?: MantencionCreateNestedManyWithoutUsuarioInput
     produccion?: ProduccionDiariaCreateNestedManyWithoutUsuarioInput
@@ -76794,6 +77551,7 @@ export namespace Prisma {
     cargas_combustible?: CargaCombustibleUncheckedCreateNestedManyWithoutUsuarioInput
     cuadraturas?: CuadraturaUncheckedCreateNestedManyWithoutUsuarioInput
     guias?: GuiaDespachoUncheckedCreateNestedManyWithoutUsuario_repartidorInput
+    guias_anuladas?: GuiaDespachoUncheckedCreateNestedManyWithoutAnulada_porInput
     log_accesos?: LogAccesoUncheckedCreateNestedManyWithoutUsuarioInput
     mantenciones?: MantencionUncheckedCreateNestedManyWithoutUsuarioInput
     produccion?: ProduccionDiariaUncheckedCreateNestedManyWithoutUsuarioInput
@@ -76926,6 +77684,7 @@ export namespace Prisma {
     cargas_combustible?: CargaCombustibleUpdateManyWithoutUsuarioNestedInput
     cuadraturas?: CuadraturaUpdateManyWithoutUsuarioNestedInput
     guias?: GuiaDespachoUpdateManyWithoutUsuario_repartidorNestedInput
+    guias_anuladas?: GuiaDespachoUpdateManyWithoutAnulada_porNestedInput
     log_accesos?: LogAccesoUpdateManyWithoutUsuarioNestedInput
     mantenciones?: MantencionUpdateManyWithoutUsuarioNestedInput
     produccion?: ProduccionDiariaUpdateManyWithoutUsuarioNestedInput
@@ -76958,6 +77717,7 @@ export namespace Prisma {
     cargas_combustible?: CargaCombustibleUncheckedUpdateManyWithoutUsuarioNestedInput
     cuadraturas?: CuadraturaUncheckedUpdateManyWithoutUsuarioNestedInput
     guias?: GuiaDespachoUncheckedUpdateManyWithoutUsuario_repartidorNestedInput
+    guias_anuladas?: GuiaDespachoUncheckedUpdateManyWithoutAnulada_porNestedInput
     log_accesos?: LogAccesoUncheckedUpdateManyWithoutUsuarioNestedInput
     mantenciones?: MantencionUncheckedUpdateManyWithoutUsuarioNestedInput
     produccion?: ProduccionDiariaUncheckedUpdateManyWithoutUsuarioNestedInput
@@ -77466,12 +78226,17 @@ export namespace Prisma {
     fecha_emision?: Date | string
     direccion_entrega: string
     estado: $Enums.EstadoGuia
+    estado_documento?: string | null
+    forma_pago?: string | null
+    numero_factura?: string | null
     nombre_receptor?: string | null
     rut_receptor?: string | null
     hora_entrega?: Date | string | null
     observaciones?: string | null
     total: number
     motivo_anulacion?: string | null
+    anulada_motivo?: string | null
+    anulada_at?: Date | string | null
     firma_digital?: string | null
     botellones_prestados_entrega?: number
     incluida_en_cierre?: boolean
@@ -77479,6 +78244,11 @@ export namespace Prisma {
     cuadratura_ventas?: CuadraturaVentaCreateNestedManyWithoutGuiaInput
     cliente: ClienteCreateNestedOneWithoutGuiasInput
     usuario_repartidor: UsuarioCreateNestedOneWithoutGuiasInput
+    anulada_por?: UsuarioCreateNestedOneWithoutGuias_anuladasInput
+    reemplaza_a?: GuiaDespachoCreateNestedOneWithoutGuias_que_reemplazan_a_estaInput
+    guias_que_reemplazan_a_esta?: GuiaDespachoCreateNestedManyWithoutReemplaza_aInput
+    reemplazada_por?: GuiaDespachoCreateNestedOneWithoutGuias_reemplazadas_por_estaInput
+    guias_reemplazadas_por_esta?: GuiaDespachoCreateNestedManyWithoutReemplazada_porInput
     items?: ItemGuiaCreateNestedManyWithoutGuiaInput
   }
 
@@ -77490,17 +78260,27 @@ export namespace Prisma {
     direccion_entrega: string
     usuario_repartidor_id: string
     estado: $Enums.EstadoGuia
+    estado_documento?: string | null
+    forma_pago?: string | null
+    numero_factura?: string | null
     nombre_receptor?: string | null
     rut_receptor?: string | null
     hora_entrega?: Date | string | null
     observaciones?: string | null
     total: number
     motivo_anulacion?: string | null
+    anulada_motivo?: string | null
+    anulada_at?: Date | string | null
+    anulada_por_id?: string | null
+    reemplaza_a_guia_id?: string | null
+    reemplazada_por_guia_id?: string | null
     firma_digital?: string | null
     botellones_prestados_entrega?: number
     incluida_en_cierre?: boolean
     fecha_cierre?: Date | string | null
     cuadratura_ventas?: CuadraturaVentaUncheckedCreateNestedManyWithoutGuiaInput
+    guias_que_reemplazan_a_esta?: GuiaDespachoUncheckedCreateNestedManyWithoutReemplaza_aInput
+    guias_reemplazadas_por_esta?: GuiaDespachoUncheckedCreateNestedManyWithoutReemplazada_porInput
     items?: ItemGuiaUncheckedCreateNestedManyWithoutGuiaInput
   }
 
@@ -77624,12 +78404,17 @@ export namespace Prisma {
     fecha_emision?: DateTimeFieldUpdateOperationsInput | Date | string
     direccion_entrega?: StringFieldUpdateOperationsInput | string
     estado?: EnumEstadoGuiaFieldUpdateOperationsInput | $Enums.EstadoGuia
+    estado_documento?: NullableStringFieldUpdateOperationsInput | string | null
+    forma_pago?: NullableStringFieldUpdateOperationsInput | string | null
+    numero_factura?: NullableStringFieldUpdateOperationsInput | string | null
     nombre_receptor?: NullableStringFieldUpdateOperationsInput | string | null
     rut_receptor?: NullableStringFieldUpdateOperationsInput | string | null
     hora_entrega?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     total?: FloatFieldUpdateOperationsInput | number
     motivo_anulacion?: NullableStringFieldUpdateOperationsInput | string | null
+    anulada_motivo?: NullableStringFieldUpdateOperationsInput | string | null
+    anulada_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     firma_digital?: NullableStringFieldUpdateOperationsInput | string | null
     botellones_prestados_entrega?: IntFieldUpdateOperationsInput | number
     incluida_en_cierre?: BoolFieldUpdateOperationsInput | boolean
@@ -77637,6 +78422,11 @@ export namespace Prisma {
     cuadratura_ventas?: CuadraturaVentaUpdateManyWithoutGuiaNestedInput
     cliente?: ClienteUpdateOneRequiredWithoutGuiasNestedInput
     usuario_repartidor?: UsuarioUpdateOneRequiredWithoutGuiasNestedInput
+    anulada_por?: UsuarioUpdateOneWithoutGuias_anuladasNestedInput
+    reemplaza_a?: GuiaDespachoUpdateOneWithoutGuias_que_reemplazan_a_estaNestedInput
+    guias_que_reemplazan_a_esta?: GuiaDespachoUpdateManyWithoutReemplaza_aNestedInput
+    reemplazada_por?: GuiaDespachoUpdateOneWithoutGuias_reemplazadas_por_estaNestedInput
+    guias_reemplazadas_por_esta?: GuiaDespachoUpdateManyWithoutReemplazada_porNestedInput
     items?: ItemGuiaUpdateManyWithoutGuiaNestedInput
   }
 
@@ -77648,17 +78438,27 @@ export namespace Prisma {
     direccion_entrega?: StringFieldUpdateOperationsInput | string
     usuario_repartidor_id?: StringFieldUpdateOperationsInput | string
     estado?: EnumEstadoGuiaFieldUpdateOperationsInput | $Enums.EstadoGuia
+    estado_documento?: NullableStringFieldUpdateOperationsInput | string | null
+    forma_pago?: NullableStringFieldUpdateOperationsInput | string | null
+    numero_factura?: NullableStringFieldUpdateOperationsInput | string | null
     nombre_receptor?: NullableStringFieldUpdateOperationsInput | string | null
     rut_receptor?: NullableStringFieldUpdateOperationsInput | string | null
     hora_entrega?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     total?: FloatFieldUpdateOperationsInput | number
     motivo_anulacion?: NullableStringFieldUpdateOperationsInput | string | null
+    anulada_motivo?: NullableStringFieldUpdateOperationsInput | string | null
+    anulada_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    anulada_por_id?: NullableStringFieldUpdateOperationsInput | string | null
+    reemplaza_a_guia_id?: NullableStringFieldUpdateOperationsInput | string | null
+    reemplazada_por_guia_id?: NullableStringFieldUpdateOperationsInput | string | null
     firma_digital?: NullableStringFieldUpdateOperationsInput | string | null
     botellones_prestados_entrega?: IntFieldUpdateOperationsInput | number
     incluida_en_cierre?: BoolFieldUpdateOperationsInput | boolean
     fecha_cierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     cuadratura_ventas?: CuadraturaVentaUncheckedUpdateManyWithoutGuiaNestedInput
+    guias_que_reemplazan_a_esta?: GuiaDespachoUncheckedUpdateManyWithoutReemplaza_aNestedInput
+    guias_reemplazadas_por_esta?: GuiaDespachoUncheckedUpdateManyWithoutReemplazada_porNestedInput
     items?: ItemGuiaUncheckedUpdateManyWithoutGuiaNestedInput
   }
 
@@ -77944,6 +78744,7 @@ export namespace Prisma {
     botellones_danados?: BotellonDanadoCreateNestedManyWithoutUsuarioInput
     cargas_combustible?: CargaCombustibleCreateNestedManyWithoutUsuarioInput
     cuadraturas?: CuadraturaCreateNestedManyWithoutUsuarioInput
+    guias_anuladas?: GuiaDespachoCreateNestedManyWithoutAnulada_porInput
     log_accesos?: LogAccesoCreateNestedManyWithoutUsuarioInput
     mantenciones?: MantencionCreateNestedManyWithoutUsuarioInput
     produccion?: ProduccionDiariaCreateNestedManyWithoutUsuarioInput
@@ -77976,6 +78777,7 @@ export namespace Prisma {
     botellones_danados?: BotellonDanadoUncheckedCreateNestedManyWithoutUsuarioInput
     cargas_combustible?: CargaCombustibleUncheckedCreateNestedManyWithoutUsuarioInput
     cuadraturas?: CuadraturaUncheckedCreateNestedManyWithoutUsuarioInput
+    guias_anuladas?: GuiaDespachoUncheckedCreateNestedManyWithoutAnulada_porInput
     log_accesos?: LogAccesoUncheckedCreateNestedManyWithoutUsuarioInput
     mantenciones?: MantencionUncheckedCreateNestedManyWithoutUsuarioInput
     produccion?: ProduccionDiariaUncheckedCreateNestedManyWithoutUsuarioInput
@@ -77990,6 +78792,359 @@ export namespace Prisma {
   export type UsuarioCreateOrConnectWithoutGuiasInput = {
     where: UsuarioWhereUniqueInput
     create: XOR<UsuarioCreateWithoutGuiasInput, UsuarioUncheckedCreateWithoutGuiasInput>
+  }
+
+  export type UsuarioCreateWithoutGuias_anuladasInput = {
+    id?: string
+    nombre: string
+    apellido?: string | null
+    rut: string
+    telefono: string
+    email: string
+    rol?: $Enums.Rol
+    fecha_ingreso: Date | string
+    activo?: boolean
+    created_at?: Date | string
+    licencia_tipo?: string | null
+    recibe_comision?: boolean
+    vencimiento_lic?: Date | string | null
+    botellones_danados?: BotellonDanadoCreateNestedManyWithoutUsuarioInput
+    cargas_combustible?: CargaCombustibleCreateNestedManyWithoutUsuarioInput
+    cuadraturas?: CuadraturaCreateNestedManyWithoutUsuarioInput
+    guias?: GuiaDespachoCreateNestedManyWithoutUsuario_repartidorInput
+    log_accesos?: LogAccesoCreateNestedManyWithoutUsuarioInput
+    mantenciones?: MantencionCreateNestedManyWithoutUsuarioInput
+    produccion?: ProduccionDiariaCreateNestedManyWithoutUsuarioInput
+    rutas_base?: RutaBaseCreateNestedManyWithoutUsuarioInput
+    rutas_dia?: RutaDiaCreateNestedManyWithoutUsuarioInput
+    stock_camion?: StockCamionCreateNestedManyWithoutUsuarioInput
+    vehiculo?: VehiculoCreateNestedOneWithoutUsuariosInput
+    incidencias?: IncidenciaCreateNestedManyWithoutUsuarioInput
+    movimientos_stock?: MovimientoStockCreateNestedManyWithoutUsuarioInput
+    user?: UserCreateNestedOneWithoutUsuarioInput
+    cierres_caja?: CierreCajaCreateNestedManyWithoutUsuarioInput
+  }
+
+  export type UsuarioUncheckedCreateWithoutGuias_anuladasInput = {
+    id?: string
+    user_id?: string | null
+    nombre: string
+    apellido?: string | null
+    rut: string
+    telefono: string
+    email: string
+    rol?: $Enums.Rol
+    vehiculo_id?: string | null
+    fecha_ingreso: Date | string
+    activo?: boolean
+    created_at?: Date | string
+    licencia_tipo?: string | null
+    recibe_comision?: boolean
+    vencimiento_lic?: Date | string | null
+    botellones_danados?: BotellonDanadoUncheckedCreateNestedManyWithoutUsuarioInput
+    cargas_combustible?: CargaCombustibleUncheckedCreateNestedManyWithoutUsuarioInput
+    cuadraturas?: CuadraturaUncheckedCreateNestedManyWithoutUsuarioInput
+    guias?: GuiaDespachoUncheckedCreateNestedManyWithoutUsuario_repartidorInput
+    log_accesos?: LogAccesoUncheckedCreateNestedManyWithoutUsuarioInput
+    mantenciones?: MantencionUncheckedCreateNestedManyWithoutUsuarioInput
+    produccion?: ProduccionDiariaUncheckedCreateNestedManyWithoutUsuarioInput
+    rutas_base?: RutaBaseUncheckedCreateNestedManyWithoutUsuarioInput
+    rutas_dia?: RutaDiaUncheckedCreateNestedManyWithoutUsuarioInput
+    stock_camion?: StockCamionUncheckedCreateNestedManyWithoutUsuarioInput
+    incidencias?: IncidenciaUncheckedCreateNestedManyWithoutUsuarioInput
+    movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutUsuarioInput
+    cierres_caja?: CierreCajaUncheckedCreateNestedManyWithoutUsuarioInput
+  }
+
+  export type UsuarioCreateOrConnectWithoutGuias_anuladasInput = {
+    where: UsuarioWhereUniqueInput
+    create: XOR<UsuarioCreateWithoutGuias_anuladasInput, UsuarioUncheckedCreateWithoutGuias_anuladasInput>
+  }
+
+  export type GuiaDespachoCreateWithoutGuias_que_reemplazan_a_estaInput = {
+    id?: string
+    numero_correlativo?: number
+    fecha_emision?: Date | string
+    direccion_entrega: string
+    estado: $Enums.EstadoGuia
+    estado_documento?: string | null
+    forma_pago?: string | null
+    numero_factura?: string | null
+    nombre_receptor?: string | null
+    rut_receptor?: string | null
+    hora_entrega?: Date | string | null
+    observaciones?: string | null
+    total: number
+    motivo_anulacion?: string | null
+    anulada_motivo?: string | null
+    anulada_at?: Date | string | null
+    firma_digital?: string | null
+    botellones_prestados_entrega?: number
+    incluida_en_cierre?: boolean
+    fecha_cierre?: Date | string | null
+    cuadratura_ventas?: CuadraturaVentaCreateNestedManyWithoutGuiaInput
+    cliente: ClienteCreateNestedOneWithoutGuiasInput
+    usuario_repartidor: UsuarioCreateNestedOneWithoutGuiasInput
+    anulada_por?: UsuarioCreateNestedOneWithoutGuias_anuladasInput
+    reemplaza_a?: GuiaDespachoCreateNestedOneWithoutGuias_que_reemplazan_a_estaInput
+    reemplazada_por?: GuiaDespachoCreateNestedOneWithoutGuias_reemplazadas_por_estaInput
+    guias_reemplazadas_por_esta?: GuiaDespachoCreateNestedManyWithoutReemplazada_porInput
+    pedido?: PedidoCreateNestedOneWithoutGuiaInput
+    items?: ItemGuiaCreateNestedManyWithoutGuiaInput
+  }
+
+  export type GuiaDespachoUncheckedCreateWithoutGuias_que_reemplazan_a_estaInput = {
+    id?: string
+    numero_correlativo?: number
+    fecha_emision?: Date | string
+    cliente_id: string
+    pedido_id?: string | null
+    direccion_entrega: string
+    usuario_repartidor_id: string
+    estado: $Enums.EstadoGuia
+    estado_documento?: string | null
+    forma_pago?: string | null
+    numero_factura?: string | null
+    nombre_receptor?: string | null
+    rut_receptor?: string | null
+    hora_entrega?: Date | string | null
+    observaciones?: string | null
+    total: number
+    motivo_anulacion?: string | null
+    anulada_motivo?: string | null
+    anulada_at?: Date | string | null
+    anulada_por_id?: string | null
+    reemplaza_a_guia_id?: string | null
+    reemplazada_por_guia_id?: string | null
+    firma_digital?: string | null
+    botellones_prestados_entrega?: number
+    incluida_en_cierre?: boolean
+    fecha_cierre?: Date | string | null
+    cuadratura_ventas?: CuadraturaVentaUncheckedCreateNestedManyWithoutGuiaInput
+    guias_reemplazadas_por_esta?: GuiaDespachoUncheckedCreateNestedManyWithoutReemplazada_porInput
+    items?: ItemGuiaUncheckedCreateNestedManyWithoutGuiaInput
+  }
+
+  export type GuiaDespachoCreateOrConnectWithoutGuias_que_reemplazan_a_estaInput = {
+    where: GuiaDespachoWhereUniqueInput
+    create: XOR<GuiaDespachoCreateWithoutGuias_que_reemplazan_a_estaInput, GuiaDespachoUncheckedCreateWithoutGuias_que_reemplazan_a_estaInput>
+  }
+
+  export type GuiaDespachoCreateWithoutReemplaza_aInput = {
+    id?: string
+    numero_correlativo?: number
+    fecha_emision?: Date | string
+    direccion_entrega: string
+    estado: $Enums.EstadoGuia
+    estado_documento?: string | null
+    forma_pago?: string | null
+    numero_factura?: string | null
+    nombre_receptor?: string | null
+    rut_receptor?: string | null
+    hora_entrega?: Date | string | null
+    observaciones?: string | null
+    total: number
+    motivo_anulacion?: string | null
+    anulada_motivo?: string | null
+    anulada_at?: Date | string | null
+    firma_digital?: string | null
+    botellones_prestados_entrega?: number
+    incluida_en_cierre?: boolean
+    fecha_cierre?: Date | string | null
+    cuadratura_ventas?: CuadraturaVentaCreateNestedManyWithoutGuiaInput
+    cliente: ClienteCreateNestedOneWithoutGuiasInput
+    usuario_repartidor: UsuarioCreateNestedOneWithoutGuiasInput
+    anulada_por?: UsuarioCreateNestedOneWithoutGuias_anuladasInput
+    guias_que_reemplazan_a_esta?: GuiaDespachoCreateNestedManyWithoutReemplaza_aInput
+    reemplazada_por?: GuiaDespachoCreateNestedOneWithoutGuias_reemplazadas_por_estaInput
+    guias_reemplazadas_por_esta?: GuiaDespachoCreateNestedManyWithoutReemplazada_porInput
+    pedido?: PedidoCreateNestedOneWithoutGuiaInput
+    items?: ItemGuiaCreateNestedManyWithoutGuiaInput
+  }
+
+  export type GuiaDespachoUncheckedCreateWithoutReemplaza_aInput = {
+    id?: string
+    numero_correlativo?: number
+    fecha_emision?: Date | string
+    cliente_id: string
+    pedido_id?: string | null
+    direccion_entrega: string
+    usuario_repartidor_id: string
+    estado: $Enums.EstadoGuia
+    estado_documento?: string | null
+    forma_pago?: string | null
+    numero_factura?: string | null
+    nombre_receptor?: string | null
+    rut_receptor?: string | null
+    hora_entrega?: Date | string | null
+    observaciones?: string | null
+    total: number
+    motivo_anulacion?: string | null
+    anulada_motivo?: string | null
+    anulada_at?: Date | string | null
+    anulada_por_id?: string | null
+    reemplazada_por_guia_id?: string | null
+    firma_digital?: string | null
+    botellones_prestados_entrega?: number
+    incluida_en_cierre?: boolean
+    fecha_cierre?: Date | string | null
+    cuadratura_ventas?: CuadraturaVentaUncheckedCreateNestedManyWithoutGuiaInput
+    guias_que_reemplazan_a_esta?: GuiaDespachoUncheckedCreateNestedManyWithoutReemplaza_aInput
+    guias_reemplazadas_por_esta?: GuiaDespachoUncheckedCreateNestedManyWithoutReemplazada_porInput
+    items?: ItemGuiaUncheckedCreateNestedManyWithoutGuiaInput
+  }
+
+  export type GuiaDespachoCreateOrConnectWithoutReemplaza_aInput = {
+    where: GuiaDespachoWhereUniqueInput
+    create: XOR<GuiaDespachoCreateWithoutReemplaza_aInput, GuiaDespachoUncheckedCreateWithoutReemplaza_aInput>
+  }
+
+  export type GuiaDespachoCreateManyReemplaza_aInputEnvelope = {
+    data: GuiaDespachoCreateManyReemplaza_aInput | GuiaDespachoCreateManyReemplaza_aInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type GuiaDespachoCreateWithoutGuias_reemplazadas_por_estaInput = {
+    id?: string
+    numero_correlativo?: number
+    fecha_emision?: Date | string
+    direccion_entrega: string
+    estado: $Enums.EstadoGuia
+    estado_documento?: string | null
+    forma_pago?: string | null
+    numero_factura?: string | null
+    nombre_receptor?: string | null
+    rut_receptor?: string | null
+    hora_entrega?: Date | string | null
+    observaciones?: string | null
+    total: number
+    motivo_anulacion?: string | null
+    anulada_motivo?: string | null
+    anulada_at?: Date | string | null
+    firma_digital?: string | null
+    botellones_prestados_entrega?: number
+    incluida_en_cierre?: boolean
+    fecha_cierre?: Date | string | null
+    cuadratura_ventas?: CuadraturaVentaCreateNestedManyWithoutGuiaInput
+    cliente: ClienteCreateNestedOneWithoutGuiasInput
+    usuario_repartidor: UsuarioCreateNestedOneWithoutGuiasInput
+    anulada_por?: UsuarioCreateNestedOneWithoutGuias_anuladasInput
+    reemplaza_a?: GuiaDespachoCreateNestedOneWithoutGuias_que_reemplazan_a_estaInput
+    guias_que_reemplazan_a_esta?: GuiaDespachoCreateNestedManyWithoutReemplaza_aInput
+    reemplazada_por?: GuiaDespachoCreateNestedOneWithoutGuias_reemplazadas_por_estaInput
+    pedido?: PedidoCreateNestedOneWithoutGuiaInput
+    items?: ItemGuiaCreateNestedManyWithoutGuiaInput
+  }
+
+  export type GuiaDespachoUncheckedCreateWithoutGuias_reemplazadas_por_estaInput = {
+    id?: string
+    numero_correlativo?: number
+    fecha_emision?: Date | string
+    cliente_id: string
+    pedido_id?: string | null
+    direccion_entrega: string
+    usuario_repartidor_id: string
+    estado: $Enums.EstadoGuia
+    estado_documento?: string | null
+    forma_pago?: string | null
+    numero_factura?: string | null
+    nombre_receptor?: string | null
+    rut_receptor?: string | null
+    hora_entrega?: Date | string | null
+    observaciones?: string | null
+    total: number
+    motivo_anulacion?: string | null
+    anulada_motivo?: string | null
+    anulada_at?: Date | string | null
+    anulada_por_id?: string | null
+    reemplaza_a_guia_id?: string | null
+    reemplazada_por_guia_id?: string | null
+    firma_digital?: string | null
+    botellones_prestados_entrega?: number
+    incluida_en_cierre?: boolean
+    fecha_cierre?: Date | string | null
+    cuadratura_ventas?: CuadraturaVentaUncheckedCreateNestedManyWithoutGuiaInput
+    guias_que_reemplazan_a_esta?: GuiaDespachoUncheckedCreateNestedManyWithoutReemplaza_aInput
+    items?: ItemGuiaUncheckedCreateNestedManyWithoutGuiaInput
+  }
+
+  export type GuiaDespachoCreateOrConnectWithoutGuias_reemplazadas_por_estaInput = {
+    where: GuiaDespachoWhereUniqueInput
+    create: XOR<GuiaDespachoCreateWithoutGuias_reemplazadas_por_estaInput, GuiaDespachoUncheckedCreateWithoutGuias_reemplazadas_por_estaInput>
+  }
+
+  export type GuiaDespachoCreateWithoutReemplazada_porInput = {
+    id?: string
+    numero_correlativo?: number
+    fecha_emision?: Date | string
+    direccion_entrega: string
+    estado: $Enums.EstadoGuia
+    estado_documento?: string | null
+    forma_pago?: string | null
+    numero_factura?: string | null
+    nombre_receptor?: string | null
+    rut_receptor?: string | null
+    hora_entrega?: Date | string | null
+    observaciones?: string | null
+    total: number
+    motivo_anulacion?: string | null
+    anulada_motivo?: string | null
+    anulada_at?: Date | string | null
+    firma_digital?: string | null
+    botellones_prestados_entrega?: number
+    incluida_en_cierre?: boolean
+    fecha_cierre?: Date | string | null
+    cuadratura_ventas?: CuadraturaVentaCreateNestedManyWithoutGuiaInput
+    cliente: ClienteCreateNestedOneWithoutGuiasInput
+    usuario_repartidor: UsuarioCreateNestedOneWithoutGuiasInput
+    anulada_por?: UsuarioCreateNestedOneWithoutGuias_anuladasInput
+    reemplaza_a?: GuiaDespachoCreateNestedOneWithoutGuias_que_reemplazan_a_estaInput
+    guias_que_reemplazan_a_esta?: GuiaDespachoCreateNestedManyWithoutReemplaza_aInput
+    guias_reemplazadas_por_esta?: GuiaDespachoCreateNestedManyWithoutReemplazada_porInput
+    pedido?: PedidoCreateNestedOneWithoutGuiaInput
+    items?: ItemGuiaCreateNestedManyWithoutGuiaInput
+  }
+
+  export type GuiaDespachoUncheckedCreateWithoutReemplazada_porInput = {
+    id?: string
+    numero_correlativo?: number
+    fecha_emision?: Date | string
+    cliente_id: string
+    pedido_id?: string | null
+    direccion_entrega: string
+    usuario_repartidor_id: string
+    estado: $Enums.EstadoGuia
+    estado_documento?: string | null
+    forma_pago?: string | null
+    numero_factura?: string | null
+    nombre_receptor?: string | null
+    rut_receptor?: string | null
+    hora_entrega?: Date | string | null
+    observaciones?: string | null
+    total: number
+    motivo_anulacion?: string | null
+    anulada_motivo?: string | null
+    anulada_at?: Date | string | null
+    anulada_por_id?: string | null
+    reemplaza_a_guia_id?: string | null
+    firma_digital?: string | null
+    botellones_prestados_entrega?: number
+    incluida_en_cierre?: boolean
+    fecha_cierre?: Date | string | null
+    cuadratura_ventas?: CuadraturaVentaUncheckedCreateNestedManyWithoutGuiaInput
+    guias_que_reemplazan_a_esta?: GuiaDespachoUncheckedCreateNestedManyWithoutReemplaza_aInput
+    guias_reemplazadas_por_esta?: GuiaDespachoUncheckedCreateNestedManyWithoutReemplazada_porInput
+    items?: ItemGuiaUncheckedCreateNestedManyWithoutGuiaInput
+  }
+
+  export type GuiaDespachoCreateOrConnectWithoutReemplazada_porInput = {
+    where: GuiaDespachoWhereUniqueInput
+    create: XOR<GuiaDespachoCreateWithoutReemplazada_porInput, GuiaDespachoUncheckedCreateWithoutReemplazada_porInput>
+  }
+
+  export type GuiaDespachoCreateManyReemplazada_porInputEnvelope = {
+    data: GuiaDespachoCreateManyReemplazada_porInput | GuiaDespachoCreateManyReemplazada_porInput[]
+    skipDuplicates?: boolean
   }
 
   export type PedidoCreateWithoutGuiaInput = {
@@ -78168,6 +79323,7 @@ export namespace Prisma {
     botellones_danados?: BotellonDanadoUpdateManyWithoutUsuarioNestedInput
     cargas_combustible?: CargaCombustibleUpdateManyWithoutUsuarioNestedInput
     cuadraturas?: CuadraturaUpdateManyWithoutUsuarioNestedInput
+    guias_anuladas?: GuiaDespachoUpdateManyWithoutAnulada_porNestedInput
     log_accesos?: LogAccesoUpdateManyWithoutUsuarioNestedInput
     mantenciones?: MantencionUpdateManyWithoutUsuarioNestedInput
     produccion?: ProduccionDiariaUpdateManyWithoutUsuarioNestedInput
@@ -78200,6 +79356,7 @@ export namespace Prisma {
     botellones_danados?: BotellonDanadoUncheckedUpdateManyWithoutUsuarioNestedInput
     cargas_combustible?: CargaCombustibleUncheckedUpdateManyWithoutUsuarioNestedInput
     cuadraturas?: CuadraturaUncheckedUpdateManyWithoutUsuarioNestedInput
+    guias_anuladas?: GuiaDespachoUncheckedUpdateManyWithoutAnulada_porNestedInput
     log_accesos?: LogAccesoUncheckedUpdateManyWithoutUsuarioNestedInput
     mantenciones?: MantencionUncheckedUpdateManyWithoutUsuarioNestedInput
     produccion?: ProduccionDiariaUncheckedUpdateManyWithoutUsuarioNestedInput
@@ -78209,6 +79366,259 @@ export namespace Prisma {
     incidencias?: IncidenciaUncheckedUpdateManyWithoutUsuarioNestedInput
     movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutUsuarioNestedInput
     cierres_caja?: CierreCajaUncheckedUpdateManyWithoutUsuarioNestedInput
+  }
+
+  export type UsuarioUpsertWithoutGuias_anuladasInput = {
+    update: XOR<UsuarioUpdateWithoutGuias_anuladasInput, UsuarioUncheckedUpdateWithoutGuias_anuladasInput>
+    create: XOR<UsuarioCreateWithoutGuias_anuladasInput, UsuarioUncheckedCreateWithoutGuias_anuladasInput>
+    where?: UsuarioWhereInput
+  }
+
+  export type UsuarioUpdateToOneWithWhereWithoutGuias_anuladasInput = {
+    where?: UsuarioWhereInput
+    data: XOR<UsuarioUpdateWithoutGuias_anuladasInput, UsuarioUncheckedUpdateWithoutGuias_anuladasInput>
+  }
+
+  export type UsuarioUpdateWithoutGuias_anuladasInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nombre?: StringFieldUpdateOperationsInput | string
+    apellido?: NullableStringFieldUpdateOperationsInput | string | null
+    rut?: StringFieldUpdateOperationsInput | string
+    telefono?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    rol?: EnumRolFieldUpdateOperationsInput | $Enums.Rol
+    fecha_ingreso?: DateTimeFieldUpdateOperationsInput | Date | string
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    licencia_tipo?: NullableStringFieldUpdateOperationsInput | string | null
+    recibe_comision?: BoolFieldUpdateOperationsInput | boolean
+    vencimiento_lic?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    botellones_danados?: BotellonDanadoUpdateManyWithoutUsuarioNestedInput
+    cargas_combustible?: CargaCombustibleUpdateManyWithoutUsuarioNestedInput
+    cuadraturas?: CuadraturaUpdateManyWithoutUsuarioNestedInput
+    guias?: GuiaDespachoUpdateManyWithoutUsuario_repartidorNestedInput
+    log_accesos?: LogAccesoUpdateManyWithoutUsuarioNestedInput
+    mantenciones?: MantencionUpdateManyWithoutUsuarioNestedInput
+    produccion?: ProduccionDiariaUpdateManyWithoutUsuarioNestedInput
+    rutas_base?: RutaBaseUpdateManyWithoutUsuarioNestedInput
+    rutas_dia?: RutaDiaUpdateManyWithoutUsuarioNestedInput
+    stock_camion?: StockCamionUpdateManyWithoutUsuarioNestedInput
+    vehiculo?: VehiculoUpdateOneWithoutUsuariosNestedInput
+    incidencias?: IncidenciaUpdateManyWithoutUsuarioNestedInput
+    movimientos_stock?: MovimientoStockUpdateManyWithoutUsuarioNestedInput
+    user?: UserUpdateOneWithoutUsuarioNestedInput
+    cierres_caja?: CierreCajaUpdateManyWithoutUsuarioNestedInput
+  }
+
+  export type UsuarioUncheckedUpdateWithoutGuias_anuladasInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    nombre?: StringFieldUpdateOperationsInput | string
+    apellido?: NullableStringFieldUpdateOperationsInput | string | null
+    rut?: StringFieldUpdateOperationsInput | string
+    telefono?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    rol?: EnumRolFieldUpdateOperationsInput | $Enums.Rol
+    vehiculo_id?: NullableStringFieldUpdateOperationsInput | string | null
+    fecha_ingreso?: DateTimeFieldUpdateOperationsInput | Date | string
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    licencia_tipo?: NullableStringFieldUpdateOperationsInput | string | null
+    recibe_comision?: BoolFieldUpdateOperationsInput | boolean
+    vencimiento_lic?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    botellones_danados?: BotellonDanadoUncheckedUpdateManyWithoutUsuarioNestedInput
+    cargas_combustible?: CargaCombustibleUncheckedUpdateManyWithoutUsuarioNestedInput
+    cuadraturas?: CuadraturaUncheckedUpdateManyWithoutUsuarioNestedInput
+    guias?: GuiaDespachoUncheckedUpdateManyWithoutUsuario_repartidorNestedInput
+    log_accesos?: LogAccesoUncheckedUpdateManyWithoutUsuarioNestedInput
+    mantenciones?: MantencionUncheckedUpdateManyWithoutUsuarioNestedInput
+    produccion?: ProduccionDiariaUncheckedUpdateManyWithoutUsuarioNestedInput
+    rutas_base?: RutaBaseUncheckedUpdateManyWithoutUsuarioNestedInput
+    rutas_dia?: RutaDiaUncheckedUpdateManyWithoutUsuarioNestedInput
+    stock_camion?: StockCamionUncheckedUpdateManyWithoutUsuarioNestedInput
+    incidencias?: IncidenciaUncheckedUpdateManyWithoutUsuarioNestedInput
+    movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutUsuarioNestedInput
+    cierres_caja?: CierreCajaUncheckedUpdateManyWithoutUsuarioNestedInput
+  }
+
+  export type GuiaDespachoUpsertWithoutGuias_que_reemplazan_a_estaInput = {
+    update: XOR<GuiaDespachoUpdateWithoutGuias_que_reemplazan_a_estaInput, GuiaDespachoUncheckedUpdateWithoutGuias_que_reemplazan_a_estaInput>
+    create: XOR<GuiaDespachoCreateWithoutGuias_que_reemplazan_a_estaInput, GuiaDespachoUncheckedCreateWithoutGuias_que_reemplazan_a_estaInput>
+    where?: GuiaDespachoWhereInput
+  }
+
+  export type GuiaDespachoUpdateToOneWithWhereWithoutGuias_que_reemplazan_a_estaInput = {
+    where?: GuiaDespachoWhereInput
+    data: XOR<GuiaDespachoUpdateWithoutGuias_que_reemplazan_a_estaInput, GuiaDespachoUncheckedUpdateWithoutGuias_que_reemplazan_a_estaInput>
+  }
+
+  export type GuiaDespachoUpdateWithoutGuias_que_reemplazan_a_estaInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fecha_emision?: DateTimeFieldUpdateOperationsInput | Date | string
+    direccion_entrega?: StringFieldUpdateOperationsInput | string
+    estado?: EnumEstadoGuiaFieldUpdateOperationsInput | $Enums.EstadoGuia
+    estado_documento?: NullableStringFieldUpdateOperationsInput | string | null
+    forma_pago?: NullableStringFieldUpdateOperationsInput | string | null
+    numero_factura?: NullableStringFieldUpdateOperationsInput | string | null
+    nombre_receptor?: NullableStringFieldUpdateOperationsInput | string | null
+    rut_receptor?: NullableStringFieldUpdateOperationsInput | string | null
+    hora_entrega?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    total?: FloatFieldUpdateOperationsInput | number
+    motivo_anulacion?: NullableStringFieldUpdateOperationsInput | string | null
+    anulada_motivo?: NullableStringFieldUpdateOperationsInput | string | null
+    anulada_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    firma_digital?: NullableStringFieldUpdateOperationsInput | string | null
+    botellones_prestados_entrega?: IntFieldUpdateOperationsInput | number
+    incluida_en_cierre?: BoolFieldUpdateOperationsInput | boolean
+    fecha_cierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cuadratura_ventas?: CuadraturaVentaUpdateManyWithoutGuiaNestedInput
+    cliente?: ClienteUpdateOneRequiredWithoutGuiasNestedInput
+    usuario_repartidor?: UsuarioUpdateOneRequiredWithoutGuiasNestedInput
+    anulada_por?: UsuarioUpdateOneWithoutGuias_anuladasNestedInput
+    reemplaza_a?: GuiaDespachoUpdateOneWithoutGuias_que_reemplazan_a_estaNestedInput
+    reemplazada_por?: GuiaDespachoUpdateOneWithoutGuias_reemplazadas_por_estaNestedInput
+    guias_reemplazadas_por_esta?: GuiaDespachoUpdateManyWithoutReemplazada_porNestedInput
+    pedido?: PedidoUpdateOneWithoutGuiaNestedInput
+    items?: ItemGuiaUpdateManyWithoutGuiaNestedInput
+  }
+
+  export type GuiaDespachoUncheckedUpdateWithoutGuias_que_reemplazan_a_estaInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    numero_correlativo?: IntFieldUpdateOperationsInput | number
+    fecha_emision?: DateTimeFieldUpdateOperationsInput | Date | string
+    cliente_id?: StringFieldUpdateOperationsInput | string
+    pedido_id?: NullableStringFieldUpdateOperationsInput | string | null
+    direccion_entrega?: StringFieldUpdateOperationsInput | string
+    usuario_repartidor_id?: StringFieldUpdateOperationsInput | string
+    estado?: EnumEstadoGuiaFieldUpdateOperationsInput | $Enums.EstadoGuia
+    estado_documento?: NullableStringFieldUpdateOperationsInput | string | null
+    forma_pago?: NullableStringFieldUpdateOperationsInput | string | null
+    numero_factura?: NullableStringFieldUpdateOperationsInput | string | null
+    nombre_receptor?: NullableStringFieldUpdateOperationsInput | string | null
+    rut_receptor?: NullableStringFieldUpdateOperationsInput | string | null
+    hora_entrega?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    total?: FloatFieldUpdateOperationsInput | number
+    motivo_anulacion?: NullableStringFieldUpdateOperationsInput | string | null
+    anulada_motivo?: NullableStringFieldUpdateOperationsInput | string | null
+    anulada_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    anulada_por_id?: NullableStringFieldUpdateOperationsInput | string | null
+    reemplaza_a_guia_id?: NullableStringFieldUpdateOperationsInput | string | null
+    reemplazada_por_guia_id?: NullableStringFieldUpdateOperationsInput | string | null
+    firma_digital?: NullableStringFieldUpdateOperationsInput | string | null
+    botellones_prestados_entrega?: IntFieldUpdateOperationsInput | number
+    incluida_en_cierre?: BoolFieldUpdateOperationsInput | boolean
+    fecha_cierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cuadratura_ventas?: CuadraturaVentaUncheckedUpdateManyWithoutGuiaNestedInput
+    guias_reemplazadas_por_esta?: GuiaDespachoUncheckedUpdateManyWithoutReemplazada_porNestedInput
+    items?: ItemGuiaUncheckedUpdateManyWithoutGuiaNestedInput
+  }
+
+  export type GuiaDespachoUpsertWithWhereUniqueWithoutReemplaza_aInput = {
+    where: GuiaDespachoWhereUniqueInput
+    update: XOR<GuiaDespachoUpdateWithoutReemplaza_aInput, GuiaDespachoUncheckedUpdateWithoutReemplaza_aInput>
+    create: XOR<GuiaDespachoCreateWithoutReemplaza_aInput, GuiaDespachoUncheckedCreateWithoutReemplaza_aInput>
+  }
+
+  export type GuiaDespachoUpdateWithWhereUniqueWithoutReemplaza_aInput = {
+    where: GuiaDespachoWhereUniqueInput
+    data: XOR<GuiaDespachoUpdateWithoutReemplaza_aInput, GuiaDespachoUncheckedUpdateWithoutReemplaza_aInput>
+  }
+
+  export type GuiaDespachoUpdateManyWithWhereWithoutReemplaza_aInput = {
+    where: GuiaDespachoScalarWhereInput
+    data: XOR<GuiaDespachoUpdateManyMutationInput, GuiaDespachoUncheckedUpdateManyWithoutReemplaza_aInput>
+  }
+
+  export type GuiaDespachoUpsertWithoutGuias_reemplazadas_por_estaInput = {
+    update: XOR<GuiaDespachoUpdateWithoutGuias_reemplazadas_por_estaInput, GuiaDespachoUncheckedUpdateWithoutGuias_reemplazadas_por_estaInput>
+    create: XOR<GuiaDespachoCreateWithoutGuias_reemplazadas_por_estaInput, GuiaDespachoUncheckedCreateWithoutGuias_reemplazadas_por_estaInput>
+    where?: GuiaDespachoWhereInput
+  }
+
+  export type GuiaDespachoUpdateToOneWithWhereWithoutGuias_reemplazadas_por_estaInput = {
+    where?: GuiaDespachoWhereInput
+    data: XOR<GuiaDespachoUpdateWithoutGuias_reemplazadas_por_estaInput, GuiaDespachoUncheckedUpdateWithoutGuias_reemplazadas_por_estaInput>
+  }
+
+  export type GuiaDespachoUpdateWithoutGuias_reemplazadas_por_estaInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fecha_emision?: DateTimeFieldUpdateOperationsInput | Date | string
+    direccion_entrega?: StringFieldUpdateOperationsInput | string
+    estado?: EnumEstadoGuiaFieldUpdateOperationsInput | $Enums.EstadoGuia
+    estado_documento?: NullableStringFieldUpdateOperationsInput | string | null
+    forma_pago?: NullableStringFieldUpdateOperationsInput | string | null
+    numero_factura?: NullableStringFieldUpdateOperationsInput | string | null
+    nombre_receptor?: NullableStringFieldUpdateOperationsInput | string | null
+    rut_receptor?: NullableStringFieldUpdateOperationsInput | string | null
+    hora_entrega?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    total?: FloatFieldUpdateOperationsInput | number
+    motivo_anulacion?: NullableStringFieldUpdateOperationsInput | string | null
+    anulada_motivo?: NullableStringFieldUpdateOperationsInput | string | null
+    anulada_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    firma_digital?: NullableStringFieldUpdateOperationsInput | string | null
+    botellones_prestados_entrega?: IntFieldUpdateOperationsInput | number
+    incluida_en_cierre?: BoolFieldUpdateOperationsInput | boolean
+    fecha_cierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cuadratura_ventas?: CuadraturaVentaUpdateManyWithoutGuiaNestedInput
+    cliente?: ClienteUpdateOneRequiredWithoutGuiasNestedInput
+    usuario_repartidor?: UsuarioUpdateOneRequiredWithoutGuiasNestedInput
+    anulada_por?: UsuarioUpdateOneWithoutGuias_anuladasNestedInput
+    reemplaza_a?: GuiaDespachoUpdateOneWithoutGuias_que_reemplazan_a_estaNestedInput
+    guias_que_reemplazan_a_esta?: GuiaDespachoUpdateManyWithoutReemplaza_aNestedInput
+    reemplazada_por?: GuiaDespachoUpdateOneWithoutGuias_reemplazadas_por_estaNestedInput
+    pedido?: PedidoUpdateOneWithoutGuiaNestedInput
+    items?: ItemGuiaUpdateManyWithoutGuiaNestedInput
+  }
+
+  export type GuiaDespachoUncheckedUpdateWithoutGuias_reemplazadas_por_estaInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    numero_correlativo?: IntFieldUpdateOperationsInput | number
+    fecha_emision?: DateTimeFieldUpdateOperationsInput | Date | string
+    cliente_id?: StringFieldUpdateOperationsInput | string
+    pedido_id?: NullableStringFieldUpdateOperationsInput | string | null
+    direccion_entrega?: StringFieldUpdateOperationsInput | string
+    usuario_repartidor_id?: StringFieldUpdateOperationsInput | string
+    estado?: EnumEstadoGuiaFieldUpdateOperationsInput | $Enums.EstadoGuia
+    estado_documento?: NullableStringFieldUpdateOperationsInput | string | null
+    forma_pago?: NullableStringFieldUpdateOperationsInput | string | null
+    numero_factura?: NullableStringFieldUpdateOperationsInput | string | null
+    nombre_receptor?: NullableStringFieldUpdateOperationsInput | string | null
+    rut_receptor?: NullableStringFieldUpdateOperationsInput | string | null
+    hora_entrega?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    total?: FloatFieldUpdateOperationsInput | number
+    motivo_anulacion?: NullableStringFieldUpdateOperationsInput | string | null
+    anulada_motivo?: NullableStringFieldUpdateOperationsInput | string | null
+    anulada_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    anulada_por_id?: NullableStringFieldUpdateOperationsInput | string | null
+    reemplaza_a_guia_id?: NullableStringFieldUpdateOperationsInput | string | null
+    reemplazada_por_guia_id?: NullableStringFieldUpdateOperationsInput | string | null
+    firma_digital?: NullableStringFieldUpdateOperationsInput | string | null
+    botellones_prestados_entrega?: IntFieldUpdateOperationsInput | number
+    incluida_en_cierre?: BoolFieldUpdateOperationsInput | boolean
+    fecha_cierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cuadratura_ventas?: CuadraturaVentaUncheckedUpdateManyWithoutGuiaNestedInput
+    guias_que_reemplazan_a_esta?: GuiaDespachoUncheckedUpdateManyWithoutReemplaza_aNestedInput
+    items?: ItemGuiaUncheckedUpdateManyWithoutGuiaNestedInput
+  }
+
+  export type GuiaDespachoUpsertWithWhereUniqueWithoutReemplazada_porInput = {
+    where: GuiaDespachoWhereUniqueInput
+    update: XOR<GuiaDespachoUpdateWithoutReemplazada_porInput, GuiaDespachoUncheckedUpdateWithoutReemplazada_porInput>
+    create: XOR<GuiaDespachoCreateWithoutReemplazada_porInput, GuiaDespachoUncheckedCreateWithoutReemplazada_porInput>
+  }
+
+  export type GuiaDespachoUpdateWithWhereUniqueWithoutReemplazada_porInput = {
+    where: GuiaDespachoWhereUniqueInput
+    data: XOR<GuiaDespachoUpdateWithoutReemplazada_porInput, GuiaDespachoUncheckedUpdateWithoutReemplazada_porInput>
+  }
+
+  export type GuiaDespachoUpdateManyWithWhereWithoutReemplazada_porInput = {
+    where: GuiaDespachoScalarWhereInput
+    data: XOR<GuiaDespachoUpdateManyMutationInput, GuiaDespachoUncheckedUpdateManyWithoutReemplazada_porInput>
   }
 
   export type PedidoUpsertWithoutGuiaInput = {
@@ -78276,12 +79686,17 @@ export namespace Prisma {
     fecha_emision?: Date | string
     direccion_entrega: string
     estado: $Enums.EstadoGuia
+    estado_documento?: string | null
+    forma_pago?: string | null
+    numero_factura?: string | null
     nombre_receptor?: string | null
     rut_receptor?: string | null
     hora_entrega?: Date | string | null
     observaciones?: string | null
     total: number
     motivo_anulacion?: string | null
+    anulada_motivo?: string | null
+    anulada_at?: Date | string | null
     firma_digital?: string | null
     botellones_prestados_entrega?: number
     incluida_en_cierre?: boolean
@@ -78289,6 +79704,11 @@ export namespace Prisma {
     cuadratura_ventas?: CuadraturaVentaCreateNestedManyWithoutGuiaInput
     cliente: ClienteCreateNestedOneWithoutGuiasInput
     usuario_repartidor: UsuarioCreateNestedOneWithoutGuiasInput
+    anulada_por?: UsuarioCreateNestedOneWithoutGuias_anuladasInput
+    reemplaza_a?: GuiaDespachoCreateNestedOneWithoutGuias_que_reemplazan_a_estaInput
+    guias_que_reemplazan_a_esta?: GuiaDespachoCreateNestedManyWithoutReemplaza_aInput
+    reemplazada_por?: GuiaDespachoCreateNestedOneWithoutGuias_reemplazadas_por_estaInput
+    guias_reemplazadas_por_esta?: GuiaDespachoCreateNestedManyWithoutReemplazada_porInput
     pedido?: PedidoCreateNestedOneWithoutGuiaInput
   }
 
@@ -78301,17 +79721,27 @@ export namespace Prisma {
     direccion_entrega: string
     usuario_repartidor_id: string
     estado: $Enums.EstadoGuia
+    estado_documento?: string | null
+    forma_pago?: string | null
+    numero_factura?: string | null
     nombre_receptor?: string | null
     rut_receptor?: string | null
     hora_entrega?: Date | string | null
     observaciones?: string | null
     total: number
     motivo_anulacion?: string | null
+    anulada_motivo?: string | null
+    anulada_at?: Date | string | null
+    anulada_por_id?: string | null
+    reemplaza_a_guia_id?: string | null
+    reemplazada_por_guia_id?: string | null
     firma_digital?: string | null
     botellones_prestados_entrega?: number
     incluida_en_cierre?: boolean
     fecha_cierre?: Date | string | null
     cuadratura_ventas?: CuadraturaVentaUncheckedCreateNestedManyWithoutGuiaInput
+    guias_que_reemplazan_a_esta?: GuiaDespachoUncheckedCreateNestedManyWithoutReemplaza_aInput
+    guias_reemplazadas_por_esta?: GuiaDespachoUncheckedCreateNestedManyWithoutReemplazada_porInput
   }
 
   export type GuiaDespachoCreateOrConnectWithoutItemsInput = {
@@ -78378,12 +79808,17 @@ export namespace Prisma {
     fecha_emision?: DateTimeFieldUpdateOperationsInput | Date | string
     direccion_entrega?: StringFieldUpdateOperationsInput | string
     estado?: EnumEstadoGuiaFieldUpdateOperationsInput | $Enums.EstadoGuia
+    estado_documento?: NullableStringFieldUpdateOperationsInput | string | null
+    forma_pago?: NullableStringFieldUpdateOperationsInput | string | null
+    numero_factura?: NullableStringFieldUpdateOperationsInput | string | null
     nombre_receptor?: NullableStringFieldUpdateOperationsInput | string | null
     rut_receptor?: NullableStringFieldUpdateOperationsInput | string | null
     hora_entrega?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     total?: FloatFieldUpdateOperationsInput | number
     motivo_anulacion?: NullableStringFieldUpdateOperationsInput | string | null
+    anulada_motivo?: NullableStringFieldUpdateOperationsInput | string | null
+    anulada_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     firma_digital?: NullableStringFieldUpdateOperationsInput | string | null
     botellones_prestados_entrega?: IntFieldUpdateOperationsInput | number
     incluida_en_cierre?: BoolFieldUpdateOperationsInput | boolean
@@ -78391,6 +79826,11 @@ export namespace Prisma {
     cuadratura_ventas?: CuadraturaVentaUpdateManyWithoutGuiaNestedInput
     cliente?: ClienteUpdateOneRequiredWithoutGuiasNestedInput
     usuario_repartidor?: UsuarioUpdateOneRequiredWithoutGuiasNestedInput
+    anulada_por?: UsuarioUpdateOneWithoutGuias_anuladasNestedInput
+    reemplaza_a?: GuiaDespachoUpdateOneWithoutGuias_que_reemplazan_a_estaNestedInput
+    guias_que_reemplazan_a_esta?: GuiaDespachoUpdateManyWithoutReemplaza_aNestedInput
+    reemplazada_por?: GuiaDespachoUpdateOneWithoutGuias_reemplazadas_por_estaNestedInput
+    guias_reemplazadas_por_esta?: GuiaDespachoUpdateManyWithoutReemplazada_porNestedInput
     pedido?: PedidoUpdateOneWithoutGuiaNestedInput
   }
 
@@ -78403,17 +79843,27 @@ export namespace Prisma {
     direccion_entrega?: StringFieldUpdateOperationsInput | string
     usuario_repartidor_id?: StringFieldUpdateOperationsInput | string
     estado?: EnumEstadoGuiaFieldUpdateOperationsInput | $Enums.EstadoGuia
+    estado_documento?: NullableStringFieldUpdateOperationsInput | string | null
+    forma_pago?: NullableStringFieldUpdateOperationsInput | string | null
+    numero_factura?: NullableStringFieldUpdateOperationsInput | string | null
     nombre_receptor?: NullableStringFieldUpdateOperationsInput | string | null
     rut_receptor?: NullableStringFieldUpdateOperationsInput | string | null
     hora_entrega?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     total?: FloatFieldUpdateOperationsInput | number
     motivo_anulacion?: NullableStringFieldUpdateOperationsInput | string | null
+    anulada_motivo?: NullableStringFieldUpdateOperationsInput | string | null
+    anulada_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    anulada_por_id?: NullableStringFieldUpdateOperationsInput | string | null
+    reemplaza_a_guia_id?: NullableStringFieldUpdateOperationsInput | string | null
+    reemplazada_por_guia_id?: NullableStringFieldUpdateOperationsInput | string | null
     firma_digital?: NullableStringFieldUpdateOperationsInput | string | null
     botellones_prestados_entrega?: IntFieldUpdateOperationsInput | number
     incluida_en_cierre?: BoolFieldUpdateOperationsInput | boolean
     fecha_cierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     cuadratura_ventas?: CuadraturaVentaUncheckedUpdateManyWithoutGuiaNestedInput
+    guias_que_reemplazan_a_esta?: GuiaDespachoUncheckedUpdateManyWithoutReemplaza_aNestedInput
+    guias_reemplazadas_por_esta?: GuiaDespachoUncheckedUpdateManyWithoutReemplazada_porNestedInput
   }
 
   export type ProductoUpsertWithoutItems_guiaInput = {
@@ -78504,6 +79954,7 @@ export namespace Prisma {
     botellones_danados?: BotellonDanadoCreateNestedManyWithoutUsuarioInput
     cargas_combustible?: CargaCombustibleCreateNestedManyWithoutUsuarioInput
     guias?: GuiaDespachoCreateNestedManyWithoutUsuario_repartidorInput
+    guias_anuladas?: GuiaDespachoCreateNestedManyWithoutAnulada_porInput
     log_accesos?: LogAccesoCreateNestedManyWithoutUsuarioInput
     mantenciones?: MantencionCreateNestedManyWithoutUsuarioInput
     produccion?: ProduccionDiariaCreateNestedManyWithoutUsuarioInput
@@ -78536,6 +79987,7 @@ export namespace Prisma {
     botellones_danados?: BotellonDanadoUncheckedCreateNestedManyWithoutUsuarioInput
     cargas_combustible?: CargaCombustibleUncheckedCreateNestedManyWithoutUsuarioInput
     guias?: GuiaDespachoUncheckedCreateNestedManyWithoutUsuario_repartidorInput
+    guias_anuladas?: GuiaDespachoUncheckedCreateNestedManyWithoutAnulada_porInput
     log_accesos?: LogAccesoUncheckedCreateNestedManyWithoutUsuarioInput
     mantenciones?: MantencionUncheckedCreateNestedManyWithoutUsuarioInput
     produccion?: ProduccionDiariaUncheckedCreateNestedManyWithoutUsuarioInput
@@ -78738,6 +80190,7 @@ export namespace Prisma {
     botellones_danados?: BotellonDanadoUpdateManyWithoutUsuarioNestedInput
     cargas_combustible?: CargaCombustibleUpdateManyWithoutUsuarioNestedInput
     guias?: GuiaDespachoUpdateManyWithoutUsuario_repartidorNestedInput
+    guias_anuladas?: GuiaDespachoUpdateManyWithoutAnulada_porNestedInput
     log_accesos?: LogAccesoUpdateManyWithoutUsuarioNestedInput
     mantenciones?: MantencionUpdateManyWithoutUsuarioNestedInput
     produccion?: ProduccionDiariaUpdateManyWithoutUsuarioNestedInput
@@ -78770,6 +80223,7 @@ export namespace Prisma {
     botellones_danados?: BotellonDanadoUncheckedUpdateManyWithoutUsuarioNestedInput
     cargas_combustible?: CargaCombustibleUncheckedUpdateManyWithoutUsuarioNestedInput
     guias?: GuiaDespachoUncheckedUpdateManyWithoutUsuario_repartidorNestedInput
+    guias_anuladas?: GuiaDespachoUncheckedUpdateManyWithoutAnulada_porNestedInput
     log_accesos?: LogAccesoUncheckedUpdateManyWithoutUsuarioNestedInput
     mantenciones?: MantencionUncheckedUpdateManyWithoutUsuarioNestedInput
     produccion?: ProduccionDiariaUncheckedUpdateManyWithoutUsuarioNestedInput
@@ -79123,18 +80577,28 @@ export namespace Prisma {
     fecha_emision?: Date | string
     direccion_entrega: string
     estado: $Enums.EstadoGuia
+    estado_documento?: string | null
+    forma_pago?: string | null
+    numero_factura?: string | null
     nombre_receptor?: string | null
     rut_receptor?: string | null
     hora_entrega?: Date | string | null
     observaciones?: string | null
     total: number
     motivo_anulacion?: string | null
+    anulada_motivo?: string | null
+    anulada_at?: Date | string | null
     firma_digital?: string | null
     botellones_prestados_entrega?: number
     incluida_en_cierre?: boolean
     fecha_cierre?: Date | string | null
     cliente: ClienteCreateNestedOneWithoutGuiasInput
     usuario_repartidor: UsuarioCreateNestedOneWithoutGuiasInput
+    anulada_por?: UsuarioCreateNestedOneWithoutGuias_anuladasInput
+    reemplaza_a?: GuiaDespachoCreateNestedOneWithoutGuias_que_reemplazan_a_estaInput
+    guias_que_reemplazan_a_esta?: GuiaDespachoCreateNestedManyWithoutReemplaza_aInput
+    reemplazada_por?: GuiaDespachoCreateNestedOneWithoutGuias_reemplazadas_por_estaInput
+    guias_reemplazadas_por_esta?: GuiaDespachoCreateNestedManyWithoutReemplazada_porInput
     pedido?: PedidoCreateNestedOneWithoutGuiaInput
     items?: ItemGuiaCreateNestedManyWithoutGuiaInput
   }
@@ -79148,16 +80612,26 @@ export namespace Prisma {
     direccion_entrega: string
     usuario_repartidor_id: string
     estado: $Enums.EstadoGuia
+    estado_documento?: string | null
+    forma_pago?: string | null
+    numero_factura?: string | null
     nombre_receptor?: string | null
     rut_receptor?: string | null
     hora_entrega?: Date | string | null
     observaciones?: string | null
     total: number
     motivo_anulacion?: string | null
+    anulada_motivo?: string | null
+    anulada_at?: Date | string | null
+    anulada_por_id?: string | null
+    reemplaza_a_guia_id?: string | null
+    reemplazada_por_guia_id?: string | null
     firma_digital?: string | null
     botellones_prestados_entrega?: number
     incluida_en_cierre?: boolean
     fecha_cierre?: Date | string | null
+    guias_que_reemplazan_a_esta?: GuiaDespachoUncheckedCreateNestedManyWithoutReemplaza_aInput
+    guias_reemplazadas_por_esta?: GuiaDespachoUncheckedCreateNestedManyWithoutReemplazada_porInput
     items?: ItemGuiaUncheckedCreateNestedManyWithoutGuiaInput
   }
 
@@ -79280,18 +80754,28 @@ export namespace Prisma {
     fecha_emision?: DateTimeFieldUpdateOperationsInput | Date | string
     direccion_entrega?: StringFieldUpdateOperationsInput | string
     estado?: EnumEstadoGuiaFieldUpdateOperationsInput | $Enums.EstadoGuia
+    estado_documento?: NullableStringFieldUpdateOperationsInput | string | null
+    forma_pago?: NullableStringFieldUpdateOperationsInput | string | null
+    numero_factura?: NullableStringFieldUpdateOperationsInput | string | null
     nombre_receptor?: NullableStringFieldUpdateOperationsInput | string | null
     rut_receptor?: NullableStringFieldUpdateOperationsInput | string | null
     hora_entrega?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     total?: FloatFieldUpdateOperationsInput | number
     motivo_anulacion?: NullableStringFieldUpdateOperationsInput | string | null
+    anulada_motivo?: NullableStringFieldUpdateOperationsInput | string | null
+    anulada_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     firma_digital?: NullableStringFieldUpdateOperationsInput | string | null
     botellones_prestados_entrega?: IntFieldUpdateOperationsInput | number
     incluida_en_cierre?: BoolFieldUpdateOperationsInput | boolean
     fecha_cierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     cliente?: ClienteUpdateOneRequiredWithoutGuiasNestedInput
     usuario_repartidor?: UsuarioUpdateOneRequiredWithoutGuiasNestedInput
+    anulada_por?: UsuarioUpdateOneWithoutGuias_anuladasNestedInput
+    reemplaza_a?: GuiaDespachoUpdateOneWithoutGuias_que_reemplazan_a_estaNestedInput
+    guias_que_reemplazan_a_esta?: GuiaDespachoUpdateManyWithoutReemplaza_aNestedInput
+    reemplazada_por?: GuiaDespachoUpdateOneWithoutGuias_reemplazadas_por_estaNestedInput
+    guias_reemplazadas_por_esta?: GuiaDespachoUpdateManyWithoutReemplazada_porNestedInput
     pedido?: PedidoUpdateOneWithoutGuiaNestedInput
     items?: ItemGuiaUpdateManyWithoutGuiaNestedInput
   }
@@ -79305,16 +80789,26 @@ export namespace Prisma {
     direccion_entrega?: StringFieldUpdateOperationsInput | string
     usuario_repartidor_id?: StringFieldUpdateOperationsInput | string
     estado?: EnumEstadoGuiaFieldUpdateOperationsInput | $Enums.EstadoGuia
+    estado_documento?: NullableStringFieldUpdateOperationsInput | string | null
+    forma_pago?: NullableStringFieldUpdateOperationsInput | string | null
+    numero_factura?: NullableStringFieldUpdateOperationsInput | string | null
     nombre_receptor?: NullableStringFieldUpdateOperationsInput | string | null
     rut_receptor?: NullableStringFieldUpdateOperationsInput | string | null
     hora_entrega?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     total?: FloatFieldUpdateOperationsInput | number
     motivo_anulacion?: NullableStringFieldUpdateOperationsInput | string | null
+    anulada_motivo?: NullableStringFieldUpdateOperationsInput | string | null
+    anulada_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    anulada_por_id?: NullableStringFieldUpdateOperationsInput | string | null
+    reemplaza_a_guia_id?: NullableStringFieldUpdateOperationsInput | string | null
+    reemplazada_por_guia_id?: NullableStringFieldUpdateOperationsInput | string | null
     firma_digital?: NullableStringFieldUpdateOperationsInput | string | null
     botellones_prestados_entrega?: IntFieldUpdateOperationsInput | number
     incluida_en_cierre?: BoolFieldUpdateOperationsInput | boolean
     fecha_cierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    guias_que_reemplazan_a_esta?: GuiaDespachoUncheckedUpdateManyWithoutReemplaza_aNestedInput
+    guias_reemplazadas_por_esta?: GuiaDespachoUncheckedUpdateManyWithoutReemplazada_porNestedInput
     items?: ItemGuiaUncheckedUpdateManyWithoutGuiaNestedInput
   }
 
@@ -79849,6 +81343,7 @@ export namespace Prisma {
     cargas_combustible?: CargaCombustibleCreateNestedManyWithoutUsuarioInput
     cuadraturas?: CuadraturaCreateNestedManyWithoutUsuarioInput
     guias?: GuiaDespachoCreateNestedManyWithoutUsuario_repartidorInput
+    guias_anuladas?: GuiaDespachoCreateNestedManyWithoutAnulada_porInput
     log_accesos?: LogAccesoCreateNestedManyWithoutUsuarioInput
     mantenciones?: MantencionCreateNestedManyWithoutUsuarioInput
     produccion?: ProduccionDiariaCreateNestedManyWithoutUsuarioInput
@@ -79881,6 +81376,7 @@ export namespace Prisma {
     cargas_combustible?: CargaCombustibleUncheckedCreateNestedManyWithoutUsuarioInput
     cuadraturas?: CuadraturaUncheckedCreateNestedManyWithoutUsuarioInput
     guias?: GuiaDespachoUncheckedCreateNestedManyWithoutUsuario_repartidorInput
+    guias_anuladas?: GuiaDespachoUncheckedCreateNestedManyWithoutAnulada_porInput
     log_accesos?: LogAccesoUncheckedCreateNestedManyWithoutUsuarioInput
     mantenciones?: MantencionUncheckedCreateNestedManyWithoutUsuarioInput
     produccion?: ProduccionDiariaUncheckedCreateNestedManyWithoutUsuarioInput
@@ -79992,6 +81488,7 @@ export namespace Prisma {
     cargas_combustible?: CargaCombustibleUpdateManyWithoutUsuarioNestedInput
     cuadraturas?: CuadraturaUpdateManyWithoutUsuarioNestedInput
     guias?: GuiaDespachoUpdateManyWithoutUsuario_repartidorNestedInput
+    guias_anuladas?: GuiaDespachoUpdateManyWithoutAnulada_porNestedInput
     log_accesos?: LogAccesoUpdateManyWithoutUsuarioNestedInput
     mantenciones?: MantencionUpdateManyWithoutUsuarioNestedInput
     produccion?: ProduccionDiariaUpdateManyWithoutUsuarioNestedInput
@@ -80024,6 +81521,7 @@ export namespace Prisma {
     cargas_combustible?: CargaCombustibleUncheckedUpdateManyWithoutUsuarioNestedInput
     cuadraturas?: CuadraturaUncheckedUpdateManyWithoutUsuarioNestedInput
     guias?: GuiaDespachoUncheckedUpdateManyWithoutUsuario_repartidorNestedInput
+    guias_anuladas?: GuiaDespachoUncheckedUpdateManyWithoutAnulada_porNestedInput
     log_accesos?: LogAccesoUncheckedUpdateManyWithoutUsuarioNestedInput
     mantenciones?: MantencionUncheckedUpdateManyWithoutUsuarioNestedInput
     produccion?: ProduccionDiariaUncheckedUpdateManyWithoutUsuarioNestedInput
@@ -80053,6 +81551,7 @@ export namespace Prisma {
     cargas_combustible?: CargaCombustibleCreateNestedManyWithoutUsuarioInput
     cuadraturas?: CuadraturaCreateNestedManyWithoutUsuarioInput
     guias?: GuiaDespachoCreateNestedManyWithoutUsuario_repartidorInput
+    guias_anuladas?: GuiaDespachoCreateNestedManyWithoutAnulada_porInput
     log_accesos?: LogAccesoCreateNestedManyWithoutUsuarioInput
     mantenciones?: MantencionCreateNestedManyWithoutUsuarioInput
     rutas_base?: RutaBaseCreateNestedManyWithoutUsuarioInput
@@ -80085,6 +81584,7 @@ export namespace Prisma {
     cargas_combustible?: CargaCombustibleUncheckedCreateNestedManyWithoutUsuarioInput
     cuadraturas?: CuadraturaUncheckedCreateNestedManyWithoutUsuarioInput
     guias?: GuiaDespachoUncheckedCreateNestedManyWithoutUsuario_repartidorInput
+    guias_anuladas?: GuiaDespachoUncheckedCreateNestedManyWithoutAnulada_porInput
     log_accesos?: LogAccesoUncheckedCreateNestedManyWithoutUsuarioInput
     mantenciones?: MantencionUncheckedCreateNestedManyWithoutUsuarioInput
     rutas_base?: RutaBaseUncheckedCreateNestedManyWithoutUsuarioInput
@@ -80129,6 +81629,7 @@ export namespace Prisma {
     cargas_combustible?: CargaCombustibleUpdateManyWithoutUsuarioNestedInput
     cuadraturas?: CuadraturaUpdateManyWithoutUsuarioNestedInput
     guias?: GuiaDespachoUpdateManyWithoutUsuario_repartidorNestedInput
+    guias_anuladas?: GuiaDespachoUpdateManyWithoutAnulada_porNestedInput
     log_accesos?: LogAccesoUpdateManyWithoutUsuarioNestedInput
     mantenciones?: MantencionUpdateManyWithoutUsuarioNestedInput
     rutas_base?: RutaBaseUpdateManyWithoutUsuarioNestedInput
@@ -80161,6 +81662,7 @@ export namespace Prisma {
     cargas_combustible?: CargaCombustibleUncheckedUpdateManyWithoutUsuarioNestedInput
     cuadraturas?: CuadraturaUncheckedUpdateManyWithoutUsuarioNestedInput
     guias?: GuiaDespachoUncheckedUpdateManyWithoutUsuario_repartidorNestedInput
+    guias_anuladas?: GuiaDespachoUncheckedUpdateManyWithoutAnulada_porNestedInput
     log_accesos?: LogAccesoUncheckedUpdateManyWithoutUsuarioNestedInput
     mantenciones?: MantencionUncheckedUpdateManyWithoutUsuarioNestedInput
     rutas_base?: RutaBaseUncheckedUpdateManyWithoutUsuarioNestedInput
@@ -80324,6 +81826,7 @@ export namespace Prisma {
     cargas_combustible?: CargaCombustibleCreateNestedManyWithoutUsuarioInput
     cuadraturas?: CuadraturaCreateNestedManyWithoutUsuarioInput
     guias?: GuiaDespachoCreateNestedManyWithoutUsuario_repartidorInput
+    guias_anuladas?: GuiaDespachoCreateNestedManyWithoutAnulada_porInput
     log_accesos?: LogAccesoCreateNestedManyWithoutUsuarioInput
     mantenciones?: MantencionCreateNestedManyWithoutUsuarioInput
     produccion?: ProduccionDiariaCreateNestedManyWithoutUsuarioInput
@@ -80356,6 +81859,7 @@ export namespace Prisma {
     cargas_combustible?: CargaCombustibleUncheckedCreateNestedManyWithoutUsuarioInput
     cuadraturas?: CuadraturaUncheckedCreateNestedManyWithoutUsuarioInput
     guias?: GuiaDespachoUncheckedCreateNestedManyWithoutUsuario_repartidorInput
+    guias_anuladas?: GuiaDespachoUncheckedCreateNestedManyWithoutAnulada_porInput
     log_accesos?: LogAccesoUncheckedCreateNestedManyWithoutUsuarioInput
     mantenciones?: MantencionUncheckedCreateNestedManyWithoutUsuarioInput
     produccion?: ProduccionDiariaUncheckedCreateNestedManyWithoutUsuarioInput
@@ -80449,6 +81953,7 @@ export namespace Prisma {
     cargas_combustible?: CargaCombustibleUpdateManyWithoutUsuarioNestedInput
     cuadraturas?: CuadraturaUpdateManyWithoutUsuarioNestedInput
     guias?: GuiaDespachoUpdateManyWithoutUsuario_repartidorNestedInput
+    guias_anuladas?: GuiaDespachoUpdateManyWithoutAnulada_porNestedInput
     log_accesos?: LogAccesoUpdateManyWithoutUsuarioNestedInput
     mantenciones?: MantencionUpdateManyWithoutUsuarioNestedInput
     produccion?: ProduccionDiariaUpdateManyWithoutUsuarioNestedInput
@@ -80481,6 +81986,7 @@ export namespace Prisma {
     cargas_combustible?: CargaCombustibleUncheckedUpdateManyWithoutUsuarioNestedInput
     cuadraturas?: CuadraturaUncheckedUpdateManyWithoutUsuarioNestedInput
     guias?: GuiaDespachoUncheckedUpdateManyWithoutUsuario_repartidorNestedInput
+    guias_anuladas?: GuiaDespachoUncheckedUpdateManyWithoutAnulada_porNestedInput
     log_accesos?: LogAccesoUncheckedUpdateManyWithoutUsuarioNestedInput
     mantenciones?: MantencionUncheckedUpdateManyWithoutUsuarioNestedInput
     produccion?: ProduccionDiariaUncheckedUpdateManyWithoutUsuarioNestedInput
@@ -80509,6 +82015,7 @@ export namespace Prisma {
     cargas_combustible?: CargaCombustibleCreateNestedManyWithoutUsuarioInput
     cuadraturas?: CuadraturaCreateNestedManyWithoutUsuarioInput
     guias?: GuiaDespachoCreateNestedManyWithoutUsuario_repartidorInput
+    guias_anuladas?: GuiaDespachoCreateNestedManyWithoutAnulada_porInput
     mantenciones?: MantencionCreateNestedManyWithoutUsuarioInput
     produccion?: ProduccionDiariaCreateNestedManyWithoutUsuarioInput
     rutas_base?: RutaBaseCreateNestedManyWithoutUsuarioInput
@@ -80541,6 +82048,7 @@ export namespace Prisma {
     cargas_combustible?: CargaCombustibleUncheckedCreateNestedManyWithoutUsuarioInput
     cuadraturas?: CuadraturaUncheckedCreateNestedManyWithoutUsuarioInput
     guias?: GuiaDespachoUncheckedCreateNestedManyWithoutUsuario_repartidorInput
+    guias_anuladas?: GuiaDespachoUncheckedCreateNestedManyWithoutAnulada_porInput
     mantenciones?: MantencionUncheckedCreateNestedManyWithoutUsuarioInput
     produccion?: ProduccionDiariaUncheckedCreateNestedManyWithoutUsuarioInput
     rutas_base?: RutaBaseUncheckedCreateNestedManyWithoutUsuarioInput
@@ -80585,6 +82093,7 @@ export namespace Prisma {
     cargas_combustible?: CargaCombustibleUpdateManyWithoutUsuarioNestedInput
     cuadraturas?: CuadraturaUpdateManyWithoutUsuarioNestedInput
     guias?: GuiaDespachoUpdateManyWithoutUsuario_repartidorNestedInput
+    guias_anuladas?: GuiaDespachoUpdateManyWithoutAnulada_porNestedInput
     mantenciones?: MantencionUpdateManyWithoutUsuarioNestedInput
     produccion?: ProduccionDiariaUpdateManyWithoutUsuarioNestedInput
     rutas_base?: RutaBaseUpdateManyWithoutUsuarioNestedInput
@@ -80617,6 +82126,7 @@ export namespace Prisma {
     cargas_combustible?: CargaCombustibleUncheckedUpdateManyWithoutUsuarioNestedInput
     cuadraturas?: CuadraturaUncheckedUpdateManyWithoutUsuarioNestedInput
     guias?: GuiaDespachoUncheckedUpdateManyWithoutUsuario_repartidorNestedInput
+    guias_anuladas?: GuiaDespachoUncheckedUpdateManyWithoutAnulada_porNestedInput
     mantenciones?: MantencionUncheckedUpdateManyWithoutUsuarioNestedInput
     produccion?: ProduccionDiariaUncheckedUpdateManyWithoutUsuarioNestedInput
     rutas_base?: RutaBaseUncheckedUpdateManyWithoutUsuarioNestedInput
@@ -81278,6 +82788,7 @@ export namespace Prisma {
     botellones_danados?: BotellonDanadoCreateNestedManyWithoutUsuarioInput
     cuadraturas?: CuadraturaCreateNestedManyWithoutUsuarioInput
     guias?: GuiaDespachoCreateNestedManyWithoutUsuario_repartidorInput
+    guias_anuladas?: GuiaDespachoCreateNestedManyWithoutAnulada_porInput
     log_accesos?: LogAccesoCreateNestedManyWithoutUsuarioInput
     mantenciones?: MantencionCreateNestedManyWithoutUsuarioInput
     produccion?: ProduccionDiariaCreateNestedManyWithoutUsuarioInput
@@ -81310,6 +82821,7 @@ export namespace Prisma {
     botellones_danados?: BotellonDanadoUncheckedCreateNestedManyWithoutUsuarioInput
     cuadraturas?: CuadraturaUncheckedCreateNestedManyWithoutUsuarioInput
     guias?: GuiaDespachoUncheckedCreateNestedManyWithoutUsuario_repartidorInput
+    guias_anuladas?: GuiaDespachoUncheckedCreateNestedManyWithoutAnulada_porInput
     log_accesos?: LogAccesoUncheckedCreateNestedManyWithoutUsuarioInput
     mantenciones?: MantencionUncheckedCreateNestedManyWithoutUsuarioInput
     produccion?: ProduccionDiariaUncheckedCreateNestedManyWithoutUsuarioInput
@@ -81391,6 +82903,7 @@ export namespace Prisma {
     botellones_danados?: BotellonDanadoUpdateManyWithoutUsuarioNestedInput
     cuadraturas?: CuadraturaUpdateManyWithoutUsuarioNestedInput
     guias?: GuiaDespachoUpdateManyWithoutUsuario_repartidorNestedInput
+    guias_anuladas?: GuiaDespachoUpdateManyWithoutAnulada_porNestedInput
     log_accesos?: LogAccesoUpdateManyWithoutUsuarioNestedInput
     mantenciones?: MantencionUpdateManyWithoutUsuarioNestedInput
     produccion?: ProduccionDiariaUpdateManyWithoutUsuarioNestedInput
@@ -81423,6 +82936,7 @@ export namespace Prisma {
     botellones_danados?: BotellonDanadoUncheckedUpdateManyWithoutUsuarioNestedInput
     cuadraturas?: CuadraturaUncheckedUpdateManyWithoutUsuarioNestedInput
     guias?: GuiaDespachoUncheckedUpdateManyWithoutUsuario_repartidorNestedInput
+    guias_anuladas?: GuiaDespachoUncheckedUpdateManyWithoutAnulada_porNestedInput
     log_accesos?: LogAccesoUncheckedUpdateManyWithoutUsuarioNestedInput
     mantenciones?: MantencionUncheckedUpdateManyWithoutUsuarioNestedInput
     produccion?: ProduccionDiariaUncheckedUpdateManyWithoutUsuarioNestedInput
@@ -81603,6 +83117,7 @@ export namespace Prisma {
     cargas_combustible?: CargaCombustibleCreateNestedManyWithoutUsuarioInput
     cuadraturas?: CuadraturaCreateNestedManyWithoutUsuarioInput
     guias?: GuiaDespachoCreateNestedManyWithoutUsuario_repartidorInput
+    guias_anuladas?: GuiaDespachoCreateNestedManyWithoutAnulada_porInput
     log_accesos?: LogAccesoCreateNestedManyWithoutUsuarioInput
     mantenciones?: MantencionCreateNestedManyWithoutUsuarioInput
     produccion?: ProduccionDiariaCreateNestedManyWithoutUsuarioInput
@@ -81635,6 +83150,7 @@ export namespace Prisma {
     cargas_combustible?: CargaCombustibleUncheckedCreateNestedManyWithoutUsuarioInput
     cuadraturas?: CuadraturaUncheckedCreateNestedManyWithoutUsuarioInput
     guias?: GuiaDespachoUncheckedCreateNestedManyWithoutUsuario_repartidorInput
+    guias_anuladas?: GuiaDespachoUncheckedCreateNestedManyWithoutAnulada_porInput
     log_accesos?: LogAccesoUncheckedCreateNestedManyWithoutUsuarioInput
     mantenciones?: MantencionUncheckedCreateNestedManyWithoutUsuarioInput
     produccion?: ProduccionDiariaUncheckedCreateNestedManyWithoutUsuarioInput
@@ -81848,6 +83364,7 @@ export namespace Prisma {
     cargas_combustible?: CargaCombustibleUpdateManyWithoutUsuarioNestedInput
     cuadraturas?: CuadraturaUpdateManyWithoutUsuarioNestedInput
     guias?: GuiaDespachoUpdateManyWithoutUsuario_repartidorNestedInput
+    guias_anuladas?: GuiaDespachoUpdateManyWithoutAnulada_porNestedInput
     log_accesos?: LogAccesoUpdateManyWithoutUsuarioNestedInput
     mantenciones?: MantencionUpdateManyWithoutUsuarioNestedInput
     produccion?: ProduccionDiariaUpdateManyWithoutUsuarioNestedInput
@@ -81880,6 +83397,7 @@ export namespace Prisma {
     cargas_combustible?: CargaCombustibleUncheckedUpdateManyWithoutUsuarioNestedInput
     cuadraturas?: CuadraturaUncheckedUpdateManyWithoutUsuarioNestedInput
     guias?: GuiaDespachoUncheckedUpdateManyWithoutUsuario_repartidorNestedInput
+    guias_anuladas?: GuiaDespachoUncheckedUpdateManyWithoutAnulada_porNestedInput
     log_accesos?: LogAccesoUncheckedUpdateManyWithoutUsuarioNestedInput
     mantenciones?: MantencionUncheckedUpdateManyWithoutUsuarioNestedInput
     produccion?: ProduccionDiariaUncheckedUpdateManyWithoutUsuarioNestedInput
@@ -82035,6 +83553,7 @@ export namespace Prisma {
     cargas_combustible?: CargaCombustibleCreateNestedManyWithoutUsuarioInput
     cuadraturas?: CuadraturaCreateNestedManyWithoutUsuarioInput
     guias?: GuiaDespachoCreateNestedManyWithoutUsuario_repartidorInput
+    guias_anuladas?: GuiaDespachoCreateNestedManyWithoutAnulada_porInput
     log_accesos?: LogAccesoCreateNestedManyWithoutUsuarioInput
     mantenciones?: MantencionCreateNestedManyWithoutUsuarioInput
     produccion?: ProduccionDiariaCreateNestedManyWithoutUsuarioInput
@@ -82066,6 +83585,7 @@ export namespace Prisma {
     cargas_combustible?: CargaCombustibleUncheckedCreateNestedManyWithoutUsuarioInput
     cuadraturas?: CuadraturaUncheckedCreateNestedManyWithoutUsuarioInput
     guias?: GuiaDespachoUncheckedCreateNestedManyWithoutUsuario_repartidorInput
+    guias_anuladas?: GuiaDespachoUncheckedCreateNestedManyWithoutAnulada_porInput
     log_accesos?: LogAccesoUncheckedCreateNestedManyWithoutUsuarioInput
     mantenciones?: MantencionUncheckedCreateNestedManyWithoutUsuarioInput
     produccion?: ProduccionDiariaUncheckedCreateNestedManyWithoutUsuarioInput
@@ -82177,6 +83697,7 @@ export namespace Prisma {
     cargas_combustible?: CargaCombustibleUpdateManyWithoutUsuarioNestedInput
     cuadraturas?: CuadraturaUpdateManyWithoutUsuarioNestedInput
     guias?: GuiaDespachoUpdateManyWithoutUsuario_repartidorNestedInput
+    guias_anuladas?: GuiaDespachoUpdateManyWithoutAnulada_porNestedInput
     log_accesos?: LogAccesoUpdateManyWithoutUsuarioNestedInput
     mantenciones?: MantencionUpdateManyWithoutUsuarioNestedInput
     produccion?: ProduccionDiariaUpdateManyWithoutUsuarioNestedInput
@@ -82208,6 +83729,7 @@ export namespace Prisma {
     cargas_combustible?: CargaCombustibleUncheckedUpdateManyWithoutUsuarioNestedInput
     cuadraturas?: CuadraturaUncheckedUpdateManyWithoutUsuarioNestedInput
     guias?: GuiaDespachoUncheckedUpdateManyWithoutUsuario_repartidorNestedInput
+    guias_anuladas?: GuiaDespachoUncheckedUpdateManyWithoutAnulada_porNestedInput
     log_accesos?: LogAccesoUncheckedUpdateManyWithoutUsuarioNestedInput
     mantenciones?: MantencionUncheckedUpdateManyWithoutUsuarioNestedInput
     produccion?: ProduccionDiariaUncheckedUpdateManyWithoutUsuarioNestedInput
@@ -82373,6 +83895,7 @@ export namespace Prisma {
     cargas_combustible?: CargaCombustibleCreateNestedManyWithoutUsuarioInput
     cuadraturas?: CuadraturaCreateNestedManyWithoutUsuarioInput
     guias?: GuiaDespachoCreateNestedManyWithoutUsuario_repartidorInput
+    guias_anuladas?: GuiaDespachoCreateNestedManyWithoutAnulada_porInput
     log_accesos?: LogAccesoCreateNestedManyWithoutUsuarioInput
     mantenciones?: MantencionCreateNestedManyWithoutUsuarioInput
     produccion?: ProduccionDiariaCreateNestedManyWithoutUsuarioInput
@@ -82405,6 +83928,7 @@ export namespace Prisma {
     cargas_combustible?: CargaCombustibleUncheckedCreateNestedManyWithoutUsuarioInput
     cuadraturas?: CuadraturaUncheckedCreateNestedManyWithoutUsuarioInput
     guias?: GuiaDespachoUncheckedCreateNestedManyWithoutUsuario_repartidorInput
+    guias_anuladas?: GuiaDespachoUncheckedCreateNestedManyWithoutAnulada_porInput
     log_accesos?: LogAccesoUncheckedCreateNestedManyWithoutUsuarioInput
     mantenciones?: MantencionUncheckedCreateNestedManyWithoutUsuarioInput
     produccion?: ProduccionDiariaUncheckedCreateNestedManyWithoutUsuarioInput
@@ -82505,6 +84029,7 @@ export namespace Prisma {
     cargas_combustible?: CargaCombustibleUpdateManyWithoutUsuarioNestedInput
     cuadraturas?: CuadraturaUpdateManyWithoutUsuarioNestedInput
     guias?: GuiaDespachoUpdateManyWithoutUsuario_repartidorNestedInput
+    guias_anuladas?: GuiaDespachoUpdateManyWithoutAnulada_porNestedInput
     log_accesos?: LogAccesoUpdateManyWithoutUsuarioNestedInput
     mantenciones?: MantencionUpdateManyWithoutUsuarioNestedInput
     produccion?: ProduccionDiariaUpdateManyWithoutUsuarioNestedInput
@@ -82537,6 +84062,7 @@ export namespace Prisma {
     cargas_combustible?: CargaCombustibleUncheckedUpdateManyWithoutUsuarioNestedInput
     cuadraturas?: CuadraturaUncheckedUpdateManyWithoutUsuarioNestedInput
     guias?: GuiaDespachoUncheckedUpdateManyWithoutUsuario_repartidorNestedInput
+    guias_anuladas?: GuiaDespachoUncheckedUpdateManyWithoutAnulada_porNestedInput
     log_accesos?: LogAccesoUncheckedUpdateManyWithoutUsuarioNestedInput
     mantenciones?: MantencionUncheckedUpdateManyWithoutUsuarioNestedInput
     produccion?: ProduccionDiariaUncheckedUpdateManyWithoutUsuarioNestedInput
@@ -82903,12 +84429,48 @@ export namespace Prisma {
     pedido_id?: string | null
     direccion_entrega: string
     estado: $Enums.EstadoGuia
+    estado_documento?: string | null
+    forma_pago?: string | null
+    numero_factura?: string | null
     nombre_receptor?: string | null
     rut_receptor?: string | null
     hora_entrega?: Date | string | null
     observaciones?: string | null
     total: number
     motivo_anulacion?: string | null
+    anulada_motivo?: string | null
+    anulada_at?: Date | string | null
+    anulada_por_id?: string | null
+    reemplaza_a_guia_id?: string | null
+    reemplazada_por_guia_id?: string | null
+    firma_digital?: string | null
+    botellones_prestados_entrega?: number
+    incluida_en_cierre?: boolean
+    fecha_cierre?: Date | string | null
+  }
+
+  export type GuiaDespachoCreateManyAnulada_porInput = {
+    id?: string
+    numero_correlativo?: number
+    fecha_emision?: Date | string
+    cliente_id: string
+    pedido_id?: string | null
+    direccion_entrega: string
+    usuario_repartidor_id: string
+    estado: $Enums.EstadoGuia
+    estado_documento?: string | null
+    forma_pago?: string | null
+    numero_factura?: string | null
+    nombre_receptor?: string | null
+    rut_receptor?: string | null
+    hora_entrega?: Date | string | null
+    observaciones?: string | null
+    total: number
+    motivo_anulacion?: string | null
+    anulada_motivo?: string | null
+    anulada_at?: Date | string | null
+    reemplaza_a_guia_id?: string | null
+    reemplazada_por_guia_id?: string | null
     firma_digital?: string | null
     botellones_prestados_entrega?: number
     incluida_en_cierre?: boolean
@@ -83134,18 +84696,28 @@ export namespace Prisma {
     fecha_emision?: DateTimeFieldUpdateOperationsInput | Date | string
     direccion_entrega?: StringFieldUpdateOperationsInput | string
     estado?: EnumEstadoGuiaFieldUpdateOperationsInput | $Enums.EstadoGuia
+    estado_documento?: NullableStringFieldUpdateOperationsInput | string | null
+    forma_pago?: NullableStringFieldUpdateOperationsInput | string | null
+    numero_factura?: NullableStringFieldUpdateOperationsInput | string | null
     nombre_receptor?: NullableStringFieldUpdateOperationsInput | string | null
     rut_receptor?: NullableStringFieldUpdateOperationsInput | string | null
     hora_entrega?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     total?: FloatFieldUpdateOperationsInput | number
     motivo_anulacion?: NullableStringFieldUpdateOperationsInput | string | null
+    anulada_motivo?: NullableStringFieldUpdateOperationsInput | string | null
+    anulada_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     firma_digital?: NullableStringFieldUpdateOperationsInput | string | null
     botellones_prestados_entrega?: IntFieldUpdateOperationsInput | number
     incluida_en_cierre?: BoolFieldUpdateOperationsInput | boolean
     fecha_cierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     cuadratura_ventas?: CuadraturaVentaUpdateManyWithoutGuiaNestedInput
     cliente?: ClienteUpdateOneRequiredWithoutGuiasNestedInput
+    anulada_por?: UsuarioUpdateOneWithoutGuias_anuladasNestedInput
+    reemplaza_a?: GuiaDespachoUpdateOneWithoutGuias_que_reemplazan_a_estaNestedInput
+    guias_que_reemplazan_a_esta?: GuiaDespachoUpdateManyWithoutReemplaza_aNestedInput
+    reemplazada_por?: GuiaDespachoUpdateOneWithoutGuias_reemplazadas_por_estaNestedInput
+    guias_reemplazadas_por_esta?: GuiaDespachoUpdateManyWithoutReemplazada_porNestedInput
     pedido?: PedidoUpdateOneWithoutGuiaNestedInput
     items?: ItemGuiaUpdateManyWithoutGuiaNestedInput
   }
@@ -83158,17 +84730,27 @@ export namespace Prisma {
     pedido_id?: NullableStringFieldUpdateOperationsInput | string | null
     direccion_entrega?: StringFieldUpdateOperationsInput | string
     estado?: EnumEstadoGuiaFieldUpdateOperationsInput | $Enums.EstadoGuia
+    estado_documento?: NullableStringFieldUpdateOperationsInput | string | null
+    forma_pago?: NullableStringFieldUpdateOperationsInput | string | null
+    numero_factura?: NullableStringFieldUpdateOperationsInput | string | null
     nombre_receptor?: NullableStringFieldUpdateOperationsInput | string | null
     rut_receptor?: NullableStringFieldUpdateOperationsInput | string | null
     hora_entrega?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     total?: FloatFieldUpdateOperationsInput | number
     motivo_anulacion?: NullableStringFieldUpdateOperationsInput | string | null
+    anulada_motivo?: NullableStringFieldUpdateOperationsInput | string | null
+    anulada_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    anulada_por_id?: NullableStringFieldUpdateOperationsInput | string | null
+    reemplaza_a_guia_id?: NullableStringFieldUpdateOperationsInput | string | null
+    reemplazada_por_guia_id?: NullableStringFieldUpdateOperationsInput | string | null
     firma_digital?: NullableStringFieldUpdateOperationsInput | string | null
     botellones_prestados_entrega?: IntFieldUpdateOperationsInput | number
     incluida_en_cierre?: BoolFieldUpdateOperationsInput | boolean
     fecha_cierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     cuadratura_ventas?: CuadraturaVentaUncheckedUpdateManyWithoutGuiaNestedInput
+    guias_que_reemplazan_a_esta?: GuiaDespachoUncheckedUpdateManyWithoutReemplaza_aNestedInput
+    guias_reemplazadas_por_esta?: GuiaDespachoUncheckedUpdateManyWithoutReemplazada_porNestedInput
     items?: ItemGuiaUncheckedUpdateManyWithoutGuiaNestedInput
   }
 
@@ -83180,12 +84762,111 @@ export namespace Prisma {
     pedido_id?: NullableStringFieldUpdateOperationsInput | string | null
     direccion_entrega?: StringFieldUpdateOperationsInput | string
     estado?: EnumEstadoGuiaFieldUpdateOperationsInput | $Enums.EstadoGuia
+    estado_documento?: NullableStringFieldUpdateOperationsInput | string | null
+    forma_pago?: NullableStringFieldUpdateOperationsInput | string | null
+    numero_factura?: NullableStringFieldUpdateOperationsInput | string | null
     nombre_receptor?: NullableStringFieldUpdateOperationsInput | string | null
     rut_receptor?: NullableStringFieldUpdateOperationsInput | string | null
     hora_entrega?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     total?: FloatFieldUpdateOperationsInput | number
     motivo_anulacion?: NullableStringFieldUpdateOperationsInput | string | null
+    anulada_motivo?: NullableStringFieldUpdateOperationsInput | string | null
+    anulada_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    anulada_por_id?: NullableStringFieldUpdateOperationsInput | string | null
+    reemplaza_a_guia_id?: NullableStringFieldUpdateOperationsInput | string | null
+    reemplazada_por_guia_id?: NullableStringFieldUpdateOperationsInput | string | null
+    firma_digital?: NullableStringFieldUpdateOperationsInput | string | null
+    botellones_prestados_entrega?: IntFieldUpdateOperationsInput | number
+    incluida_en_cierre?: BoolFieldUpdateOperationsInput | boolean
+    fecha_cierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type GuiaDespachoUpdateWithoutAnulada_porInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fecha_emision?: DateTimeFieldUpdateOperationsInput | Date | string
+    direccion_entrega?: StringFieldUpdateOperationsInput | string
+    estado?: EnumEstadoGuiaFieldUpdateOperationsInput | $Enums.EstadoGuia
+    estado_documento?: NullableStringFieldUpdateOperationsInput | string | null
+    forma_pago?: NullableStringFieldUpdateOperationsInput | string | null
+    numero_factura?: NullableStringFieldUpdateOperationsInput | string | null
+    nombre_receptor?: NullableStringFieldUpdateOperationsInput | string | null
+    rut_receptor?: NullableStringFieldUpdateOperationsInput | string | null
+    hora_entrega?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    total?: FloatFieldUpdateOperationsInput | number
+    motivo_anulacion?: NullableStringFieldUpdateOperationsInput | string | null
+    anulada_motivo?: NullableStringFieldUpdateOperationsInput | string | null
+    anulada_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    firma_digital?: NullableStringFieldUpdateOperationsInput | string | null
+    botellones_prestados_entrega?: IntFieldUpdateOperationsInput | number
+    incluida_en_cierre?: BoolFieldUpdateOperationsInput | boolean
+    fecha_cierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cuadratura_ventas?: CuadraturaVentaUpdateManyWithoutGuiaNestedInput
+    cliente?: ClienteUpdateOneRequiredWithoutGuiasNestedInput
+    usuario_repartidor?: UsuarioUpdateOneRequiredWithoutGuiasNestedInput
+    reemplaza_a?: GuiaDespachoUpdateOneWithoutGuias_que_reemplazan_a_estaNestedInput
+    guias_que_reemplazan_a_esta?: GuiaDespachoUpdateManyWithoutReemplaza_aNestedInput
+    reemplazada_por?: GuiaDespachoUpdateOneWithoutGuias_reemplazadas_por_estaNestedInput
+    guias_reemplazadas_por_esta?: GuiaDespachoUpdateManyWithoutReemplazada_porNestedInput
+    pedido?: PedidoUpdateOneWithoutGuiaNestedInput
+    items?: ItemGuiaUpdateManyWithoutGuiaNestedInput
+  }
+
+  export type GuiaDespachoUncheckedUpdateWithoutAnulada_porInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    numero_correlativo?: IntFieldUpdateOperationsInput | number
+    fecha_emision?: DateTimeFieldUpdateOperationsInput | Date | string
+    cliente_id?: StringFieldUpdateOperationsInput | string
+    pedido_id?: NullableStringFieldUpdateOperationsInput | string | null
+    direccion_entrega?: StringFieldUpdateOperationsInput | string
+    usuario_repartidor_id?: StringFieldUpdateOperationsInput | string
+    estado?: EnumEstadoGuiaFieldUpdateOperationsInput | $Enums.EstadoGuia
+    estado_documento?: NullableStringFieldUpdateOperationsInput | string | null
+    forma_pago?: NullableStringFieldUpdateOperationsInput | string | null
+    numero_factura?: NullableStringFieldUpdateOperationsInput | string | null
+    nombre_receptor?: NullableStringFieldUpdateOperationsInput | string | null
+    rut_receptor?: NullableStringFieldUpdateOperationsInput | string | null
+    hora_entrega?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    total?: FloatFieldUpdateOperationsInput | number
+    motivo_anulacion?: NullableStringFieldUpdateOperationsInput | string | null
+    anulada_motivo?: NullableStringFieldUpdateOperationsInput | string | null
+    anulada_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reemplaza_a_guia_id?: NullableStringFieldUpdateOperationsInput | string | null
+    reemplazada_por_guia_id?: NullableStringFieldUpdateOperationsInput | string | null
+    firma_digital?: NullableStringFieldUpdateOperationsInput | string | null
+    botellones_prestados_entrega?: IntFieldUpdateOperationsInput | number
+    incluida_en_cierre?: BoolFieldUpdateOperationsInput | boolean
+    fecha_cierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cuadratura_ventas?: CuadraturaVentaUncheckedUpdateManyWithoutGuiaNestedInput
+    guias_que_reemplazan_a_esta?: GuiaDespachoUncheckedUpdateManyWithoutReemplaza_aNestedInput
+    guias_reemplazadas_por_esta?: GuiaDespachoUncheckedUpdateManyWithoutReemplazada_porNestedInput
+    items?: ItemGuiaUncheckedUpdateManyWithoutGuiaNestedInput
+  }
+
+  export type GuiaDespachoUncheckedUpdateManyWithoutAnulada_porInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    numero_correlativo?: IntFieldUpdateOperationsInput | number
+    fecha_emision?: DateTimeFieldUpdateOperationsInput | Date | string
+    cliente_id?: StringFieldUpdateOperationsInput | string
+    pedido_id?: NullableStringFieldUpdateOperationsInput | string | null
+    direccion_entrega?: StringFieldUpdateOperationsInput | string
+    usuario_repartidor_id?: StringFieldUpdateOperationsInput | string
+    estado?: EnumEstadoGuiaFieldUpdateOperationsInput | $Enums.EstadoGuia
+    estado_documento?: NullableStringFieldUpdateOperationsInput | string | null
+    forma_pago?: NullableStringFieldUpdateOperationsInput | string | null
+    numero_factura?: NullableStringFieldUpdateOperationsInput | string | null
+    nombre_receptor?: NullableStringFieldUpdateOperationsInput | string | null
+    rut_receptor?: NullableStringFieldUpdateOperationsInput | string | null
+    hora_entrega?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    total?: FloatFieldUpdateOperationsInput | number
+    motivo_anulacion?: NullableStringFieldUpdateOperationsInput | string | null
+    anulada_motivo?: NullableStringFieldUpdateOperationsInput | string | null
+    anulada_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reemplaza_a_guia_id?: NullableStringFieldUpdateOperationsInput | string | null
+    reemplazada_por_guia_id?: NullableStringFieldUpdateOperationsInput | string | null
     firma_digital?: NullableStringFieldUpdateOperationsInput | string | null
     botellones_prestados_entrega?: IntFieldUpdateOperationsInput | number
     incluida_en_cierre?: BoolFieldUpdateOperationsInput | boolean
@@ -83724,6 +85405,7 @@ export namespace Prisma {
     cargas_combustible?: CargaCombustibleUpdateManyWithoutUsuarioNestedInput
     cuadraturas?: CuadraturaUpdateManyWithoutUsuarioNestedInput
     guias?: GuiaDespachoUpdateManyWithoutUsuario_repartidorNestedInput
+    guias_anuladas?: GuiaDespachoUpdateManyWithoutAnulada_porNestedInput
     log_accesos?: LogAccesoUpdateManyWithoutUsuarioNestedInput
     mantenciones?: MantencionUpdateManyWithoutUsuarioNestedInput
     produccion?: ProduccionDiariaUpdateManyWithoutUsuarioNestedInput
@@ -83755,6 +85437,7 @@ export namespace Prisma {
     cargas_combustible?: CargaCombustibleUncheckedUpdateManyWithoutUsuarioNestedInput
     cuadraturas?: CuadraturaUncheckedUpdateManyWithoutUsuarioNestedInput
     guias?: GuiaDespachoUncheckedUpdateManyWithoutUsuario_repartidorNestedInput
+    guias_anuladas?: GuiaDespachoUncheckedUpdateManyWithoutAnulada_porNestedInput
     log_accesos?: LogAccesoUncheckedUpdateManyWithoutUsuarioNestedInput
     mantenciones?: MantencionUncheckedUpdateManyWithoutUsuarioNestedInput
     produccion?: ProduccionDiariaUncheckedUpdateManyWithoutUsuarioNestedInput
@@ -84153,12 +85836,20 @@ export namespace Prisma {
     direccion_entrega: string
     usuario_repartidor_id: string
     estado: $Enums.EstadoGuia
+    estado_documento?: string | null
+    forma_pago?: string | null
+    numero_factura?: string | null
     nombre_receptor?: string | null
     rut_receptor?: string | null
     hora_entrega?: Date | string | null
     observaciones?: string | null
     total: number
     motivo_anulacion?: string | null
+    anulada_motivo?: string | null
+    anulada_at?: Date | string | null
+    anulada_por_id?: string | null
+    reemplaza_a_guia_id?: string | null
+    reemplazada_por_guia_id?: string | null
     firma_digital?: string | null
     botellones_prestados_entrega?: number
     incluida_en_cierre?: boolean
@@ -84316,18 +86007,28 @@ export namespace Prisma {
     fecha_emision?: DateTimeFieldUpdateOperationsInput | Date | string
     direccion_entrega?: StringFieldUpdateOperationsInput | string
     estado?: EnumEstadoGuiaFieldUpdateOperationsInput | $Enums.EstadoGuia
+    estado_documento?: NullableStringFieldUpdateOperationsInput | string | null
+    forma_pago?: NullableStringFieldUpdateOperationsInput | string | null
+    numero_factura?: NullableStringFieldUpdateOperationsInput | string | null
     nombre_receptor?: NullableStringFieldUpdateOperationsInput | string | null
     rut_receptor?: NullableStringFieldUpdateOperationsInput | string | null
     hora_entrega?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     total?: FloatFieldUpdateOperationsInput | number
     motivo_anulacion?: NullableStringFieldUpdateOperationsInput | string | null
+    anulada_motivo?: NullableStringFieldUpdateOperationsInput | string | null
+    anulada_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     firma_digital?: NullableStringFieldUpdateOperationsInput | string | null
     botellones_prestados_entrega?: IntFieldUpdateOperationsInput | number
     incluida_en_cierre?: BoolFieldUpdateOperationsInput | boolean
     fecha_cierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     cuadratura_ventas?: CuadraturaVentaUpdateManyWithoutGuiaNestedInput
     usuario_repartidor?: UsuarioUpdateOneRequiredWithoutGuiasNestedInput
+    anulada_por?: UsuarioUpdateOneWithoutGuias_anuladasNestedInput
+    reemplaza_a?: GuiaDespachoUpdateOneWithoutGuias_que_reemplazan_a_estaNestedInput
+    guias_que_reemplazan_a_esta?: GuiaDespachoUpdateManyWithoutReemplaza_aNestedInput
+    reemplazada_por?: GuiaDespachoUpdateOneWithoutGuias_reemplazadas_por_estaNestedInput
+    guias_reemplazadas_por_esta?: GuiaDespachoUpdateManyWithoutReemplazada_porNestedInput
     pedido?: PedidoUpdateOneWithoutGuiaNestedInput
     items?: ItemGuiaUpdateManyWithoutGuiaNestedInput
   }
@@ -84340,17 +86041,27 @@ export namespace Prisma {
     direccion_entrega?: StringFieldUpdateOperationsInput | string
     usuario_repartidor_id?: StringFieldUpdateOperationsInput | string
     estado?: EnumEstadoGuiaFieldUpdateOperationsInput | $Enums.EstadoGuia
+    estado_documento?: NullableStringFieldUpdateOperationsInput | string | null
+    forma_pago?: NullableStringFieldUpdateOperationsInput | string | null
+    numero_factura?: NullableStringFieldUpdateOperationsInput | string | null
     nombre_receptor?: NullableStringFieldUpdateOperationsInput | string | null
     rut_receptor?: NullableStringFieldUpdateOperationsInput | string | null
     hora_entrega?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     total?: FloatFieldUpdateOperationsInput | number
     motivo_anulacion?: NullableStringFieldUpdateOperationsInput | string | null
+    anulada_motivo?: NullableStringFieldUpdateOperationsInput | string | null
+    anulada_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    anulada_por_id?: NullableStringFieldUpdateOperationsInput | string | null
+    reemplaza_a_guia_id?: NullableStringFieldUpdateOperationsInput | string | null
+    reemplazada_por_guia_id?: NullableStringFieldUpdateOperationsInput | string | null
     firma_digital?: NullableStringFieldUpdateOperationsInput | string | null
     botellones_prestados_entrega?: IntFieldUpdateOperationsInput | number
     incluida_en_cierre?: BoolFieldUpdateOperationsInput | boolean
     fecha_cierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     cuadratura_ventas?: CuadraturaVentaUncheckedUpdateManyWithoutGuiaNestedInput
+    guias_que_reemplazan_a_esta?: GuiaDespachoUncheckedUpdateManyWithoutReemplaza_aNestedInput
+    guias_reemplazadas_por_esta?: GuiaDespachoUncheckedUpdateManyWithoutReemplazada_porNestedInput
     items?: ItemGuiaUncheckedUpdateManyWithoutGuiaNestedInput
   }
 
@@ -84362,12 +86073,20 @@ export namespace Prisma {
     direccion_entrega?: StringFieldUpdateOperationsInput | string
     usuario_repartidor_id?: StringFieldUpdateOperationsInput | string
     estado?: EnumEstadoGuiaFieldUpdateOperationsInput | $Enums.EstadoGuia
+    estado_documento?: NullableStringFieldUpdateOperationsInput | string | null
+    forma_pago?: NullableStringFieldUpdateOperationsInput | string | null
+    numero_factura?: NullableStringFieldUpdateOperationsInput | string | null
     nombre_receptor?: NullableStringFieldUpdateOperationsInput | string | null
     rut_receptor?: NullableStringFieldUpdateOperationsInput | string | null
     hora_entrega?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     observaciones?: NullableStringFieldUpdateOperationsInput | string | null
     total?: FloatFieldUpdateOperationsInput | number
     motivo_anulacion?: NullableStringFieldUpdateOperationsInput | string | null
+    anulada_motivo?: NullableStringFieldUpdateOperationsInput | string | null
+    anulada_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    anulada_por_id?: NullableStringFieldUpdateOperationsInput | string | null
+    reemplaza_a_guia_id?: NullableStringFieldUpdateOperationsInput | string | null
+    reemplazada_por_guia_id?: NullableStringFieldUpdateOperationsInput | string | null
     firma_digital?: NullableStringFieldUpdateOperationsInput | string | null
     botellones_prestados_entrega?: IntFieldUpdateOperationsInput | number
     incluida_en_cierre?: BoolFieldUpdateOperationsInput | boolean
@@ -85041,6 +86760,62 @@ export namespace Prisma {
     metodo_pago?: $Enums.MetodoPago
   }
 
+  export type GuiaDespachoCreateManyReemplaza_aInput = {
+    id?: string
+    numero_correlativo?: number
+    fecha_emision?: Date | string
+    cliente_id: string
+    pedido_id?: string | null
+    direccion_entrega: string
+    usuario_repartidor_id: string
+    estado: $Enums.EstadoGuia
+    estado_documento?: string | null
+    forma_pago?: string | null
+    numero_factura?: string | null
+    nombre_receptor?: string | null
+    rut_receptor?: string | null
+    hora_entrega?: Date | string | null
+    observaciones?: string | null
+    total: number
+    motivo_anulacion?: string | null
+    anulada_motivo?: string | null
+    anulada_at?: Date | string | null
+    anulada_por_id?: string | null
+    reemplazada_por_guia_id?: string | null
+    firma_digital?: string | null
+    botellones_prestados_entrega?: number
+    incluida_en_cierre?: boolean
+    fecha_cierre?: Date | string | null
+  }
+
+  export type GuiaDespachoCreateManyReemplazada_porInput = {
+    id?: string
+    numero_correlativo?: number
+    fecha_emision?: Date | string
+    cliente_id: string
+    pedido_id?: string | null
+    direccion_entrega: string
+    usuario_repartidor_id: string
+    estado: $Enums.EstadoGuia
+    estado_documento?: string | null
+    forma_pago?: string | null
+    numero_factura?: string | null
+    nombre_receptor?: string | null
+    rut_receptor?: string | null
+    hora_entrega?: Date | string | null
+    observaciones?: string | null
+    total: number
+    motivo_anulacion?: string | null
+    anulada_motivo?: string | null
+    anulada_at?: Date | string | null
+    anulada_por_id?: string | null
+    reemplaza_a_guia_id?: string | null
+    firma_digital?: string | null
+    botellones_prestados_entrega?: number
+    incluida_en_cierre?: boolean
+    fecha_cierre?: Date | string | null
+  }
+
   export type ItemGuiaCreateManyGuiaInput = {
     id?: string
     producto_id: string
@@ -85081,6 +86856,188 @@ export namespace Prisma {
     tipo_cliente?: EnumTipoClienteFieldUpdateOperationsInput | $Enums.TipoCliente
     comision_calculada?: FloatFieldUpdateOperationsInput | number
     metodo_pago?: EnumMetodoPagoFieldUpdateOperationsInput | $Enums.MetodoPago
+  }
+
+  export type GuiaDespachoUpdateWithoutReemplaza_aInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fecha_emision?: DateTimeFieldUpdateOperationsInput | Date | string
+    direccion_entrega?: StringFieldUpdateOperationsInput | string
+    estado?: EnumEstadoGuiaFieldUpdateOperationsInput | $Enums.EstadoGuia
+    estado_documento?: NullableStringFieldUpdateOperationsInput | string | null
+    forma_pago?: NullableStringFieldUpdateOperationsInput | string | null
+    numero_factura?: NullableStringFieldUpdateOperationsInput | string | null
+    nombre_receptor?: NullableStringFieldUpdateOperationsInput | string | null
+    rut_receptor?: NullableStringFieldUpdateOperationsInput | string | null
+    hora_entrega?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    total?: FloatFieldUpdateOperationsInput | number
+    motivo_anulacion?: NullableStringFieldUpdateOperationsInput | string | null
+    anulada_motivo?: NullableStringFieldUpdateOperationsInput | string | null
+    anulada_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    firma_digital?: NullableStringFieldUpdateOperationsInput | string | null
+    botellones_prestados_entrega?: IntFieldUpdateOperationsInput | number
+    incluida_en_cierre?: BoolFieldUpdateOperationsInput | boolean
+    fecha_cierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cuadratura_ventas?: CuadraturaVentaUpdateManyWithoutGuiaNestedInput
+    cliente?: ClienteUpdateOneRequiredWithoutGuiasNestedInput
+    usuario_repartidor?: UsuarioUpdateOneRequiredWithoutGuiasNestedInput
+    anulada_por?: UsuarioUpdateOneWithoutGuias_anuladasNestedInput
+    guias_que_reemplazan_a_esta?: GuiaDespachoUpdateManyWithoutReemplaza_aNestedInput
+    reemplazada_por?: GuiaDespachoUpdateOneWithoutGuias_reemplazadas_por_estaNestedInput
+    guias_reemplazadas_por_esta?: GuiaDespachoUpdateManyWithoutReemplazada_porNestedInput
+    pedido?: PedidoUpdateOneWithoutGuiaNestedInput
+    items?: ItemGuiaUpdateManyWithoutGuiaNestedInput
+  }
+
+  export type GuiaDespachoUncheckedUpdateWithoutReemplaza_aInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    numero_correlativo?: IntFieldUpdateOperationsInput | number
+    fecha_emision?: DateTimeFieldUpdateOperationsInput | Date | string
+    cliente_id?: StringFieldUpdateOperationsInput | string
+    pedido_id?: NullableStringFieldUpdateOperationsInput | string | null
+    direccion_entrega?: StringFieldUpdateOperationsInput | string
+    usuario_repartidor_id?: StringFieldUpdateOperationsInput | string
+    estado?: EnumEstadoGuiaFieldUpdateOperationsInput | $Enums.EstadoGuia
+    estado_documento?: NullableStringFieldUpdateOperationsInput | string | null
+    forma_pago?: NullableStringFieldUpdateOperationsInput | string | null
+    numero_factura?: NullableStringFieldUpdateOperationsInput | string | null
+    nombre_receptor?: NullableStringFieldUpdateOperationsInput | string | null
+    rut_receptor?: NullableStringFieldUpdateOperationsInput | string | null
+    hora_entrega?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    total?: FloatFieldUpdateOperationsInput | number
+    motivo_anulacion?: NullableStringFieldUpdateOperationsInput | string | null
+    anulada_motivo?: NullableStringFieldUpdateOperationsInput | string | null
+    anulada_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    anulada_por_id?: NullableStringFieldUpdateOperationsInput | string | null
+    reemplazada_por_guia_id?: NullableStringFieldUpdateOperationsInput | string | null
+    firma_digital?: NullableStringFieldUpdateOperationsInput | string | null
+    botellones_prestados_entrega?: IntFieldUpdateOperationsInput | number
+    incluida_en_cierre?: BoolFieldUpdateOperationsInput | boolean
+    fecha_cierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cuadratura_ventas?: CuadraturaVentaUncheckedUpdateManyWithoutGuiaNestedInput
+    guias_que_reemplazan_a_esta?: GuiaDespachoUncheckedUpdateManyWithoutReemplaza_aNestedInput
+    guias_reemplazadas_por_esta?: GuiaDespachoUncheckedUpdateManyWithoutReemplazada_porNestedInput
+    items?: ItemGuiaUncheckedUpdateManyWithoutGuiaNestedInput
+  }
+
+  export type GuiaDespachoUncheckedUpdateManyWithoutReemplaza_aInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    numero_correlativo?: IntFieldUpdateOperationsInput | number
+    fecha_emision?: DateTimeFieldUpdateOperationsInput | Date | string
+    cliente_id?: StringFieldUpdateOperationsInput | string
+    pedido_id?: NullableStringFieldUpdateOperationsInput | string | null
+    direccion_entrega?: StringFieldUpdateOperationsInput | string
+    usuario_repartidor_id?: StringFieldUpdateOperationsInput | string
+    estado?: EnumEstadoGuiaFieldUpdateOperationsInput | $Enums.EstadoGuia
+    estado_documento?: NullableStringFieldUpdateOperationsInput | string | null
+    forma_pago?: NullableStringFieldUpdateOperationsInput | string | null
+    numero_factura?: NullableStringFieldUpdateOperationsInput | string | null
+    nombre_receptor?: NullableStringFieldUpdateOperationsInput | string | null
+    rut_receptor?: NullableStringFieldUpdateOperationsInput | string | null
+    hora_entrega?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    total?: FloatFieldUpdateOperationsInput | number
+    motivo_anulacion?: NullableStringFieldUpdateOperationsInput | string | null
+    anulada_motivo?: NullableStringFieldUpdateOperationsInput | string | null
+    anulada_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    anulada_por_id?: NullableStringFieldUpdateOperationsInput | string | null
+    reemplazada_por_guia_id?: NullableStringFieldUpdateOperationsInput | string | null
+    firma_digital?: NullableStringFieldUpdateOperationsInput | string | null
+    botellones_prestados_entrega?: IntFieldUpdateOperationsInput | number
+    incluida_en_cierre?: BoolFieldUpdateOperationsInput | boolean
+    fecha_cierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type GuiaDespachoUpdateWithoutReemplazada_porInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fecha_emision?: DateTimeFieldUpdateOperationsInput | Date | string
+    direccion_entrega?: StringFieldUpdateOperationsInput | string
+    estado?: EnumEstadoGuiaFieldUpdateOperationsInput | $Enums.EstadoGuia
+    estado_documento?: NullableStringFieldUpdateOperationsInput | string | null
+    forma_pago?: NullableStringFieldUpdateOperationsInput | string | null
+    numero_factura?: NullableStringFieldUpdateOperationsInput | string | null
+    nombre_receptor?: NullableStringFieldUpdateOperationsInput | string | null
+    rut_receptor?: NullableStringFieldUpdateOperationsInput | string | null
+    hora_entrega?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    total?: FloatFieldUpdateOperationsInput | number
+    motivo_anulacion?: NullableStringFieldUpdateOperationsInput | string | null
+    anulada_motivo?: NullableStringFieldUpdateOperationsInput | string | null
+    anulada_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    firma_digital?: NullableStringFieldUpdateOperationsInput | string | null
+    botellones_prestados_entrega?: IntFieldUpdateOperationsInput | number
+    incluida_en_cierre?: BoolFieldUpdateOperationsInput | boolean
+    fecha_cierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cuadratura_ventas?: CuadraturaVentaUpdateManyWithoutGuiaNestedInput
+    cliente?: ClienteUpdateOneRequiredWithoutGuiasNestedInput
+    usuario_repartidor?: UsuarioUpdateOneRequiredWithoutGuiasNestedInput
+    anulada_por?: UsuarioUpdateOneWithoutGuias_anuladasNestedInput
+    reemplaza_a?: GuiaDespachoUpdateOneWithoutGuias_que_reemplazan_a_estaNestedInput
+    guias_que_reemplazan_a_esta?: GuiaDespachoUpdateManyWithoutReemplaza_aNestedInput
+    guias_reemplazadas_por_esta?: GuiaDespachoUpdateManyWithoutReemplazada_porNestedInput
+    pedido?: PedidoUpdateOneWithoutGuiaNestedInput
+    items?: ItemGuiaUpdateManyWithoutGuiaNestedInput
+  }
+
+  export type GuiaDespachoUncheckedUpdateWithoutReemplazada_porInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    numero_correlativo?: IntFieldUpdateOperationsInput | number
+    fecha_emision?: DateTimeFieldUpdateOperationsInput | Date | string
+    cliente_id?: StringFieldUpdateOperationsInput | string
+    pedido_id?: NullableStringFieldUpdateOperationsInput | string | null
+    direccion_entrega?: StringFieldUpdateOperationsInput | string
+    usuario_repartidor_id?: StringFieldUpdateOperationsInput | string
+    estado?: EnumEstadoGuiaFieldUpdateOperationsInput | $Enums.EstadoGuia
+    estado_documento?: NullableStringFieldUpdateOperationsInput | string | null
+    forma_pago?: NullableStringFieldUpdateOperationsInput | string | null
+    numero_factura?: NullableStringFieldUpdateOperationsInput | string | null
+    nombre_receptor?: NullableStringFieldUpdateOperationsInput | string | null
+    rut_receptor?: NullableStringFieldUpdateOperationsInput | string | null
+    hora_entrega?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    total?: FloatFieldUpdateOperationsInput | number
+    motivo_anulacion?: NullableStringFieldUpdateOperationsInput | string | null
+    anulada_motivo?: NullableStringFieldUpdateOperationsInput | string | null
+    anulada_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    anulada_por_id?: NullableStringFieldUpdateOperationsInput | string | null
+    reemplaza_a_guia_id?: NullableStringFieldUpdateOperationsInput | string | null
+    firma_digital?: NullableStringFieldUpdateOperationsInput | string | null
+    botellones_prestados_entrega?: IntFieldUpdateOperationsInput | number
+    incluida_en_cierre?: BoolFieldUpdateOperationsInput | boolean
+    fecha_cierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cuadratura_ventas?: CuadraturaVentaUncheckedUpdateManyWithoutGuiaNestedInput
+    guias_que_reemplazan_a_esta?: GuiaDespachoUncheckedUpdateManyWithoutReemplaza_aNestedInput
+    guias_reemplazadas_por_esta?: GuiaDespachoUncheckedUpdateManyWithoutReemplazada_porNestedInput
+    items?: ItemGuiaUncheckedUpdateManyWithoutGuiaNestedInput
+  }
+
+  export type GuiaDespachoUncheckedUpdateManyWithoutReemplazada_porInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    numero_correlativo?: IntFieldUpdateOperationsInput | number
+    fecha_emision?: DateTimeFieldUpdateOperationsInput | Date | string
+    cliente_id?: StringFieldUpdateOperationsInput | string
+    pedido_id?: NullableStringFieldUpdateOperationsInput | string | null
+    direccion_entrega?: StringFieldUpdateOperationsInput | string
+    usuario_repartidor_id?: StringFieldUpdateOperationsInput | string
+    estado?: EnumEstadoGuiaFieldUpdateOperationsInput | $Enums.EstadoGuia
+    estado_documento?: NullableStringFieldUpdateOperationsInput | string | null
+    forma_pago?: NullableStringFieldUpdateOperationsInput | string | null
+    numero_factura?: NullableStringFieldUpdateOperationsInput | string | null
+    nombre_receptor?: NullableStringFieldUpdateOperationsInput | string | null
+    rut_receptor?: NullableStringFieldUpdateOperationsInput | string | null
+    hora_entrega?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    observaciones?: NullableStringFieldUpdateOperationsInput | string | null
+    total?: FloatFieldUpdateOperationsInput | number
+    motivo_anulacion?: NullableStringFieldUpdateOperationsInput | string | null
+    anulada_motivo?: NullableStringFieldUpdateOperationsInput | string | null
+    anulada_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    anulada_por_id?: NullableStringFieldUpdateOperationsInput | string | null
+    reemplaza_a_guia_id?: NullableStringFieldUpdateOperationsInput | string | null
+    firma_digital?: NullableStringFieldUpdateOperationsInput | string | null
+    botellones_prestados_entrega?: IntFieldUpdateOperationsInput | number
+    incluida_en_cierre?: BoolFieldUpdateOperationsInput | boolean
+    fecha_cierre?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ItemGuiaUpdateWithoutGuiaInput = {

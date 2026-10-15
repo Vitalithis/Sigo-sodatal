@@ -84,6 +84,19 @@ export default function CalendarioAsistencia({ usuarioId, nombreUsuario, rol, on
   const [rangoEstado, setRangoEstado] = useState<'VACACIONES' | 'LICENCIA' | 'LIBRE' | 'PRESENTE' | 'AUSENTE' | 'RESET'>('VACACIONES');
   const [rangoNota, setRangoNota] = useState('');
 
+  // Cerrar modales con tecla Escape
+  useEffect(() => {
+    if (!selectedDayStr && !isRangoModalOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && !isSaving) {
+        if (selectedDayStr) setSelectedDayStr(null);
+        if (isRangoModalOpen) setIsRangoModalOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedDayStr, isRangoModalOpen, isSaving]);
+
   const calcularDiasRango = (desdeStr: string, hastaStr: string) => {
     if (!desdeStr || !hastaStr) return 0;
     const d1 = new Date(`${desdeStr}T00:00:00`);
@@ -476,7 +489,12 @@ export default function CalendarioAsistencia({ usuarioId, nombreUsuario, rol, on
 
       {/* MODAL PARA EDITAR / REGISTRAR ASISTENCIA DEL DÍA SELECCIONADO */}
       {selectedDayStr && typeof document !== 'undefined' && createPortal(
-        <div className="fixed inset-0 bg-slate-900/60 z-[100] flex items-center justify-center p-4 backdrop-blur-sm !m-0 !top-0 !left-0 !right-0 !bottom-0 animate-in fade-in duration-150">
+        <div
+          onClick={(e) => {
+            if (e.target === e.currentTarget && !isSaving) setSelectedDayStr(null);
+          }}
+          className="fixed inset-0 bg-slate-900/60 z-[100] flex items-center justify-center p-4 backdrop-blur-sm !m-0 !top-0 !left-0 !right-0 !bottom-0 animate-in fade-in duration-150"
+        >
           <div className="bg-white rounded-2xl shadow-2xl border border-slate-100 w-full max-w-md overflow-hidden !m-0 animate-in zoom-in-95 duration-150">
             
             {/* Header Modal */}
@@ -586,7 +604,12 @@ export default function CalendarioAsistencia({ usuarioId, nombreUsuario, rol, on
 
       {/* MODAL PARA REGISTRO MASIVO POR RANGO (VACACIONES, LICENCIAS, ETC.) */}
       {isRangoModalOpen && typeof document !== 'undefined' && createPortal(
-        <div className="fixed inset-0 bg-slate-900/60 z-[100] flex items-center justify-center p-4 backdrop-blur-sm !m-0 !top-0 !left-0 !right-0 !bottom-0 animate-in fade-in duration-150">
+        <div
+          onClick={(e) => {
+            if (e.target === e.currentTarget && !isSaving) setIsRangoModalOpen(false);
+          }}
+          className="fixed inset-0 bg-slate-900/60 z-[100] flex items-center justify-center p-4 backdrop-blur-sm !m-0 !top-0 !left-0 !right-0 !bottom-0 animate-in fade-in duration-150"
+        >
           <div className="bg-white rounded-2xl shadow-2xl border border-slate-100 w-full max-w-lg overflow-hidden !m-0 animate-in zoom-in-95 duration-150">
             
             {/* Header Modal Rango */}

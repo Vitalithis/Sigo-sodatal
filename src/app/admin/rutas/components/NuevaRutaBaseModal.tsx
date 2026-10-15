@@ -20,9 +20,11 @@ export default function NuevaRutaBaseModal({ isOpen, onClose, onSuccess }: Props
   const [choferes, setChoferes] = useState<any[]>([]);
   const [vehiculos, setVehiculos] = useState<any[]>([]);
   const [cargando, setCargando] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   useEffect(() => {
     if (isOpen) {
+      setErrorMsg(null);
       const cargarOpciones = async () => {
         const res = await getFormularioRutaBaseData();
         if (res.success) {
@@ -36,12 +38,23 @@ export default function NuevaRutaBaseModal({ isOpen, onClose, onSuccess }: Props
     }
   }, [isOpen]);
 
+  // Cerrar modal con tecla Escape
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && !cargando) onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, cargando, onClose]);
+
   if (!isOpen) return null;
 
   const manejarEnvio = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrorMsg(null);
     if (!nombre || !usuarioId || !vehiculoId) {
-      alert('Por favor rellena todos los campos obligatorios.');
+      setErrorMsg('Por favor rellena todos los campos obligatorios.');
       return;
     }
 
@@ -55,16 +68,21 @@ export default function NuevaRutaBaseModal({ isOpen, onClose, onSuccess }: Props
     setCargando(false);
 
     if (res.success) {
-      alert('¡Plantilla de Ruta Base creada correctamente!');
+      setErrorMsg(null);
       setNombre('');
       onSuccess();
     } else {
-      alert(res.message || 'Error al guardar la ruta base.');
+      setErrorMsg(res.message || 'Error al guardar la ruta base.');
     }
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50 text-xs text-gray-900 font-sans">
+    <div
+      onClick={(e) => {
+        if (e.target === e.currentTarget && !cargando) onClose();
+      }}
+      className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50 text-xs text-gray-900 font-sans"
+    >
       <div className="bg-white rounded-xl shadow-xl border border-gray-200 max-w-md w-full overflow-hidden">
         
         <div className="bg-slate-800 p-3 text-white flex justify-between items-center">
@@ -73,6 +91,12 @@ export default function NuevaRutaBaseModal({ isOpen, onClose, onSuccess }: Props
         </div>
 
         <form onSubmit={manejarEnvio} className="p-4 space-y-3">
+          {errorMsg && (
+            <div className="p-2.5 bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold rounded-lg flex items-center justify-between">
+              <span>{errorMsg}</span>
+              <button type="button" onClick={() => setErrorMsg(null)} className="text-rose-400 hover:text-rose-600 font-bold ml-2">✕</button>
+            </div>
+          )}
           <div>
             <label className="block font-bold text-gray-700 uppercase mb-1">Nombre de la Ruta (Ej: Ruta Norte o Sector Centro):</label>
             <input

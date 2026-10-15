@@ -37,11 +37,16 @@ export type FormProduccion = {
   usuario_id: string;
 };
 
-interface InitialData {
+export interface InitialData {
   produccionInicial: ProduccionRow[];
   tubosIniciales: TuboRow[];
   configInicial: ConfigRow[];
   usuarios: UsuarioLite[];
+  notify?: {
+    showSuccess?: (title: string, message: string, duration?: number) => void;
+    showError?: (title: string, message: string, duration?: number) => void;
+    showInfo?: (title: string, message: string, duration?: number) => void;
+  };
 }
 
 const hoyISO = () => getHoyHabilStr();
@@ -56,7 +61,7 @@ const FORM_VACIO: Omit<FormProduccion, 'usuario_id'> = {
   observaciones: '',
 };
 
-export function useProduccionCO2({ produccionInicial, tubosIniciales, configInicial, usuarios }: InitialData) {
+export function useProduccionCO2({ produccionInicial, tubosIniciales, configInicial, usuarios, notify }: InitialData) {
   const [produccion, setProduccion] = useState<ProduccionRow[]>(produccionInicial);
   const [tubos, setTubos] = useState<TuboRow[]>(tubosIniciales);
   const [config, setConfig] = useState<Record<string, string>>(
@@ -105,7 +110,11 @@ export function useProduccionCO2({ produccionInicial, tubosIniciales, configInic
   const manejarCrearProduccion = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formProduccion.usuario_id) {
-      setBanner({ tipo: 'error', texto: 'Selecciona quién registra la producción.' });
+      if (notify?.showError) {
+        notify.showError('Dato Requerido', 'Selecciona quién registra la producción.');
+      } else {
+        setBanner({ tipo: 'error', texto: 'Selecciona quién registra la producción.' });
+      }
       return;
     }
     setCargando(true); setBanner(null);
@@ -120,11 +129,25 @@ export function useProduccionCO2({ produccionInicial, tubosIniciales, configInic
     if (res.success) {
       setFormProduccion((p) => ({ ...FORM_VACIO, fecha: hoyISO(), usuario_id: p.usuario_id }));
       await Promise.all([refrescarProduccion(), refrescarTubos()]);
-      setBanner(res.alertaCO2
-        ? { tipo: 'alerta', texto: `Producción registrada. ${res.alertaCO2}` }
-        : { tipo: 'ok', texto: 'Producción registrada correctamente.' });
+      if (res.alertaCO2) {
+        if (notify?.showInfo) {
+          notify.showInfo('Producción Registrada', `Producción guardada. ${res.alertaCO2}`);
+        } else {
+          setBanner({ tipo: 'alerta', texto: `Producción registrada. ${res.alertaCO2}` });
+        }
+      } else {
+        if (notify?.showSuccess) {
+          notify.showSuccess('Producción Registrada', 'Producción registrada correctamente.');
+        } else {
+          setBanner({ tipo: 'ok', texto: 'Producción registrada correctamente.' });
+        }
+      }
     } else {
-      setBanner({ tipo: 'error', texto: res.message || 'No se pudo registrar la producción.' });
+      if (notify?.showError) {
+        notify.showError('Error al Registrar', res.message || 'No se pudo registrar la producción.');
+      } else {
+        setBanner({ tipo: 'error', texto: res.message || 'No se pudo registrar la producción.' });
+      }
     }
     setCargando(false);
   };
@@ -133,7 +156,12 @@ export function useProduccionCO2({ produccionInicial, tubosIniciales, configInic
     e.preventDefault();
     const pesoNum = parseFloat(formTubo.peso_kg);
     if (!pesoNum || pesoNum <= 0) {
-      setBanner({ tipo: 'error', texto: 'Indica un peso válido para el tubo.' }); return;
+      if (notify?.showError) {
+        notify.showError('Dato Requerido', 'Indica un peso válido para el tubo.');
+      } else {
+        setBanner({ tipo: 'error', texto: 'Indica un peso válido para el tubo.' });
+      }
+      return;
     }
     const payload: TuboCO2Input = {
       fecha_llegada: formTubo.fecha_llegada, peso_kg: pesoNum,
@@ -145,9 +173,17 @@ export function useProduccionCO2({ produccionInicial, tubosIniciales, configInic
     if (res.success) {
       setFormTubo({ fecha_llegada: hoyISO(), peso_kg: '45', rendimiento_estimado: '' });
       await refrescarTubos();
-      setBanner({ tipo: 'ok', texto: 'Tubo de CO₂ registrado y activado.' });
+      if (notify?.showSuccess) {
+        notify.showSuccess('Tubo de CO₂ Registrado', 'Tubo de CO₂ registrado y activado.');
+      } else {
+        setBanner({ tipo: 'ok', texto: 'Tubo de CO₂ registrado y activado.' });
+      }
     } else {
-      setBanner({ tipo: 'error', texto: res.message || 'No se pudo registrar el tubo.' });
+      if (notify?.showError) {
+        notify.showError('Error al Registrar', res.message || 'No se pudo registrar el tubo.');
+      } else {
+        setBanner({ tipo: 'error', texto: res.message || 'No se pudo registrar el tubo.' });
+      }
     }
     setCargando(false);
   };
@@ -159,9 +195,17 @@ export function useProduccionCO2({ produccionInicial, tubosIniciales, configInic
     
     if (res.success) { 
       await refrescarTubos(); 
-      setBanner({ tipo: 'ok', texto: 'Tubo cerrado.' }); 
+      if (notify?.showSuccess) {
+        notify.showSuccess('Tubo Cerrado', 'Tubo cerrado correctamente.');
+      } else {
+        setBanner({ tipo: 'ok', texto: 'Tubo cerrado.' }); 
+      }
     } else {
-      setBanner({ tipo: 'error', texto: res.message || 'No se pudo cerrar el tubo.' });
+      if (notify?.showError) {
+        notify.showError('Error al Cerrar', res.message || 'No se pudo cerrar el tubo.');
+      } else {
+        setBanner({ tipo: 'error', texto: res.message || 'No se pudo cerrar el tubo.' });
+      }
     }
     
     setCargando(false);
@@ -176,9 +220,17 @@ export function useProduccionCO2({ produccionInicial, tubosIniciales, configInic
     });
     if (res.success) {
       setConfig({ ...formConfig });
-      setBanner({ tipo: 'ok', texto: 'Configuración de CO₂ actualizada.' });
+      if (notify?.showSuccess) {
+        notify.showSuccess('Configuración Actualizada', 'Configuración de CO₂ actualizada correctamente.');
+      } else {
+        setBanner({ tipo: 'ok', texto: 'Configuración de CO₂ actualizada.' });
+      }
     } else {
-      setBanner({ tipo: 'error', texto: res.message || 'No se pudo actualizar la configuración.' });
+      if (notify?.showError) {
+        notify.showError('Error de Configuración', res.message || 'No se pudo actualizar la configuración.');
+      } else {
+        setBanner({ tipo: 'error', texto: res.message || 'No se pudo actualizar la configuración.' });
+      }
     }
     setCargando(false);
   };

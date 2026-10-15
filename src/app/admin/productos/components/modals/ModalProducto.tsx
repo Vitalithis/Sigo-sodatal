@@ -1,3 +1,4 @@
+import React, { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { X, Loader2, ToggleLeft, ToggleRight, Package } from 'lucide-react';
 import { CategoriaProducto } from '@lib/prisma/generated';
@@ -24,10 +25,25 @@ export function ModalProducto({
   precioRecarga, setPrecioRecarga,
   stockMinimo, setStockMinimo, activo, setActivo,
 }: Props) {
+  // Cerrar con Escape
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && !isPending) onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, isPending, onClose]);
+
   if (!isOpen || typeof document === 'undefined') return null;
 
   return createPortal(
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+    <div
+      onClick={(e) => {
+        if (e.target === e.currentTarget && !isPending) onClose();
+      }}
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200"
+    >
       <div className="bg-white rounded-2xl shadow-2xl border border-slate-100 w-full max-w-lg overflow-hidden animate-in zoom-in-95 duration-200">
         
         {/* Header Modal */}

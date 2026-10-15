@@ -25,8 +25,22 @@ export default function ModalImpresion({ clientes, tituloReporte, onClose }: Pro
     window.print();
   };
 
+  // Cerrar modal con tecla Escape
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
+
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200 print:p-0 print:bg-white print:static print:inset-auto !m-0 !top-0 !left-0 !right-0 !bottom-0">
+    <div
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+      className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200 print:p-0 print:bg-white print:static print:inset-auto !m-0 !top-0 !left-0 !right-0 !bottom-0"
+    >
       
       {/* Contenedor principal modal / documento imprimible */}
       <div className="bg-white w-full max-w-5xl rounded-2xl shadow-2xl flex flex-col max-h-[92vh] overflow-hidden border border-slate-100 print:shadow-none print:border-none print:max-h-none print:w-full print:rounded-none">

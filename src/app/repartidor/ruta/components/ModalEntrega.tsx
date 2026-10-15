@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { actualizarParadaCompletaAction } from '@/app/admin/rutas/actions';
 import { Minus, Plus, CheckCircle2, AlertTriangle, Package, RefreshCw, Banknote, CreditCard, Smartphone, FileText } from 'lucide-react';
 import NuevaGuiaModal from '@/app/admin/guias/components/NuevaGuiaModal';
@@ -62,6 +62,17 @@ export default function ModalEntrega({ parada, usuarioId, onClose, onAbrirIncide
   const [modalGuiaAbierto, setModalGuiaAbierto] = useState(false);
   const [guiaRegistrada, setGuiaRegistrada] = useState<any>(parada.pedido?.guia || null);
 
+  // Cerrar modal con tecla Escape (si la guía interna no está abierta)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && !loading && !modalGuiaAbierto) {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [loading, modalGuiaAbierto, onClose]);
+
   async function handleConfirmarEntrega() {
     if (metodoPago === 'GUIA_MENSUAL' && !guiaRegistrada) {
       setModalGuiaAbierto(true);
@@ -95,7 +106,12 @@ export default function ModalEntrega({ parada, usuarioId, onClose, onAbrirIncide
   const totalUnidades = cant20 + cant10 + cantSoda;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+    <div
+      onClick={(e) => {
+        if (e.target === e.currentTarget && !loading) onClose();
+      }}
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+    >
       <div className="bg-white w-full max-w-md rounded-2xl overflow-hidden shadow-2xl animate-in slide-in-from-bottom-4 sm:slide-in-from-bottom-0 sm:zoom-in-95">
         
         {/* Cabecera */}

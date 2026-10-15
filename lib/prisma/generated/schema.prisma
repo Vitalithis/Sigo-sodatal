@@ -28,7 +28,8 @@ model Usuario {
   botellones_danados BotellonDanado[]
   cargas_combustible CargaCombustible[]
   cuadraturas        Cuadratura[]
-  guias              GuiaDespacho[]
+  guias              GuiaDespacho[]     @relation("GuiaRepartidor")
+  guias_anuladas     GuiaDespacho[]     @relation("GuiaAnuladaPor")
   log_accesos        LogAcceso[]
   mantenciones       Mantencion[]
   produccion         ProduccionDiaria[]
@@ -310,19 +311,32 @@ model GuiaDespacho {
   direccion_entrega            String
   usuario_repartidor_id        String
   estado                       EstadoGuia
+  estado_documento             String?           @default("VIGENTE")
+  forma_pago                   String?
+  numero_factura               String?
   nombre_receptor              String?
   rut_receptor                 String?
   hora_entrega                 DateTime?
   observaciones                String?
   total                        Float
   motivo_anulacion             String?
+  anulada_motivo               String?           @db.Text
+  anulada_at                   DateTime?
+  anulada_por_id               String?
+  reemplaza_a_guia_id          String?
+  reemplazada_por_guia_id      String?
   firma_digital                String?           @db.LongText
   botellones_prestados_entrega Int               @default(0)
   incluida_en_cierre           Boolean           @default(false)
   fecha_cierre                 DateTime?
   cuadratura_ventas            CuadraturaVenta[]
   cliente                      Cliente           @relation(fields: [cliente_id], references: [id])
-  usuario_repartidor           Usuario           @relation(fields: [usuario_repartidor_id], references: [id])
+  usuario_repartidor           Usuario           @relation("GuiaRepartidor", fields: [usuario_repartidor_id], references: [id])
+  anulada_por                  Usuario?          @relation("GuiaAnuladaPor", fields: [anulada_por_id], references: [id])
+  reemplaza_a                  GuiaDespacho?     @relation("GuiaReemplazoA", fields: [reemplaza_a_guia_id], references: [id])
+  guias_que_reemplazan_a_esta  GuiaDespacho[]    @relation("GuiaReemplazoA")
+  reemplazada_por              GuiaDespacho?     @relation("GuiaReemplazadaPor", fields: [reemplazada_por_guia_id], references: [id])
+  guias_reemplazadas_por_esta  GuiaDespacho[]    @relation("GuiaReemplazadaPor")
   pedido                       Pedido?           @relation(fields: [pedido_id], references: [id])
   items                        ItemGuia[]
 }

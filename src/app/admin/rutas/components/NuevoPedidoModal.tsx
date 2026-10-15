@@ -73,6 +73,7 @@ export default function NuevoPedidoModal({
   const [items, setItems] = useState<ItemCarrito[]>([]);
 
   const [guardando, setGuardando] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const dropClienteRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
@@ -211,6 +212,16 @@ export default function NuevoPedidoModal({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  // Cerrar modal con tecla Escape
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && !guardando) onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, guardando, onClose]);
+
   // ── BUSCADOR AUTOMÁTICO CON DEBOUNCE (250ms) ──
   useEffect(() => {
     // Si ya hay un cliente seleccionado y el criterio coincide, no buscar
@@ -332,10 +343,11 @@ export default function NuevoPedidoModal({
 
   const guardarPedido = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrorMsg(null);
 
     const itemsValidos = items.filter(i => i.productoId && i.cantidad > 0);
     if (itemsValidos.length === 0) {
-      alert('Agrega al menos un producto con cantidad válida.');
+      setErrorMsg('Agrega al menos un producto con cantidad válida.');
       return;
     }
 
@@ -368,19 +380,25 @@ export default function NuevoPedidoModal({
     setGuardando(false);
 
     if (res.success) {
+      setErrorMsg(null);
       limpiarClienteSeleccionado();
       setItems([nuevoItemConDefault()]);
       setCanalOrigen('LLAMADO');
       onSuccess();
     } else {
-      alert('Error al guardar pedido: ' + res.message);
+      setErrorMsg('Error al guardar pedido: ' + res.message);
     }
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4 overflow-y-auto animate-in fade-in duration-150">
+    <div
+      onClick={(e) => {
+        if (e.target === e.currentTarget && !guardando) onClose();
+      }}
+      className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4 overflow-y-auto animate-in fade-in duration-150"
+    >
       <div className="bg-white rounded-3xl shadow-2xl border border-slate-100 w-full max-w-xl my-auto overflow-hidden flex flex-col max-h-[92vh]">
 
         {/* HEADER MODERNO CON GRADIENTE CORPORATIVO */}
@@ -410,6 +428,18 @@ export default function NuevoPedidoModal({
 
         {/* CUERPO DEL MODAL (SCROLL) */}
         <form onSubmit={guardarPedido} className="p-5 sm:p-6 overflow-y-auto space-y-5 text-slate-700">
+          {errorMsg && (
+            <div className="p-3.5 bg-rose-50 border border-rose-200 text-rose-800 text-xs font-semibold rounded-2xl flex items-center justify-between">
+              <span>{errorMsg}</span>
+              <button
+                type="button"
+                onClick={() => setErrorMsg(null)}
+                className="text-rose-400 hover:text-rose-600 font-bold ml-2 p-1 text-sm"
+              >
+                ✕
+              </button>
+            </div>
+          )}
 
           {/* ── 1. BUSCADOR DE CLIENTE AUTOMÁTICO ── */}
           <div ref={dropClienteRef} className="relative bg-slate-50 p-4 rounded-2xl border border-slate-200/80">

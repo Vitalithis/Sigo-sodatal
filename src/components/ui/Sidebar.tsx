@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
@@ -23,12 +23,15 @@ import {
   ChevronLeft,
   ChevronRight,
   ChevronDown,
+  ChevronUp,
+  User,
   DollarSign,
   Settings,
   Boxes,
   Archive,
 } from 'lucide-react';
 import { logout } from '@/app/(auth)/login/actions';
+import ModalAjustesCuenta from './ModalAjustesCuenta';
 
 interface SidebarProps {
   rol: string;
@@ -55,7 +58,32 @@ export default function Sidebar({ rol, nombre }: SidebarProps) {
   const pathname = usePathname();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [isAjustesOpen, setIsAjustesOpen] = useState(false);
+  const userMenuRef = useRef<HTMLDivElement>(null);
   const inicial = (nombre || 'U').charAt(0).toUpperCase();
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
+        setIsUserMenuOpen(false);
+      }
+    }
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === 'Escape') {
+        setIsUserMenuOpen(false);
+      }
+    }
+
+    if (isUserMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('keydown', handleKeyDown);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isUserMenuOpen]);
 
   const isActive = (href: string) =>
     href === '/admin'
@@ -307,15 +335,77 @@ export default function Sidebar({ rol, nombre }: SidebarProps) {
         })}
       </nav>
 
-      {/* ── Perfil y salir ── */}
+      {/* ── Perfil y salir (Menú desplegable) ── */}
       <div
-        className="p-3 flex flex-col gap-2 flex-shrink-0"
+        ref={userMenuRef}
+        className="p-2.5 flex flex-col gap-1.5 flex-shrink-0 relative"
         style={{ borderTop: '1px solid rgba(255,255,255,0.12)' }}
       >
-        <div className={`flex items-center ${isCollapsed ? 'justify-center' : 'justify-between'} gap-2`}>
+        {/* Menú desplegable flotante */}
+        {isUserMenuOpen && (
+          <div
+            className={`absolute z-50 bg-[#001f5c] border border-white/20 shadow-2xl rounded-2xl p-2 text-white backdrop-blur-md animate-in fade-in duration-150 ${
+              isCollapsed
+                ? 'bottom-2 left-16 w-60'
+                : 'bottom-full left-2 right-2 mb-2'
+            }`}
+          >
+            {/* Cabecera del usuario en el menú */}
+            <div className="p-2 flex items-center gap-2.5">
+              <div
+                className="w-9 h-9 rounded-full flex items-center justify-center font-bold text-xs text-white border-2 shrink-0"
+                style={{ backgroundColor: 'rgba(255,255,255,0.2)', borderColor: 'rgba(255,255,255,0.35)' }}
+              >
+                {inicial}
+              </div>
+              <div className="flex flex-col min-w-0">
+                <span className="text-xs font-bold text-white truncate">{nombre}</span>
+                <span className="text-[10px] font-semibold text-blue-200 uppercase tracking-wider">{rol}</span>
+              </div>
+            </div>
+
+            <div className="my-1.5 border-t border-white/10" />
+
+            {/* Opción Ajustes de la cuenta */}
+            <button
+              type="button"
+              onClick={() => {
+                setIsUserMenuOpen(false);
+                setIsAjustesOpen(true);
+              }}
+              className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-slate-100 hover:text-white hover:bg-white/10 transition-colors text-left group"
+            >
+              <Settings className="w-4 h-4 text-blue-300 group-hover:rotate-45 transition-transform" />
+              <span>Ajustes de la cuenta</span>
+            </button>
+
+            {/* Opción Cerrar sesión */}
+            <form action={logout} className="w-full">
+              <button
+                type="submit"
+                className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-rose-300 hover:text-rose-100 hover:bg-rose-500/20 transition-colors text-left group"
+              >
+                <LogOut className="w-4 h-4 text-rose-400 group-hover:-translate-x-0.5 transition-transform" />
+                <span>Cerrar sesión</span>
+              </button>
+            </form>
+          </div>
+        )}
+
+        {/* Botón trigger del usuario */}
+        <button
+          type="button"
+          onClick={() => setIsUserMenuOpen(prev => !prev)}
+          title={isCollapsed ? `${nombre} (${rol}) - Ajustes` : undefined}
+          className={`w-full flex items-center ${
+            isCollapsed ? 'justify-center' : 'justify-between'
+          } p-1.5 rounded-xl hover:bg-white/10 transition-all text-left group ${
+            isUserMenuOpen ? 'bg-white/15 ring-1 ring-white/30' : ''
+          }`}
+        >
           <div className="flex items-center gap-2.5 min-w-0">
             <div
-              className="w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs text-white border-2 shrink-0"
+              className="w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs text-white border-2 shrink-0 group-hover:scale-105 transition-transform"
               style={{ backgroundColor: 'rgba(255,255,255,0.2)', borderColor: 'rgba(255,255,255,0.35)' }}
             >
               {inicial}
@@ -328,16 +418,14 @@ export default function Sidebar({ rol, nombre }: SidebarProps) {
             )}
           </div>
 
-          <form action={logout}>
-            <button
-              type="submit"
-              title="Cerrar Sesión"
-              className="p-2 rounded-lg text-blue-200 hover:bg-white/10 hover:text-white transition-colors"
-            >
-              <LogOut className="h-4 w-4" />
-            </button>
-          </form>
-        </div>
+          {!isCollapsed && (
+            <ChevronUp
+              className={`h-4 w-4 text-blue-200 transition-transform duration-200 shrink-0 ${
+                isUserMenuOpen ? 'rotate-180 text-white' : 'opacity-70 group-hover:opacity-100'
+              }`}
+            />
+          )}
+        </button>
 
         {!isCollapsed && (
           <div className="text-[10px] text-center pt-0.5" style={{ color: 'rgba(147,197,253,0.7)' }}>
@@ -345,6 +433,14 @@ export default function Sidebar({ rol, nombre }: SidebarProps) {
           </div>
         )}
       </div>
+
+      {/* Modal de Ajustes Personales */}
+      <ModalAjustesCuenta
+        isOpen={isAjustesOpen}
+        onClose={() => setIsAjustesOpen(false)}
+        nombreActual={nombre}
+        rolActual={rol}
+      />
     </aside>
   );
 }

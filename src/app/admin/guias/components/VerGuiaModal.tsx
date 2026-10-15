@@ -17,11 +17,21 @@ import {
   Phone, 
   CreditCard,
   Loader2,
-  Share2
+  Share2,
+  ArrowRight,
+  ArrowLeft
 } from 'lucide-react';
 import FirmaCanvas from './FirmaCanvas';
 import { guardarFirmaGuiaAction, exportarGuiaSQLAction } from '../actions';
-import { generarHtmlGuiaIndividual, descargarBlob, descargarGuiaPDF } from '../utils/exportarDocumentosGuias';
+import { 
+  generarHtmlGuiaIndividual, 
+  descargarBlob, 
+  descargarGuiaPDF, 
+  obtenerEstadoDocumento, 
+  obtenerFormaPagoLabel, 
+  formatearFolio,
+  esFirmaDataUrlValida 
+} from '../utils/exportarDocumentosGuias';
 import { usePopup } from '@/hooks/usePopup';
 import PopupGlobal from '@/components/ui/PopupGlobal';
 
@@ -31,22 +41,6 @@ interface VerGuiaModalProps {
   onClose: () => void;
   onFirmaActualizada?: () => void;
 }
-
-const ESTADO_LABELS: Record<string, string> = {
-  ENTREGADA_EFECTIVO: 'Entregada (Efectivo)',
-  ENTREGADA_TARJETA: 'Entregada (Tarjeta)',
-  ENTREGADA_TRANSFERENCIA: 'Entregada (Transferencia)',
-  ENTREGADA_CREDITO: 'Entregada (Crédito Empresa)',
-  ANULADA: 'Anulada',
-};
-
-const ESTADO_BADGE_CLASS: Record<string, string> = {
-  ENTREGADA_EFECTIVO: 'bg-emerald-100 text-emerald-800 border-emerald-300',
-  ENTREGADA_TARJETA: 'bg-blue-100 text-[#013299] border-blue-300',
-  ENTREGADA_TRANSFERENCIA: 'bg-indigo-100 text-indigo-800 border-indigo-300',
-  ENTREGADA_CREDITO: 'bg-amber-100 text-amber-800 border-amber-300',
-  ANULADA: 'bg-rose-100 text-rose-800 border-rose-300',
-};
 
 export default function VerGuiaModal({
   guia,
@@ -63,7 +57,6 @@ export default function VerGuiaModal({
   const [generandoPDF, setGenerandoPDF] = useState(false);
   const [guiaLocal, setGuiaLocal] = useState<any>(guia);
 
-  // Sincronizar estado local al abrir o cambiar la guía
   React.useEffect(() => {
     if (isOpen && guia) {
       setGuiaLocal(guia);
@@ -79,6 +72,16 @@ export default function VerGuiaModal({
     setNuevaFirma(null);
     onClose();
   };
+
+  // Cerrar modal con tecla Escape
+  React.useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') handleCerrar();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen]);
 
   if (!isOpen || !guiaLocal) return null;
 
@@ -128,7 +131,7 @@ export default function VerGuiaModal({
     setGuardandoFirma(false);
 
     if (res.success) {
-      showSuccess('Firma Guardada', 'La firma digital ha sido registrada en la guía de despacho.');
+      showSuccess('Firma Guardada', 'La firma digital ha sido registrada en el comprobante.');
       setGuiaLocal((prev: any) => ({ ...prev, firma_digital: nuevaFirma }));
       setEditandoFirma(false);
       setNuevaFirma(null);
@@ -138,7 +141,10 @@ export default function VerGuiaModal({
     }
   };
 
-  const tieneFirma = !!guiaLocal.firma_digital;
+  const esAnulada = obtenerEstadoDocumento(guiaLocal) === 'ANULADA';
+  const tieneFirma = esFirmaDataUrlValida(guiaLocal.firma_digital);
+  const formaPagoTexto = obtenerFormaPagoLabel(guiaLocal);
+
   const fechaEmision = new Date(guiaLocal.fecha_emision);
   const fechaFormateada = fechaEmision.toLocaleDateString('es-CL', {
     day: '2-digit',
@@ -150,84 +156,111 @@ export default function VerGuiaModal({
     minute: '2-digit',
   });
 
-  return (
-    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4 overflow-y-auto animate-in fade-in duration-200">
-      <PopupGlobal popup={popup} onClose={close} />
+  const fechaRecepcionTexto = guiaLocal.hora_entrega
+    ? new Date(guiaLocal.hora_entrega).toLocaleString('es-CL', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      })
+    : `${fechaFormateada} - ${horaFormateada} (fecha de emisión)`;
 
-      {/* Contenedor del Modal */}
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[95vh] flex flex-col overflow-hidden border border-slate-200 print:border-none print:shadow-none print:max-w-none print:w-full print:h-auto print:max-h-none print:m-0 print:p-0">
+  const reemplazaA = guiaLocal.reemplaza_a?.numero_correlativo || guiaLocal.reemplaza_a_correlativo;
+  const reemplazadaPor = guiaLocal.reemplazada_por?.numero_correlativo || guiaLocal.reemplazada_por_correlativo;
+
+  return (
+    <div 
+      onClick={(e) => {
+        if (e.target === e.currentTarget) handleCerrar();
+      }}
+      className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200"
+      role="dialog"
+      aria-modal="true"
+    >
+      <PopupGlobal popup={popup} onClose={close} />
+      
+      <div className="bg-white w-full max-w-4xl max-h-[96vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-slate-100">
         
-        {/* Barra superior de acciones (Se oculta al imprimir) */}
-        <div className="bg-slate-900 text-white px-5 py-3.5 flex flex-wrap items-center justify-between gap-3 shrink-0 print:hidden">
+        {/* Barra Superior con Acciones Rápidas */}
+        <div className="bg-[#013299] text-white px-6 py-3.5 flex justify-between items-center shrink-0">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-[#013299] rounded-xl text-white">
-              <FileText className="w-5 h-5" />
+            <div className="p-2 bg-white/10 rounded-xl backdrop-blur-md">
+              <FileText className="w-5 h-5 text-white" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-base font-bold text-white leading-tight">
-                  Guía de Despacho #{guiaLocal.numero_correlativo}
-                </h2>
-                <span className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold border ${ESTADO_BADGE_CLASS[guiaLocal.estado] || 'bg-slate-800 text-slate-200 border-slate-700'}`}>
-                  {ESTADO_LABELS[guiaLocal.estado] || guiaLocal.estado}
+                <h3 className="font-extrabold text-base leading-tight">
+                  Comprobante de Entrega #{formatearFolio(guiaLocal.numero_correlativo)}
+                </h3>
+                <span className={`text-[10px] font-black px-2 py-0.5 rounded-full uppercase border ${esAnulada ? 'bg-rose-500 text-white border-rose-400' : 'bg-emerald-500 text-white border-emerald-400'}`}>
+                  {esAnulada ? 'ANULADA' : 'VIGENTE'}
                 </span>
               </div>
-              <p className="text-xs text-slate-400">
-                Cliente: <span className="text-white font-medium">{guiaLocal.cliente?.nombre || 'S/N'}</span>
-              </p>
+              <p className="text-[11px] text-blue-100">Documento interno de control de entrega</p>
             </div>
           </div>
 
           <div className="flex items-center gap-2">
             <button
-              onClick={handleDescargarSQL}
-              disabled={exportandoSQL}
-              className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-xl border border-slate-700 transition-colors flex items-center gap-1.5"
-              title="Descargar respaldo en archivo SQL"
-            >
-              <Download className="w-3.5 h-3.5" />
-              SQL
-            </button>
-
-            <button
               onClick={handleDescargarGuia}
               disabled={generandoPDF}
-              className="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-60 text-white text-xs font-bold rounded-xl shadow-md transition-all flex items-center gap-1.5"
-              title="Descargar documento oficial en formato PDF (.pdf)"
+              className="h-8 px-3 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-60 text-white rounded-xl text-xs font-bold transition-all shadow-sm flex items-center gap-1.5"
+              title="Descargar Comprobante en formato PDF (.pdf)"
             >
               {generandoPDF ? (
                 <Loader2 className="w-3.5 h-3.5 animate-spin" />
               ) : (
                 <Download className="w-3.5 h-3.5" />
               )}
-              <span>{generandoPDF ? 'Generando...' : 'Descargar PDF'}</span>
+              <span className="hidden sm:inline">PDF</span>
             </button>
 
             <button
               onClick={handleImprimir}
-              className="px-3.5 py-1.5 bg-[#013299] hover:bg-blue-800 text-white text-xs font-bold rounded-xl shadow-md transition-all flex items-center gap-1.5"
-              title="Imprimir documento o Guardar como PDF"
+              className="h-8 px-3 bg-white/15 hover:bg-white/25 text-white rounded-xl text-xs font-bold transition-all backdrop-blur-sm flex items-center gap-1.5"
+              title="Imprimir documento oficial"
             >
               <Printer className="w-3.5 h-3.5" />
-              Imprimir / PDF
+              <span className="hidden sm:inline">Imprimir</span>
+            </button>
+
+            <button
+              onClick={handleDescargarSQL}
+              disabled={exportandoSQL}
+              className="h-8 px-3 bg-white/10 hover:bg-white/20 text-white rounded-xl text-xs font-semibold transition-all backdrop-blur-sm flex items-center gap-1.5"
+              title="Exportar respaldo en SQL"
+            >
+              {exportandoSQL ? (
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+              ) : (
+                <FileText className="w-3.5 h-3.5" />
+              )}
+              <span className="hidden sm:inline">SQL</span>
             </button>
 
             <button
               onClick={handleCerrar}
-              className="p-1.5 hover:bg-slate-800 rounded-xl transition-colors text-slate-400 hover:text-white"
+              className="p-1.5 text-white/80 hover:text-white hover:bg-white/10 rounded-xl transition-colors ml-1"
+              title="Cerrar modal"
             >
               <X className="w-5 h-5" />
             </button>
           </div>
         </div>
 
-        {/* ============================================================== */}
-        {/* ÁREA DEL DOCUMENTO (Formato Oficial Guía de Despacho Chilena) */}
-        {/* ============================================================== */}
+        {/* ÁREA DEL DOCUMENTO */}
         <div className="p-6 sm:p-8 overflow-y-auto flex-1 bg-slate-100/50 print:bg-white print:p-0 print:overflow-visible">
-          <div className="max-w-3xl mx-auto bg-white p-6 sm:p-10 rounded-2xl shadow-sm border border-slate-200 print:border-none print:shadow-none print:p-4 text-slate-900 font-sans print:rounded-none">
+          <div className="max-w-3xl mx-auto bg-white p-6 sm:p-10 rounded-2xl shadow-sm border border-slate-200 print:border-none print:shadow-none print:p-4 text-slate-900 font-sans print:rounded-none relative overflow-hidden">
             
-            {/* Encabezado: Logo Emisor vs Recuadro Rojo SII */}
+            {/* Sello de Agua Diagonal si es ANULADA */}
+            {esAnulada && (
+              <div className="absolute top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 -rotate-[30deg] text-[75px] font-black text-rose-500/15 border-8 border-rose-500/20 px-8 py-2 rounded-2xl tracking-[12px] pointer-events-none select-none uppercase z-10 whitespace-nowrap">
+                ANULADA
+              </div>
+            )}
+
+            {/* Encabezado: Logo Emisor vs Caja Folio Neutra */}
             <div className="grid grid-cols-1 sm:grid-cols-12 gap-6 items-start pb-6 border-b border-slate-200">
               
               {/* Datos de SODATAL (Emisor) */}
@@ -235,41 +268,65 @@ export default function VerGuiaModal({
                 <div className="flex items-center gap-2">
                   <span className="text-3xl font-black text-[#013299] tracking-tight uppercase">SODATAL</span>
                   <span className="bg-blue-50 text-[#013299] border border-blue-200 text-[10px] font-black px-2 py-0.5 rounded uppercase tracking-wider">
-                    Agua & Soda Purificada
+                    Control de Entrega
                   </span>
                 </div>
-                <p className="text-xs font-bold text-slate-700">DISTRIBUIDORA Y LOGÍSTICA SODATAL SpA</p>
+                <p className="text-xs font-bold text-slate-800">R.U.T.: 76.892.410-5</p>
                 <p className="text-xs text-slate-500 leading-snug">
-                  Giro: Purificación, embotellado y distribución de aguas minerales y sodas
+                  Giro: Elaboración de bebidas no alcohólicas
                 </p>
                 <div className="pt-1 text-[11px] text-slate-600 space-y-0.5">
                   <p className="flex items-center gap-1.5">
                     <MapPin className="w-3 h-3 text-[#013299]" />
-                    Casa Matriz: Los Ángeles, Región del Biobío, Chile
+                    Joaquín Prieto 289, Concepción, Chile
                   </p>
                   <p className="flex items-center gap-1.5">
                     <Phone className="w-3 h-3 text-[#013299]" />
-                    Contacto: contacto@sodatal.cl • +56 9 8765 4321
+                    Teléfono: +56 9 5174 9928
                   </p>
                 </div>
               </div>
 
-              {/* Recuadro Rojo Oficial de Guía de Despacho */}
+              {/* Recuadro de Folio Neutro (Rojo solo si es ANULADA) */}
               <div className="sm:col-span-5 flex justify-center sm:justify-end">
-                <div className="border-2 border-red-600 rounded-lg p-3 sm:p-4 text-center w-full max-w-[260px] bg-red-50/20">
-                  <p className="text-xs font-black text-red-600 tracking-wider">R.U.T.: 76.892.410-5</p>
-                  <p className="text-sm font-black text-red-700 uppercase my-1 tracking-wide">
-                    GUÍA DE DESPACHO
+                <div className={`rounded-xl p-3 sm:p-4 text-center w-full max-w-[260px] border-2 ${esAnulada ? 'border-red-600 bg-red-50/30' : 'border-[#0284c7] bg-sky-50/40'}`}>
+                  <p className={`text-xs font-black uppercase my-0.5 tracking-wide ${esAnulada ? 'text-red-700' : 'text-[#0369a1]'}`}>
+                    COMPROBANTE DE ENTREGA
                   </p>
-                  <p className="text-base font-black text-red-600 font-mono">
-                    N° {String(guiaLocal.numero_correlativo).padStart(6, '0')}
+                  <p className={`text-lg font-black font-mono ${esAnulada ? 'text-red-600' : 'text-[#0284c7]'}`}>
+                    N° {formatearFolio(guiaLocal.numero_correlativo)}
                   </p>
-                  <p className="text-[10px] text-red-500 font-semibold mt-1">S.I.I. - UNIDAD LOS ÁNGELES</p>
+                  <p className={`text-[10px] font-bold mt-1 ${esAnulada ? 'text-red-500' : 'text-sky-600'}`}>
+                    {esAnulada ? 'DOCUMENTO ANULADO' : 'DOCUMENTO INTERNO'}
+                  </p>
                 </div>
               </div>
             </div>
 
-            {/* Datos del Cliente y Traslado */}
+            {/* Aviso Destacado si es ANULADA */}
+            {esAnulada && (
+              <div className="my-4 p-3.5 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-900 space-y-1">
+                <div className="flex items-center justify-between">
+                  <span className="font-extrabold text-rose-800 uppercase text-xs flex items-center gap-1">
+                    <AlertCircle className="w-4 h-4 text-rose-600" />
+                    Comprobante Anulado
+                  </span>
+                  {guiaLocal.anulada_at && (
+                    <span className="text-[11px] text-rose-700 font-semibold">
+                      Fecha: {new Date(guiaLocal.anulada_at).toLocaleString('es-CL')}
+                    </span>
+                  )}
+                </div>
+                <p><b>Motivo de anulación:</b> {guiaLocal.anulada_motivo || guiaLocal.motivo_anulacion || 'Sin motivo registrado'}</p>
+                {reemplazadaPor && (
+                  <p className="font-bold text-blue-700 pt-0.5">
+                    ➜ Reemplazada por comprobante N° #{formatearFolio(reemplazadaPor)}
+                  </p>
+                )}
+              </div>
+            )}
+
+            {/* Datos del Receptor y Despacho */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 py-5 text-xs border-b border-slate-200">
               <div className="space-y-1.5 bg-slate-50 p-3.5 rounded-xl border border-slate-100">
                 <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Datos del Receptor</p>
@@ -281,13 +338,17 @@ export default function VerGuiaModal({
               </div>
 
               <div className="space-y-1.5 bg-slate-50 p-3.5 rounded-xl border border-slate-100">
-                <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Detalles del Despacho</p>
+                <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Detalles de la Entrega</p>
                 <p><span className="font-bold text-slate-700">Fecha Emisión:</span> {fechaFormateada} - {horaFormateada}</p>
                 <p><span className="font-bold text-slate-700">Repartidor:</span> {guiaLocal.usuario_repartidor ? `${guiaLocal.usuario_repartidor.nombre} ${guiaLocal.usuario_repartidor.apellido || ''}` : 'Asignado en ruta'}</p>
-                <p><span className="font-bold text-slate-700">Condición de Pago:</span> <span className="font-bold text-[#013299]">{ESTADO_LABELS[guiaLocal.estado] || guiaLocal.estado}</span></p>
+                <p><span className="font-bold text-slate-700">Estado:</span> <span className={`font-bold ${esAnulada ? 'text-rose-600' : 'text-emerald-600'}`}>{esAnulada ? 'ANULADA' : 'VIGENTE'}</span></p>
+                <p><span className="font-bold text-slate-700">Forma de pago:</span> <span className="font-bold text-[#013299]">{formaPagoTexto}</span></p>
                 <p><span className="font-bold text-slate-700">Envases Prestados:</span> {guiaLocal.botellones_prestados_entrega || 0} unidades</p>
                 {guiaLocal.numero_factura && (
-                  <p><span className="font-bold text-slate-700">Factura Ref:</span> #{guiaLocal.numero_factura}</p>
+                  <p><span className="font-bold text-slate-700">Se facturará en:</span> Factura/Boleta N° {guiaLocal.numero_factura}</p>
+                )}
+                {reemplazaA && (
+                  <p><span className="font-bold text-slate-700">Vínculo:</span> <span className="font-bold text-amber-700">Reemplaza a N° #{formatearFolio(reemplazaA)}</span></p>
                 )}
               </div>
             </div>
@@ -333,18 +394,25 @@ export default function VerGuiaModal({
                     ) : (
                       <tr>
                         <td colSpan={6} className="py-6 text-center text-slate-400 italic">
-                          No hay ítems registrados en esta guía.
+                          No hay ítems registrados en este comprobante.
                         </td>
                       </tr>
                     )}
                   </tbody>
-                  <tfoot>
-                    <tr className="bg-slate-50 border-t-2 border-slate-200">
-                      <td colSpan={5} className="py-3 px-3 text-right font-bold text-slate-700 uppercase tracking-wider text-xs">
-                        Total a Pagar:
+                  <tfoot className="border-t-2 border-slate-200 bg-slate-50 font-bold">
+                    <tr>
+                      <td colSpan={5} className="py-3 px-3 text-right uppercase text-slate-600 text-xs">
+                        Total de Entrega:
                       </td>
-                      <td className="py-3 px-3 text-right font-black text-base text-[#013299]">
-                        ${Number(guiaLocal.total || 0).toLocaleString('es-CL')}
+                      <td className={`py-3 px-3 text-right text-base font-black ${esAnulada ? 'text-rose-600' : 'text-[#013299]'}`}>
+                        {esAnulada ? (
+                          <span>
+                            <span className="line-through">${Number(guiaLocal.total || 0).toLocaleString('es-CL')}</span>
+                            <span className="text-xs ml-1 font-semibold">(Sin efecto)</span>
+                          </span>
+                        ) : (
+                          `$${Number(guiaLocal.total || 0).toLocaleString('es-CL')}`
+                        )}
                       </td>
                     </tr>
                   </tfoot>
@@ -352,29 +420,25 @@ export default function VerGuiaModal({
               </div>
             </div>
 
-            {/* Observaciones (si las hay) */}
+            {/* Observaciones */}
             {guiaLocal.observaciones && (
-              <div className="mb-5 p-3 bg-amber-50/70 border border-amber-200 rounded-xl text-xs text-amber-900">
-                <span className="font-bold">Observaciones: </span>
-                <span>{guiaLocal.observaciones}</span>
+              <div className="bg-amber-50/70 border border-amber-200 rounded-xl p-3 text-xs text-amber-900 mb-5">
+                <span className="font-bold block uppercase text-[10px] text-amber-800 mb-0.5">Observaciones:</span>
+                <p>{guiaLocal.observaciones}</p>
               </div>
             )}
 
-            {/* ============================================================== */}
-            {/* SECCIÓN DE RECEPCIÓN Y FIRMA DIGITAL                          */}
-            {/* ============================================================== */}
-            <div className="mt-4 pt-5 border-t border-slate-200">
+            {/* Sección de Firma y Recepción */}
+            <div className="pt-2 border-t border-slate-200">
               <div className="grid grid-cols-1 sm:grid-cols-12 gap-6 items-end">
                 
-                {/* Datos del Receptor */}
+                {/* Cuadro de Recepción Conforme */}
                 <div className="sm:col-span-6 space-y-1.5 text-xs">
-                  <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-                    Datos de Recepción Conforme
-                  </p>
-                  <div className="bg-slate-50 p-3 rounded-xl border border-slate-100 space-y-1">
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Recepción Conforme</p>
+                  <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-1">
                     <p>
-                      <span className="font-bold text-slate-700">Receptor: </span> 
-                      <span className="font-semibold text-slate-900">{guiaLocal.nombre_receptor || 'No especificado'}</span>
+                      <span className="font-bold text-slate-700">Nombre Receptor: </span> 
+                      <span className="font-bold text-slate-900">{guiaLocal.nombre_receptor || 'No especificado'}</span>
                     </p>
                     {guiaLocal.rut_receptor && (
                       <p>
@@ -384,17 +448,7 @@ export default function VerGuiaModal({
                     )}
                     <p>
                       <span className="font-bold text-slate-700">Fecha/Hora Recepción: </span> 
-                      <span className="text-slate-700">
-                        {guiaLocal.hora_entrega 
-                          ? new Date(guiaLocal.hora_entrega).toLocaleString('es-CL', {
-                              day: '2-digit',
-                              month: '2-digit',
-                              year: 'numeric',
-                              hour: '2-digit',
-                              minute: '2-digit',
-                            })
-                          : `${fechaFormateada} - ${horaFormateada}`}
-                      </span>
+                      <span className="text-slate-700">{fechaRecepcionTexto}</span>
                     </p>
                     <p className="text-[10px] text-slate-400 pt-1">
                       El receptor declara recibir las mercaderías a su entera conformidad.
@@ -411,14 +465,13 @@ export default function VerGuiaModal({
                         Firma Digital del Receptor
                       </span>
                       {tieneFirma && !editandoFirma && (
-                        <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full print:border-none">
+                        <span className={`inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full print:border-none ${esAnulada ? 'text-rose-700 bg-rose-50 border border-rose-200' : 'text-emerald-700 bg-emerald-50 border border-emerald-200'}`}>
                           <CheckCircle2 className="w-3 h-3" />
                           Firmada
                         </span>
                       )}
                     </div>
 
-                    {/* Caso 1: Tiene firma digital ya registrada y no está editando */}
                     {tieneFirma && !editandoFirma ? (
                       <div className="space-y-2">
                         <div className="bg-slate-50 rounded-lg p-2 flex items-center justify-center border border-slate-100 min-h-[120px]">
@@ -433,98 +486,71 @@ export default function VerGuiaModal({
                           <p className="text-[10px] font-bold text-slate-500 uppercase">
                             Firma Receptor Conforme
                           </p>
-                          <p className="text-[9px] text-slate-400">
-                            {guiaLocal.nombre_receptor || 'Receptor'}
+                          <p className={`text-[9px] font-bold ${esAnulada ? 'text-rose-600' : 'text-emerald-600'}`}>
+                            {esAnulada ? 'Firma de la entrega original. Documento anulado.' : (guiaLocal.nombre_receptor || 'Receptor')}
                           </p>
                         </div>
-
-                        {/* Botón para cambiar o corregir firma si fuera necesario (Oculto en print) */}
-                        <div className="text-right print:hidden pt-1">
+                      </div>
+                    ) : editandoFirma && !esAnulada ? (
+                      <div className="space-y-2">
+                        <p className="text-[10px] text-slate-500 italic">
+                          Dibuja la firma del receptor con el cursor o pantalla táctil:
+                        </p>
+                        <FirmaCanvas 
+                          value={nuevaFirma} 
+                          onChange={(dataUrl) => setNuevaFirma(dataUrl)} 
+                          height={120} 
+                        />
+                        <div className="flex gap-2 justify-end pt-1">
                           <button
                             type="button"
                             onClick={() => {
-                              setEditandoFirma(true);
+                              setEditandoFirma(false);
                               setNuevaFirma(null);
                             }}
-                            className="text-[11px] text-[#013299] hover:underline font-semibold"
+                            className="px-3 py-1.5 text-xs text-slate-600 font-bold hover:bg-slate-100 rounded-lg transition-colors"
                           >
-                            Volver a firmar o corregir
+                            Cancelar
+                          </button>
+                          <button
+                            type="button"
+                            onClick={handleGuardarFirma}
+                            disabled={guardandoFirma || !nuevaFirma}
+                            className="px-3.5 py-1.5 text-xs bg-[#013299] hover:bg-blue-900 text-white font-bold rounded-lg transition-colors disabled:opacity-50 flex items-center gap-1"
+                          >
+                            {guardandoFirma ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : null}
+                            Guardar Firma
                           </button>
                         </div>
                       </div>
                     ) : (
-                      /* Caso 2: No tiene firma o el usuario hizo clic en firmar */
-                      <div className="space-y-2.5">
-                        {!tieneFirma && (
-                          <div className="p-2 bg-amber-50 border border-amber-200 rounded-lg text-[11px] text-amber-800 flex items-start gap-1.5 print:hidden">
-                            <AlertCircle className="w-4 h-4 shrink-0 text-amber-600 mt-0.5" />
-                            <span>
-                              Esta guía no tiene firma registrada. Puedes solicitar que el receptor firme en el recuadro a continuación:
-                            </span>
-                          </div>
+                      <div className="py-6 text-center space-y-2">
+                        <div className="w-10 h-10 mx-auto rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
+                          <PenTool className="w-5 h-5" />
+                        </div>
+                        <p className="text-xs text-slate-400 italic">
+                          Comprobante sin firma digital registrada
+                        </p>
+                        {!esAnulada && (
+                          <button
+                            type="button"
+                            onClick={() => setEditandoFirma(true)}
+                            className="text-xs text-[#013299] font-bold hover:underline"
+                          >
+                            + Registrar firma ahora
+                          </button>
                         )}
-
-                        <div className="print:hidden">
-                          <FirmaCanvas
-                            value={nuevaFirma}
-                            onChange={(url) => setNuevaFirma(url)}
-                            height={120}
-                          />
-
-                          <div className="flex gap-2 pt-2 justify-end">
-                            {editandoFirma && (
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  setEditandoFirma(false);
-                                  setNuevaFirma(null);
-                                }}
-                                className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg transition-colors"
-                              >
-                                Cancelar
-                              </button>
-                            )}
-
-                            <button
-                              type="button"
-                              onClick={handleGuardarFirma}
-                              disabled={guardandoFirma || !nuevaFirma}
-                              className="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white text-xs font-bold rounded-lg transition-colors flex items-center gap-1.5 shadow-sm"
-                            >
-                              {guardandoFirma ? (
-                                <>
-                                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                                  Guardando...
-                                </>
-                              ) : (
-                                <>
-                                  <CheckCircle2 className="w-3.5 h-3.5" />
-                                  Guardar Firma
-                                </>
-                              )}
-                            </button>
-                          </div>
-                        </div>
-
-                        {/* Versión estática solo para impresión cuando no hay firma */}
-                        <div className="hidden print:block pt-8 text-center border-t border-slate-300">
-                          <p className="text-[10px] font-bold text-slate-500 uppercase">
-                            Firma y RUT Receptor Conforme
-                          </p>
-                        </div>
                       </div>
                     )}
-
                   </div>
                 </div>
 
               </div>
             </div>
 
-            {/* Pie de página oficial */}
+            {/* Pie de página oficial no tributario */}
             <div className="mt-8 pt-4 border-t border-slate-200 text-center text-[10px] text-slate-400 print:mt-4">
-              <p>Documento tributario de control de despacho • Sistema Integral de Gestión Operativa (SIGO Sodatal)</p>
-              <p className="text-[9px] mt-0.5">Copia electrónica válida para respaldo de pago de clientes empresa.</p>
+              <p>Documento interno de control de entrega. No constituye documento tributario. • Sistema Integral de Gestión Operativa (SIGO SODATAL)</p>
             </div>
 
           </div>
@@ -532,7 +558,6 @@ export default function VerGuiaModal({
 
       </div>
 
-      {/* Estilos específicos para impresión limpia de la guía en formato A4 / Carta */}
       <style jsx global>{`
         @media print {
           body * {
@@ -544,7 +569,6 @@ export default function VerGuiaModal({
           .print\\:hidden {
             display: none !important;
           }
-          /* Mostrar únicamente el contenedor del modal */
           div[role='dialog'],
           .fixed.inset-0 {
             position: absolute !important;

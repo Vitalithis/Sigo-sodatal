@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   DndContext, closestCenter, KeyboardSensor, PointerSensor,
   useSensor, useSensors, DragEndEvent
@@ -264,6 +264,19 @@ export default function RutasBaseManager({ rutasBaseIniciales, choferes, vehicul
   // Modal para confirmar cantidades por defecto de nuevo cliente en la ruta
   const [pendiente, setPendiente] = useState<{ rutaId: string; cliente: any } | null>(null);
   const [cantidadesModal, setCantidadesModal] = useState<Cantidades>(CANTIDADES_VACIAS);
+
+  // Cerrar modales con tecla Escape
+  useEffect(() => {
+    if (!isCrearModalOpen && !pendiente) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        if (pendiente) setPendiente(null);
+        else if (isCrearModalOpen) setIsCrearModalOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isCrearModalOpen, pendiente]);
 
   // Edición inline de cantidades
   const [editando, setEditando] = useState<string | null>(null);
@@ -812,7 +825,12 @@ export default function RutasBaseManager({ rutasBaseIniciales, choferes, vehicul
 
       {/* MODAL: Crear Nueva Plantilla de Ruta Base */}
       {isCrearModalOpen && (
-        <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+        <div
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setIsCrearModalOpen(false);
+          }}
+          className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4 z-50"
+        >
           <form onSubmit={manejarCrearRuta} className="bg-white rounded-2xl shadow-2xl border border-slate-100 w-full max-w-md p-6 space-y-4">
             <div className="flex justify-between items-center border-b border-slate-100 pb-3">
               <h3 className="text-base font-bold text-slate-900">
@@ -944,7 +962,12 @@ export default function RutasBaseManager({ rutasBaseIniciales, choferes, vehicul
 
       {/* MODAL: Fijar cantidades por defecto al agregar cliente */}
       {pendiente && (
-        <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center z-[100] p-4">
+        <div
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setPendiente(null);
+          }}
+          className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center z-[100] p-4"
+        >
           <div className="bg-white rounded-2xl shadow-2xl border border-slate-100 w-full max-w-sm p-6 space-y-4">
             <div>
               <h3 className="text-sm font-bold text-slate-900">

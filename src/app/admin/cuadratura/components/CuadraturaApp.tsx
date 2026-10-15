@@ -82,6 +82,21 @@ export default function CuadraturaApp({ repartidores, productos, historial }: Cu
   const [busqueda, setBusqueda] = useState('');
   const [cargandoDatosRuta, setCargandoDatosRuta] = useState(false);
 
+  // Cerrar modales con tecla Escape
+  useEffect(() => {
+    if (!panel) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && !isPending) {
+        setPanel(null);
+        setCuadraturaSeleccionada(null);
+        setResumenRutaCierre(null);
+        setNvResumenRuta(null);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [panel, isPending]);
+
   const maxDate = getHoyHabilStr();
 
   // ── Salida
@@ -1031,7 +1046,17 @@ export default function CuadraturaApp({ repartidores, productos, historial }: Cu
 
       {/* MODALES */}
       {panel && (
-        <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm animate-in fade-in duration-200">
+        <div
+          onClick={(e) => {
+            if (e.target === e.currentTarget && !isPending) {
+              setPanel(null);
+              setCuadraturaSeleccionada(null);
+              setResumenRutaCierre(null);
+              setNvResumenRuta(null);
+            }
+          }}
+          className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm animate-in fade-in duration-200"
+        >
           <div className="bg-white w-full max-w-3xl rounded-2xl shadow-2xl flex flex-col max-h-[92vh] overflow-hidden border border-slate-100">
             
             {/* Header Modal */}

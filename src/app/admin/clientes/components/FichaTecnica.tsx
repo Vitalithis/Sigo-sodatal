@@ -40,7 +40,12 @@ export default function FichaTecnica({
 
   useEffect(() => {
     setMounted(true);
-  }, []);
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
 
   const tabProps = { cliente, onClienteUpdate, showSuccess, showError, showConfirm };
   const tieneDeuda = (cliente.deuda || 0) > 0;

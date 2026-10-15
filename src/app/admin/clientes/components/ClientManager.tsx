@@ -74,6 +74,18 @@ export default function ClientManager({ initialClientes }: { initialClientes: an
   const [editingClienteId, setEditingClienteId] = useState<string | null>(null);
   const [errorForm, setErrorForm]               = useState<string | null>(null);
 
+  // Cerrar modal con tecla Escape
+  useEffect(() => {
+    if (!isModalOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && !isPending) {
+        setIsModalOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isModalOpen, isPending]);
+
   // Estado comunas/sectores
   const [comunas, setComunas]                       = useState<ComunaConSectores[]>([]);
   const [comunaSeleccionada, setComunaSeleccionada] = useState<string>('');
@@ -817,7 +829,14 @@ export default function ClientManager({ initialClientes }: { initialClientes: an
 
       {/* Modal Crear/Editar */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200 !m-0 !top-0 !left-0 !right-0 !bottom-0">
+        <div
+          onClick={(e) => {
+            if (e.target === e.currentTarget && !isPending) {
+              setIsModalOpen(false);
+            }
+          }}
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200 !m-0 !top-0 !left-0 !right-0 !bottom-0"
+        >
           <div className="bg-white w-full max-w-lg rounded-2xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden border border-slate-100">
             <div className="p-5 border-b border-slate-100 flex justify-between items-center text-white" style={{ backgroundColor: '#013299' }}>
               <div className="flex items-center gap-2.5">

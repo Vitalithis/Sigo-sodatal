@@ -57,6 +57,8 @@ export interface NuevaGuiaInitialData {
   cantidades?: CantidadesInicialesGuia;
   parada_id?: string;
   pedido_id?: string;
+  botellones_prestados_entrega?: number;
+  guia_reemplazo_origen?: any;
 }
 
 export default function NuevaGuiaModal({
@@ -92,6 +94,8 @@ export default function NuevaGuiaModal({
 
   // Otros
   const [metodoPago, setMetodoPago] = useState<'EFECTIVO' | 'TARJETA' | 'GUIA_MENSUAL'>('EFECTIVO');
+  const [botellonesPrestados, setBotellonesPrestados] = useState<number>(0);
+  const [conservarEntrega, setConservarEntrega] = useState(false);
   const [nombreReceptor, setNombreReceptor] = useState('');
   const [rutReceptor, setRutReceptor] = useState('');
   const [observaciones, setObservaciones] = useState('');
@@ -165,31 +169,82 @@ export default function NuevaGuiaModal({
       });
 
       if (initialData) {
-        if (initialData.cliente) {
-          setClienteSeleccionado(initialData.cliente);
-          setCriterioCliente(initialData.cliente.nombre || '');
-          setDireccionEntrega(initialData.direccion_entrega || initialData.cliente.direccion || '');
-        } else if (initialData.direccion_entrega) {
-          setDireccionEntrega(initialData.direccion_entrega);
-        }
+        if (initialData.guia_reemplazo_origen) {
+          const gOri = initialData.guia_reemplazo_origen;
+          if (gOri.cliente) {
+            setClienteSeleccionado(gOri.cliente);
+            setCriterioCliente(gOri.cliente.nombre || '');
+          }
+          // Priorizar siempre la dirección real del cliente
+          const dirCliente = gOri.cliente?.direccion?.trim();
+          const dirGuiaValida = gOri.direccion_entrega && !gOri.direccion_entrega.toLowerCase().includes('confirmada en ruta')
+            ? gOri.direccion_entrega.trim()
+            : '';
+          setDireccionEntrega(dirCliente || dirGuiaValida || '');
+          if (gOri.usuario_repartidor_id) {
+            setRepartidorId(gOri.usuario_repartidor_id);
+          }
+          if (gOri.forma_pago === 'TARJETA' || gOri.estado === 'ENTREGADA_TARJETA') {
+            setMetodoPago('TARJETA');
+          } else if (gOri.forma_pago === 'CREDITO' || gOri.estado === 'ENTREGADA_CREDITO') {
+            setMetodoPago('GUIA_MENSUAL');
+          } else {
+            setMetodoPago('EFECTIVO');
+          }
+          setBotellonesPrestados(gOri.botellones_prestados_entrega || 0);
+          setObservaciones(gOri.observaciones || '');
 
-        if (initialData.usuario_repartidor_id) {
-          setRepartidorId(initialData.usuario_repartidor_id);
-        }
-        if (initialData.metodo_pago) {
-          setMetodoPago(initialData.metodo_pago);
-        }
-        if (initialData.nombre_receptor) {
-          setNombreReceptor(initialData.nombre_receptor);
-        }
-        if (initialData.rut_receptor) {
-          setRutReceptor(initialData.rut_receptor);
-        }
-        if (initialData.observaciones) {
-          setObservaciones(initialData.observaciones);
-        }
-        if (initialData.items && initialData.items.length > 0) {
-          setItems(initialData.items);
+          if (gOri.items && gOri.items.length > 0) {
+            const mappedItems: LineaItem[] = gOri.items.map((it: any, idx: number) => ({
+              key: `reemp-${idx}-${Date.now()}`,
+              producto_id: it.producto_id,
+              nombre: it.producto?.nombre || 'Producto',
+              tipo_transaccion: it.tipo_transaccion || 'VENTA',
+              cantidad: it.cantidad,
+              precio_unitario: it.precio_unitario,
+            }));
+            setItems(mappedItems);
+          }
+
+          // Por defecto la entrega NO está conservada
+          setConservarEntrega(false);
+          setFirmaDigital(null);
+          setNombreReceptor('');
+          setRutReceptor('');
+        } else {
+          if (initialData.cliente) {
+            setClienteSeleccionado(initialData.cliente);
+            setCriterioCliente(initialData.cliente.nombre || '');
+            const dirCliente = initialData.cliente.direccion?.trim();
+            const dirValida = initialData.direccion_entrega && !initialData.direccion_entrega.toLowerCase().includes('confirmada en ruta')
+              ? initialData.direccion_entrega.trim()
+              : '';
+            setDireccionEntrega(dirCliente || dirValida || '');
+          } else if (initialData.direccion_entrega) {
+            setDireccionEntrega(initialData.direccion_entrega);
+          }
+
+          if (initialData.usuario_repartidor_id) {
+            setRepartidorId(initialData.usuario_repartidor_id);
+          }
+          if (initialData.metodo_pago) {
+            setMetodoPago(initialData.metodo_pago);
+          }
+          if (initialData.nombre_receptor) {
+            setNombreReceptor(initialData.nombre_receptor);
+          }
+          if (initialData.rut_receptor) {
+            setRutReceptor(initialData.rut_receptor);
+          }
+          if (initialData.observaciones) {
+            setObservaciones(initialData.observaciones);
+          }
+          if (initialData.botellones_prestados_entrega) {
+            setBotellonesPrestados(initialData.botellones_prestados_entrega);
+          }
+          if (initialData.items && initialData.items.length > 0) {
+            setItems(initialData.items);
+          }
         }
       }
     }
@@ -228,6 +283,16 @@ export default function NuevaGuiaModal({
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  // Cerrar modal con tecla Escape
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
 
   const seleccionarCliente = (cli: any) => {
     setClienteSeleccionado(cli);
@@ -289,6 +354,18 @@ export default function NuevaGuiaModal({
 
   const total = items.reduce((acc, i) => acc + i.cantidad * i.precio_unitario, 0);
 
+  const toggleConservarEntrega = (marcado: boolean) => {
+    setConservarEntrega(marcado);
+    const origen = initialData?.guia_reemplazo_origen;
+    if (marcado && origen) {
+      setNombreReceptor(origen.nombre_receptor || '');
+      setRutReceptor(origen.rut_receptor || '');
+      setFirmaDigital(origen.firma_digital || null);
+    } else {
+      setFirmaDigital(null);
+    }
+  };
+
   const resetForm = () => {
     setCriterioCliente('');
     setClienteSeleccionado(null);
@@ -298,6 +375,8 @@ export default function NuevaGuiaModal({
     setProductoTemp('');
     setCantidadTemp(1);
     setMetodoPago('EFECTIVO');
+    setBotellonesPrestados(0);
+    setConservarEntrega(false);
     setObservaciones('');
     setNombreReceptor('');
     setRutReceptor('');
@@ -340,10 +419,13 @@ export default function NuevaGuiaModal({
       rut_receptor: rutReceptor.trim() || undefined,
       observaciones: observaciones || undefined,
       firma_digital: firmaDigital || undefined,
-      botellones_prestados_entrega: 0,
+      botellones_prestados_entrega: botellonesPrestados,
       items: payload,
       pedido_id: initialData?.pedido_id,
       parada_id: initialData?.parada_id,
+      reemplaza_a_guia_id: initialData?.guia_reemplazo_origen?.id,
+      conservar_entrega: conservarEntrega,
+      hora_entrega: conservarEntrega ? initialData?.guia_reemplazo_origen?.hora_entrega : undefined,
     });
     setGuardando(false);
 
@@ -358,7 +440,12 @@ export default function NuevaGuiaModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
+    <div
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+      className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200"
+    >
       <PopupGlobal popup={popup} onClose={close} />
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[92vh] flex flex-col overflow-hidden border border-slate-100">
         
@@ -369,8 +456,12 @@ export default function NuevaGuiaModal({
               <FileText className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h3 className="font-bold text-lg leading-tight">Nueva Guía de Despacho</h3>
-              <p className="text-xs text-blue-100">Registro de entrega inmediata</p>
+              <h3 className="font-bold text-lg leading-tight">
+                {initialData?.guia_reemplazo_origen
+                  ? `Comprobante de Reemplazo (de Guía #${String(initialData.guia_reemplazo_origen.numero_correlativo).padStart(6, '0')})`
+                  : 'Nuevo Comprobante de Entrega'}
+              </h3>
+              <p className="text-xs text-blue-100">Control interno de entrega de mercaderías</p>
             </div>
           </div>
           <button
@@ -384,6 +475,33 @@ export default function NuevaGuiaModal({
 
         {/* Body Form */}
         <form onSubmit={guardarGuia} className="p-6 space-y-5 overflow-y-auto flex-1">
+
+          {/* Banner de reemplazo con Checkbox */}
+          {initialData?.guia_reemplazo_origen && (
+            <div className="bg-blue-50/80 border border-blue-200 p-3.5 rounded-xl space-y-2">
+              <div className="flex items-center gap-2">
+                <span className="font-bold text-xs text-[#013299]">
+                  ➜ Reemplazando comprobante anulado #{String(initialData.guia_reemplazo_origen.numero_correlativo).padStart(6, '0')}
+                </span>
+              </div>
+              <label className="flex items-start gap-2.5 pt-1 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={conservarEntrega}
+                  onChange={(e) => toggleConservarEntrega(e.target.checked)}
+                  className="mt-0.5 rounded text-[#013299] focus:ring-[#013299] border-blue-300 w-4 h-4 cursor-pointer"
+                />
+                <span className="text-xs font-semibold text-slate-800 leading-snug">
+                  La entrega ya se realizó: conservar firma, receptor y hora de recepción de la guía anulada
+                </span>
+              </label>
+              {conservarEntrega && (
+                <p className="text-[11px] text-emerald-700 font-semibold pl-6">
+                  ✓ Se conservará la firma digital de respaldo y la recepción original de entrega.
+                </p>
+              )}
+            </div>
+          )}
           
           {/* Cliente with Live Debounced Search */}
           <div ref={dropClienteRef} className="relative">
@@ -710,21 +828,37 @@ export default function NuevaGuiaModal({
               </div>
             </div>
 
-            {/* Método de Pago */}
-            <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
-                <CreditCard className="w-3.5 h-3.5 text-[#013299]" />
-                Método de Pago
-              </label>
-              <select
-                value={metodoPago}
-                onChange={(e) => setMetodoPago(e.target.value as any)}
-                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-[#013299] focus:ring-2 focus:ring-[#013299]/20 transition-all"
-              >
-                <option value="EFECTIVO">Efectivo</option>
-                <option value="TARJETA">Tarjeta (Débito/Crédito)</option>
-                <option value="GUIA_MENSUAL">Guía Mensual (Crédito)</option>
-              </select>
+            {/* Método de Pago y Envases Prestados */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+                  <CreditCard className="w-3.5 h-3.5 text-[#013299]" />
+                  Método de Pago
+                </label>
+                <select
+                  value={metodoPago}
+                  onChange={(e) => setMetodoPago(e.target.value as any)}
+                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-[#013299] focus:ring-2 focus:ring-[#013299]/20 transition-all"
+                >
+                  <option value="EFECTIVO">Efectivo</option>
+                  <option value="TARJETA">Tarjeta (Débito/Crédito)</option>
+                  <option value="GUIA_MENSUAL">Guía Mensual (Crédito)</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+                  <Package className="w-3.5 h-3.5 text-[#013299]" />
+                  Envases Prestados (Botellones)
+                </label>
+                <input
+                  type="number"
+                  min="0"
+                  value={botellonesPrestados}
+                  onChange={(e) => setBotellonesPrestados(Math.max(0, parseInt(e.target.value) || 0))}
+                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-[#013299] focus:ring-2 focus:ring-[#013299]/20 transition-all"
+                />
+              </div>
             </div>
 
             {/* Observaciones */}

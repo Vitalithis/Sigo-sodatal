@@ -1,3 +1,4 @@
+import React, { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { AlertTriangle, Info, Loader2, X } from 'lucide-react';
 import { Producto } from '../hooks/useProductManager';
@@ -11,10 +12,25 @@ interface Props {
 }
 
 export function ModalConstraint({ isOpen, producto, isPending, onDesactivar, onCancel }: Props) {
+  // Cerrar con Escape
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && !isPending) onCancel();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, isPending, onCancel]);
+
   if (!isOpen || !producto || typeof document === 'undefined') return null;
 
   return createPortal(
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+    <div
+      onClick={(e) => {
+        if (e.target === e.currentTarget && !isPending) onCancel();
+      }}
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200"
+    >
       <div className="bg-white rounded-2xl shadow-2xl border border-slate-100 w-full max-w-md overflow-hidden animate-in zoom-in-95 duration-200">
         
         {/* Header Modal */}

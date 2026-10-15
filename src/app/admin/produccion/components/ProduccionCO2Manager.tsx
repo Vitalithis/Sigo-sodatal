@@ -20,17 +20,20 @@ interface Props {
 export default function ProduccionCO2Manager(props: Props) {
   const [tab, setTab] = useState<'produccion' | 'co2' | 'reportes'>('produccion');
   
-  const { popup, showConfirm, close } = usePopup();
+  const { popup, showSuccess, showError, showInfo, showConfirm, close } = usePopup();
 
   const {
-    produccion, tubos, cargando, banner,
+    produccion, tubos, cargando,
     tuboActivo, estadoTubo, umbralAlerta,
     formProduccion, setFormProduccion,
     formTubo, setFormTubo,
     formConfig, setFormConfig,
     manejarCrearProduccion, manejarCrearTubo,
     manejarCerrarTubo, manejarGuardarConfig,
-  } = useProduccionCO2(props);
+  } = useProduccionCO2({
+    ...props,
+    notify: { showSuccess, showError, showInfo }
+  });
 
   return (
     <div className="space-y-6">
@@ -53,20 +56,6 @@ export default function ProduccionCO2Manager(props: Props) {
           </button>
         ))}
       </div>
-
-      {/* Banner */}
-      {banner && (
-        <div className={`flex items-start gap-3 px-4 py-3 rounded-xl text-xs font-semibold border shadow-sm ${
-          banner.tipo === 'ok' ? 'bg-green-50 text-green-700 border-green-200'
-          : banner.tipo === 'alerta' ? 'bg-amber-50 text-amber-800 border-amber-200'
-          : 'bg-red-50 text-red-700 border-red-200'
-        }`}>
-          {banner.tipo === 'ok' ? <CheckCircle className="h-4 w-4 shrink-0 mt-0.5" />
-          : banner.tipo === 'alerta' ? <AlertTriangle className="h-4 w-4 shrink-0 mt-0.5" />
-          : <Info className="h-4 w-4 shrink-0 mt-0.5" />}
-          {banner.texto}
-        </div>
-      )}
 
       {/* Renderizado condicional ajustado para 3 vistas */}
       {tab === 'produccion' ? (

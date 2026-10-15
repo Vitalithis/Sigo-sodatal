@@ -1,3 +1,4 @@
+import React, { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { X, Loader2, PackagePlus, PackageMinus, Boxes } from 'lucide-react';
 import { Producto } from '../hooks/useProductManager';
@@ -20,6 +21,16 @@ export function ModalStock({
   isOpen, producto, isPending, onSubmit, onClose,
   cantidad, setCantidad, motivo, setMotivo, tipo, setTipo,
 }: Props) {
+  // Cerrar con Escape
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && !isPending) onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, isPending, onClose]);
+
   if (!isOpen || !producto || typeof document === 'undefined') return null;
 
   const stockActual = producto.stock_fabrica?.cantidad ?? 0;
@@ -27,7 +38,12 @@ export function ModalStock({
   const stockResultante = stockActual + delta;
 
   return createPortal(
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+    <div
+      onClick={(e) => {
+        if (e.target === e.currentTarget && !isPending) onClose();
+      }}
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200"
+    >
       <div className="bg-white rounded-2xl shadow-2xl border border-slate-100 w-full max-w-md overflow-hidden animate-in zoom-in-95 duration-200">
         
         {/* Header Modal */}

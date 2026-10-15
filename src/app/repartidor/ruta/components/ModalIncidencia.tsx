@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { registrarIncidenciaAction } from '@/app/admin/rutas/actions';
 import { TipoIncidencia } from '@lib/prisma/generated';
 
@@ -17,6 +17,15 @@ export default function ModalIncidencia({ parada, usuarioId, onClose, onSuccess 
   const [cantidadEntregada, setCantidadEntregada] = useState<number | ''>('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  // Cerrar modal con tecla Escape
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && !loading) onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [loading, onClose]);
 
   const cliente = parada.cliente;
   const pedido = parada.pedido;
@@ -65,7 +74,12 @@ export default function ModalIncidencia({ parada, usuarioId, onClose, onSuccess 
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+    <div
+      onClick={(e) => {
+        if (e.target === e.currentTarget && !loading) onClose();
+      }}
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+    >
       <div className="bg-white w-full max-w-md rounded-2xl overflow-hidden shadow-2xl animate-in slide-in-from-bottom-4 sm:slide-in-from-bottom-0 sm:zoom-in-95">
         
         <div className="bg-red-50 p-4 border-b border-red-100 flex justify-between items-start">

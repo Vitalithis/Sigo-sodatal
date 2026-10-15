@@ -100,9 +100,10 @@ export default function RutasManager() {
     if (!confirm('¿Eliminar esta hoja de ruta completa? Se perderán todas sus paradas y no se puede deshacer.')) return;
     const res = await eliminarRutaDiaAction(rutaDiaId);
     if (res.success) {
+      setMensajeEstado({ texto: 'Hoja de ruta eliminada con éxito.', error: false });
       await cargarDatos();
     } else {
-      alert('Error al eliminar: ' + res.message);
+      setMensajeEstado({ texto: 'Error al eliminar: ' + res.message, error: true });
     }
   };
 
@@ -129,7 +130,7 @@ export default function RutasManager() {
     const payload = nuevasParadas.map((parada, index) => ({ id: parada.id, orden_nuevo: index + 1 }));
     const res = await actualizarOrdenParadasAction(payload);
     if (!res.success) {
-      alert('Error al guardar el nuevo orden: ' + res.message);
+      setMensajeEstado({ texto: 'Error al guardar el nuevo orden: ' + res.message, error: true });
       await cargarDatos(true);
     }
   };
