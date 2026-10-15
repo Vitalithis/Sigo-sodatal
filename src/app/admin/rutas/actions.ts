@@ -1575,6 +1575,27 @@ export async function actualizarParadaCompletaAction(paradaId: string, datos: an
           }
         }
       }
+
+      // Si se agregaron productos adicionales desde el modal de entrega
+      if (datos.items_extra && Array.isArray(datos.items_extra) && targetPedidoId) {
+        for (const extra of datos.items_extra) {
+          if (extra.producto_id && Number(extra.cantidad) > 0) {
+            const prod = await prisma.producto.findUnique({ where: { id: extra.producto_id } });
+            if (prod) {
+              await prisma.pedidoItem.create({
+                data: {
+                  pedido_id: targetPedidoId,
+                  producto_id: prod.id,
+                  tipo_transaccion: (extra.tipo_transaccion as any) || 'VENTA',
+                  cantidad: Number(extra.cantidad),
+                  cantidad_entregada: Number(extra.cantidad),
+                  precio_historico: prod.precio_venta_nueva ?? 0,
+                }
+              });
+            }
+          }
+        }
+      }
     }
 
     // Observaciones generales (input libre en la fila)

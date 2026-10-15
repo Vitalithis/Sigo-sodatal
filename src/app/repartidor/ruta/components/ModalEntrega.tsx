@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { actualizarParadaCompletaAction } from '@/app/admin/rutas/actions';
-import { Minus, Plus, CheckCircle2, AlertTriangle, Package, RefreshCw, Banknote, CreditCard, Smartphone, FileText } from 'lucide-react';
+import { obtenerProductosAction } from '@/app/admin/productos/actions';
+import { Minus, Plus, CheckCircle2, AlertTriangle, Package, RefreshCw, Banknote, CreditCard, Smartphone, FileText, Trash2 } from 'lucide-react';
 import NuevaGuiaModal from '@/app/admin/guias/components/NuevaGuiaModal';
 
 interface ModalEntregaProps {
@@ -19,6 +20,64 @@ export default function ModalEntrega({ parada, usuarioId, onClose, onAbrirIncide
 
   const pedido = parada.pedido;
   const cliente = parada.cliente;
+
+  // Catálogo de productos para agregar items adicionales
+  const [catalogoProductos, setCatalogoProductos] = useState<any[]>([]);
+  const [productoSeleccionadoId, setProductoSeleccionadoId] = useState<string>('');
+  const [itemsExtra, setItemsExtra] = useState<Array<{
+    producto_id: string;
+    nombre: string;
+    cantidad: number;
+    precio: number;
+    tipo_transaccion: 'VENTA' | 'RECARGA';
+  }>>([]);
+
+  useEffect(() => {
+    async function cargarCatalogo() {
+      const res = await obtenerProductosAction();
+      if (res.success && res.productos) {
+        setCatalogoProductos(res.productos);
+        if (res.productos.length > 0) {
+          setProductoSeleccionadoId(res.productos[0].id);
+        }
+      }
+    }
+    cargarCatalogo();
+  }, []);
+
+  function handleAgregarProducto() {
+    if (!productoSeleccionadoId) return;
+    const prod = catalogoProductos.find(p => p.id === productoSeleccionadoId);
+    if (!prod) return;
+
+    setItemsExtra(prev => {
+      const existe = prev.find(it => it.producto_id === prod.id);
+      if (existe) {
+        return prev.map(it => it.producto_id === prod.id ? { ...it, cantidad: it.cantidad + 1 } : it);
+      }
+      return [...prev, {
+        producto_id: prod.id,
+        nombre: prod.nombre,
+        cantidad: 1,
+        precio: prod.precio_venta_nueva ?? 0,
+        tipo_transaccion: 'VENTA',
+      }];
+    });
+  }
+
+  function actualizarCantidadExtra(productoId: string, delta: number) {
+    setItemsExtra(prev => prev.map(it => {
+      if (it.producto_id === productoId) {
+        const nuevaCant = it.cantidad + delta;
+        return nuevaCant > 0 ? { ...it, cantidad: nuevaCant } : null;
+      }
+      return it;
+    }).filter(Boolean) as any);
+  }
+
+  function eliminarExtra(productoId: string) {
+    setItemsExtra(prev => prev.filter(it => it.producto_id !== productoId));
+  }
 
   // Cantidades iniciales estimadas
   const initBot20 = () => {
@@ -92,6 +151,11 @@ export default function ModalEntrega({ parada, usuarioId, onClose, onAbrirIncide
       estado: 'ENTREGADO',
       cantidades,
       metodo_pago: metodoPago,
+      items_extra: itemsExtra.map(it => ({
+        producto_id: it.producto_id,
+        cantidad: it.cantidad,
+        tipo_transaccion: it.tipo_transaccion
+      })),
     });
     
     if (res.success) {
@@ -103,7 +167,8 @@ export default function ModalEntrega({ parada, usuarioId, onClose, onAbrirIncide
     }
   }
 
-  const totalUnidades = cant20 + cant10 + cantSoda;
+  const totalExtras = itemsExtra.reduce((acc, it) => acc + it.cantidad, 0);
+  const totalUnidades = cant20 + cant10 + cantSoda + totalExtras;
 
   return (
     <div
@@ -255,6 +320,89 @@ export default function ModalEntrega({ parada, usuarioId, onClose, onAbrirIncide
                   </button>
                 </div>
               </div>
+            </div>
+
+            {/* Agregar Producto Adicional con Lista Desplegable */}
+            <div className="mt-3 bg-slate-50 border border-slate-200/90 rounded-xl p-3 space-y-2">
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-black text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
+                  <Package className="w-3.5 h-3.5 text-[#013299]" />
+                  Agregar Producto
+                </label>
+                {itemsExtra.length > 0 && (
+                  <span className="text-[10px] font-bold text-[#013299] bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200">
+                    +{totalExtras} adicional{totalExtras > 1 ? 'es' : ''}
+                  </span>
+                )}
+              </div>
+
+              {/* Selector Desplegable + Botón Agregar */}
+              <div className="flex gap-2">
+                <select
+                  value={productoSeleccionadoId}
+                  onChange={(e) => setProductoSeleccionadoId(e.target.value)}
+                  className="flex-1 text-xs bg-white border border-slate-300 rounded-lg px-2.5 py-2 font-medium text-slate-800 outline-none focus:border-[#013299]"
+                >
+                  <option value="" disabled>Selecciona producto...</option>
+                  {catalogoProductos.map((p) => (
+                    <option key={p.id} value={p.id}>
+                      {p.nombre} {p.precio_venta_nueva ? `($${Number(p.precio_venta_nueva).toLocaleString('es-CL')})` : ''}
+                    </option>
+                  ))}
+                </select>
+
+                <button
+                  type="button"
+                  onClick={handleAgregarProducto}
+                  disabled={!productoSeleccionadoId}
+                  className="bg-[#013299] hover:bg-blue-800 active:scale-95 text-white text-xs font-bold px-3 py-2 rounded-lg flex items-center gap-1 shrink-0 transition-all disabled:opacity-50"
+                  title="Agregar producto a la entrega"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                  <span>Agregar</span>
+                </button>
+              </div>
+
+              {/* Lista de productos extra agregados */}
+              {itemsExtra.length > 0 && (
+                <div className="space-y-1.5 pt-1">
+                  {itemsExtra.map((it) => (
+                    <div 
+                      key={it.producto_id} 
+                      className="flex items-center justify-between bg-white border border-slate-200 px-2.5 py-1.5 rounded-lg text-xs"
+                    >
+                      <span className="font-bold text-slate-800 truncate mr-2">{it.nombre}</span>
+                      <div className="flex items-center gap-1.5 shrink-0">
+                        <button
+                          type="button"
+                          onClick={() => actualizarCantidadExtra(it.producto_id, -1)}
+                          className="w-6 h-6 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center font-bold"
+                          title="Restar uno"
+                        >
+                          -
+                        </button>
+                        <span className="w-6 text-center font-black text-slate-900">{it.cantidad}</span>
+                        <button
+                          type="button"
+                          onClick={() => actualizarCantidadExtra(it.producto_id, 1)}
+                          className="w-6 h-6 rounded bg-[#013299] text-white flex items-center justify-center font-bold"
+                          title="Sumar uno"
+                        >
+                          +
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => eliminarExtra(it.producto_id)}
+                          className="text-rose-500 hover:text-rose-700 p-1 ml-1"
+                          title="Eliminar producto"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
 
@@ -419,7 +567,7 @@ export default function ModalEntrega({ parada, usuarioId, onClose, onAbrirIncide
         </div>
 
         {/* Acciones */}
-        <div className="p-4 border-t bg-gray-50 space-y-2.5">
+        <div className="p-4 border-t bg-gray-50">
           <button
             onClick={handleConfirmarEntrega}
             disabled={loading}
@@ -446,17 +594,6 @@ export default function ModalEntrega({ parada, usuarioId, onClose, onAbrirIncide
                 })
               </>
             )}
-          </button>
-          
-          <button
-            onClick={() => {
-              onClose();
-              onAbrirIncidencia();
-            }}
-            disabled={loading}
-            className="w-full bg-white text-slate-700 border border-slate-200 font-bold text-xs py-2.5 rounded-xl hover:bg-slate-100 transition-colors"
-          >
-            Reportar Problema / No Estaba
           </button>
         </div>
 
@@ -488,6 +625,40 @@ export default function ModalEntrega({ parada, usuarioId, onClose, onAbrirIncide
               bot10: cant10,
               soda: cantSoda,
             },
+            items: itemsExtra.length > 0 ? [
+              ...(cant20 > 0 && catalogoProductos.find(p => p.categoria === 'BOTELLON20') ? [{
+                key: `guia-20-${Date.now()}`,
+                producto_id: catalogoProductos.find(p => p.categoria === 'BOTELLON20')!.id,
+                nombre: catalogoProductos.find(p => p.categoria === 'BOTELLON20')!.nombre,
+                tipo_transaccion: 'RECARGA' as const,
+                cantidad: cant20,
+                precio_unitario: catalogoProductos.find(p => p.categoria === 'BOTELLON20')!.precio_recarga ?? 2500,
+              }] : []),
+              ...(cant10 > 0 && catalogoProductos.find(p => p.categoria === 'BOTELLON10') ? [{
+                key: `guia-10-${Date.now()}`,
+                producto_id: catalogoProductos.find(p => p.categoria === 'BOTELLON10')!.id,
+                nombre: catalogoProductos.find(p => p.categoria === 'BOTELLON10')!.nombre,
+                tipo_transaccion: 'RECARGA' as const,
+                cantidad: cant10,
+                precio_unitario: catalogoProductos.find(p => p.categoria === 'BOTELLON10')!.precio_recarga ?? 2000,
+              }] : []),
+              ...(cantSoda > 0 && catalogoProductos.find(p => p.categoria === 'SODA') ? [{
+                key: `guia-soda-${Date.now()}`,
+                producto_id: catalogoProductos.find(p => p.categoria === 'SODA')!.id,
+                nombre: catalogoProductos.find(p => p.categoria === 'SODA')!.nombre,
+                tipo_transaccion: 'RECARGA' as const,
+                cantidad: cantSoda,
+                precio_unitario: catalogoProductos.find(p => p.categoria === 'SODA')!.precio_recarga ?? 1500,
+              }] : []),
+              ...itemsExtra.map((extra, idx) => ({
+                key: `guia-extra-${idx}-${Date.now()}`,
+                producto_id: extra.producto_id,
+                nombre: extra.nombre,
+                tipo_transaccion: extra.tipo_transaccion || ('VENTA' as const),
+                cantidad: extra.cantidad,
+                precio_unitario: extra.precio,
+              }))
+            ] : undefined,
             parada_id: parada.id,
             pedido_id: parada.pedido_id || undefined,
           }}

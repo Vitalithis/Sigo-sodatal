@@ -644,7 +644,7 @@ interface TablaSortableProps {
     paradaId: string,
     cantidades: any
   ) => Promise<{ success: boolean; message?: string }>;
-  onEliminarRuta: (rutaDiaId: string) => void;
+  onEliminarRuta: (rutaDiaId: string, rutaInfo?: { id: string; chofer?: string; patente?: string; totalParadas?: number; nombreRuta?: string }) => void;
   onEliminarParada: (paradaId: string, nombreCliente?: string) => void;
   onRutaActualizada?: () => void;
 }
@@ -1142,7 +1142,13 @@ export default function TablaSortable({
           </button>
           <button 
             type="button"
-            onClick={() => onEliminarRuta(rutaId)}
+            onClick={() => onEliminarRuta(rutaId, {
+              id: rutaId,
+              chofer: ruta.usuario ? `${ruta.usuario.nombre || ''} ${ruta.usuario.apellido || ''}`.trim() : undefined,
+              patente: ruta.vehiculo?.patente,
+              totalParadas: paradas?.length || 0,
+              nombreRuta: ruta.ruta_base?.nombre,
+            })}
             className="bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-bold px-3 py-1.5 rounded-xl border border-rose-200 transition-all flex items-center gap-1.5 shadow-2xs"
           >
             <Trash2 className="w-3.5 h-3.5 text-rose-600" />

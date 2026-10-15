@@ -17,6 +17,7 @@ import {
 
 import VistaCalendarioRutas from './VistaCalendarioRutas';
 import ModalEliminarParada from './ModalEliminarParada';
+import ModalEliminarRuta from './ModalEliminarRuta';
 import ModalRutaContencion from './ModalRutaContencion';
 import { Calendar, ListFilter, Shield, Zap, Users, Plus } from 'lucide-react';
 import { getHoyHabilStr, handleDateInputSoloHabiles } from '@/lib/fechas';
@@ -34,6 +35,14 @@ export default function RutasManager() {
   const [modalContencionAbierto, setModalContencionAbierto] = useState(false);
   const [paradaParaEliminar, setParadaParaEliminar] = useState<{ id: string; nombreCliente?: string } | null>(null);
   const [eliminandoParada, setEliminandoParada] = useState(false);
+  const [rutaParaEliminar, setRutaParaEliminar] = useState<{
+    id: string;
+    chofer?: string;
+    patente?: string;
+    totalParadas?: number;
+    nombreRuta?: string;
+  } | null>(null);
+  const [eliminandoRuta, setEliminandoRuta] = useState(false);
   const [mensajeEstado, setMensajeEstado] = useState<{ texto: string; error: boolean } | null>(null);
 
   const diasSemanaUnidad = ['DOMINGO', 'LUNES', 'MARTES', 'MIERCOLES', 'JUEVES', 'VIERNES', 'SABADO'];
@@ -96,15 +105,22 @@ export default function RutasManager() {
     return res;
   };
 
-  const handleEliminarRuta = async (rutaDiaId: string) => {
-    if (!confirm('¿Eliminar esta hoja de ruta completa? Se perderán todas sus paradas y no se puede deshacer.')) return;
-    const res = await eliminarRutaDiaAction(rutaDiaId);
+  const handleSolicitarEliminarRuta = (rutaDiaId: string, rutaInfo?: any) => {
+    setRutaParaEliminar(rutaInfo || { id: rutaDiaId });
+  };
+
+  const handleConfirmarEliminarRuta = async () => {
+    if (!rutaParaEliminar) return;
+    setEliminandoRuta(true);
+    const res = await eliminarRutaDiaAction(rutaParaEliminar.id);
     if (res.success) {
       setMensajeEstado({ texto: 'Hoja de ruta eliminada con éxito.', error: false });
       await cargarDatos();
     } else {
       setMensajeEstado({ texto: 'Error al eliminar: ' + res.message, error: true });
     }
+    setEliminandoRuta(false);
+    setRutaParaEliminar(null);
   };
 
   const handleSolicitarEliminarParada = (paradaId: string, nombreCliente?: string) => {
@@ -359,7 +375,7 @@ export default function RutasManager() {
                 onReorder={handleReorder}
                 onActualizarParada={handleActualizarParada}
                 onActualizarEsperado={handleActualizarEsperado}
-                onEliminarRuta={handleEliminarRuta}
+                onEliminarRuta={handleSolicitarEliminarRuta}
                 onEliminarParada={handleSolicitarEliminarParada}
                 onRutaActualizada={() => cargarDatos(true)}
               />
@@ -384,6 +400,15 @@ export default function RutasManager() {
         isPending={eliminandoParada}
         onConfirm={handleConfirmarEliminarParada}
         onCancel={() => setParadaParaEliminar(null)}
+      />
+
+      {/* ── Modal confirmar eliminar ruta ── */}
+      <ModalEliminarRuta
+        isOpen={!!rutaParaEliminar}
+        rutaInfo={rutaParaEliminar}
+        isPending={eliminandoRuta}
+        onConfirm={handleConfirmarEliminarRuta}
+        onCancel={() => setRutaParaEliminar(null)}
       />
 
       {/* ── Modal crear ruta de contención / emergencia ── */}

@@ -20,16 +20,14 @@ export default async function RepartidorLayout({ children }: { children: React.R
   }
 
   return (
-    <div className="min-h-screen bg-slate-100 flex flex-col font-sans">
-      <div className="max-w-md mx-auto w-full bg-slate-50 min-h-screen flex flex-col relative shadow-2xl border-x border-slate-200/60 pb-20">
-        <RepartidorHeader nombreUsuario={usuario.nombre} vehiculoPatente={vehiculoPatente} />
-        
-        <main className="flex-1 p-4 overflow-y-auto">
-          {children}
-        </main>
+    <div className="min-h-screen bg-slate-100/80 text-slate-900 flex flex-col font-sans">
+      <RepartidorHeader nombreUsuario={usuario.nombre} vehiculoPatente={vehiculoPatente} />
+      
+      <main className="flex-1 w-full max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 pb-24 md:pb-12">
+        {children}
+      </main>
 
-        <RepartidorBottomNav />
-      </div>
+      <RepartidorBottomNav />
     </div>
   );
 }

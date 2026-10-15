@@ -3,21 +3,22 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Navigation, Package, User } from 'lucide-react';
+import { Home, Navigation, FileText, Scale, User } from 'lucide-react';
 
 export default function RepartidorBottomNav() {
   const pathname = usePathname();
 
   const navItems = [
     { href: '/repartidor', label: 'Inicio', icon: Home },
-    { href: '/repartidor/ruta', label: 'Mi Ruta', icon: Navigation },
-    { href: '/repartidor/stock', label: 'Stock Camión', icon: Package },
-    { href: '/repartidor/perfil', label: 'Mi Perfil', icon: User },
+    { href: '/repartidor/ruta', label: 'Rutas', icon: Navigation },
+    { href: '/repartidor/guias', label: 'Guías', icon: FileText },
+    { href: '/repartidor/cuadraturas', label: 'Cuadre', icon: Scale },
+    { href: '/repartidor/perfil', label: 'Perfil', icon: User },
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200/80 shadow-lg max-w-md mx-auto">
-      <div className="flex items-center justify-around h-16 px-2">
+    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200/90 shadow-[0_-4px_20px_rgba(0,0,0,0.06)]">
+      <div className="flex items-center justify-around h-16 px-1 max-w-lg mx-auto">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = pathname === item.href || (item.href !== '/repartidor' && pathname.startsWith(item.href));
