@@ -47,3 +47,7 @@ arbol.txt
 # Obsidian
 .obsidian/
 _docs/
+
+# Logs locales y Fluent Bit
+/logs/
+*.db
