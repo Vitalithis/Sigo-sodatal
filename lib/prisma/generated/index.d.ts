@@ -253,6 +253,11 @@ export type VentaCierreCaja = $Result.DefaultSelection<Prisma.$VentaCierreCajaPa
  * 
  */
 export type GastoCierreCaja = $Result.DefaultSelection<Prisma.$GastoCierreCajaPayload>
+/**
+ * Model ComprobantePago
+ * 
+ */
+export type ComprobantePago = $Result.DefaultSelection<Prisma.$ComprobantePagoPayload>
 
 /**
  * Enums
@@ -495,6 +500,25 @@ export const MetodoPagoCaja: {
 
 export type MetodoPagoCaja = (typeof MetodoPagoCaja)[keyof typeof MetodoPagoCaja]
 
+
+export const EstadoComprobantePago: {
+  PENDIENTE: 'PENDIENTE',
+  CONCILIADO: 'CONCILIADO',
+  RECHAZADO: 'RECHAZADO'
+};
+
+export type EstadoComprobantePago = (typeof EstadoComprobantePago)[keyof typeof EstadoComprobantePago]
+
+
+export const OrigenDocumentoComprobante: {
+  TRANSFERENCIA_BANCARIA: 'TRANSFERENCIA_BANCARIA',
+  VOUCHER_POS: 'VOUCHER_POS',
+  DEPOSITO_VENTANILLA: 'DEPOSITO_VENTANILLA',
+  OTRO: 'OTRO'
+};
+
+export type OrigenDocumentoComprobante = (typeof OrigenDocumentoComprobante)[keyof typeof OrigenDocumentoComprobante]
+
 }
 
 export type TipoIncidencia = $Enums.TipoIncidencia
@@ -596,6 +620,14 @@ export const EstadoCierreCaja: typeof $Enums.EstadoCierreCaja
 export type MetodoPagoCaja = $Enums.MetodoPagoCaja
 
 export const MetodoPagoCaja: typeof $Enums.MetodoPagoCaja
+
+export type EstadoComprobantePago = $Enums.EstadoComprobantePago
+
+export const EstadoComprobantePago: typeof $Enums.EstadoComprobantePago
+
+export type OrigenDocumentoComprobante = $Enums.OrigenDocumentoComprobante
+
+export const OrigenDocumentoComprobante: typeof $Enums.OrigenDocumentoComprobante
 
 /**
  * ##  Prisma Client ʲˢ
@@ -1194,6 +1226,16 @@ export class PrismaClient<
     * ```
     */
   get gastoCierreCaja(): Prisma.GastoCierreCajaDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.comprobantePago`: Exposes CRUD operations for the **ComprobantePago** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ComprobantePagos
+    * const comprobantePagos = await prisma.comprobantePago.findMany()
+    * ```
+    */
+  get comprobantePago(): Prisma.ComprobantePagoDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1682,7 +1724,8 @@ export namespace Prisma {
     Verification: 'Verification',
     CierreCaja: 'CierreCaja',
     VentaCierreCaja: 'VentaCierreCaja',
-    GastoCierreCaja: 'GastoCierreCaja'
+    GastoCierreCaja: 'GastoCierreCaja',
+    ComprobantePago: 'ComprobantePago'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1701,7 +1744,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "usuario" | "vehiculo" | "mantencion" | "repuestoMantencion" | "alertaVehiculo" | "producto" | "movimientoStock" | "comision" | "cliente" | "rutaBase" | "rutaBaseSector" | "comuna" | "sector" | "clienteRutaBase" | "rutaDia" | "paradaDia" | "pedido" | "pedidoItem" | "guiaDespacho" | "itemGuia" | "cuadratura" | "cuadraturaSalida" | "cuadraturaVenta" | "cuadraturaRetorno" | "cuadraturaGasto" | "botellonVacio" | "botellonDanado" | "produccionDiaria" | "tuboCO2" | "stockFabrica" | "stockCamion" | "configuracion" | "logAcceso" | "dispensador" | "mantencionDispensador" | "repuestoDispensador" | "maquinaReemplazo" | "notificacion" | "historialFinanciero" | "cargaCombustible" | "incidencia" | "user" | "session" | "account" | "verification" | "cierreCaja" | "ventaCierreCaja" | "gastoCierreCaja"
+      modelProps: "usuario" | "vehiculo" | "mantencion" | "repuestoMantencion" | "alertaVehiculo" | "producto" | "movimientoStock" | "comision" | "cliente" | "rutaBase" | "rutaBaseSector" | "comuna" | "sector" | "clienteRutaBase" | "rutaDia" | "paradaDia" | "pedido" | "pedidoItem" | "guiaDespacho" | "itemGuia" | "cuadratura" | "cuadraturaSalida" | "cuadraturaVenta" | "cuadraturaRetorno" | "cuadraturaGasto" | "botellonVacio" | "botellonDanado" | "produccionDiaria" | "tuboCO2" | "stockFabrica" | "stockCamion" | "configuracion" | "logAcceso" | "dispensador" | "mantencionDispensador" | "repuestoDispensador" | "maquinaReemplazo" | "notificacion" | "historialFinanciero" | "cargaCombustible" | "incidencia" | "user" | "session" | "account" | "verification" | "cierreCaja" | "ventaCierreCaja" | "gastoCierreCaja" | "comprobantePago"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -4873,6 +4916,72 @@ export namespace Prisma {
           }
         }
       }
+      ComprobantePago: {
+        payload: Prisma.$ComprobantePagoPayload<ExtArgs>
+        fields: Prisma.ComprobantePagoFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ComprobantePagoFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ComprobantePagoPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ComprobantePagoFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ComprobantePagoPayload>
+          }
+          findFirst: {
+            args: Prisma.ComprobantePagoFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ComprobantePagoPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ComprobantePagoFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ComprobantePagoPayload>
+          }
+          findMany: {
+            args: Prisma.ComprobantePagoFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ComprobantePagoPayload>[]
+          }
+          create: {
+            args: Prisma.ComprobantePagoCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ComprobantePagoPayload>
+          }
+          createMany: {
+            args: Prisma.ComprobantePagoCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.ComprobantePagoDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ComprobantePagoPayload>
+          }
+          update: {
+            args: Prisma.ComprobantePagoUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ComprobantePagoPayload>
+          }
+          deleteMany: {
+            args: Prisma.ComprobantePagoDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ComprobantePagoUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.ComprobantePagoUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ComprobantePagoPayload>
+          }
+          aggregate: {
+            args: Prisma.ComprobantePagoAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateComprobantePago>
+          }
+          groupBy: {
+            args: Prisma.ComprobantePagoGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ComprobantePagoGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ComprobantePagoCountArgs<ExtArgs>
+            result: $Utils.Optional<ComprobantePagoCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -5017,6 +5126,7 @@ export namespace Prisma {
     cierreCaja?: CierreCajaOmit
     ventaCierreCaja?: VentaCierreCajaOmit
     gastoCierreCaja?: GastoCierreCajaOmit
+    comprobantePago?: ComprobantePagoOmit
   }
 
   /* Types for Logging */
@@ -5111,6 +5221,7 @@ export namespace Prisma {
     incidencias: number
     movimientos_stock: number
     cierres_caja: number
+    comprobantes_conciliados: number
   }
 
   export type UsuarioCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5128,6 +5239,7 @@ export namespace Prisma {
     incidencias?: boolean | UsuarioCountOutputTypeCountIncidenciasArgs
     movimientos_stock?: boolean | UsuarioCountOutputTypeCountMovimientos_stockArgs
     cierres_caja?: boolean | UsuarioCountOutputTypeCountCierres_cajaArgs
+    comprobantes_conciliados?: boolean | UsuarioCountOutputTypeCountComprobantes_conciliadosArgs
   }
 
   // Custom InputTypes
@@ -5237,6 +5349,13 @@ export namespace Prisma {
    */
   export type UsuarioCountOutputTypeCountCierres_cajaArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: CierreCajaWhereInput
+  }
+
+  /**
+   * UsuarioCountOutputType without action
+   */
+  export type UsuarioCountOutputTypeCountComprobantes_conciliadosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ComprobantePagoWhereInput
   }
 
 
@@ -5463,6 +5582,7 @@ export namespace Prisma {
     paradas: number
     pedidos: number
     incidencias: number
+    comprobantes: number
   }
 
   export type ClienteCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5474,6 +5594,7 @@ export namespace Prisma {
     paradas?: boolean | ClienteCountOutputTypeCountParadasArgs
     pedidos?: boolean | ClienteCountOutputTypeCountPedidosArgs
     incidencias?: boolean | ClienteCountOutputTypeCountIncidenciasArgs
+    comprobantes?: boolean | ClienteCountOutputTypeCountComprobantesArgs
   }
 
   // Custom InputTypes
@@ -5541,6 +5662,13 @@ export namespace Prisma {
    */
   export type ClienteCountOutputTypeCountIncidenciasArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: IncidenciaWhereInput
+  }
+
+  /**
+   * ClienteCountOutputType without action
+   */
+  export type ClienteCountOutputTypeCountComprobantesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ComprobantePagoWhereInput
   }
 
 
@@ -6337,6 +6465,7 @@ export namespace Prisma {
     movimientos_stock?: boolean | Usuario$movimientos_stockArgs<ExtArgs>
     user?: boolean | Usuario$userArgs<ExtArgs>
     cierres_caja?: boolean | Usuario$cierres_cajaArgs<ExtArgs>
+    comprobantes_conciliados?: boolean | Usuario$comprobantes_conciliadosArgs<ExtArgs>
     _count?: boolean | UsuarioCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["usuario"]>
 
@@ -6378,6 +6507,7 @@ export namespace Prisma {
     movimientos_stock?: boolean | Usuario$movimientos_stockArgs<ExtArgs>
     user?: boolean | Usuario$userArgs<ExtArgs>
     cierres_caja?: boolean | Usuario$cierres_cajaArgs<ExtArgs>
+    comprobantes_conciliados?: boolean | Usuario$comprobantes_conciliadosArgs<ExtArgs>
     _count?: boolean | UsuarioCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -6400,6 +6530,7 @@ export namespace Prisma {
       movimientos_stock: Prisma.$MovimientoStockPayload<ExtArgs>[]
       user: Prisma.$UserPayload<ExtArgs> | null
       cierres_caja: Prisma.$CierreCajaPayload<ExtArgs>[]
+      comprobantes_conciliados: Prisma.$ComprobantePagoPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -6773,6 +6904,7 @@ export namespace Prisma {
     movimientos_stock<T extends Usuario$movimientos_stockArgs<ExtArgs> = {}>(args?: Subset<T, Usuario$movimientos_stockArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MovimientoStockPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     user<T extends Usuario$userArgs<ExtArgs> = {}>(args?: Subset<T, Usuario$userArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     cierres_caja<T extends Usuario$cierres_cajaArgs<ExtArgs> = {}>(args?: Subset<T, Usuario$cierres_cajaArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CierreCajaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    comprobantes_conciliados<T extends Usuario$comprobantes_conciliadosArgs<ExtArgs> = {}>(args?: Subset<T, Usuario$comprobantes_conciliadosArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ComprobantePagoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -7531,6 +7663,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: CierreCajaScalarFieldEnum | CierreCajaScalarFieldEnum[]
+  }
+
+  /**
+   * Usuario.comprobantes_conciliados
+   */
+  export type Usuario$comprobantes_conciliadosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ComprobantePago
+     */
+    select?: ComprobantePagoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ComprobantePago
+     */
+    omit?: ComprobantePagoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ComprobantePagoInclude<ExtArgs> | null
+    where?: ComprobantePagoWhereInput
+    orderBy?: ComprobantePagoOrderByWithRelationInput | ComprobantePagoOrderByWithRelationInput[]
+    cursor?: ComprobantePagoWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ComprobantePagoScalarFieldEnum | ComprobantePagoScalarFieldEnum[]
   }
 
   /**
@@ -15301,6 +15457,7 @@ export namespace Prisma {
     paradas?: boolean | Cliente$paradasArgs<ExtArgs>
     pedidos?: boolean | Cliente$pedidosArgs<ExtArgs>
     incidencias?: boolean | Cliente$incidenciasArgs<ExtArgs>
+    comprobantes?: boolean | Cliente$comprobantesArgs<ExtArgs>
     _count?: boolean | ClienteCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["cliente"]>
 
@@ -15338,6 +15495,7 @@ export namespace Prisma {
     paradas?: boolean | Cliente$paradasArgs<ExtArgs>
     pedidos?: boolean | Cliente$pedidosArgs<ExtArgs>
     incidencias?: boolean | Cliente$incidenciasArgs<ExtArgs>
+    comprobantes?: boolean | Cliente$comprobantesArgs<ExtArgs>
     _count?: boolean | ClienteCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -15353,6 +15511,7 @@ export namespace Prisma {
       paradas: Prisma.$ParadaDiaPayload<ExtArgs>[]
       pedidos: Prisma.$PedidoPayload<ExtArgs>[]
       incidencias: Prisma.$IncidenciaPayload<ExtArgs>[]
+      comprobantes: Prisma.$ComprobantePagoPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -15722,6 +15881,7 @@ export namespace Prisma {
     paradas<T extends Cliente$paradasArgs<ExtArgs> = {}>(args?: Subset<T, Cliente$paradasArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ParadaDiaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     pedidos<T extends Cliente$pedidosArgs<ExtArgs> = {}>(args?: Subset<T, Cliente$pedidosArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PedidoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     incidencias<T extends Cliente$incidenciasArgs<ExtArgs> = {}>(args?: Subset<T, Cliente$incidenciasArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IncidenciaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    comprobantes<T extends Cliente$comprobantesArgs<ExtArgs> = {}>(args?: Subset<T, Cliente$comprobantesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ComprobantePagoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -16320,6 +16480,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: IncidenciaScalarFieldEnum | IncidenciaScalarFieldEnum[]
+  }
+
+  /**
+   * Cliente.comprobantes
+   */
+  export type Cliente$comprobantesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ComprobantePago
+     */
+    select?: ComprobantePagoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ComprobantePago
+     */
+    omit?: ComprobantePagoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ComprobantePagoInclude<ExtArgs> | null
+    where?: ComprobantePagoWhereInput
+    orderBy?: ComprobantePagoOrderByWithRelationInput | ComprobantePagoOrderByWithRelationInput[]
+    cursor?: ComprobantePagoWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ComprobantePagoScalarFieldEnum | ComprobantePagoScalarFieldEnum[]
   }
 
   /**
@@ -55767,6 +55951,1187 @@ export namespace Prisma {
 
 
   /**
+   * Model ComprobantePago
+   */
+
+  export type AggregateComprobantePago = {
+    _count: ComprobantePagoCountAggregateOutputType | null
+    _avg: ComprobantePagoAvgAggregateOutputType | null
+    _sum: ComprobantePagoSumAggregateOutputType | null
+    _min: ComprobantePagoMinAggregateOutputType | null
+    _max: ComprobantePagoMaxAggregateOutputType | null
+  }
+
+  export type ComprobantePagoAvgAggregateOutputType = {
+    monto: number | null
+    confianza_ia: number | null
+  }
+
+  export type ComprobantePagoSumAggregateOutputType = {
+    monto: number | null
+    confianza_ia: number | null
+  }
+
+  export type ComprobantePagoMinAggregateOutputType = {
+    id: string | null
+    origen_documento: $Enums.OrigenDocumentoComprobante | null
+    banco_origen: string | null
+    monto: number | null
+    fecha_transaccion: Date | null
+    num_operacion: string | null
+    rut_emisor: string | null
+    metodo_pago: $Enums.MetodoPago | null
+    estado: $Enums.EstadoComprobantePago | null
+    url_archivo: string | null
+    nombre_archivo: string | null
+    mime_type: string | null
+    confianza_ia: number | null
+    observaciones_ia: string | null
+    cliente_id: string | null
+    motivo_rechazo: string | null
+    conciliado_por_id: string | null
+    fecha_conciliacion: Date | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type ComprobantePagoMaxAggregateOutputType = {
+    id: string | null
+    origen_documento: $Enums.OrigenDocumentoComprobante | null
+    banco_origen: string | null
+    monto: number | null
+    fecha_transaccion: Date | null
+    num_operacion: string | null
+    rut_emisor: string | null
+    metodo_pago: $Enums.MetodoPago | null
+    estado: $Enums.EstadoComprobantePago | null
+    url_archivo: string | null
+    nombre_archivo: string | null
+    mime_type: string | null
+    confianza_ia: number | null
+    observaciones_ia: string | null
+    cliente_id: string | null
+    motivo_rechazo: string | null
+    conciliado_por_id: string | null
+    fecha_conciliacion: Date | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type ComprobantePagoCountAggregateOutputType = {
+    id: number
+    origen_documento: number
+    banco_origen: number
+    monto: number
+    fecha_transaccion: number
+    num_operacion: number
+    rut_emisor: number
+    metodo_pago: number
+    estado: number
+    url_archivo: number
+    nombre_archivo: number
+    mime_type: number
+    confianza_ia: number
+    datos_ia_raw: number
+    observaciones_ia: number
+    cliente_id: number
+    motivo_rechazo: number
+    conciliado_por_id: number
+    fecha_conciliacion: number
+    created_at: number
+    updated_at: number
+    _all: number
+  }
+
+
+  export type ComprobantePagoAvgAggregateInputType = {
+    monto?: true
+    confianza_ia?: true
+  }
+
+  export type ComprobantePagoSumAggregateInputType = {
+    monto?: true
+    confianza_ia?: true
+  }
+
+  export type ComprobantePagoMinAggregateInputType = {
+    id?: true
+    origen_documento?: true
+    banco_origen?: true
+    monto?: true
+    fecha_transaccion?: true
+    num_operacion?: true
+    rut_emisor?: true
+    metodo_pago?: true
+    estado?: true
+    url_archivo?: true
+    nombre_archivo?: true
+    mime_type?: true
+    confianza_ia?: true
+    observaciones_ia?: true
+    cliente_id?: true
+    motivo_rechazo?: true
+    conciliado_por_id?: true
+    fecha_conciliacion?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type ComprobantePagoMaxAggregateInputType = {
+    id?: true
+    origen_documento?: true
+    banco_origen?: true
+    monto?: true
+    fecha_transaccion?: true
+    num_operacion?: true
+    rut_emisor?: true
+    metodo_pago?: true
+    estado?: true
+    url_archivo?: true
+    nombre_archivo?: true
+    mime_type?: true
+    confianza_ia?: true
+    observaciones_ia?: true
+    cliente_id?: true
+    motivo_rechazo?: true
+    conciliado_por_id?: true
+    fecha_conciliacion?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type ComprobantePagoCountAggregateInputType = {
+    id?: true
+    origen_documento?: true
+    banco_origen?: true
+    monto?: true
+    fecha_transaccion?: true
+    num_operacion?: true
+    rut_emisor?: true
+    metodo_pago?: true
+    estado?: true
+    url_archivo?: true
+    nombre_archivo?: true
+    mime_type?: true
+    confianza_ia?: true
+    datos_ia_raw?: true
+    observaciones_ia?: true
+    cliente_id?: true
+    motivo_rechazo?: true
+    conciliado_por_id?: true
+    fecha_conciliacion?: true
+    created_at?: true
+    updated_at?: true
+    _all?: true
+  }
+
+  export type ComprobantePagoAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ComprobantePago to aggregate.
+     */
+    where?: ComprobantePagoWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ComprobantePagos to fetch.
+     */
+    orderBy?: ComprobantePagoOrderByWithRelationInput | ComprobantePagoOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ComprobantePagoWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ComprobantePagos from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ComprobantePagos.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ComprobantePagos
+    **/
+    _count?: true | ComprobantePagoCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ComprobantePagoAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ComprobantePagoSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ComprobantePagoMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ComprobantePagoMaxAggregateInputType
+  }
+
+  export type GetComprobantePagoAggregateType<T extends ComprobantePagoAggregateArgs> = {
+        [P in keyof T & keyof AggregateComprobantePago]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateComprobantePago[P]>
+      : GetScalarType<T[P], AggregateComprobantePago[P]>
+  }
+
+
+
+
+  export type ComprobantePagoGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ComprobantePagoWhereInput
+    orderBy?: ComprobantePagoOrderByWithAggregationInput | ComprobantePagoOrderByWithAggregationInput[]
+    by: ComprobantePagoScalarFieldEnum[] | ComprobantePagoScalarFieldEnum
+    having?: ComprobantePagoScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ComprobantePagoCountAggregateInputType | true
+    _avg?: ComprobantePagoAvgAggregateInputType
+    _sum?: ComprobantePagoSumAggregateInputType
+    _min?: ComprobantePagoMinAggregateInputType
+    _max?: ComprobantePagoMaxAggregateInputType
+  }
+
+  export type ComprobantePagoGroupByOutputType = {
+    id: string
+    origen_documento: $Enums.OrigenDocumentoComprobante
+    banco_origen: string | null
+    monto: number
+    fecha_transaccion: Date | null
+    num_operacion: string
+    rut_emisor: string | null
+    metodo_pago: $Enums.MetodoPago
+    estado: $Enums.EstadoComprobantePago
+    url_archivo: string
+    nombre_archivo: string
+    mime_type: string
+    confianza_ia: number
+    datos_ia_raw: JsonValue | null
+    observaciones_ia: string | null
+    cliente_id: string | null
+    motivo_rechazo: string | null
+    conciliado_por_id: string | null
+    fecha_conciliacion: Date | null
+    created_at: Date
+    updated_at: Date
+    _count: ComprobantePagoCountAggregateOutputType | null
+    _avg: ComprobantePagoAvgAggregateOutputType | null
+    _sum: ComprobantePagoSumAggregateOutputType | null
+    _min: ComprobantePagoMinAggregateOutputType | null
+    _max: ComprobantePagoMaxAggregateOutputType | null
+  }
+
+  type GetComprobantePagoGroupByPayload<T extends ComprobantePagoGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ComprobantePagoGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ComprobantePagoGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ComprobantePagoGroupByOutputType[P]>
+            : GetScalarType<T[P], ComprobantePagoGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ComprobantePagoSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    origen_documento?: boolean
+    banco_origen?: boolean
+    monto?: boolean
+    fecha_transaccion?: boolean
+    num_operacion?: boolean
+    rut_emisor?: boolean
+    metodo_pago?: boolean
+    estado?: boolean
+    url_archivo?: boolean
+    nombre_archivo?: boolean
+    mime_type?: boolean
+    confianza_ia?: boolean
+    datos_ia_raw?: boolean
+    observaciones_ia?: boolean
+    cliente_id?: boolean
+    motivo_rechazo?: boolean
+    conciliado_por_id?: boolean
+    fecha_conciliacion?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    cliente?: boolean | ComprobantePago$clienteArgs<ExtArgs>
+    usuario_concilio?: boolean | ComprobantePago$usuario_concilioArgs<ExtArgs>
+  }, ExtArgs["result"]["comprobantePago"]>
+
+
+
+  export type ComprobantePagoSelectScalar = {
+    id?: boolean
+    origen_documento?: boolean
+    banco_origen?: boolean
+    monto?: boolean
+    fecha_transaccion?: boolean
+    num_operacion?: boolean
+    rut_emisor?: boolean
+    metodo_pago?: boolean
+    estado?: boolean
+    url_archivo?: boolean
+    nombre_archivo?: boolean
+    mime_type?: boolean
+    confianza_ia?: boolean
+    datos_ia_raw?: boolean
+    observaciones_ia?: boolean
+    cliente_id?: boolean
+    motivo_rechazo?: boolean
+    conciliado_por_id?: boolean
+    fecha_conciliacion?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }
+
+  export type ComprobantePagoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "origen_documento" | "banco_origen" | "monto" | "fecha_transaccion" | "num_operacion" | "rut_emisor" | "metodo_pago" | "estado" | "url_archivo" | "nombre_archivo" | "mime_type" | "confianza_ia" | "datos_ia_raw" | "observaciones_ia" | "cliente_id" | "motivo_rechazo" | "conciliado_por_id" | "fecha_conciliacion" | "created_at" | "updated_at", ExtArgs["result"]["comprobantePago"]>
+  export type ComprobantePagoInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    cliente?: boolean | ComprobantePago$clienteArgs<ExtArgs>
+    usuario_concilio?: boolean | ComprobantePago$usuario_concilioArgs<ExtArgs>
+  }
+
+  export type $ComprobantePagoPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ComprobantePago"
+    objects: {
+      cliente: Prisma.$ClientePayload<ExtArgs> | null
+      usuario_concilio: Prisma.$UsuarioPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      origen_documento: $Enums.OrigenDocumentoComprobante
+      banco_origen: string | null
+      monto: number
+      fecha_transaccion: Date | null
+      num_operacion: string
+      rut_emisor: string | null
+      metodo_pago: $Enums.MetodoPago
+      estado: $Enums.EstadoComprobantePago
+      url_archivo: string
+      nombre_archivo: string
+      mime_type: string
+      confianza_ia: number
+      datos_ia_raw: Prisma.JsonValue | null
+      observaciones_ia: string | null
+      cliente_id: string | null
+      motivo_rechazo: string | null
+      conciliado_por_id: string | null
+      fecha_conciliacion: Date | null
+      created_at: Date
+      updated_at: Date
+    }, ExtArgs["result"]["comprobantePago"]>
+    composites: {}
+  }
+
+  type ComprobantePagoGetPayload<S extends boolean | null | undefined | ComprobantePagoDefaultArgs> = $Result.GetResult<Prisma.$ComprobantePagoPayload, S>
+
+  type ComprobantePagoCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ComprobantePagoFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ComprobantePagoCountAggregateInputType | true
+    }
+
+  export interface ComprobantePagoDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ComprobantePago'], meta: { name: 'ComprobantePago' } }
+    /**
+     * Find zero or one ComprobantePago that matches the filter.
+     * @param {ComprobantePagoFindUniqueArgs} args - Arguments to find a ComprobantePago
+     * @example
+     * // Get one ComprobantePago
+     * const comprobantePago = await prisma.comprobantePago.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ComprobantePagoFindUniqueArgs>(args: SelectSubset<T, ComprobantePagoFindUniqueArgs<ExtArgs>>): Prisma__ComprobantePagoClient<$Result.GetResult<Prisma.$ComprobantePagoPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ComprobantePago that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ComprobantePagoFindUniqueOrThrowArgs} args - Arguments to find a ComprobantePago
+     * @example
+     * // Get one ComprobantePago
+     * const comprobantePago = await prisma.comprobantePago.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ComprobantePagoFindUniqueOrThrowArgs>(args: SelectSubset<T, ComprobantePagoFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ComprobantePagoClient<$Result.GetResult<Prisma.$ComprobantePagoPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ComprobantePago that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ComprobantePagoFindFirstArgs} args - Arguments to find a ComprobantePago
+     * @example
+     * // Get one ComprobantePago
+     * const comprobantePago = await prisma.comprobantePago.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ComprobantePagoFindFirstArgs>(args?: SelectSubset<T, ComprobantePagoFindFirstArgs<ExtArgs>>): Prisma__ComprobantePagoClient<$Result.GetResult<Prisma.$ComprobantePagoPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ComprobantePago that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ComprobantePagoFindFirstOrThrowArgs} args - Arguments to find a ComprobantePago
+     * @example
+     * // Get one ComprobantePago
+     * const comprobantePago = await prisma.comprobantePago.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ComprobantePagoFindFirstOrThrowArgs>(args?: SelectSubset<T, ComprobantePagoFindFirstOrThrowArgs<ExtArgs>>): Prisma__ComprobantePagoClient<$Result.GetResult<Prisma.$ComprobantePagoPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ComprobantePagos that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ComprobantePagoFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ComprobantePagos
+     * const comprobantePagos = await prisma.comprobantePago.findMany()
+     * 
+     * // Get first 10 ComprobantePagos
+     * const comprobantePagos = await prisma.comprobantePago.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const comprobantePagoWithIdOnly = await prisma.comprobantePago.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ComprobantePagoFindManyArgs>(args?: SelectSubset<T, ComprobantePagoFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ComprobantePagoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ComprobantePago.
+     * @param {ComprobantePagoCreateArgs} args - Arguments to create a ComprobantePago.
+     * @example
+     * // Create one ComprobantePago
+     * const ComprobantePago = await prisma.comprobantePago.create({
+     *   data: {
+     *     // ... data to create a ComprobantePago
+     *   }
+     * })
+     * 
+     */
+    create<T extends ComprobantePagoCreateArgs>(args: SelectSubset<T, ComprobantePagoCreateArgs<ExtArgs>>): Prisma__ComprobantePagoClient<$Result.GetResult<Prisma.$ComprobantePagoPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ComprobantePagos.
+     * @param {ComprobantePagoCreateManyArgs} args - Arguments to create many ComprobantePagos.
+     * @example
+     * // Create many ComprobantePagos
+     * const comprobantePago = await prisma.comprobantePago.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ComprobantePagoCreateManyArgs>(args?: SelectSubset<T, ComprobantePagoCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a ComprobantePago.
+     * @param {ComprobantePagoDeleteArgs} args - Arguments to delete one ComprobantePago.
+     * @example
+     * // Delete one ComprobantePago
+     * const ComprobantePago = await prisma.comprobantePago.delete({
+     *   where: {
+     *     // ... filter to delete one ComprobantePago
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ComprobantePagoDeleteArgs>(args: SelectSubset<T, ComprobantePagoDeleteArgs<ExtArgs>>): Prisma__ComprobantePagoClient<$Result.GetResult<Prisma.$ComprobantePagoPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ComprobantePago.
+     * @param {ComprobantePagoUpdateArgs} args - Arguments to update one ComprobantePago.
+     * @example
+     * // Update one ComprobantePago
+     * const comprobantePago = await prisma.comprobantePago.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ComprobantePagoUpdateArgs>(args: SelectSubset<T, ComprobantePagoUpdateArgs<ExtArgs>>): Prisma__ComprobantePagoClient<$Result.GetResult<Prisma.$ComprobantePagoPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ComprobantePagos.
+     * @param {ComprobantePagoDeleteManyArgs} args - Arguments to filter ComprobantePagos to delete.
+     * @example
+     * // Delete a few ComprobantePagos
+     * const { count } = await prisma.comprobantePago.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ComprobantePagoDeleteManyArgs>(args?: SelectSubset<T, ComprobantePagoDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ComprobantePagos.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ComprobantePagoUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ComprobantePagos
+     * const comprobantePago = await prisma.comprobantePago.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ComprobantePagoUpdateManyArgs>(args: SelectSubset<T, ComprobantePagoUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one ComprobantePago.
+     * @param {ComprobantePagoUpsertArgs} args - Arguments to update or create a ComprobantePago.
+     * @example
+     * // Update or create a ComprobantePago
+     * const comprobantePago = await prisma.comprobantePago.upsert({
+     *   create: {
+     *     // ... data to create a ComprobantePago
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ComprobantePago we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ComprobantePagoUpsertArgs>(args: SelectSubset<T, ComprobantePagoUpsertArgs<ExtArgs>>): Prisma__ComprobantePagoClient<$Result.GetResult<Prisma.$ComprobantePagoPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ComprobantePagos.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ComprobantePagoCountArgs} args - Arguments to filter ComprobantePagos to count.
+     * @example
+     * // Count the number of ComprobantePagos
+     * const count = await prisma.comprobantePago.count({
+     *   where: {
+     *     // ... the filter for the ComprobantePagos we want to count
+     *   }
+     * })
+    **/
+    count<T extends ComprobantePagoCountArgs>(
+      args?: Subset<T, ComprobantePagoCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ComprobantePagoCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ComprobantePago.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ComprobantePagoAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ComprobantePagoAggregateArgs>(args: Subset<T, ComprobantePagoAggregateArgs>): Prisma.PrismaPromise<GetComprobantePagoAggregateType<T>>
+
+    /**
+     * Group by ComprobantePago.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ComprobantePagoGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ComprobantePagoGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ComprobantePagoGroupByArgs['orderBy'] }
+        : { orderBy?: ComprobantePagoGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ComprobantePagoGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetComprobantePagoGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ComprobantePago model
+   */
+  readonly fields: ComprobantePagoFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ComprobantePago.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ComprobantePagoClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    cliente<T extends ComprobantePago$clienteArgs<ExtArgs> = {}>(args?: Subset<T, ComprobantePago$clienteArgs<ExtArgs>>): Prisma__ClienteClient<$Result.GetResult<Prisma.$ClientePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    usuario_concilio<T extends ComprobantePago$usuario_concilioArgs<ExtArgs> = {}>(args?: Subset<T, ComprobantePago$usuario_concilioArgs<ExtArgs>>): Prisma__UsuarioClient<$Result.GetResult<Prisma.$UsuarioPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ComprobantePago model
+   */
+  interface ComprobantePagoFieldRefs {
+    readonly id: FieldRef<"ComprobantePago", 'String'>
+    readonly origen_documento: FieldRef<"ComprobantePago", 'OrigenDocumentoComprobante'>
+    readonly banco_origen: FieldRef<"ComprobantePago", 'String'>
+    readonly monto: FieldRef<"ComprobantePago", 'Float'>
+    readonly fecha_transaccion: FieldRef<"ComprobantePago", 'DateTime'>
+    readonly num_operacion: FieldRef<"ComprobantePago", 'String'>
+    readonly rut_emisor: FieldRef<"ComprobantePago", 'String'>
+    readonly metodo_pago: FieldRef<"ComprobantePago", 'MetodoPago'>
+    readonly estado: FieldRef<"ComprobantePago", 'EstadoComprobantePago'>
+    readonly url_archivo: FieldRef<"ComprobantePago", 'String'>
+    readonly nombre_archivo: FieldRef<"ComprobantePago", 'String'>
+    readonly mime_type: FieldRef<"ComprobantePago", 'String'>
+    readonly confianza_ia: FieldRef<"ComprobantePago", 'Float'>
+    readonly datos_ia_raw: FieldRef<"ComprobantePago", 'Json'>
+    readonly observaciones_ia: FieldRef<"ComprobantePago", 'String'>
+    readonly cliente_id: FieldRef<"ComprobantePago", 'String'>
+    readonly motivo_rechazo: FieldRef<"ComprobantePago", 'String'>
+    readonly conciliado_por_id: FieldRef<"ComprobantePago", 'String'>
+    readonly fecha_conciliacion: FieldRef<"ComprobantePago", 'DateTime'>
+    readonly created_at: FieldRef<"ComprobantePago", 'DateTime'>
+    readonly updated_at: FieldRef<"ComprobantePago", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ComprobantePago findUnique
+   */
+  export type ComprobantePagoFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ComprobantePago
+     */
+    select?: ComprobantePagoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ComprobantePago
+     */
+    omit?: ComprobantePagoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ComprobantePagoInclude<ExtArgs> | null
+    /**
+     * Filter, which ComprobantePago to fetch.
+     */
+    where: ComprobantePagoWhereUniqueInput
+  }
+
+  /**
+   * ComprobantePago findUniqueOrThrow
+   */
+  export type ComprobantePagoFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ComprobantePago
+     */
+    select?: ComprobantePagoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ComprobantePago
+     */
+    omit?: ComprobantePagoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ComprobantePagoInclude<ExtArgs> | null
+    /**
+     * Filter, which ComprobantePago to fetch.
+     */
+    where: ComprobantePagoWhereUniqueInput
+  }
+
+  /**
+   * ComprobantePago findFirst
+   */
+  export type ComprobantePagoFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ComprobantePago
+     */
+    select?: ComprobantePagoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ComprobantePago
+     */
+    omit?: ComprobantePagoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ComprobantePagoInclude<ExtArgs> | null
+    /**
+     * Filter, which ComprobantePago to fetch.
+     */
+    where?: ComprobantePagoWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ComprobantePagos to fetch.
+     */
+    orderBy?: ComprobantePagoOrderByWithRelationInput | ComprobantePagoOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ComprobantePagos.
+     */
+    cursor?: ComprobantePagoWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ComprobantePagos from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ComprobantePagos.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ComprobantePagos.
+     */
+    distinct?: ComprobantePagoScalarFieldEnum | ComprobantePagoScalarFieldEnum[]
+  }
+
+  /**
+   * ComprobantePago findFirstOrThrow
+   */
+  export type ComprobantePagoFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ComprobantePago
+     */
+    select?: ComprobantePagoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ComprobantePago
+     */
+    omit?: ComprobantePagoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ComprobantePagoInclude<ExtArgs> | null
+    /**
+     * Filter, which ComprobantePago to fetch.
+     */
+    where?: ComprobantePagoWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ComprobantePagos to fetch.
+     */
+    orderBy?: ComprobantePagoOrderByWithRelationInput | ComprobantePagoOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ComprobantePagos.
+     */
+    cursor?: ComprobantePagoWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ComprobantePagos from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ComprobantePagos.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ComprobantePagos.
+     */
+    distinct?: ComprobantePagoScalarFieldEnum | ComprobantePagoScalarFieldEnum[]
+  }
+
+  /**
+   * ComprobantePago findMany
+   */
+  export type ComprobantePagoFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ComprobantePago
+     */
+    select?: ComprobantePagoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ComprobantePago
+     */
+    omit?: ComprobantePagoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ComprobantePagoInclude<ExtArgs> | null
+    /**
+     * Filter, which ComprobantePagos to fetch.
+     */
+    where?: ComprobantePagoWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ComprobantePagos to fetch.
+     */
+    orderBy?: ComprobantePagoOrderByWithRelationInput | ComprobantePagoOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ComprobantePagos.
+     */
+    cursor?: ComprobantePagoWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ComprobantePagos from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ComprobantePagos.
+     */
+    skip?: number
+    distinct?: ComprobantePagoScalarFieldEnum | ComprobantePagoScalarFieldEnum[]
+  }
+
+  /**
+   * ComprobantePago create
+   */
+  export type ComprobantePagoCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ComprobantePago
+     */
+    select?: ComprobantePagoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ComprobantePago
+     */
+    omit?: ComprobantePagoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ComprobantePagoInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ComprobantePago.
+     */
+    data: XOR<ComprobantePagoCreateInput, ComprobantePagoUncheckedCreateInput>
+  }
+
+  /**
+   * ComprobantePago createMany
+   */
+  export type ComprobantePagoCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ComprobantePagos.
+     */
+    data: ComprobantePagoCreateManyInput | ComprobantePagoCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ComprobantePago update
+   */
+  export type ComprobantePagoUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ComprobantePago
+     */
+    select?: ComprobantePagoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ComprobantePago
+     */
+    omit?: ComprobantePagoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ComprobantePagoInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ComprobantePago.
+     */
+    data: XOR<ComprobantePagoUpdateInput, ComprobantePagoUncheckedUpdateInput>
+    /**
+     * Choose, which ComprobantePago to update.
+     */
+    where: ComprobantePagoWhereUniqueInput
+  }
+
+  /**
+   * ComprobantePago updateMany
+   */
+  export type ComprobantePagoUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ComprobantePagos.
+     */
+    data: XOR<ComprobantePagoUpdateManyMutationInput, ComprobantePagoUncheckedUpdateManyInput>
+    /**
+     * Filter which ComprobantePagos to update
+     */
+    where?: ComprobantePagoWhereInput
+    /**
+     * Limit how many ComprobantePagos to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ComprobantePago upsert
+   */
+  export type ComprobantePagoUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ComprobantePago
+     */
+    select?: ComprobantePagoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ComprobantePago
+     */
+    omit?: ComprobantePagoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ComprobantePagoInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ComprobantePago to update in case it exists.
+     */
+    where: ComprobantePagoWhereUniqueInput
+    /**
+     * In case the ComprobantePago found by the `where` argument doesn't exist, create a new ComprobantePago with this data.
+     */
+    create: XOR<ComprobantePagoCreateInput, ComprobantePagoUncheckedCreateInput>
+    /**
+     * In case the ComprobantePago was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ComprobantePagoUpdateInput, ComprobantePagoUncheckedUpdateInput>
+  }
+
+  /**
+   * ComprobantePago delete
+   */
+  export type ComprobantePagoDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ComprobantePago
+     */
+    select?: ComprobantePagoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ComprobantePago
+     */
+    omit?: ComprobantePagoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ComprobantePagoInclude<ExtArgs> | null
+    /**
+     * Filter which ComprobantePago to delete.
+     */
+    where: ComprobantePagoWhereUniqueInput
+  }
+
+  /**
+   * ComprobantePago deleteMany
+   */
+  export type ComprobantePagoDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ComprobantePagos to delete
+     */
+    where?: ComprobantePagoWhereInput
+    /**
+     * Limit how many ComprobantePagos to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ComprobantePago.cliente
+   */
+  export type ComprobantePago$clienteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Cliente
+     */
+    select?: ClienteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Cliente
+     */
+    omit?: ClienteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ClienteInclude<ExtArgs> | null
+    where?: ClienteWhereInput
+  }
+
+  /**
+   * ComprobantePago.usuario_concilio
+   */
+  export type ComprobantePago$usuario_concilioArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Usuario
+     */
+    select?: UsuarioSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Usuario
+     */
+    omit?: UsuarioOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UsuarioInclude<ExtArgs> | null
+    where?: UsuarioWhereInput
+  }
+
+  /**
+   * ComprobantePago without action
+   */
+  export type ComprobantePagoDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ComprobantePago
+     */
+    select?: ComprobantePagoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ComprobantePago
+     */
+    omit?: ComprobantePagoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ComprobantePagoInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -56462,6 +57827,33 @@ export namespace Prisma {
   export type GastoCierreCajaScalarFieldEnum = (typeof GastoCierreCajaScalarFieldEnum)[keyof typeof GastoCierreCajaScalarFieldEnum]
 
 
+  export const ComprobantePagoScalarFieldEnum: {
+    id: 'id',
+    origen_documento: 'origen_documento',
+    banco_origen: 'banco_origen',
+    monto: 'monto',
+    fecha_transaccion: 'fecha_transaccion',
+    num_operacion: 'num_operacion',
+    rut_emisor: 'rut_emisor',
+    metodo_pago: 'metodo_pago',
+    estado: 'estado',
+    url_archivo: 'url_archivo',
+    nombre_archivo: 'nombre_archivo',
+    mime_type: 'mime_type',
+    confianza_ia: 'confianza_ia',
+    datos_ia_raw: 'datos_ia_raw',
+    observaciones_ia: 'observaciones_ia',
+    cliente_id: 'cliente_id',
+    motivo_rechazo: 'motivo_rechazo',
+    conciliado_por_id: 'conciliado_por_id',
+    fecha_conciliacion: 'fecha_conciliacion',
+    created_at: 'created_at',
+    updated_at: 'updated_at'
+  };
+
+  export type ComprobantePagoScalarFieldEnum = (typeof ComprobantePagoScalarFieldEnum)[keyof typeof ComprobantePagoScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -57000,6 +58392,23 @@ export namespace Prisma {
   export type GastoCierreCajaOrderByRelevanceFieldEnum = (typeof GastoCierreCajaOrderByRelevanceFieldEnum)[keyof typeof GastoCierreCajaOrderByRelevanceFieldEnum]
 
 
+  export const ComprobantePagoOrderByRelevanceFieldEnum: {
+    id: 'id',
+    banco_origen: 'banco_origen',
+    num_operacion: 'num_operacion',
+    rut_emisor: 'rut_emisor',
+    url_archivo: 'url_archivo',
+    nombre_archivo: 'nombre_archivo',
+    mime_type: 'mime_type',
+    observaciones_ia: 'observaciones_ia',
+    cliente_id: 'cliente_id',
+    motivo_rechazo: 'motivo_rechazo',
+    conciliado_por_id: 'conciliado_por_id'
+  };
+
+  export type ComprobantePagoOrderByRelevanceFieldEnum = (typeof ComprobantePagoOrderByRelevanceFieldEnum)[keyof typeof ComprobantePagoOrderByRelevanceFieldEnum]
+
+
   /**
    * Field references
    */
@@ -57227,6 +58636,20 @@ export namespace Prisma {
    */
   export type EnumMetodoPagoCajaFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MetodoPagoCaja'>
     
+
+
+  /**
+   * Reference to a field of type 'OrigenDocumentoComprobante'
+   */
+  export type EnumOrigenDocumentoComprobanteFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OrigenDocumentoComprobante'>
+    
+
+
+  /**
+   * Reference to a field of type 'EstadoComprobantePago'
+   */
+  export type EnumEstadoComprobantePagoFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EstadoComprobantePago'>
+    
   /**
    * Deep Input Types
    */
@@ -57267,6 +58690,7 @@ export namespace Prisma {
     movimientos_stock?: MovimientoStockListRelationFilter
     user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     cierres_caja?: CierreCajaListRelationFilter
+    comprobantes_conciliados?: ComprobantePagoListRelationFilter
   }
 
   export type UsuarioOrderByWithRelationInput = {
@@ -57301,6 +58725,7 @@ export namespace Prisma {
     movimientos_stock?: MovimientoStockOrderByRelationAggregateInput
     user?: UserOrderByWithRelationInput
     cierres_caja?: CierreCajaOrderByRelationAggregateInput
+    comprobantes_conciliados?: ComprobantePagoOrderByRelationAggregateInput
     _relevance?: UsuarioOrderByRelevanceInput
   }
 
@@ -57339,6 +58764,7 @@ export namespace Prisma {
     movimientos_stock?: MovimientoStockListRelationFilter
     user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     cierres_caja?: CierreCajaListRelationFilter
+    comprobantes_conciliados?: ComprobantePagoListRelationFilter
   }, "id" | "user_id" | "rut" | "email">
 
   export type UsuarioOrderByWithAggregationInput = {
@@ -57946,6 +59372,7 @@ export namespace Prisma {
     paradas?: ParadaDiaListRelationFilter
     pedidos?: PedidoListRelationFilter
     incidencias?: IncidenciaListRelationFilter
+    comprobantes?: ComprobantePagoListRelationFilter
   }
 
   export type ClienteOrderByWithRelationInput = {
@@ -57976,6 +59403,7 @@ export namespace Prisma {
     paradas?: ParadaDiaOrderByRelationAggregateInput
     pedidos?: PedidoOrderByRelationAggregateInput
     incidencias?: IncidenciaOrderByRelationAggregateInput
+    comprobantes?: ComprobantePagoOrderByRelationAggregateInput
     _relevance?: ClienteOrderByRelevanceInput
   }
 
@@ -58010,6 +59438,7 @@ export namespace Prisma {
     paradas?: ParadaDiaListRelationFilter
     pedidos?: PedidoListRelationFilter
     incidencias?: IncidenciaListRelationFilter
+    comprobantes?: ComprobantePagoListRelationFilter
   }, "id">
 
   export type ClienteOrderByWithAggregationInput = {
@@ -61021,6 +62450,148 @@ export namespace Prisma {
     tipo?: StringWithAggregatesFilter<"GastoCierreCaja"> | string
   }
 
+  export type ComprobantePagoWhereInput = {
+    AND?: ComprobantePagoWhereInput | ComprobantePagoWhereInput[]
+    OR?: ComprobantePagoWhereInput[]
+    NOT?: ComprobantePagoWhereInput | ComprobantePagoWhereInput[]
+    id?: StringFilter<"ComprobantePago"> | string
+    origen_documento?: EnumOrigenDocumentoComprobanteFilter<"ComprobantePago"> | $Enums.OrigenDocumentoComprobante
+    banco_origen?: StringNullableFilter<"ComprobantePago"> | string | null
+    monto?: FloatFilter<"ComprobantePago"> | number
+    fecha_transaccion?: DateTimeNullableFilter<"ComprobantePago"> | Date | string | null
+    num_operacion?: StringFilter<"ComprobantePago"> | string
+    rut_emisor?: StringNullableFilter<"ComprobantePago"> | string | null
+    metodo_pago?: EnumMetodoPagoFilter<"ComprobantePago"> | $Enums.MetodoPago
+    estado?: EnumEstadoComprobantePagoFilter<"ComprobantePago"> | $Enums.EstadoComprobantePago
+    url_archivo?: StringFilter<"ComprobantePago"> | string
+    nombre_archivo?: StringFilter<"ComprobantePago"> | string
+    mime_type?: StringFilter<"ComprobantePago"> | string
+    confianza_ia?: FloatFilter<"ComprobantePago"> | number
+    datos_ia_raw?: JsonNullableFilter<"ComprobantePago">
+    observaciones_ia?: StringNullableFilter<"ComprobantePago"> | string | null
+    cliente_id?: StringNullableFilter<"ComprobantePago"> | string | null
+    motivo_rechazo?: StringNullableFilter<"ComprobantePago"> | string | null
+    conciliado_por_id?: StringNullableFilter<"ComprobantePago"> | string | null
+    fecha_conciliacion?: DateTimeNullableFilter<"ComprobantePago"> | Date | string | null
+    created_at?: DateTimeFilter<"ComprobantePago"> | Date | string
+    updated_at?: DateTimeFilter<"ComprobantePago"> | Date | string
+    cliente?: XOR<ClienteNullableScalarRelationFilter, ClienteWhereInput> | null
+    usuario_concilio?: XOR<UsuarioNullableScalarRelationFilter, UsuarioWhereInput> | null
+  }
+
+  export type ComprobantePagoOrderByWithRelationInput = {
+    id?: SortOrder
+    origen_documento?: SortOrder
+    banco_origen?: SortOrderInput | SortOrder
+    monto?: SortOrder
+    fecha_transaccion?: SortOrderInput | SortOrder
+    num_operacion?: SortOrder
+    rut_emisor?: SortOrderInput | SortOrder
+    metodo_pago?: SortOrder
+    estado?: SortOrder
+    url_archivo?: SortOrder
+    nombre_archivo?: SortOrder
+    mime_type?: SortOrder
+    confianza_ia?: SortOrder
+    datos_ia_raw?: SortOrderInput | SortOrder
+    observaciones_ia?: SortOrderInput | SortOrder
+    cliente_id?: SortOrderInput | SortOrder
+    motivo_rechazo?: SortOrderInput | SortOrder
+    conciliado_por_id?: SortOrderInput | SortOrder
+    fecha_conciliacion?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    cliente?: ClienteOrderByWithRelationInput
+    usuario_concilio?: UsuarioOrderByWithRelationInput
+    _relevance?: ComprobantePagoOrderByRelevanceInput
+  }
+
+  export type ComprobantePagoWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    uq_operacion_monto?: ComprobantePagoUq_operacion_montoCompoundUniqueInput
+    AND?: ComprobantePagoWhereInput | ComprobantePagoWhereInput[]
+    OR?: ComprobantePagoWhereInput[]
+    NOT?: ComprobantePagoWhereInput | ComprobantePagoWhereInput[]
+    origen_documento?: EnumOrigenDocumentoComprobanteFilter<"ComprobantePago"> | $Enums.OrigenDocumentoComprobante
+    banco_origen?: StringNullableFilter<"ComprobantePago"> | string | null
+    monto?: FloatFilter<"ComprobantePago"> | number
+    fecha_transaccion?: DateTimeNullableFilter<"ComprobantePago"> | Date | string | null
+    num_operacion?: StringFilter<"ComprobantePago"> | string
+    rut_emisor?: StringNullableFilter<"ComprobantePago"> | string | null
+    metodo_pago?: EnumMetodoPagoFilter<"ComprobantePago"> | $Enums.MetodoPago
+    estado?: EnumEstadoComprobantePagoFilter<"ComprobantePago"> | $Enums.EstadoComprobantePago
+    url_archivo?: StringFilter<"ComprobantePago"> | string
+    nombre_archivo?: StringFilter<"ComprobantePago"> | string
+    mime_type?: StringFilter<"ComprobantePago"> | string
+    confianza_ia?: FloatFilter<"ComprobantePago"> | number
+    datos_ia_raw?: JsonNullableFilter<"ComprobantePago">
+    observaciones_ia?: StringNullableFilter<"ComprobantePago"> | string | null
+    cliente_id?: StringNullableFilter<"ComprobantePago"> | string | null
+    motivo_rechazo?: StringNullableFilter<"ComprobantePago"> | string | null
+    conciliado_por_id?: StringNullableFilter<"ComprobantePago"> | string | null
+    fecha_conciliacion?: DateTimeNullableFilter<"ComprobantePago"> | Date | string | null
+    created_at?: DateTimeFilter<"ComprobantePago"> | Date | string
+    updated_at?: DateTimeFilter<"ComprobantePago"> | Date | string
+    cliente?: XOR<ClienteNullableScalarRelationFilter, ClienteWhereInput> | null
+    usuario_concilio?: XOR<UsuarioNullableScalarRelationFilter, UsuarioWhereInput> | null
+  }, "id" | "uq_operacion_monto">
+
+  export type ComprobantePagoOrderByWithAggregationInput = {
+    id?: SortOrder
+    origen_documento?: SortOrder
+    banco_origen?: SortOrderInput | SortOrder
+    monto?: SortOrder
+    fecha_transaccion?: SortOrderInput | SortOrder
+    num_operacion?: SortOrder
+    rut_emisor?: SortOrderInput | SortOrder
+    metodo_pago?: SortOrder
+    estado?: SortOrder
+    url_archivo?: SortOrder
+    nombre_archivo?: SortOrder
+    mime_type?: SortOrder
+    confianza_ia?: SortOrder
+    datos_ia_raw?: SortOrderInput | SortOrder
+    observaciones_ia?: SortOrderInput | SortOrder
+    cliente_id?: SortOrderInput | SortOrder
+    motivo_rechazo?: SortOrderInput | SortOrder
+    conciliado_por_id?: SortOrderInput | SortOrder
+    fecha_conciliacion?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    _count?: ComprobantePagoCountOrderByAggregateInput
+    _avg?: ComprobantePagoAvgOrderByAggregateInput
+    _max?: ComprobantePagoMaxOrderByAggregateInput
+    _min?: ComprobantePagoMinOrderByAggregateInput
+    _sum?: ComprobantePagoSumOrderByAggregateInput
+  }
+
+  export type ComprobantePagoScalarWhereWithAggregatesInput = {
+    AND?: ComprobantePagoScalarWhereWithAggregatesInput | ComprobantePagoScalarWhereWithAggregatesInput[]
+    OR?: ComprobantePagoScalarWhereWithAggregatesInput[]
+    NOT?: ComprobantePagoScalarWhereWithAggregatesInput | ComprobantePagoScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ComprobantePago"> | string
+    origen_documento?: EnumOrigenDocumentoComprobanteWithAggregatesFilter<"ComprobantePago"> | $Enums.OrigenDocumentoComprobante
+    banco_origen?: StringNullableWithAggregatesFilter<"ComprobantePago"> | string | null
+    monto?: FloatWithAggregatesFilter<"ComprobantePago"> | number
+    fecha_transaccion?: DateTimeNullableWithAggregatesFilter<"ComprobantePago"> | Date | string | null
+    num_operacion?: StringWithAggregatesFilter<"ComprobantePago"> | string
+    rut_emisor?: StringNullableWithAggregatesFilter<"ComprobantePago"> | string | null
+    metodo_pago?: EnumMetodoPagoWithAggregatesFilter<"ComprobantePago"> | $Enums.MetodoPago
+    estado?: EnumEstadoComprobantePagoWithAggregatesFilter<"ComprobantePago"> | $Enums.EstadoComprobantePago
+    url_archivo?: StringWithAggregatesFilter<"ComprobantePago"> | string
+    nombre_archivo?: StringWithAggregatesFilter<"ComprobantePago"> | string
+    mime_type?: StringWithAggregatesFilter<"ComprobantePago"> | string
+    confianza_ia?: FloatWithAggregatesFilter<"ComprobantePago"> | number
+    datos_ia_raw?: JsonNullableWithAggregatesFilter<"ComprobantePago">
+    observaciones_ia?: StringNullableWithAggregatesFilter<"ComprobantePago"> | string | null
+    cliente_id?: StringNullableWithAggregatesFilter<"ComprobantePago"> | string | null
+    motivo_rechazo?: StringNullableWithAggregatesFilter<"ComprobantePago"> | string | null
+    conciliado_por_id?: StringNullableWithAggregatesFilter<"ComprobantePago"> | string | null
+    fecha_conciliacion?: DateTimeNullableWithAggregatesFilter<"ComprobantePago"> | Date | string | null
+    created_at?: DateTimeWithAggregatesFilter<"ComprobantePago"> | Date | string
+    updated_at?: DateTimeWithAggregatesFilter<"ComprobantePago"> | Date | string
+  }
+
   export type UsuarioCreateInput = {
     id?: string
     nombre: string
@@ -61051,6 +62622,7 @@ export namespace Prisma {
     movimientos_stock?: MovimientoStockCreateNestedManyWithoutUsuarioInput
     user?: UserCreateNestedOneWithoutUsuarioInput
     cierres_caja?: CierreCajaCreateNestedManyWithoutUsuarioInput
+    comprobantes_conciliados?: ComprobantePagoCreateNestedManyWithoutUsuario_concilioInput
   }
 
   export type UsuarioUncheckedCreateInput = {
@@ -61083,6 +62655,7 @@ export namespace Prisma {
     incidencias?: IncidenciaUncheckedCreateNestedManyWithoutUsuarioInput
     movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutUsuarioInput
     cierres_caja?: CierreCajaUncheckedCreateNestedManyWithoutUsuarioInput
+    comprobantes_conciliados?: ComprobantePagoUncheckedCreateNestedManyWithoutUsuario_concilioInput
   }
 
   export type UsuarioUpdateInput = {
@@ -61115,6 +62688,7 @@ export namespace Prisma {
     movimientos_stock?: MovimientoStockUpdateManyWithoutUsuarioNestedInput
     user?: UserUpdateOneWithoutUsuarioNestedInput
     cierres_caja?: CierreCajaUpdateManyWithoutUsuarioNestedInput
+    comprobantes_conciliados?: ComprobantePagoUpdateManyWithoutUsuario_concilioNestedInput
   }
 
   export type UsuarioUncheckedUpdateInput = {
@@ -61147,6 +62721,7 @@ export namespace Prisma {
     incidencias?: IncidenciaUncheckedUpdateManyWithoutUsuarioNestedInput
     movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutUsuarioNestedInput
     cierres_caja?: CierreCajaUncheckedUpdateManyWithoutUsuarioNestedInput
+    comprobantes_conciliados?: ComprobantePagoUncheckedUpdateManyWithoutUsuario_concilioNestedInput
   }
 
   export type UsuarioCreateManyInput = {
@@ -61786,6 +63361,7 @@ export namespace Prisma {
     paradas?: ParadaDiaCreateNestedManyWithoutClienteInput
     pedidos?: PedidoCreateNestedManyWithoutClienteInput
     incidencias?: IncidenciaCreateNestedManyWithoutClienteInput
+    comprobantes?: ComprobantePagoCreateNestedManyWithoutClienteInput
   }
 
   export type ClienteUncheckedCreateInput = {
@@ -61815,6 +63391,7 @@ export namespace Prisma {
     paradas?: ParadaDiaUncheckedCreateNestedManyWithoutClienteInput
     pedidos?: PedidoUncheckedCreateNestedManyWithoutClienteInput
     incidencias?: IncidenciaUncheckedCreateNestedManyWithoutClienteInput
+    comprobantes?: ComprobantePagoUncheckedCreateNestedManyWithoutClienteInput
   }
 
   export type ClienteUpdateInput = {
@@ -61844,6 +63421,7 @@ export namespace Prisma {
     paradas?: ParadaDiaUpdateManyWithoutClienteNestedInput
     pedidos?: PedidoUpdateManyWithoutClienteNestedInput
     incidencias?: IncidenciaUpdateManyWithoutClienteNestedInput
+    comprobantes?: ComprobantePagoUpdateManyWithoutClienteNestedInput
   }
 
   export type ClienteUncheckedUpdateInput = {
@@ -61873,6 +63451,7 @@ export namespace Prisma {
     paradas?: ParadaDiaUncheckedUpdateManyWithoutClienteNestedInput
     pedidos?: PedidoUncheckedUpdateManyWithoutClienteNestedInput
     incidencias?: IncidenciaUncheckedUpdateManyWithoutClienteNestedInput
+    comprobantes?: ComprobantePagoUncheckedUpdateManyWithoutClienteNestedInput
   }
 
   export type ClienteCreateManyInput = {
@@ -64989,6 +66568,172 @@ export namespace Prisma {
     tipo?: StringFieldUpdateOperationsInput | string
   }
 
+  export type ComprobantePagoCreateInput = {
+    id?: string
+    origen_documento?: $Enums.OrigenDocumentoComprobante
+    banco_origen?: string | null
+    monto: number
+    fecha_transaccion?: Date | string | null
+    num_operacion: string
+    rut_emisor?: string | null
+    metodo_pago?: $Enums.MetodoPago
+    estado?: $Enums.EstadoComprobantePago
+    url_archivo: string
+    nombre_archivo: string
+    mime_type: string
+    confianza_ia?: number
+    datos_ia_raw?: NullableJsonNullValueInput | InputJsonValue
+    observaciones_ia?: string | null
+    motivo_rechazo?: string | null
+    fecha_conciliacion?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    cliente?: ClienteCreateNestedOneWithoutComprobantesInput
+    usuario_concilio?: UsuarioCreateNestedOneWithoutComprobantes_conciliadosInput
+  }
+
+  export type ComprobantePagoUncheckedCreateInput = {
+    id?: string
+    origen_documento?: $Enums.OrigenDocumentoComprobante
+    banco_origen?: string | null
+    monto: number
+    fecha_transaccion?: Date | string | null
+    num_operacion: string
+    rut_emisor?: string | null
+    metodo_pago?: $Enums.MetodoPago
+    estado?: $Enums.EstadoComprobantePago
+    url_archivo: string
+    nombre_archivo: string
+    mime_type: string
+    confianza_ia?: number
+    datos_ia_raw?: NullableJsonNullValueInput | InputJsonValue
+    observaciones_ia?: string | null
+    cliente_id?: string | null
+    motivo_rechazo?: string | null
+    conciliado_por_id?: string | null
+    fecha_conciliacion?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type ComprobantePagoUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    origen_documento?: EnumOrigenDocumentoComprobanteFieldUpdateOperationsInput | $Enums.OrigenDocumentoComprobante
+    banco_origen?: NullableStringFieldUpdateOperationsInput | string | null
+    monto?: FloatFieldUpdateOperationsInput | number
+    fecha_transaccion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    num_operacion?: StringFieldUpdateOperationsInput | string
+    rut_emisor?: NullableStringFieldUpdateOperationsInput | string | null
+    metodo_pago?: EnumMetodoPagoFieldUpdateOperationsInput | $Enums.MetodoPago
+    estado?: EnumEstadoComprobantePagoFieldUpdateOperationsInput | $Enums.EstadoComprobantePago
+    url_archivo?: StringFieldUpdateOperationsInput | string
+    nombre_archivo?: StringFieldUpdateOperationsInput | string
+    mime_type?: StringFieldUpdateOperationsInput | string
+    confianza_ia?: FloatFieldUpdateOperationsInput | number
+    datos_ia_raw?: NullableJsonNullValueInput | InputJsonValue
+    observaciones_ia?: NullableStringFieldUpdateOperationsInput | string | null
+    motivo_rechazo?: NullableStringFieldUpdateOperationsInput | string | null
+    fecha_conciliacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    cliente?: ClienteUpdateOneWithoutComprobantesNestedInput
+    usuario_concilio?: UsuarioUpdateOneWithoutComprobantes_conciliadosNestedInput
+  }
+
+  export type ComprobantePagoUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    origen_documento?: EnumOrigenDocumentoComprobanteFieldUpdateOperationsInput | $Enums.OrigenDocumentoComprobante
+    banco_origen?: NullableStringFieldUpdateOperationsInput | string | null
+    monto?: FloatFieldUpdateOperationsInput | number
+    fecha_transaccion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    num_operacion?: StringFieldUpdateOperationsInput | string
+    rut_emisor?: NullableStringFieldUpdateOperationsInput | string | null
+    metodo_pago?: EnumMetodoPagoFieldUpdateOperationsInput | $Enums.MetodoPago
+    estado?: EnumEstadoComprobantePagoFieldUpdateOperationsInput | $Enums.EstadoComprobantePago
+    url_archivo?: StringFieldUpdateOperationsInput | string
+    nombre_archivo?: StringFieldUpdateOperationsInput | string
+    mime_type?: StringFieldUpdateOperationsInput | string
+    confianza_ia?: FloatFieldUpdateOperationsInput | number
+    datos_ia_raw?: NullableJsonNullValueInput | InputJsonValue
+    observaciones_ia?: NullableStringFieldUpdateOperationsInput | string | null
+    cliente_id?: NullableStringFieldUpdateOperationsInput | string | null
+    motivo_rechazo?: NullableStringFieldUpdateOperationsInput | string | null
+    conciliado_por_id?: NullableStringFieldUpdateOperationsInput | string | null
+    fecha_conciliacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ComprobantePagoCreateManyInput = {
+    id?: string
+    origen_documento?: $Enums.OrigenDocumentoComprobante
+    banco_origen?: string | null
+    monto: number
+    fecha_transaccion?: Date | string | null
+    num_operacion: string
+    rut_emisor?: string | null
+    metodo_pago?: $Enums.MetodoPago
+    estado?: $Enums.EstadoComprobantePago
+    url_archivo: string
+    nombre_archivo: string
+    mime_type: string
+    confianza_ia?: number
+    datos_ia_raw?: NullableJsonNullValueInput | InputJsonValue
+    observaciones_ia?: string | null
+    cliente_id?: string | null
+    motivo_rechazo?: string | null
+    conciliado_por_id?: string | null
+    fecha_conciliacion?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type ComprobantePagoUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    origen_documento?: EnumOrigenDocumentoComprobanteFieldUpdateOperationsInput | $Enums.OrigenDocumentoComprobante
+    banco_origen?: NullableStringFieldUpdateOperationsInput | string | null
+    monto?: FloatFieldUpdateOperationsInput | number
+    fecha_transaccion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    num_operacion?: StringFieldUpdateOperationsInput | string
+    rut_emisor?: NullableStringFieldUpdateOperationsInput | string | null
+    metodo_pago?: EnumMetodoPagoFieldUpdateOperationsInput | $Enums.MetodoPago
+    estado?: EnumEstadoComprobantePagoFieldUpdateOperationsInput | $Enums.EstadoComprobantePago
+    url_archivo?: StringFieldUpdateOperationsInput | string
+    nombre_archivo?: StringFieldUpdateOperationsInput | string
+    mime_type?: StringFieldUpdateOperationsInput | string
+    confianza_ia?: FloatFieldUpdateOperationsInput | number
+    datos_ia_raw?: NullableJsonNullValueInput | InputJsonValue
+    observaciones_ia?: NullableStringFieldUpdateOperationsInput | string | null
+    motivo_rechazo?: NullableStringFieldUpdateOperationsInput | string | null
+    fecha_conciliacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ComprobantePagoUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    origen_documento?: EnumOrigenDocumentoComprobanteFieldUpdateOperationsInput | $Enums.OrigenDocumentoComprobante
+    banco_origen?: NullableStringFieldUpdateOperationsInput | string | null
+    monto?: FloatFieldUpdateOperationsInput | number
+    fecha_transaccion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    num_operacion?: StringFieldUpdateOperationsInput | string
+    rut_emisor?: NullableStringFieldUpdateOperationsInput | string | null
+    metodo_pago?: EnumMetodoPagoFieldUpdateOperationsInput | $Enums.MetodoPago
+    estado?: EnumEstadoComprobantePagoFieldUpdateOperationsInput | $Enums.EstadoComprobantePago
+    url_archivo?: StringFieldUpdateOperationsInput | string
+    nombre_archivo?: StringFieldUpdateOperationsInput | string
+    mime_type?: StringFieldUpdateOperationsInput | string
+    confianza_ia?: FloatFieldUpdateOperationsInput | number
+    datos_ia_raw?: NullableJsonNullValueInput | InputJsonValue
+    observaciones_ia?: NullableStringFieldUpdateOperationsInput | string | null
+    cliente_id?: NullableStringFieldUpdateOperationsInput | string | null
+    motivo_rechazo?: NullableStringFieldUpdateOperationsInput | string | null
+    conciliado_por_id?: NullableStringFieldUpdateOperationsInput | string | null
+    fecha_conciliacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[]
@@ -65141,6 +66886,12 @@ export namespace Prisma {
     none?: CierreCajaWhereInput
   }
 
+  export type ComprobantePagoListRelationFilter = {
+    every?: ComprobantePagoWhereInput
+    some?: ComprobantePagoWhereInput
+    none?: ComprobantePagoWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -65195,6 +66946,10 @@ export namespace Prisma {
   }
 
   export type CierreCajaOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ComprobantePagoOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -68523,6 +70278,131 @@ export namespace Prisma {
     monto?: SortOrder
   }
 
+  export type EnumOrigenDocumentoComprobanteFilter<$PrismaModel = never> = {
+    equals?: $Enums.OrigenDocumentoComprobante | EnumOrigenDocumentoComprobanteFieldRefInput<$PrismaModel>
+    in?: $Enums.OrigenDocumentoComprobante[]
+    notIn?: $Enums.OrigenDocumentoComprobante[]
+    not?: NestedEnumOrigenDocumentoComprobanteFilter<$PrismaModel> | $Enums.OrigenDocumentoComprobante
+  }
+
+  export type EnumEstadoComprobantePagoFilter<$PrismaModel = never> = {
+    equals?: $Enums.EstadoComprobantePago | EnumEstadoComprobantePagoFieldRefInput<$PrismaModel>
+    in?: $Enums.EstadoComprobantePago[]
+    notIn?: $Enums.EstadoComprobantePago[]
+    not?: NestedEnumEstadoComprobantePagoFilter<$PrismaModel> | $Enums.EstadoComprobantePago
+  }
+
+  export type ComprobantePagoOrderByRelevanceInput = {
+    fields: ComprobantePagoOrderByRelevanceFieldEnum | ComprobantePagoOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type ComprobantePagoUq_operacion_montoCompoundUniqueInput = {
+    num_operacion: string
+    monto: number
+  }
+
+  export type ComprobantePagoCountOrderByAggregateInput = {
+    id?: SortOrder
+    origen_documento?: SortOrder
+    banco_origen?: SortOrder
+    monto?: SortOrder
+    fecha_transaccion?: SortOrder
+    num_operacion?: SortOrder
+    rut_emisor?: SortOrder
+    metodo_pago?: SortOrder
+    estado?: SortOrder
+    url_archivo?: SortOrder
+    nombre_archivo?: SortOrder
+    mime_type?: SortOrder
+    confianza_ia?: SortOrder
+    datos_ia_raw?: SortOrder
+    observaciones_ia?: SortOrder
+    cliente_id?: SortOrder
+    motivo_rechazo?: SortOrder
+    conciliado_por_id?: SortOrder
+    fecha_conciliacion?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type ComprobantePagoAvgOrderByAggregateInput = {
+    monto?: SortOrder
+    confianza_ia?: SortOrder
+  }
+
+  export type ComprobantePagoMaxOrderByAggregateInput = {
+    id?: SortOrder
+    origen_documento?: SortOrder
+    banco_origen?: SortOrder
+    monto?: SortOrder
+    fecha_transaccion?: SortOrder
+    num_operacion?: SortOrder
+    rut_emisor?: SortOrder
+    metodo_pago?: SortOrder
+    estado?: SortOrder
+    url_archivo?: SortOrder
+    nombre_archivo?: SortOrder
+    mime_type?: SortOrder
+    confianza_ia?: SortOrder
+    observaciones_ia?: SortOrder
+    cliente_id?: SortOrder
+    motivo_rechazo?: SortOrder
+    conciliado_por_id?: SortOrder
+    fecha_conciliacion?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type ComprobantePagoMinOrderByAggregateInput = {
+    id?: SortOrder
+    origen_documento?: SortOrder
+    banco_origen?: SortOrder
+    monto?: SortOrder
+    fecha_transaccion?: SortOrder
+    num_operacion?: SortOrder
+    rut_emisor?: SortOrder
+    metodo_pago?: SortOrder
+    estado?: SortOrder
+    url_archivo?: SortOrder
+    nombre_archivo?: SortOrder
+    mime_type?: SortOrder
+    confianza_ia?: SortOrder
+    observaciones_ia?: SortOrder
+    cliente_id?: SortOrder
+    motivo_rechazo?: SortOrder
+    conciliado_por_id?: SortOrder
+    fecha_conciliacion?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type ComprobantePagoSumOrderByAggregateInput = {
+    monto?: SortOrder
+    confianza_ia?: SortOrder
+  }
+
+  export type EnumOrigenDocumentoComprobanteWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.OrigenDocumentoComprobante | EnumOrigenDocumentoComprobanteFieldRefInput<$PrismaModel>
+    in?: $Enums.OrigenDocumentoComprobante[]
+    notIn?: $Enums.OrigenDocumentoComprobante[]
+    not?: NestedEnumOrigenDocumentoComprobanteWithAggregatesFilter<$PrismaModel> | $Enums.OrigenDocumentoComprobante
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumOrigenDocumentoComprobanteFilter<$PrismaModel>
+    _max?: NestedEnumOrigenDocumentoComprobanteFilter<$PrismaModel>
+  }
+
+  export type EnumEstadoComprobantePagoWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.EstadoComprobantePago | EnumEstadoComprobantePagoFieldRefInput<$PrismaModel>
+    in?: $Enums.EstadoComprobantePago[]
+    notIn?: $Enums.EstadoComprobantePago[]
+    not?: NestedEnumEstadoComprobantePagoWithAggregatesFilter<$PrismaModel> | $Enums.EstadoComprobantePago
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumEstadoComprobantePagoFilter<$PrismaModel>
+    _max?: NestedEnumEstadoComprobantePagoFilter<$PrismaModel>
+  }
+
   export type BotellonDanadoCreateNestedManyWithoutUsuarioInput = {
     create?: XOR<BotellonDanadoCreateWithoutUsuarioInput, BotellonDanadoUncheckedCreateWithoutUsuarioInput> | BotellonDanadoCreateWithoutUsuarioInput[] | BotellonDanadoUncheckedCreateWithoutUsuarioInput[]
     connectOrCreate?: BotellonDanadoCreateOrConnectWithoutUsuarioInput | BotellonDanadoCreateOrConnectWithoutUsuarioInput[]
@@ -68633,6 +70513,13 @@ export namespace Prisma {
     connect?: CierreCajaWhereUniqueInput | CierreCajaWhereUniqueInput[]
   }
 
+  export type ComprobantePagoCreateNestedManyWithoutUsuario_concilioInput = {
+    create?: XOR<ComprobantePagoCreateWithoutUsuario_concilioInput, ComprobantePagoUncheckedCreateWithoutUsuario_concilioInput> | ComprobantePagoCreateWithoutUsuario_concilioInput[] | ComprobantePagoUncheckedCreateWithoutUsuario_concilioInput[]
+    connectOrCreate?: ComprobantePagoCreateOrConnectWithoutUsuario_concilioInput | ComprobantePagoCreateOrConnectWithoutUsuario_concilioInput[]
+    createMany?: ComprobantePagoCreateManyUsuario_concilioInputEnvelope
+    connect?: ComprobantePagoWhereUniqueInput | ComprobantePagoWhereUniqueInput[]
+  }
+
   export type BotellonDanadoUncheckedCreateNestedManyWithoutUsuarioInput = {
     create?: XOR<BotellonDanadoCreateWithoutUsuarioInput, BotellonDanadoUncheckedCreateWithoutUsuarioInput> | BotellonDanadoCreateWithoutUsuarioInput[] | BotellonDanadoUncheckedCreateWithoutUsuarioInput[]
     connectOrCreate?: BotellonDanadoCreateOrConnectWithoutUsuarioInput | BotellonDanadoCreateOrConnectWithoutUsuarioInput[]
@@ -68729,6 +70616,13 @@ export namespace Prisma {
     connectOrCreate?: CierreCajaCreateOrConnectWithoutUsuarioInput | CierreCajaCreateOrConnectWithoutUsuarioInput[]
     createMany?: CierreCajaCreateManyUsuarioInputEnvelope
     connect?: CierreCajaWhereUniqueInput | CierreCajaWhereUniqueInput[]
+  }
+
+  export type ComprobantePagoUncheckedCreateNestedManyWithoutUsuario_concilioInput = {
+    create?: XOR<ComprobantePagoCreateWithoutUsuario_concilioInput, ComprobantePagoUncheckedCreateWithoutUsuario_concilioInput> | ComprobantePagoCreateWithoutUsuario_concilioInput[] | ComprobantePagoUncheckedCreateWithoutUsuario_concilioInput[]
+    connectOrCreate?: ComprobantePagoCreateOrConnectWithoutUsuario_concilioInput | ComprobantePagoCreateOrConnectWithoutUsuario_concilioInput[]
+    createMany?: ComprobantePagoCreateManyUsuario_concilioInputEnvelope
+    connect?: ComprobantePagoWhereUniqueInput | ComprobantePagoWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -68971,6 +70865,20 @@ export namespace Prisma {
     deleteMany?: CierreCajaScalarWhereInput | CierreCajaScalarWhereInput[]
   }
 
+  export type ComprobantePagoUpdateManyWithoutUsuario_concilioNestedInput = {
+    create?: XOR<ComprobantePagoCreateWithoutUsuario_concilioInput, ComprobantePagoUncheckedCreateWithoutUsuario_concilioInput> | ComprobantePagoCreateWithoutUsuario_concilioInput[] | ComprobantePagoUncheckedCreateWithoutUsuario_concilioInput[]
+    connectOrCreate?: ComprobantePagoCreateOrConnectWithoutUsuario_concilioInput | ComprobantePagoCreateOrConnectWithoutUsuario_concilioInput[]
+    upsert?: ComprobantePagoUpsertWithWhereUniqueWithoutUsuario_concilioInput | ComprobantePagoUpsertWithWhereUniqueWithoutUsuario_concilioInput[]
+    createMany?: ComprobantePagoCreateManyUsuario_concilioInputEnvelope
+    set?: ComprobantePagoWhereUniqueInput | ComprobantePagoWhereUniqueInput[]
+    disconnect?: ComprobantePagoWhereUniqueInput | ComprobantePagoWhereUniqueInput[]
+    delete?: ComprobantePagoWhereUniqueInput | ComprobantePagoWhereUniqueInput[]
+    connect?: ComprobantePagoWhereUniqueInput | ComprobantePagoWhereUniqueInput[]
+    update?: ComprobantePagoUpdateWithWhereUniqueWithoutUsuario_concilioInput | ComprobantePagoUpdateWithWhereUniqueWithoutUsuario_concilioInput[]
+    updateMany?: ComprobantePagoUpdateManyWithWhereWithoutUsuario_concilioInput | ComprobantePagoUpdateManyWithWhereWithoutUsuario_concilioInput[]
+    deleteMany?: ComprobantePagoScalarWhereInput | ComprobantePagoScalarWhereInput[]
+  }
+
   export type BotellonDanadoUncheckedUpdateManyWithoutUsuarioNestedInput = {
     create?: XOR<BotellonDanadoCreateWithoutUsuarioInput, BotellonDanadoUncheckedCreateWithoutUsuarioInput> | BotellonDanadoCreateWithoutUsuarioInput[] | BotellonDanadoUncheckedCreateWithoutUsuarioInput[]
     connectOrCreate?: BotellonDanadoCreateOrConnectWithoutUsuarioInput | BotellonDanadoCreateOrConnectWithoutUsuarioInput[]
@@ -69165,6 +71073,20 @@ export namespace Prisma {
     update?: CierreCajaUpdateWithWhereUniqueWithoutUsuarioInput | CierreCajaUpdateWithWhereUniqueWithoutUsuarioInput[]
     updateMany?: CierreCajaUpdateManyWithWhereWithoutUsuarioInput | CierreCajaUpdateManyWithWhereWithoutUsuarioInput[]
     deleteMany?: CierreCajaScalarWhereInput | CierreCajaScalarWhereInput[]
+  }
+
+  export type ComprobantePagoUncheckedUpdateManyWithoutUsuario_concilioNestedInput = {
+    create?: XOR<ComprobantePagoCreateWithoutUsuario_concilioInput, ComprobantePagoUncheckedCreateWithoutUsuario_concilioInput> | ComprobantePagoCreateWithoutUsuario_concilioInput[] | ComprobantePagoUncheckedCreateWithoutUsuario_concilioInput[]
+    connectOrCreate?: ComprobantePagoCreateOrConnectWithoutUsuario_concilioInput | ComprobantePagoCreateOrConnectWithoutUsuario_concilioInput[]
+    upsert?: ComprobantePagoUpsertWithWhereUniqueWithoutUsuario_concilioInput | ComprobantePagoUpsertWithWhereUniqueWithoutUsuario_concilioInput[]
+    createMany?: ComprobantePagoCreateManyUsuario_concilioInputEnvelope
+    set?: ComprobantePagoWhereUniqueInput | ComprobantePagoWhereUniqueInput[]
+    disconnect?: ComprobantePagoWhereUniqueInput | ComprobantePagoWhereUniqueInput[]
+    delete?: ComprobantePagoWhereUniqueInput | ComprobantePagoWhereUniqueInput[]
+    connect?: ComprobantePagoWhereUniqueInput | ComprobantePagoWhereUniqueInput[]
+    update?: ComprobantePagoUpdateWithWhereUniqueWithoutUsuario_concilioInput | ComprobantePagoUpdateWithWhereUniqueWithoutUsuario_concilioInput[]
+    updateMany?: ComprobantePagoUpdateManyWithWhereWithoutUsuario_concilioInput | ComprobantePagoUpdateManyWithWhereWithoutUsuario_concilioInput[]
+    deleteMany?: ComprobantePagoScalarWhereInput | ComprobantePagoScalarWhereInput[]
   }
 
   export type AlertaVehiculoCreateNestedManyWithoutVehiculoInput = {
@@ -70085,6 +72007,13 @@ export namespace Prisma {
     connect?: IncidenciaWhereUniqueInput | IncidenciaWhereUniqueInput[]
   }
 
+  export type ComprobantePagoCreateNestedManyWithoutClienteInput = {
+    create?: XOR<ComprobantePagoCreateWithoutClienteInput, ComprobantePagoUncheckedCreateWithoutClienteInput> | ComprobantePagoCreateWithoutClienteInput[] | ComprobantePagoUncheckedCreateWithoutClienteInput[]
+    connectOrCreate?: ComprobantePagoCreateOrConnectWithoutClienteInput | ComprobantePagoCreateOrConnectWithoutClienteInput[]
+    createMany?: ComprobantePagoCreateManyClienteInputEnvelope
+    connect?: ComprobantePagoWhereUniqueInput | ComprobantePagoWhereUniqueInput[]
+  }
+
   export type BotellonDanadoUncheckedCreateNestedManyWithoutClienteInput = {
     create?: XOR<BotellonDanadoCreateWithoutClienteInput, BotellonDanadoUncheckedCreateWithoutClienteInput> | BotellonDanadoCreateWithoutClienteInput[] | BotellonDanadoUncheckedCreateWithoutClienteInput[]
     connectOrCreate?: BotellonDanadoCreateOrConnectWithoutClienteInput | BotellonDanadoCreateOrConnectWithoutClienteInput[]
@@ -70139,6 +72068,13 @@ export namespace Prisma {
     connectOrCreate?: IncidenciaCreateOrConnectWithoutClienteInput | IncidenciaCreateOrConnectWithoutClienteInput[]
     createMany?: IncidenciaCreateManyClienteInputEnvelope
     connect?: IncidenciaWhereUniqueInput | IncidenciaWhereUniqueInput[]
+  }
+
+  export type ComprobantePagoUncheckedCreateNestedManyWithoutClienteInput = {
+    create?: XOR<ComprobantePagoCreateWithoutClienteInput, ComprobantePagoUncheckedCreateWithoutClienteInput> | ComprobantePagoCreateWithoutClienteInput[] | ComprobantePagoUncheckedCreateWithoutClienteInput[]
+    connectOrCreate?: ComprobantePagoCreateOrConnectWithoutClienteInput | ComprobantePagoCreateOrConnectWithoutClienteInput[]
+    createMany?: ComprobantePagoCreateManyClienteInputEnvelope
+    connect?: ComprobantePagoWhereUniqueInput | ComprobantePagoWhereUniqueInput[]
   }
 
   export type EnumModalidadPagoFieldUpdateOperationsInput = {
@@ -70283,6 +72219,20 @@ export namespace Prisma {
     deleteMany?: IncidenciaScalarWhereInput | IncidenciaScalarWhereInput[]
   }
 
+  export type ComprobantePagoUpdateManyWithoutClienteNestedInput = {
+    create?: XOR<ComprobantePagoCreateWithoutClienteInput, ComprobantePagoUncheckedCreateWithoutClienteInput> | ComprobantePagoCreateWithoutClienteInput[] | ComprobantePagoUncheckedCreateWithoutClienteInput[]
+    connectOrCreate?: ComprobantePagoCreateOrConnectWithoutClienteInput | ComprobantePagoCreateOrConnectWithoutClienteInput[]
+    upsert?: ComprobantePagoUpsertWithWhereUniqueWithoutClienteInput | ComprobantePagoUpsertWithWhereUniqueWithoutClienteInput[]
+    createMany?: ComprobantePagoCreateManyClienteInputEnvelope
+    set?: ComprobantePagoWhereUniqueInput | ComprobantePagoWhereUniqueInput[]
+    disconnect?: ComprobantePagoWhereUniqueInput | ComprobantePagoWhereUniqueInput[]
+    delete?: ComprobantePagoWhereUniqueInput | ComprobantePagoWhereUniqueInput[]
+    connect?: ComprobantePagoWhereUniqueInput | ComprobantePagoWhereUniqueInput[]
+    update?: ComprobantePagoUpdateWithWhereUniqueWithoutClienteInput | ComprobantePagoUpdateWithWhereUniqueWithoutClienteInput[]
+    updateMany?: ComprobantePagoUpdateManyWithWhereWithoutClienteInput | ComprobantePagoUpdateManyWithWhereWithoutClienteInput[]
+    deleteMany?: ComprobantePagoScalarWhereInput | ComprobantePagoScalarWhereInput[]
+  }
+
   export type BotellonDanadoUncheckedUpdateManyWithoutClienteNestedInput = {
     create?: XOR<BotellonDanadoCreateWithoutClienteInput, BotellonDanadoUncheckedCreateWithoutClienteInput> | BotellonDanadoCreateWithoutClienteInput[] | BotellonDanadoUncheckedCreateWithoutClienteInput[]
     connectOrCreate?: BotellonDanadoCreateOrConnectWithoutClienteInput | BotellonDanadoCreateOrConnectWithoutClienteInput[]
@@ -70393,6 +72343,20 @@ export namespace Prisma {
     update?: IncidenciaUpdateWithWhereUniqueWithoutClienteInput | IncidenciaUpdateWithWhereUniqueWithoutClienteInput[]
     updateMany?: IncidenciaUpdateManyWithWhereWithoutClienteInput | IncidenciaUpdateManyWithWhereWithoutClienteInput[]
     deleteMany?: IncidenciaScalarWhereInput | IncidenciaScalarWhereInput[]
+  }
+
+  export type ComprobantePagoUncheckedUpdateManyWithoutClienteNestedInput = {
+    create?: XOR<ComprobantePagoCreateWithoutClienteInput, ComprobantePagoUncheckedCreateWithoutClienteInput> | ComprobantePagoCreateWithoutClienteInput[] | ComprobantePagoUncheckedCreateWithoutClienteInput[]
+    connectOrCreate?: ComprobantePagoCreateOrConnectWithoutClienteInput | ComprobantePagoCreateOrConnectWithoutClienteInput[]
+    upsert?: ComprobantePagoUpsertWithWhereUniqueWithoutClienteInput | ComprobantePagoUpsertWithWhereUniqueWithoutClienteInput[]
+    createMany?: ComprobantePagoCreateManyClienteInputEnvelope
+    set?: ComprobantePagoWhereUniqueInput | ComprobantePagoWhereUniqueInput[]
+    disconnect?: ComprobantePagoWhereUniqueInput | ComprobantePagoWhereUniqueInput[]
+    delete?: ComprobantePagoWhereUniqueInput | ComprobantePagoWhereUniqueInput[]
+    connect?: ComprobantePagoWhereUniqueInput | ComprobantePagoWhereUniqueInput[]
+    update?: ComprobantePagoUpdateWithWhereUniqueWithoutClienteInput | ComprobantePagoUpdateWithWhereUniqueWithoutClienteInput[]
+    updateMany?: ComprobantePagoUpdateManyWithWhereWithoutClienteInput | ComprobantePagoUpdateManyWithWhereWithoutClienteInput[]
+    deleteMany?: ComprobantePagoScalarWhereInput | ComprobantePagoScalarWhereInput[]
   }
 
   export type ClienteRutaBaseCreateNestedManyWithoutRuta_baseInput = {
@@ -72489,6 +74453,46 @@ export namespace Prisma {
     update?: XOR<XOR<CierreCajaUpdateToOneWithWhereWithoutGastosInput, CierreCajaUpdateWithoutGastosInput>, CierreCajaUncheckedUpdateWithoutGastosInput>
   }
 
+  export type ClienteCreateNestedOneWithoutComprobantesInput = {
+    create?: XOR<ClienteCreateWithoutComprobantesInput, ClienteUncheckedCreateWithoutComprobantesInput>
+    connectOrCreate?: ClienteCreateOrConnectWithoutComprobantesInput
+    connect?: ClienteWhereUniqueInput
+  }
+
+  export type UsuarioCreateNestedOneWithoutComprobantes_conciliadosInput = {
+    create?: XOR<UsuarioCreateWithoutComprobantes_conciliadosInput, UsuarioUncheckedCreateWithoutComprobantes_conciliadosInput>
+    connectOrCreate?: UsuarioCreateOrConnectWithoutComprobantes_conciliadosInput
+    connect?: UsuarioWhereUniqueInput
+  }
+
+  export type EnumOrigenDocumentoComprobanteFieldUpdateOperationsInput = {
+    set?: $Enums.OrigenDocumentoComprobante
+  }
+
+  export type EnumEstadoComprobantePagoFieldUpdateOperationsInput = {
+    set?: $Enums.EstadoComprobantePago
+  }
+
+  export type ClienteUpdateOneWithoutComprobantesNestedInput = {
+    create?: XOR<ClienteCreateWithoutComprobantesInput, ClienteUncheckedCreateWithoutComprobantesInput>
+    connectOrCreate?: ClienteCreateOrConnectWithoutComprobantesInput
+    upsert?: ClienteUpsertWithoutComprobantesInput
+    disconnect?: ClienteWhereInput | boolean
+    delete?: ClienteWhereInput | boolean
+    connect?: ClienteWhereUniqueInput
+    update?: XOR<XOR<ClienteUpdateToOneWithWhereWithoutComprobantesInput, ClienteUpdateWithoutComprobantesInput>, ClienteUncheckedUpdateWithoutComprobantesInput>
+  }
+
+  export type UsuarioUpdateOneWithoutComprobantes_conciliadosNestedInput = {
+    create?: XOR<UsuarioCreateWithoutComprobantes_conciliadosInput, UsuarioUncheckedCreateWithoutComprobantes_conciliadosInput>
+    connectOrCreate?: UsuarioCreateOrConnectWithoutComprobantes_conciliadosInput
+    upsert?: UsuarioUpsertWithoutComprobantes_conciliadosInput
+    disconnect?: UsuarioWhereInput | boolean
+    delete?: UsuarioWhereInput | boolean
+    connect?: UsuarioWhereUniqueInput
+    update?: XOR<XOR<UsuarioUpdateToOneWithWhereWithoutComprobantes_conciliadosInput, UsuarioUpdateWithoutComprobantes_conciliadosInput>, UsuarioUncheckedUpdateWithoutComprobantes_conciliadosInput>
+  }
+
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[]
@@ -73191,6 +75195,40 @@ export namespace Prisma {
     _max?: NestedEnumMetodoPagoCajaFilter<$PrismaModel>
   }
 
+  export type NestedEnumOrigenDocumentoComprobanteFilter<$PrismaModel = never> = {
+    equals?: $Enums.OrigenDocumentoComprobante | EnumOrigenDocumentoComprobanteFieldRefInput<$PrismaModel>
+    in?: $Enums.OrigenDocumentoComprobante[]
+    notIn?: $Enums.OrigenDocumentoComprobante[]
+    not?: NestedEnumOrigenDocumentoComprobanteFilter<$PrismaModel> | $Enums.OrigenDocumentoComprobante
+  }
+
+  export type NestedEnumEstadoComprobantePagoFilter<$PrismaModel = never> = {
+    equals?: $Enums.EstadoComprobantePago | EnumEstadoComprobantePagoFieldRefInput<$PrismaModel>
+    in?: $Enums.EstadoComprobantePago[]
+    notIn?: $Enums.EstadoComprobantePago[]
+    not?: NestedEnumEstadoComprobantePagoFilter<$PrismaModel> | $Enums.EstadoComprobantePago
+  }
+
+  export type NestedEnumOrigenDocumentoComprobanteWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.OrigenDocumentoComprobante | EnumOrigenDocumentoComprobanteFieldRefInput<$PrismaModel>
+    in?: $Enums.OrigenDocumentoComprobante[]
+    notIn?: $Enums.OrigenDocumentoComprobante[]
+    not?: NestedEnumOrigenDocumentoComprobanteWithAggregatesFilter<$PrismaModel> | $Enums.OrigenDocumentoComprobante
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumOrigenDocumentoComprobanteFilter<$PrismaModel>
+    _max?: NestedEnumOrigenDocumentoComprobanteFilter<$PrismaModel>
+  }
+
+  export type NestedEnumEstadoComprobantePagoWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.EstadoComprobantePago | EnumEstadoComprobantePagoFieldRefInput<$PrismaModel>
+    in?: $Enums.EstadoComprobantePago[]
+    notIn?: $Enums.EstadoComprobantePago[]
+    not?: NestedEnumEstadoComprobantePagoWithAggregatesFilter<$PrismaModel> | $Enums.EstadoComprobantePago
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumEstadoComprobantePagoFilter<$PrismaModel>
+    _max?: NestedEnumEstadoComprobantePagoFilter<$PrismaModel>
+  }
+
   export type BotellonDanadoCreateWithoutUsuarioInput = {
     id?: string
     cuadratura_id: string
@@ -73809,6 +75847,62 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ComprobantePagoCreateWithoutUsuario_concilioInput = {
+    id?: string
+    origen_documento?: $Enums.OrigenDocumentoComprobante
+    banco_origen?: string | null
+    monto: number
+    fecha_transaccion?: Date | string | null
+    num_operacion: string
+    rut_emisor?: string | null
+    metodo_pago?: $Enums.MetodoPago
+    estado?: $Enums.EstadoComprobantePago
+    url_archivo: string
+    nombre_archivo: string
+    mime_type: string
+    confianza_ia?: number
+    datos_ia_raw?: NullableJsonNullValueInput | InputJsonValue
+    observaciones_ia?: string | null
+    motivo_rechazo?: string | null
+    fecha_conciliacion?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    cliente?: ClienteCreateNestedOneWithoutComprobantesInput
+  }
+
+  export type ComprobantePagoUncheckedCreateWithoutUsuario_concilioInput = {
+    id?: string
+    origen_documento?: $Enums.OrigenDocumentoComprobante
+    banco_origen?: string | null
+    monto: number
+    fecha_transaccion?: Date | string | null
+    num_operacion: string
+    rut_emisor?: string | null
+    metodo_pago?: $Enums.MetodoPago
+    estado?: $Enums.EstadoComprobantePago
+    url_archivo: string
+    nombre_archivo: string
+    mime_type: string
+    confianza_ia?: number
+    datos_ia_raw?: NullableJsonNullValueInput | InputJsonValue
+    observaciones_ia?: string | null
+    cliente_id?: string | null
+    motivo_rechazo?: string | null
+    fecha_conciliacion?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type ComprobantePagoCreateOrConnectWithoutUsuario_concilioInput = {
+    where: ComprobantePagoWhereUniqueInput
+    create: XOR<ComprobantePagoCreateWithoutUsuario_concilioInput, ComprobantePagoUncheckedCreateWithoutUsuario_concilioInput>
+  }
+
+  export type ComprobantePagoCreateManyUsuario_concilioInputEnvelope = {
+    data: ComprobantePagoCreateManyUsuario_concilioInput | ComprobantePagoCreateManyUsuario_concilioInput[]
+    skipDuplicates?: boolean
+  }
+
   export type BotellonDanadoUpsertWithWhereUniqueWithoutUsuarioInput = {
     where: BotellonDanadoWhereUniqueInput
     update: XOR<BotellonDanadoUpdateWithoutUsuarioInput, BotellonDanadoUncheckedUpdateWithoutUsuarioInput>
@@ -74321,6 +76415,49 @@ export namespace Prisma {
     usuario_id?: StringFilter<"CierreCaja"> | string
   }
 
+  export type ComprobantePagoUpsertWithWhereUniqueWithoutUsuario_concilioInput = {
+    where: ComprobantePagoWhereUniqueInput
+    update: XOR<ComprobantePagoUpdateWithoutUsuario_concilioInput, ComprobantePagoUncheckedUpdateWithoutUsuario_concilioInput>
+    create: XOR<ComprobantePagoCreateWithoutUsuario_concilioInput, ComprobantePagoUncheckedCreateWithoutUsuario_concilioInput>
+  }
+
+  export type ComprobantePagoUpdateWithWhereUniqueWithoutUsuario_concilioInput = {
+    where: ComprobantePagoWhereUniqueInput
+    data: XOR<ComprobantePagoUpdateWithoutUsuario_concilioInput, ComprobantePagoUncheckedUpdateWithoutUsuario_concilioInput>
+  }
+
+  export type ComprobantePagoUpdateManyWithWhereWithoutUsuario_concilioInput = {
+    where: ComprobantePagoScalarWhereInput
+    data: XOR<ComprobantePagoUpdateManyMutationInput, ComprobantePagoUncheckedUpdateManyWithoutUsuario_concilioInput>
+  }
+
+  export type ComprobantePagoScalarWhereInput = {
+    AND?: ComprobantePagoScalarWhereInput | ComprobantePagoScalarWhereInput[]
+    OR?: ComprobantePagoScalarWhereInput[]
+    NOT?: ComprobantePagoScalarWhereInput | ComprobantePagoScalarWhereInput[]
+    id?: StringFilter<"ComprobantePago"> | string
+    origen_documento?: EnumOrigenDocumentoComprobanteFilter<"ComprobantePago"> | $Enums.OrigenDocumentoComprobante
+    banco_origen?: StringNullableFilter<"ComprobantePago"> | string | null
+    monto?: FloatFilter<"ComprobantePago"> | number
+    fecha_transaccion?: DateTimeNullableFilter<"ComprobantePago"> | Date | string | null
+    num_operacion?: StringFilter<"ComprobantePago"> | string
+    rut_emisor?: StringNullableFilter<"ComprobantePago"> | string | null
+    metodo_pago?: EnumMetodoPagoFilter<"ComprobantePago"> | $Enums.MetodoPago
+    estado?: EnumEstadoComprobantePagoFilter<"ComprobantePago"> | $Enums.EstadoComprobantePago
+    url_archivo?: StringFilter<"ComprobantePago"> | string
+    nombre_archivo?: StringFilter<"ComprobantePago"> | string
+    mime_type?: StringFilter<"ComprobantePago"> | string
+    confianza_ia?: FloatFilter<"ComprobantePago"> | number
+    datos_ia_raw?: JsonNullableFilter<"ComprobantePago">
+    observaciones_ia?: StringNullableFilter<"ComprobantePago"> | string | null
+    cliente_id?: StringNullableFilter<"ComprobantePago"> | string | null
+    motivo_rechazo?: StringNullableFilter<"ComprobantePago"> | string | null
+    conciliado_por_id?: StringNullableFilter<"ComprobantePago"> | string | null
+    fecha_conciliacion?: DateTimeNullableFilter<"ComprobantePago"> | Date | string | null
+    created_at?: DateTimeFilter<"ComprobantePago"> | Date | string
+    updated_at?: DateTimeFilter<"ComprobantePago"> | Date | string
+  }
+
   export type AlertaVehiculoCreateWithoutVehiculoInput = {
     id?: string
     tipo: $Enums.TipoAlerta
@@ -74510,6 +76647,7 @@ export namespace Prisma {
     movimientos_stock?: MovimientoStockCreateNestedManyWithoutUsuarioInput
     user?: UserCreateNestedOneWithoutUsuarioInput
     cierres_caja?: CierreCajaCreateNestedManyWithoutUsuarioInput
+    comprobantes_conciliados?: ComprobantePagoCreateNestedManyWithoutUsuario_concilioInput
   }
 
   export type UsuarioUncheckedCreateWithoutVehiculoInput = {
@@ -74541,6 +76679,7 @@ export namespace Prisma {
     incidencias?: IncidenciaUncheckedCreateNestedManyWithoutUsuarioInput
     movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutUsuarioInput
     cierres_caja?: CierreCajaUncheckedCreateNestedManyWithoutUsuarioInput
+    comprobantes_conciliados?: ComprobantePagoUncheckedCreateNestedManyWithoutUsuario_concilioInput
   }
 
   export type UsuarioCreateOrConnectWithoutVehiculoInput = {
@@ -74711,6 +76850,7 @@ export namespace Prisma {
     movimientos_stock?: MovimientoStockCreateNestedManyWithoutUsuarioInput
     user?: UserCreateNestedOneWithoutUsuarioInput
     cierres_caja?: CierreCajaCreateNestedManyWithoutUsuarioInput
+    comprobantes_conciliados?: ComprobantePagoCreateNestedManyWithoutUsuario_concilioInput
   }
 
   export type UsuarioUncheckedCreateWithoutMantencionesInput = {
@@ -74742,6 +76882,7 @@ export namespace Prisma {
     incidencias?: IncidenciaUncheckedCreateNestedManyWithoutUsuarioInput
     movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutUsuarioInput
     cierres_caja?: CierreCajaUncheckedCreateNestedManyWithoutUsuarioInput
+    comprobantes_conciliados?: ComprobantePagoUncheckedCreateNestedManyWithoutUsuario_concilioInput
   }
 
   export type UsuarioCreateOrConnectWithoutMantencionesInput = {
@@ -74850,6 +76991,7 @@ export namespace Prisma {
     movimientos_stock?: MovimientoStockUpdateManyWithoutUsuarioNestedInput
     user?: UserUpdateOneWithoutUsuarioNestedInput
     cierres_caja?: CierreCajaUpdateManyWithoutUsuarioNestedInput
+    comprobantes_conciliados?: ComprobantePagoUpdateManyWithoutUsuario_concilioNestedInput
   }
 
   export type UsuarioUncheckedUpdateWithoutMantencionesInput = {
@@ -74881,6 +77023,7 @@ export namespace Prisma {
     incidencias?: IncidenciaUncheckedUpdateManyWithoutUsuarioNestedInput
     movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutUsuarioNestedInput
     cierres_caja?: CierreCajaUncheckedUpdateManyWithoutUsuarioNestedInput
+    comprobantes_conciliados?: ComprobantePagoUncheckedUpdateManyWithoutUsuario_concilioNestedInput
   }
 
   export type VehiculoUpsertWithoutMantencionesInput = {
@@ -75690,6 +77833,7 @@ export namespace Prisma {
     incidencias?: IncidenciaCreateNestedManyWithoutUsuarioInput
     user?: UserCreateNestedOneWithoutUsuarioInput
     cierres_caja?: CierreCajaCreateNestedManyWithoutUsuarioInput
+    comprobantes_conciliados?: ComprobantePagoCreateNestedManyWithoutUsuario_concilioInput
   }
 
   export type UsuarioUncheckedCreateWithoutMovimientos_stockInput = {
@@ -75721,6 +77865,7 @@ export namespace Prisma {
     stock_camion?: StockCamionUncheckedCreateNestedManyWithoutUsuarioInput
     incidencias?: IncidenciaUncheckedCreateNestedManyWithoutUsuarioInput
     cierres_caja?: CierreCajaUncheckedCreateNestedManyWithoutUsuarioInput
+    comprobantes_conciliados?: ComprobantePagoUncheckedCreateNestedManyWithoutUsuario_concilioInput
   }
 
   export type UsuarioCreateOrConnectWithoutMovimientos_stockInput = {
@@ -75817,6 +77962,7 @@ export namespace Prisma {
     incidencias?: IncidenciaUpdateManyWithoutUsuarioNestedInput
     user?: UserUpdateOneWithoutUsuarioNestedInput
     cierres_caja?: CierreCajaUpdateManyWithoutUsuarioNestedInput
+    comprobantes_conciliados?: ComprobantePagoUpdateManyWithoutUsuario_concilioNestedInput
   }
 
   export type UsuarioUncheckedUpdateWithoutMovimientos_stockInput = {
@@ -75848,6 +77994,7 @@ export namespace Prisma {
     stock_camion?: StockCamionUncheckedUpdateManyWithoutUsuarioNestedInput
     incidencias?: IncidenciaUncheckedUpdateManyWithoutUsuarioNestedInput
     cierres_caja?: CierreCajaUncheckedUpdateManyWithoutUsuarioNestedInput
+    comprobantes_conciliados?: ComprobantePagoUncheckedUpdateManyWithoutUsuario_concilioNestedInput
   }
 
   export type ProductoCreateWithoutComisionesInput = {
@@ -76285,6 +78432,62 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ComprobantePagoCreateWithoutClienteInput = {
+    id?: string
+    origen_documento?: $Enums.OrigenDocumentoComprobante
+    banco_origen?: string | null
+    monto: number
+    fecha_transaccion?: Date | string | null
+    num_operacion: string
+    rut_emisor?: string | null
+    metodo_pago?: $Enums.MetodoPago
+    estado?: $Enums.EstadoComprobantePago
+    url_archivo: string
+    nombre_archivo: string
+    mime_type: string
+    confianza_ia?: number
+    datos_ia_raw?: NullableJsonNullValueInput | InputJsonValue
+    observaciones_ia?: string | null
+    motivo_rechazo?: string | null
+    fecha_conciliacion?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    usuario_concilio?: UsuarioCreateNestedOneWithoutComprobantes_conciliadosInput
+  }
+
+  export type ComprobantePagoUncheckedCreateWithoutClienteInput = {
+    id?: string
+    origen_documento?: $Enums.OrigenDocumentoComprobante
+    banco_origen?: string | null
+    monto: number
+    fecha_transaccion?: Date | string | null
+    num_operacion: string
+    rut_emisor?: string | null
+    metodo_pago?: $Enums.MetodoPago
+    estado?: $Enums.EstadoComprobantePago
+    url_archivo: string
+    nombre_archivo: string
+    mime_type: string
+    confianza_ia?: number
+    datos_ia_raw?: NullableJsonNullValueInput | InputJsonValue
+    observaciones_ia?: string | null
+    motivo_rechazo?: string | null
+    conciliado_por_id?: string | null
+    fecha_conciliacion?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type ComprobantePagoCreateOrConnectWithoutClienteInput = {
+    where: ComprobantePagoWhereUniqueInput
+    create: XOR<ComprobantePagoCreateWithoutClienteInput, ComprobantePagoUncheckedCreateWithoutClienteInput>
+  }
+
+  export type ComprobantePagoCreateManyClienteInputEnvelope = {
+    data: ComprobantePagoCreateManyClienteInput | ComprobantePagoCreateManyClienteInput[]
+    skipDuplicates?: boolean
+  }
+
   export type SectorUpsertWithoutClientesInput = {
     update: XOR<SectorUpdateWithoutClientesInput, SectorUncheckedUpdateWithoutClientesInput>
     create: XOR<SectorCreateWithoutClientesInput, SectorUncheckedCreateWithoutClientesInput>
@@ -76524,6 +78727,22 @@ export namespace Prisma {
     data: XOR<IncidenciaUpdateManyMutationInput, IncidenciaUncheckedUpdateManyWithoutClienteInput>
   }
 
+  export type ComprobantePagoUpsertWithWhereUniqueWithoutClienteInput = {
+    where: ComprobantePagoWhereUniqueInput
+    update: XOR<ComprobantePagoUpdateWithoutClienteInput, ComprobantePagoUncheckedUpdateWithoutClienteInput>
+    create: XOR<ComprobantePagoCreateWithoutClienteInput, ComprobantePagoUncheckedCreateWithoutClienteInput>
+  }
+
+  export type ComprobantePagoUpdateWithWhereUniqueWithoutClienteInput = {
+    where: ComprobantePagoWhereUniqueInput
+    data: XOR<ComprobantePagoUpdateWithoutClienteInput, ComprobantePagoUncheckedUpdateWithoutClienteInput>
+  }
+
+  export type ComprobantePagoUpdateManyWithWhereWithoutClienteInput = {
+    where: ComprobantePagoScalarWhereInput
+    data: XOR<ComprobantePagoUpdateManyMutationInput, ComprobantePagoUncheckedUpdateManyWithoutClienteInput>
+  }
+
   export type ClienteRutaBaseCreateWithoutRuta_baseInput = {
     id?: string
     orden: number
@@ -76605,6 +78824,7 @@ export namespace Prisma {
     movimientos_stock?: MovimientoStockCreateNestedManyWithoutUsuarioInput
     user?: UserCreateNestedOneWithoutUsuarioInput
     cierres_caja?: CierreCajaCreateNestedManyWithoutUsuarioInput
+    comprobantes_conciliados?: ComprobantePagoCreateNestedManyWithoutUsuario_concilioInput
   }
 
   export type UsuarioUncheckedCreateWithoutRutas_baseInput = {
@@ -76636,6 +78856,7 @@ export namespace Prisma {
     incidencias?: IncidenciaUncheckedCreateNestedManyWithoutUsuarioInput
     movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutUsuarioInput
     cierres_caja?: CierreCajaUncheckedCreateNestedManyWithoutUsuarioInput
+    comprobantes_conciliados?: ComprobantePagoUncheckedCreateNestedManyWithoutUsuario_concilioInput
   }
 
   export type UsuarioCreateOrConnectWithoutRutas_baseInput = {
@@ -76789,6 +79010,7 @@ export namespace Prisma {
     movimientos_stock?: MovimientoStockUpdateManyWithoutUsuarioNestedInput
     user?: UserUpdateOneWithoutUsuarioNestedInput
     cierres_caja?: CierreCajaUpdateManyWithoutUsuarioNestedInput
+    comprobantes_conciliados?: ComprobantePagoUpdateManyWithoutUsuario_concilioNestedInput
   }
 
   export type UsuarioUncheckedUpdateWithoutRutas_baseInput = {
@@ -76820,6 +79042,7 @@ export namespace Prisma {
     incidencias?: IncidenciaUncheckedUpdateManyWithoutUsuarioNestedInput
     movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutUsuarioNestedInput
     cierres_caja?: CierreCajaUncheckedUpdateManyWithoutUsuarioNestedInput
+    comprobantes_conciliados?: ComprobantePagoUncheckedUpdateManyWithoutUsuario_concilioNestedInput
   }
 
   export type VehiculoUpsertWithoutRutas_baseInput = {
@@ -77088,6 +79311,7 @@ export namespace Prisma {
     paradas?: ParadaDiaCreateNestedManyWithoutClienteInput
     pedidos?: PedidoCreateNestedManyWithoutClienteInput
     incidencias?: IncidenciaCreateNestedManyWithoutClienteInput
+    comprobantes?: ComprobantePagoCreateNestedManyWithoutClienteInput
   }
 
   export type ClienteUncheckedCreateWithoutSectorInput = {
@@ -77116,6 +79340,7 @@ export namespace Prisma {
     paradas?: ParadaDiaUncheckedCreateNestedManyWithoutClienteInput
     pedidos?: PedidoUncheckedCreateNestedManyWithoutClienteInput
     incidencias?: IncidenciaUncheckedCreateNestedManyWithoutClienteInput
+    comprobantes?: ComprobantePagoUncheckedCreateNestedManyWithoutClienteInput
   }
 
   export type ClienteCreateOrConnectWithoutSectorInput = {
@@ -77253,6 +79478,7 @@ export namespace Prisma {
     paradas?: ParadaDiaCreateNestedManyWithoutClienteInput
     pedidos?: PedidoCreateNestedManyWithoutClienteInput
     incidencias?: IncidenciaCreateNestedManyWithoutClienteInput
+    comprobantes?: ComprobantePagoCreateNestedManyWithoutClienteInput
   }
 
   export type ClienteUncheckedCreateWithoutClientes_rutaInput = {
@@ -77281,6 +79507,7 @@ export namespace Prisma {
     paradas?: ParadaDiaUncheckedCreateNestedManyWithoutClienteInput
     pedidos?: PedidoUncheckedCreateNestedManyWithoutClienteInput
     incidencias?: IncidenciaUncheckedCreateNestedManyWithoutClienteInput
+    comprobantes?: ComprobantePagoUncheckedCreateNestedManyWithoutClienteInput
   }
 
   export type ClienteCreateOrConnectWithoutClientes_rutaInput = {
@@ -77354,6 +79581,7 @@ export namespace Prisma {
     paradas?: ParadaDiaUpdateManyWithoutClienteNestedInput
     pedidos?: PedidoUpdateManyWithoutClienteNestedInput
     incidencias?: IncidenciaUpdateManyWithoutClienteNestedInput
+    comprobantes?: ComprobantePagoUpdateManyWithoutClienteNestedInput
   }
 
   export type ClienteUncheckedUpdateWithoutClientes_rutaInput = {
@@ -77382,6 +79610,7 @@ export namespace Prisma {
     paradas?: ParadaDiaUncheckedUpdateManyWithoutClienteNestedInput
     pedidos?: PedidoUncheckedUpdateManyWithoutClienteNestedInput
     incidencias?: IncidenciaUncheckedUpdateManyWithoutClienteNestedInput
+    comprobantes?: ComprobantePagoUncheckedUpdateManyWithoutClienteNestedInput
   }
 
   export type RutaBaseUpsertWithoutClientesInput = {
@@ -77529,6 +79758,7 @@ export namespace Prisma {
     movimientos_stock?: MovimientoStockCreateNestedManyWithoutUsuarioInput
     user?: UserCreateNestedOneWithoutUsuarioInput
     cierres_caja?: CierreCajaCreateNestedManyWithoutUsuarioInput
+    comprobantes_conciliados?: ComprobantePagoCreateNestedManyWithoutUsuario_concilioInput
   }
 
   export type UsuarioUncheckedCreateWithoutRutas_diaInput = {
@@ -77560,6 +79790,7 @@ export namespace Prisma {
     incidencias?: IncidenciaUncheckedCreateNestedManyWithoutUsuarioInput
     movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutUsuarioInput
     cierres_caja?: CierreCajaUncheckedCreateNestedManyWithoutUsuarioInput
+    comprobantes_conciliados?: ComprobantePagoUncheckedCreateNestedManyWithoutUsuario_concilioInput
   }
 
   export type UsuarioCreateOrConnectWithoutRutas_diaInput = {
@@ -77695,6 +79926,7 @@ export namespace Prisma {
     movimientos_stock?: MovimientoStockUpdateManyWithoutUsuarioNestedInput
     user?: UserUpdateOneWithoutUsuarioNestedInput
     cierres_caja?: CierreCajaUpdateManyWithoutUsuarioNestedInput
+    comprobantes_conciliados?: ComprobantePagoUpdateManyWithoutUsuario_concilioNestedInput
   }
 
   export type UsuarioUncheckedUpdateWithoutRutas_diaInput = {
@@ -77726,6 +79958,7 @@ export namespace Prisma {
     incidencias?: IncidenciaUncheckedUpdateManyWithoutUsuarioNestedInput
     movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutUsuarioNestedInput
     cierres_caja?: CierreCajaUncheckedUpdateManyWithoutUsuarioNestedInput
+    comprobantes_conciliados?: ComprobantePagoUncheckedUpdateManyWithoutUsuario_concilioNestedInput
   }
 
   export type VehiculoUpsertWithoutRutas_diaInput = {
@@ -77797,6 +80030,7 @@ export namespace Prisma {
     historial_financiero?: HistorialFinancieroCreateNestedManyWithoutClienteInput
     pedidos?: PedidoCreateNestedManyWithoutClienteInput
     incidencias?: IncidenciaCreateNestedManyWithoutClienteInput
+    comprobantes?: ComprobantePagoCreateNestedManyWithoutClienteInput
   }
 
   export type ClienteUncheckedCreateWithoutParadasInput = {
@@ -77825,6 +80059,7 @@ export namespace Prisma {
     historial_financiero?: HistorialFinancieroUncheckedCreateNestedManyWithoutClienteInput
     pedidos?: PedidoUncheckedCreateNestedManyWithoutClienteInput
     incidencias?: IncidenciaUncheckedCreateNestedManyWithoutClienteInput
+    comprobantes?: ComprobantePagoUncheckedCreateNestedManyWithoutClienteInput
   }
 
   export type ClienteCreateOrConnectWithoutParadasInput = {
@@ -77961,6 +80196,7 @@ export namespace Prisma {
     historial_financiero?: HistorialFinancieroUpdateManyWithoutClienteNestedInput
     pedidos?: PedidoUpdateManyWithoutClienteNestedInput
     incidencias?: IncidenciaUpdateManyWithoutClienteNestedInput
+    comprobantes?: ComprobantePagoUpdateManyWithoutClienteNestedInput
   }
 
   export type ClienteUncheckedUpdateWithoutParadasInput = {
@@ -77989,6 +80225,7 @@ export namespace Prisma {
     historial_financiero?: HistorialFinancieroUncheckedUpdateManyWithoutClienteNestedInput
     pedidos?: PedidoUncheckedUpdateManyWithoutClienteNestedInput
     incidencias?: IncidenciaUncheckedUpdateManyWithoutClienteNestedInput
+    comprobantes?: ComprobantePagoUncheckedUpdateManyWithoutClienteNestedInput
   }
 
   export type PedidoUpsertWithoutParadasInput = {
@@ -78157,6 +80394,7 @@ export namespace Prisma {
     historial_financiero?: HistorialFinancieroCreateNestedManyWithoutClienteInput
     paradas?: ParadaDiaCreateNestedManyWithoutClienteInput
     incidencias?: IncidenciaCreateNestedManyWithoutClienteInput
+    comprobantes?: ComprobantePagoCreateNestedManyWithoutClienteInput
   }
 
   export type ClienteUncheckedCreateWithoutPedidosInput = {
@@ -78185,6 +80423,7 @@ export namespace Prisma {
     historial_financiero?: HistorialFinancieroUncheckedCreateNestedManyWithoutClienteInput
     paradas?: ParadaDiaUncheckedCreateNestedManyWithoutClienteInput
     incidencias?: IncidenciaUncheckedCreateNestedManyWithoutClienteInput
+    comprobantes?: ComprobantePagoUncheckedCreateNestedManyWithoutClienteInput
   }
 
   export type ClienteCreateOrConnectWithoutPedidosInput = {
@@ -78342,6 +80581,7 @@ export namespace Prisma {
     historial_financiero?: HistorialFinancieroUpdateManyWithoutClienteNestedInput
     paradas?: ParadaDiaUpdateManyWithoutClienteNestedInput
     incidencias?: IncidenciaUpdateManyWithoutClienteNestedInput
+    comprobantes?: ComprobantePagoUpdateManyWithoutClienteNestedInput
   }
 
   export type ClienteUncheckedUpdateWithoutPedidosInput = {
@@ -78370,6 +80610,7 @@ export namespace Prisma {
     historial_financiero?: HistorialFinancieroUncheckedUpdateManyWithoutClienteNestedInput
     paradas?: ParadaDiaUncheckedUpdateManyWithoutClienteNestedInput
     incidencias?: IncidenciaUncheckedUpdateManyWithoutClienteNestedInput
+    comprobantes?: ComprobantePagoUncheckedUpdateManyWithoutClienteNestedInput
   }
 
   export type PedidoItemUpsertWithWhereUniqueWithoutPedidoInput = {
@@ -78692,6 +80933,7 @@ export namespace Prisma {
     paradas?: ParadaDiaCreateNestedManyWithoutClienteInput
     pedidos?: PedidoCreateNestedManyWithoutClienteInput
     incidencias?: IncidenciaCreateNestedManyWithoutClienteInput
+    comprobantes?: ComprobantePagoCreateNestedManyWithoutClienteInput
   }
 
   export type ClienteUncheckedCreateWithoutGuiasInput = {
@@ -78720,6 +80962,7 @@ export namespace Prisma {
     paradas?: ParadaDiaUncheckedCreateNestedManyWithoutClienteInput
     pedidos?: PedidoUncheckedCreateNestedManyWithoutClienteInput
     incidencias?: IncidenciaUncheckedCreateNestedManyWithoutClienteInput
+    comprobantes?: ComprobantePagoUncheckedCreateNestedManyWithoutClienteInput
   }
 
   export type ClienteCreateOrConnectWithoutGuiasInput = {
@@ -78756,6 +80999,7 @@ export namespace Prisma {
     movimientos_stock?: MovimientoStockCreateNestedManyWithoutUsuarioInput
     user?: UserCreateNestedOneWithoutUsuarioInput
     cierres_caja?: CierreCajaCreateNestedManyWithoutUsuarioInput
+    comprobantes_conciliados?: ComprobantePagoCreateNestedManyWithoutUsuario_concilioInput
   }
 
   export type UsuarioUncheckedCreateWithoutGuiasInput = {
@@ -78787,6 +81031,7 @@ export namespace Prisma {
     incidencias?: IncidenciaUncheckedCreateNestedManyWithoutUsuarioInput
     movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutUsuarioInput
     cierres_caja?: CierreCajaUncheckedCreateNestedManyWithoutUsuarioInput
+    comprobantes_conciliados?: ComprobantePagoUncheckedCreateNestedManyWithoutUsuario_concilioInput
   }
 
   export type UsuarioCreateOrConnectWithoutGuiasInput = {
@@ -78823,6 +81068,7 @@ export namespace Prisma {
     movimientos_stock?: MovimientoStockCreateNestedManyWithoutUsuarioInput
     user?: UserCreateNestedOneWithoutUsuarioInput
     cierres_caja?: CierreCajaCreateNestedManyWithoutUsuarioInput
+    comprobantes_conciliados?: ComprobantePagoCreateNestedManyWithoutUsuario_concilioInput
   }
 
   export type UsuarioUncheckedCreateWithoutGuias_anuladasInput = {
@@ -78854,6 +81100,7 @@ export namespace Prisma {
     incidencias?: IncidenciaUncheckedCreateNestedManyWithoutUsuarioInput
     movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutUsuarioInput
     cierres_caja?: CierreCajaUncheckedCreateNestedManyWithoutUsuarioInput
+    comprobantes_conciliados?: ComprobantePagoUncheckedCreateNestedManyWithoutUsuario_concilioInput
   }
 
   export type UsuarioCreateOrConnectWithoutGuias_anuladasInput = {
@@ -79265,6 +81512,7 @@ export namespace Prisma {
     paradas?: ParadaDiaUpdateManyWithoutClienteNestedInput
     pedidos?: PedidoUpdateManyWithoutClienteNestedInput
     incidencias?: IncidenciaUpdateManyWithoutClienteNestedInput
+    comprobantes?: ComprobantePagoUpdateManyWithoutClienteNestedInput
   }
 
   export type ClienteUncheckedUpdateWithoutGuiasInput = {
@@ -79293,6 +81541,7 @@ export namespace Prisma {
     paradas?: ParadaDiaUncheckedUpdateManyWithoutClienteNestedInput
     pedidos?: PedidoUncheckedUpdateManyWithoutClienteNestedInput
     incidencias?: IncidenciaUncheckedUpdateManyWithoutClienteNestedInput
+    comprobantes?: ComprobantePagoUncheckedUpdateManyWithoutClienteNestedInput
   }
 
   export type UsuarioUpsertWithoutGuiasInput = {
@@ -79335,6 +81584,7 @@ export namespace Prisma {
     movimientos_stock?: MovimientoStockUpdateManyWithoutUsuarioNestedInput
     user?: UserUpdateOneWithoutUsuarioNestedInput
     cierres_caja?: CierreCajaUpdateManyWithoutUsuarioNestedInput
+    comprobantes_conciliados?: ComprobantePagoUpdateManyWithoutUsuario_concilioNestedInput
   }
 
   export type UsuarioUncheckedUpdateWithoutGuiasInput = {
@@ -79366,6 +81616,7 @@ export namespace Prisma {
     incidencias?: IncidenciaUncheckedUpdateManyWithoutUsuarioNestedInput
     movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutUsuarioNestedInput
     cierres_caja?: CierreCajaUncheckedUpdateManyWithoutUsuarioNestedInput
+    comprobantes_conciliados?: ComprobantePagoUncheckedUpdateManyWithoutUsuario_concilioNestedInput
   }
 
   export type UsuarioUpsertWithoutGuias_anuladasInput = {
@@ -79408,6 +81659,7 @@ export namespace Prisma {
     movimientos_stock?: MovimientoStockUpdateManyWithoutUsuarioNestedInput
     user?: UserUpdateOneWithoutUsuarioNestedInput
     cierres_caja?: CierreCajaUpdateManyWithoutUsuarioNestedInput
+    comprobantes_conciliados?: ComprobantePagoUpdateManyWithoutUsuario_concilioNestedInput
   }
 
   export type UsuarioUncheckedUpdateWithoutGuias_anuladasInput = {
@@ -79439,6 +81691,7 @@ export namespace Prisma {
     incidencias?: IncidenciaUncheckedUpdateManyWithoutUsuarioNestedInput
     movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutUsuarioNestedInput
     cierres_caja?: CierreCajaUncheckedUpdateManyWithoutUsuarioNestedInput
+    comprobantes_conciliados?: ComprobantePagoUncheckedUpdateManyWithoutUsuario_concilioNestedInput
   }
 
   export type GuiaDespachoUpsertWithoutGuias_que_reemplazan_a_estaInput = {
@@ -79966,6 +82219,7 @@ export namespace Prisma {
     movimientos_stock?: MovimientoStockCreateNestedManyWithoutUsuarioInput
     user?: UserCreateNestedOneWithoutUsuarioInput
     cierres_caja?: CierreCajaCreateNestedManyWithoutUsuarioInput
+    comprobantes_conciliados?: ComprobantePagoCreateNestedManyWithoutUsuario_concilioInput
   }
 
   export type UsuarioUncheckedCreateWithoutCuadraturasInput = {
@@ -79997,6 +82251,7 @@ export namespace Prisma {
     incidencias?: IncidenciaUncheckedCreateNestedManyWithoutUsuarioInput
     movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutUsuarioInput
     cierres_caja?: CierreCajaUncheckedCreateNestedManyWithoutUsuarioInput
+    comprobantes_conciliados?: ComprobantePagoUncheckedCreateNestedManyWithoutUsuario_concilioInput
   }
 
   export type UsuarioCreateOrConnectWithoutCuadraturasInput = {
@@ -80202,6 +82457,7 @@ export namespace Prisma {
     movimientos_stock?: MovimientoStockUpdateManyWithoutUsuarioNestedInput
     user?: UserUpdateOneWithoutUsuarioNestedInput
     cierres_caja?: CierreCajaUpdateManyWithoutUsuarioNestedInput
+    comprobantes_conciliados?: ComprobantePagoUpdateManyWithoutUsuario_concilioNestedInput
   }
 
   export type UsuarioUncheckedUpdateWithoutCuadraturasInput = {
@@ -80233,6 +82489,7 @@ export namespace Prisma {
     incidencias?: IncidenciaUncheckedUpdateManyWithoutUsuarioNestedInput
     movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutUsuarioNestedInput
     cierres_caja?: CierreCajaUncheckedUpdateManyWithoutUsuarioNestedInput
+    comprobantes_conciliados?: ComprobantePagoUncheckedUpdateManyWithoutUsuario_concilioNestedInput
   }
 
   export type CuadraturaRetornoUpsertWithWhereUniqueWithoutCuadraturaInput = {
@@ -81291,6 +83548,7 @@ export namespace Prisma {
     paradas?: ParadaDiaCreateNestedManyWithoutClienteInput
     pedidos?: PedidoCreateNestedManyWithoutClienteInput
     incidencias?: IncidenciaCreateNestedManyWithoutClienteInput
+    comprobantes?: ComprobantePagoCreateNestedManyWithoutClienteInput
   }
 
   export type ClienteUncheckedCreateWithoutBotellones_danadosInput = {
@@ -81319,6 +83577,7 @@ export namespace Prisma {
     paradas?: ParadaDiaUncheckedCreateNestedManyWithoutClienteInput
     pedidos?: PedidoUncheckedCreateNestedManyWithoutClienteInput
     incidencias?: IncidenciaUncheckedCreateNestedManyWithoutClienteInput
+    comprobantes?: ComprobantePagoUncheckedCreateNestedManyWithoutClienteInput
   }
 
   export type ClienteCreateOrConnectWithoutBotellones_danadosInput = {
@@ -81355,6 +83614,7 @@ export namespace Prisma {
     movimientos_stock?: MovimientoStockCreateNestedManyWithoutUsuarioInput
     user?: UserCreateNestedOneWithoutUsuarioInput
     cierres_caja?: CierreCajaCreateNestedManyWithoutUsuarioInput
+    comprobantes_conciliados?: ComprobantePagoCreateNestedManyWithoutUsuario_concilioInput
   }
 
   export type UsuarioUncheckedCreateWithoutBotellones_danadosInput = {
@@ -81386,6 +83646,7 @@ export namespace Prisma {
     incidencias?: IncidenciaUncheckedCreateNestedManyWithoutUsuarioInput
     movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutUsuarioInput
     cierres_caja?: CierreCajaUncheckedCreateNestedManyWithoutUsuarioInput
+    comprobantes_conciliados?: ComprobantePagoUncheckedCreateNestedManyWithoutUsuario_concilioInput
   }
 
   export type UsuarioCreateOrConnectWithoutBotellones_danadosInput = {
@@ -81430,6 +83691,7 @@ export namespace Prisma {
     paradas?: ParadaDiaUpdateManyWithoutClienteNestedInput
     pedidos?: PedidoUpdateManyWithoutClienteNestedInput
     incidencias?: IncidenciaUpdateManyWithoutClienteNestedInput
+    comprobantes?: ComprobantePagoUpdateManyWithoutClienteNestedInput
   }
 
   export type ClienteUncheckedUpdateWithoutBotellones_danadosInput = {
@@ -81458,6 +83720,7 @@ export namespace Prisma {
     paradas?: ParadaDiaUncheckedUpdateManyWithoutClienteNestedInput
     pedidos?: PedidoUncheckedUpdateManyWithoutClienteNestedInput
     incidencias?: IncidenciaUncheckedUpdateManyWithoutClienteNestedInput
+    comprobantes?: ComprobantePagoUncheckedUpdateManyWithoutClienteNestedInput
   }
 
   export type UsuarioUpsertWithoutBotellones_danadosInput = {
@@ -81500,6 +83763,7 @@ export namespace Prisma {
     movimientos_stock?: MovimientoStockUpdateManyWithoutUsuarioNestedInput
     user?: UserUpdateOneWithoutUsuarioNestedInput
     cierres_caja?: CierreCajaUpdateManyWithoutUsuarioNestedInput
+    comprobantes_conciliados?: ComprobantePagoUpdateManyWithoutUsuario_concilioNestedInput
   }
 
   export type UsuarioUncheckedUpdateWithoutBotellones_danadosInput = {
@@ -81531,6 +83795,7 @@ export namespace Prisma {
     incidencias?: IncidenciaUncheckedUpdateManyWithoutUsuarioNestedInput
     movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutUsuarioNestedInput
     cierres_caja?: CierreCajaUncheckedUpdateManyWithoutUsuarioNestedInput
+    comprobantes_conciliados?: ComprobantePagoUncheckedUpdateManyWithoutUsuario_concilioNestedInput
   }
 
   export type UsuarioCreateWithoutProduccionInput = {
@@ -81562,6 +83827,7 @@ export namespace Prisma {
     movimientos_stock?: MovimientoStockCreateNestedManyWithoutUsuarioInput
     user?: UserCreateNestedOneWithoutUsuarioInput
     cierres_caja?: CierreCajaCreateNestedManyWithoutUsuarioInput
+    comprobantes_conciliados?: ComprobantePagoCreateNestedManyWithoutUsuario_concilioInput
   }
 
   export type UsuarioUncheckedCreateWithoutProduccionInput = {
@@ -81593,6 +83859,7 @@ export namespace Prisma {
     incidencias?: IncidenciaUncheckedCreateNestedManyWithoutUsuarioInput
     movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutUsuarioInput
     cierres_caja?: CierreCajaUncheckedCreateNestedManyWithoutUsuarioInput
+    comprobantes_conciliados?: ComprobantePagoUncheckedCreateNestedManyWithoutUsuario_concilioInput
   }
 
   export type UsuarioCreateOrConnectWithoutProduccionInput = {
@@ -81640,6 +83907,7 @@ export namespace Prisma {
     movimientos_stock?: MovimientoStockUpdateManyWithoutUsuarioNestedInput
     user?: UserUpdateOneWithoutUsuarioNestedInput
     cierres_caja?: CierreCajaUpdateManyWithoutUsuarioNestedInput
+    comprobantes_conciliados?: ComprobantePagoUpdateManyWithoutUsuario_concilioNestedInput
   }
 
   export type UsuarioUncheckedUpdateWithoutProduccionInput = {
@@ -81671,6 +83939,7 @@ export namespace Prisma {
     incidencias?: IncidenciaUncheckedUpdateManyWithoutUsuarioNestedInput
     movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutUsuarioNestedInput
     cierres_caja?: CierreCajaUncheckedUpdateManyWithoutUsuarioNestedInput
+    comprobantes_conciliados?: ComprobantePagoUncheckedUpdateManyWithoutUsuario_concilioNestedInput
   }
 
   export type ProductoCreateWithoutStock_fabricaInput = {
@@ -81837,6 +84106,7 @@ export namespace Prisma {
     movimientos_stock?: MovimientoStockCreateNestedManyWithoutUsuarioInput
     user?: UserCreateNestedOneWithoutUsuarioInput
     cierres_caja?: CierreCajaCreateNestedManyWithoutUsuarioInput
+    comprobantes_conciliados?: ComprobantePagoCreateNestedManyWithoutUsuario_concilioInput
   }
 
   export type UsuarioUncheckedCreateWithoutStock_camionInput = {
@@ -81868,6 +84138,7 @@ export namespace Prisma {
     incidencias?: IncidenciaUncheckedCreateNestedManyWithoutUsuarioInput
     movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutUsuarioInput
     cierres_caja?: CierreCajaUncheckedCreateNestedManyWithoutUsuarioInput
+    comprobantes_conciliados?: ComprobantePagoUncheckedCreateNestedManyWithoutUsuario_concilioInput
   }
 
   export type UsuarioCreateOrConnectWithoutStock_camionInput = {
@@ -81964,6 +84235,7 @@ export namespace Prisma {
     movimientos_stock?: MovimientoStockUpdateManyWithoutUsuarioNestedInput
     user?: UserUpdateOneWithoutUsuarioNestedInput
     cierres_caja?: CierreCajaUpdateManyWithoutUsuarioNestedInput
+    comprobantes_conciliados?: ComprobantePagoUpdateManyWithoutUsuario_concilioNestedInput
   }
 
   export type UsuarioUncheckedUpdateWithoutStock_camionInput = {
@@ -81995,6 +84267,7 @@ export namespace Prisma {
     incidencias?: IncidenciaUncheckedUpdateManyWithoutUsuarioNestedInput
     movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutUsuarioNestedInput
     cierres_caja?: CierreCajaUncheckedUpdateManyWithoutUsuarioNestedInput
+    comprobantes_conciliados?: ComprobantePagoUncheckedUpdateManyWithoutUsuario_concilioNestedInput
   }
 
   export type UsuarioCreateWithoutLog_accesosInput = {
@@ -82026,6 +84299,7 @@ export namespace Prisma {
     movimientos_stock?: MovimientoStockCreateNestedManyWithoutUsuarioInput
     user?: UserCreateNestedOneWithoutUsuarioInput
     cierres_caja?: CierreCajaCreateNestedManyWithoutUsuarioInput
+    comprobantes_conciliados?: ComprobantePagoCreateNestedManyWithoutUsuario_concilioInput
   }
 
   export type UsuarioUncheckedCreateWithoutLog_accesosInput = {
@@ -82057,6 +84331,7 @@ export namespace Prisma {
     incidencias?: IncidenciaUncheckedCreateNestedManyWithoutUsuarioInput
     movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutUsuarioInput
     cierres_caja?: CierreCajaUncheckedCreateNestedManyWithoutUsuarioInput
+    comprobantes_conciliados?: ComprobantePagoUncheckedCreateNestedManyWithoutUsuario_concilioInput
   }
 
   export type UsuarioCreateOrConnectWithoutLog_accesosInput = {
@@ -82104,6 +84379,7 @@ export namespace Prisma {
     movimientos_stock?: MovimientoStockUpdateManyWithoutUsuarioNestedInput
     user?: UserUpdateOneWithoutUsuarioNestedInput
     cierres_caja?: CierreCajaUpdateManyWithoutUsuarioNestedInput
+    comprobantes_conciliados?: ComprobantePagoUpdateManyWithoutUsuario_concilioNestedInput
   }
 
   export type UsuarioUncheckedUpdateWithoutLog_accesosInput = {
@@ -82135,6 +84411,7 @@ export namespace Prisma {
     incidencias?: IncidenciaUncheckedUpdateManyWithoutUsuarioNestedInput
     movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutUsuarioNestedInput
     cierres_caja?: CierreCajaUncheckedUpdateManyWithoutUsuarioNestedInput
+    comprobantes_conciliados?: ComprobantePagoUncheckedUpdateManyWithoutUsuario_concilioNestedInput
   }
 
   export type ClienteCreateWithoutDispensadoresInput = {
@@ -82163,6 +84440,7 @@ export namespace Prisma {
     paradas?: ParadaDiaCreateNestedManyWithoutClienteInput
     pedidos?: PedidoCreateNestedManyWithoutClienteInput
     incidencias?: IncidenciaCreateNestedManyWithoutClienteInput
+    comprobantes?: ComprobantePagoCreateNestedManyWithoutClienteInput
   }
 
   export type ClienteUncheckedCreateWithoutDispensadoresInput = {
@@ -82191,6 +84469,7 @@ export namespace Prisma {
     paradas?: ParadaDiaUncheckedCreateNestedManyWithoutClienteInput
     pedidos?: PedidoUncheckedCreateNestedManyWithoutClienteInput
     incidencias?: IncidenciaUncheckedCreateNestedManyWithoutClienteInput
+    comprobantes?: ComprobantePagoUncheckedCreateNestedManyWithoutClienteInput
   }
 
   export type ClienteCreateOrConnectWithoutDispensadoresInput = {
@@ -82277,6 +84556,7 @@ export namespace Prisma {
     paradas?: ParadaDiaUpdateManyWithoutClienteNestedInput
     pedidos?: PedidoUpdateManyWithoutClienteNestedInput
     incidencias?: IncidenciaUpdateManyWithoutClienteNestedInput
+    comprobantes?: ComprobantePagoUpdateManyWithoutClienteNestedInput
   }
 
   export type ClienteUncheckedUpdateWithoutDispensadoresInput = {
@@ -82305,6 +84585,7 @@ export namespace Prisma {
     paradas?: ParadaDiaUncheckedUpdateManyWithoutClienteNestedInput
     pedidos?: PedidoUncheckedUpdateManyWithoutClienteNestedInput
     incidencias?: IncidenciaUncheckedUpdateManyWithoutClienteNestedInput
+    comprobantes?: ComprobantePagoUncheckedUpdateManyWithoutClienteNestedInput
   }
 
   export type MantencionDispensadorUpsertWithWhereUniqueWithoutDispensadorInput = {
@@ -82669,6 +84950,7 @@ export namespace Prisma {
     paradas?: ParadaDiaCreateNestedManyWithoutClienteInput
     pedidos?: PedidoCreateNestedManyWithoutClienteInput
     incidencias?: IncidenciaCreateNestedManyWithoutClienteInput
+    comprobantes?: ComprobantePagoCreateNestedManyWithoutClienteInput
   }
 
   export type ClienteUncheckedCreateWithoutHistorial_financieroInput = {
@@ -82697,6 +84979,7 @@ export namespace Prisma {
     paradas?: ParadaDiaUncheckedCreateNestedManyWithoutClienteInput
     pedidos?: PedidoUncheckedCreateNestedManyWithoutClienteInput
     incidencias?: IncidenciaUncheckedCreateNestedManyWithoutClienteInput
+    comprobantes?: ComprobantePagoUncheckedCreateNestedManyWithoutClienteInput
   }
 
   export type ClienteCreateOrConnectWithoutHistorial_financieroInput = {
@@ -82741,6 +85024,7 @@ export namespace Prisma {
     paradas?: ParadaDiaUpdateManyWithoutClienteNestedInput
     pedidos?: PedidoUpdateManyWithoutClienteNestedInput
     incidencias?: IncidenciaUpdateManyWithoutClienteNestedInput
+    comprobantes?: ComprobantePagoUpdateManyWithoutClienteNestedInput
   }
 
   export type ClienteUncheckedUpdateWithoutHistorial_financieroInput = {
@@ -82769,6 +85053,7 @@ export namespace Prisma {
     paradas?: ParadaDiaUncheckedUpdateManyWithoutClienteNestedInput
     pedidos?: PedidoUncheckedUpdateManyWithoutClienteNestedInput
     incidencias?: IncidenciaUncheckedUpdateManyWithoutClienteNestedInput
+    comprobantes?: ComprobantePagoUncheckedUpdateManyWithoutClienteNestedInput
   }
 
   export type UsuarioCreateWithoutCargas_combustibleInput = {
@@ -82800,6 +85085,7 @@ export namespace Prisma {
     movimientos_stock?: MovimientoStockCreateNestedManyWithoutUsuarioInput
     user?: UserCreateNestedOneWithoutUsuarioInput
     cierres_caja?: CierreCajaCreateNestedManyWithoutUsuarioInput
+    comprobantes_conciliados?: ComprobantePagoCreateNestedManyWithoutUsuario_concilioInput
   }
 
   export type UsuarioUncheckedCreateWithoutCargas_combustibleInput = {
@@ -82831,6 +85117,7 @@ export namespace Prisma {
     incidencias?: IncidenciaUncheckedCreateNestedManyWithoutUsuarioInput
     movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutUsuarioInput
     cierres_caja?: CierreCajaUncheckedCreateNestedManyWithoutUsuarioInput
+    comprobantes_conciliados?: ComprobantePagoUncheckedCreateNestedManyWithoutUsuario_concilioInput
   }
 
   export type UsuarioCreateOrConnectWithoutCargas_combustibleInput = {
@@ -82915,6 +85202,7 @@ export namespace Prisma {
     movimientos_stock?: MovimientoStockUpdateManyWithoutUsuarioNestedInput
     user?: UserUpdateOneWithoutUsuarioNestedInput
     cierres_caja?: CierreCajaUpdateManyWithoutUsuarioNestedInput
+    comprobantes_conciliados?: ComprobantePagoUpdateManyWithoutUsuario_concilioNestedInput
   }
 
   export type UsuarioUncheckedUpdateWithoutCargas_combustibleInput = {
@@ -82946,6 +85234,7 @@ export namespace Prisma {
     incidencias?: IncidenciaUncheckedUpdateManyWithoutUsuarioNestedInput
     movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutUsuarioNestedInput
     cierres_caja?: CierreCajaUncheckedUpdateManyWithoutUsuarioNestedInput
+    comprobantes_conciliados?: ComprobantePagoUncheckedUpdateManyWithoutUsuario_concilioNestedInput
   }
 
   export type VehiculoUpsertWithoutCargas_combustibleInput = {
@@ -83017,6 +85306,7 @@ export namespace Prisma {
     historial_financiero?: HistorialFinancieroCreateNestedManyWithoutClienteInput
     paradas?: ParadaDiaCreateNestedManyWithoutClienteInput
     pedidos?: PedidoCreateNestedManyWithoutClienteInput
+    comprobantes?: ComprobantePagoCreateNestedManyWithoutClienteInput
   }
 
   export type ClienteUncheckedCreateWithoutIncidenciasInput = {
@@ -83045,6 +85335,7 @@ export namespace Prisma {
     historial_financiero?: HistorialFinancieroUncheckedCreateNestedManyWithoutClienteInput
     paradas?: ParadaDiaUncheckedCreateNestedManyWithoutClienteInput
     pedidos?: PedidoUncheckedCreateNestedManyWithoutClienteInput
+    comprobantes?: ComprobantePagoUncheckedCreateNestedManyWithoutClienteInput
   }
 
   export type ClienteCreateOrConnectWithoutIncidenciasInput = {
@@ -83128,6 +85419,7 @@ export namespace Prisma {
     movimientos_stock?: MovimientoStockCreateNestedManyWithoutUsuarioInput
     user?: UserCreateNestedOneWithoutUsuarioInput
     cierres_caja?: CierreCajaCreateNestedManyWithoutUsuarioInput
+    comprobantes_conciliados?: ComprobantePagoCreateNestedManyWithoutUsuario_concilioInput
   }
 
   export type UsuarioUncheckedCreateWithoutIncidenciasInput = {
@@ -83159,6 +85451,7 @@ export namespace Prisma {
     stock_camion?: StockCamionUncheckedCreateNestedManyWithoutUsuarioInput
     movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutUsuarioInput
     cierres_caja?: CierreCajaUncheckedCreateNestedManyWithoutUsuarioInput
+    comprobantes_conciliados?: ComprobantePagoUncheckedCreateNestedManyWithoutUsuario_concilioInput
   }
 
   export type UsuarioCreateOrConnectWithoutIncidenciasInput = {
@@ -83252,6 +85545,7 @@ export namespace Prisma {
     historial_financiero?: HistorialFinancieroUpdateManyWithoutClienteNestedInput
     paradas?: ParadaDiaUpdateManyWithoutClienteNestedInput
     pedidos?: PedidoUpdateManyWithoutClienteNestedInput
+    comprobantes?: ComprobantePagoUpdateManyWithoutClienteNestedInput
   }
 
   export type ClienteUncheckedUpdateWithoutIncidenciasInput = {
@@ -83280,6 +85574,7 @@ export namespace Prisma {
     historial_financiero?: HistorialFinancieroUncheckedUpdateManyWithoutClienteNestedInput
     paradas?: ParadaDiaUncheckedUpdateManyWithoutClienteNestedInput
     pedidos?: PedidoUncheckedUpdateManyWithoutClienteNestedInput
+    comprobantes?: ComprobantePagoUncheckedUpdateManyWithoutClienteNestedInput
   }
 
   export type ParadaDiaUpsertWithoutIncidenciasInput = {
@@ -83375,6 +85670,7 @@ export namespace Prisma {
     movimientos_stock?: MovimientoStockUpdateManyWithoutUsuarioNestedInput
     user?: UserUpdateOneWithoutUsuarioNestedInput
     cierres_caja?: CierreCajaUpdateManyWithoutUsuarioNestedInput
+    comprobantes_conciliados?: ComprobantePagoUpdateManyWithoutUsuario_concilioNestedInput
   }
 
   export type UsuarioUncheckedUpdateWithoutIncidenciasInput = {
@@ -83406,6 +85702,7 @@ export namespace Prisma {
     stock_camion?: StockCamionUncheckedUpdateManyWithoutUsuarioNestedInput
     movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutUsuarioNestedInput
     cierres_caja?: CierreCajaUncheckedUpdateManyWithoutUsuarioNestedInput
+    comprobantes_conciliados?: ComprobantePagoUncheckedUpdateManyWithoutUsuario_concilioNestedInput
   }
 
   export type CuadraturaUpsertWithoutIncidenciasInput = {
@@ -83564,6 +85861,7 @@ export namespace Prisma {
     incidencias?: IncidenciaCreateNestedManyWithoutUsuarioInput
     movimientos_stock?: MovimientoStockCreateNestedManyWithoutUsuarioInput
     cierres_caja?: CierreCajaCreateNestedManyWithoutUsuarioInput
+    comprobantes_conciliados?: ComprobantePagoCreateNestedManyWithoutUsuario_concilioInput
   }
 
   export type UsuarioUncheckedCreateWithoutUserInput = {
@@ -83595,6 +85893,7 @@ export namespace Prisma {
     incidencias?: IncidenciaUncheckedCreateNestedManyWithoutUsuarioInput
     movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutUsuarioInput
     cierres_caja?: CierreCajaUncheckedCreateNestedManyWithoutUsuarioInput
+    comprobantes_conciliados?: ComprobantePagoUncheckedCreateNestedManyWithoutUsuario_concilioInput
   }
 
   export type UsuarioCreateOrConnectWithoutUserInput = {
@@ -83708,6 +86007,7 @@ export namespace Prisma {
     incidencias?: IncidenciaUpdateManyWithoutUsuarioNestedInput
     movimientos_stock?: MovimientoStockUpdateManyWithoutUsuarioNestedInput
     cierres_caja?: CierreCajaUpdateManyWithoutUsuarioNestedInput
+    comprobantes_conciliados?: ComprobantePagoUpdateManyWithoutUsuario_concilioNestedInput
   }
 
   export type UsuarioUncheckedUpdateWithoutUserInput = {
@@ -83739,6 +86039,7 @@ export namespace Prisma {
     incidencias?: IncidenciaUncheckedUpdateManyWithoutUsuarioNestedInput
     movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutUsuarioNestedInput
     cierres_caja?: CierreCajaUncheckedUpdateManyWithoutUsuarioNestedInput
+    comprobantes_conciliados?: ComprobantePagoUncheckedUpdateManyWithoutUsuario_concilioNestedInput
   }
 
   export type UserCreateWithoutSessionsInput = {
@@ -83906,6 +86207,7 @@ export namespace Prisma {
     incidencias?: IncidenciaCreateNestedManyWithoutUsuarioInput
     movimientos_stock?: MovimientoStockCreateNestedManyWithoutUsuarioInput
     user?: UserCreateNestedOneWithoutUsuarioInput
+    comprobantes_conciliados?: ComprobantePagoCreateNestedManyWithoutUsuario_concilioInput
   }
 
   export type UsuarioUncheckedCreateWithoutCierres_cajaInput = {
@@ -83937,6 +86239,7 @@ export namespace Prisma {
     stock_camion?: StockCamionUncheckedCreateNestedManyWithoutUsuarioInput
     incidencias?: IncidenciaUncheckedCreateNestedManyWithoutUsuarioInput
     movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutUsuarioInput
+    comprobantes_conciliados?: ComprobantePagoUncheckedCreateNestedManyWithoutUsuario_concilioInput
   }
 
   export type UsuarioCreateOrConnectWithoutCierres_cajaInput = {
@@ -84040,6 +86343,7 @@ export namespace Prisma {
     incidencias?: IncidenciaUpdateManyWithoutUsuarioNestedInput
     movimientos_stock?: MovimientoStockUpdateManyWithoutUsuarioNestedInput
     user?: UserUpdateOneWithoutUsuarioNestedInput
+    comprobantes_conciliados?: ComprobantePagoUpdateManyWithoutUsuario_concilioNestedInput
   }
 
   export type UsuarioUncheckedUpdateWithoutCierres_cajaInput = {
@@ -84071,6 +86375,7 @@ export namespace Prisma {
     stock_camion?: StockCamionUncheckedUpdateManyWithoutUsuarioNestedInput
     incidencias?: IncidenciaUncheckedUpdateManyWithoutUsuarioNestedInput
     movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutUsuarioNestedInput
+    comprobantes_conciliados?: ComprobantePagoUncheckedUpdateManyWithoutUsuario_concilioNestedInput
   }
 
   export type VentaCierreCajaUpsertWithWhereUniqueWithoutCierreInput = {
@@ -84384,6 +86689,282 @@ export namespace Prisma {
     ventas?: VentaCierreCajaUncheckedUpdateManyWithoutCierreNestedInput
   }
 
+  export type ClienteCreateWithoutComprobantesInput = {
+    id?: string
+    nombre: string
+    tipo: $Enums.TipoCliente
+    direccion: string
+    telefono: string
+    email?: string | null
+    rut_empresa?: string | null
+    giro?: string | null
+    modalidad_pago?: $Enums.ModalidadPago
+    tipo_ruta?: $Enums.TipoRuta
+    notas?: string | null
+    activo?: boolean
+    botellones_prestados?: number
+    preferencia_factura?: $Enums.PreferenciaFacturacion
+    frecuencia?: $Enums.Frecuencia
+    semana_alterna?: $Enums.SemanaAlterna | null
+    deuda?: number
+    sector?: SectorCreateNestedOneWithoutClientesInput
+    botellones_danados?: BotellonDanadoCreateNestedManyWithoutClienteInput
+    clientes_ruta?: ClienteRutaBaseCreateNestedManyWithoutClienteInput
+    dispensadores?: DispensadorCreateNestedManyWithoutClienteInput
+    guias?: GuiaDespachoCreateNestedManyWithoutClienteInput
+    historial_financiero?: HistorialFinancieroCreateNestedManyWithoutClienteInput
+    paradas?: ParadaDiaCreateNestedManyWithoutClienteInput
+    pedidos?: PedidoCreateNestedManyWithoutClienteInput
+    incidencias?: IncidenciaCreateNestedManyWithoutClienteInput
+  }
+
+  export type ClienteUncheckedCreateWithoutComprobantesInput = {
+    id?: string
+    nombre: string
+    tipo: $Enums.TipoCliente
+    direccion: string
+    telefono: string
+    email?: string | null
+    rut_empresa?: string | null
+    giro?: string | null
+    modalidad_pago?: $Enums.ModalidadPago
+    tipo_ruta?: $Enums.TipoRuta
+    notas?: string | null
+    activo?: boolean
+    botellones_prestados?: number
+    preferencia_factura?: $Enums.PreferenciaFacturacion
+    sector_id?: string | null
+    frecuencia?: $Enums.Frecuencia
+    semana_alterna?: $Enums.SemanaAlterna | null
+    deuda?: number
+    botellones_danados?: BotellonDanadoUncheckedCreateNestedManyWithoutClienteInput
+    clientes_ruta?: ClienteRutaBaseUncheckedCreateNestedManyWithoutClienteInput
+    dispensadores?: DispensadorUncheckedCreateNestedManyWithoutClienteInput
+    guias?: GuiaDespachoUncheckedCreateNestedManyWithoutClienteInput
+    historial_financiero?: HistorialFinancieroUncheckedCreateNestedManyWithoutClienteInput
+    paradas?: ParadaDiaUncheckedCreateNestedManyWithoutClienteInput
+    pedidos?: PedidoUncheckedCreateNestedManyWithoutClienteInput
+    incidencias?: IncidenciaUncheckedCreateNestedManyWithoutClienteInput
+  }
+
+  export type ClienteCreateOrConnectWithoutComprobantesInput = {
+    where: ClienteWhereUniqueInput
+    create: XOR<ClienteCreateWithoutComprobantesInput, ClienteUncheckedCreateWithoutComprobantesInput>
+  }
+
+  export type UsuarioCreateWithoutComprobantes_conciliadosInput = {
+    id?: string
+    nombre: string
+    apellido?: string | null
+    rut: string
+    telefono: string
+    email: string
+    rol?: $Enums.Rol
+    fecha_ingreso: Date | string
+    activo?: boolean
+    created_at?: Date | string
+    licencia_tipo?: string | null
+    recibe_comision?: boolean
+    vencimiento_lic?: Date | string | null
+    botellones_danados?: BotellonDanadoCreateNestedManyWithoutUsuarioInput
+    cargas_combustible?: CargaCombustibleCreateNestedManyWithoutUsuarioInput
+    cuadraturas?: CuadraturaCreateNestedManyWithoutUsuarioInput
+    guias?: GuiaDespachoCreateNestedManyWithoutUsuario_repartidorInput
+    guias_anuladas?: GuiaDespachoCreateNestedManyWithoutAnulada_porInput
+    log_accesos?: LogAccesoCreateNestedManyWithoutUsuarioInput
+    mantenciones?: MantencionCreateNestedManyWithoutUsuarioInput
+    produccion?: ProduccionDiariaCreateNestedManyWithoutUsuarioInput
+    rutas_base?: RutaBaseCreateNestedManyWithoutUsuarioInput
+    rutas_dia?: RutaDiaCreateNestedManyWithoutUsuarioInput
+    stock_camion?: StockCamionCreateNestedManyWithoutUsuarioInput
+    vehiculo?: VehiculoCreateNestedOneWithoutUsuariosInput
+    incidencias?: IncidenciaCreateNestedManyWithoutUsuarioInput
+    movimientos_stock?: MovimientoStockCreateNestedManyWithoutUsuarioInput
+    user?: UserCreateNestedOneWithoutUsuarioInput
+    cierres_caja?: CierreCajaCreateNestedManyWithoutUsuarioInput
+  }
+
+  export type UsuarioUncheckedCreateWithoutComprobantes_conciliadosInput = {
+    id?: string
+    user_id?: string | null
+    nombre: string
+    apellido?: string | null
+    rut: string
+    telefono: string
+    email: string
+    rol?: $Enums.Rol
+    vehiculo_id?: string | null
+    fecha_ingreso: Date | string
+    activo?: boolean
+    created_at?: Date | string
+    licencia_tipo?: string | null
+    recibe_comision?: boolean
+    vencimiento_lic?: Date | string | null
+    botellones_danados?: BotellonDanadoUncheckedCreateNestedManyWithoutUsuarioInput
+    cargas_combustible?: CargaCombustibleUncheckedCreateNestedManyWithoutUsuarioInput
+    cuadraturas?: CuadraturaUncheckedCreateNestedManyWithoutUsuarioInput
+    guias?: GuiaDespachoUncheckedCreateNestedManyWithoutUsuario_repartidorInput
+    guias_anuladas?: GuiaDespachoUncheckedCreateNestedManyWithoutAnulada_porInput
+    log_accesos?: LogAccesoUncheckedCreateNestedManyWithoutUsuarioInput
+    mantenciones?: MantencionUncheckedCreateNestedManyWithoutUsuarioInput
+    produccion?: ProduccionDiariaUncheckedCreateNestedManyWithoutUsuarioInput
+    rutas_base?: RutaBaseUncheckedCreateNestedManyWithoutUsuarioInput
+    rutas_dia?: RutaDiaUncheckedCreateNestedManyWithoutUsuarioInput
+    stock_camion?: StockCamionUncheckedCreateNestedManyWithoutUsuarioInput
+    incidencias?: IncidenciaUncheckedCreateNestedManyWithoutUsuarioInput
+    movimientos_stock?: MovimientoStockUncheckedCreateNestedManyWithoutUsuarioInput
+    cierres_caja?: CierreCajaUncheckedCreateNestedManyWithoutUsuarioInput
+  }
+
+  export type UsuarioCreateOrConnectWithoutComprobantes_conciliadosInput = {
+    where: UsuarioWhereUniqueInput
+    create: XOR<UsuarioCreateWithoutComprobantes_conciliadosInput, UsuarioUncheckedCreateWithoutComprobantes_conciliadosInput>
+  }
+
+  export type ClienteUpsertWithoutComprobantesInput = {
+    update: XOR<ClienteUpdateWithoutComprobantesInput, ClienteUncheckedUpdateWithoutComprobantesInput>
+    create: XOR<ClienteCreateWithoutComprobantesInput, ClienteUncheckedCreateWithoutComprobantesInput>
+    where?: ClienteWhereInput
+  }
+
+  export type ClienteUpdateToOneWithWhereWithoutComprobantesInput = {
+    where?: ClienteWhereInput
+    data: XOR<ClienteUpdateWithoutComprobantesInput, ClienteUncheckedUpdateWithoutComprobantesInput>
+  }
+
+  export type ClienteUpdateWithoutComprobantesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nombre?: StringFieldUpdateOperationsInput | string
+    tipo?: EnumTipoClienteFieldUpdateOperationsInput | $Enums.TipoCliente
+    direccion?: StringFieldUpdateOperationsInput | string
+    telefono?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    rut_empresa?: NullableStringFieldUpdateOperationsInput | string | null
+    giro?: NullableStringFieldUpdateOperationsInput | string | null
+    modalidad_pago?: EnumModalidadPagoFieldUpdateOperationsInput | $Enums.ModalidadPago
+    tipo_ruta?: EnumTipoRutaFieldUpdateOperationsInput | $Enums.TipoRuta
+    notas?: NullableStringFieldUpdateOperationsInput | string | null
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    botellones_prestados?: IntFieldUpdateOperationsInput | number
+    preferencia_factura?: EnumPreferenciaFacturacionFieldUpdateOperationsInput | $Enums.PreferenciaFacturacion
+    frecuencia?: EnumFrecuenciaFieldUpdateOperationsInput | $Enums.Frecuencia
+    semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
+    deuda?: FloatFieldUpdateOperationsInput | number
+    sector?: SectorUpdateOneWithoutClientesNestedInput
+    botellones_danados?: BotellonDanadoUpdateManyWithoutClienteNestedInput
+    clientes_ruta?: ClienteRutaBaseUpdateManyWithoutClienteNestedInput
+    dispensadores?: DispensadorUpdateManyWithoutClienteNestedInput
+    guias?: GuiaDespachoUpdateManyWithoutClienteNestedInput
+    historial_financiero?: HistorialFinancieroUpdateManyWithoutClienteNestedInput
+    paradas?: ParadaDiaUpdateManyWithoutClienteNestedInput
+    pedidos?: PedidoUpdateManyWithoutClienteNestedInput
+    incidencias?: IncidenciaUpdateManyWithoutClienteNestedInput
+  }
+
+  export type ClienteUncheckedUpdateWithoutComprobantesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nombre?: StringFieldUpdateOperationsInput | string
+    tipo?: EnumTipoClienteFieldUpdateOperationsInput | $Enums.TipoCliente
+    direccion?: StringFieldUpdateOperationsInput | string
+    telefono?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    rut_empresa?: NullableStringFieldUpdateOperationsInput | string | null
+    giro?: NullableStringFieldUpdateOperationsInput | string | null
+    modalidad_pago?: EnumModalidadPagoFieldUpdateOperationsInput | $Enums.ModalidadPago
+    tipo_ruta?: EnumTipoRutaFieldUpdateOperationsInput | $Enums.TipoRuta
+    notas?: NullableStringFieldUpdateOperationsInput | string | null
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    botellones_prestados?: IntFieldUpdateOperationsInput | number
+    preferencia_factura?: EnumPreferenciaFacturacionFieldUpdateOperationsInput | $Enums.PreferenciaFacturacion
+    sector_id?: NullableStringFieldUpdateOperationsInput | string | null
+    frecuencia?: EnumFrecuenciaFieldUpdateOperationsInput | $Enums.Frecuencia
+    semana_alterna?: NullableEnumSemanaAlternaFieldUpdateOperationsInput | $Enums.SemanaAlterna | null
+    deuda?: FloatFieldUpdateOperationsInput | number
+    botellones_danados?: BotellonDanadoUncheckedUpdateManyWithoutClienteNestedInput
+    clientes_ruta?: ClienteRutaBaseUncheckedUpdateManyWithoutClienteNestedInput
+    dispensadores?: DispensadorUncheckedUpdateManyWithoutClienteNestedInput
+    guias?: GuiaDespachoUncheckedUpdateManyWithoutClienteNestedInput
+    historial_financiero?: HistorialFinancieroUncheckedUpdateManyWithoutClienteNestedInput
+    paradas?: ParadaDiaUncheckedUpdateManyWithoutClienteNestedInput
+    pedidos?: PedidoUncheckedUpdateManyWithoutClienteNestedInput
+    incidencias?: IncidenciaUncheckedUpdateManyWithoutClienteNestedInput
+  }
+
+  export type UsuarioUpsertWithoutComprobantes_conciliadosInput = {
+    update: XOR<UsuarioUpdateWithoutComprobantes_conciliadosInput, UsuarioUncheckedUpdateWithoutComprobantes_conciliadosInput>
+    create: XOR<UsuarioCreateWithoutComprobantes_conciliadosInput, UsuarioUncheckedCreateWithoutComprobantes_conciliadosInput>
+    where?: UsuarioWhereInput
+  }
+
+  export type UsuarioUpdateToOneWithWhereWithoutComprobantes_conciliadosInput = {
+    where?: UsuarioWhereInput
+    data: XOR<UsuarioUpdateWithoutComprobantes_conciliadosInput, UsuarioUncheckedUpdateWithoutComprobantes_conciliadosInput>
+  }
+
+  export type UsuarioUpdateWithoutComprobantes_conciliadosInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nombre?: StringFieldUpdateOperationsInput | string
+    apellido?: NullableStringFieldUpdateOperationsInput | string | null
+    rut?: StringFieldUpdateOperationsInput | string
+    telefono?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    rol?: EnumRolFieldUpdateOperationsInput | $Enums.Rol
+    fecha_ingreso?: DateTimeFieldUpdateOperationsInput | Date | string
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    licencia_tipo?: NullableStringFieldUpdateOperationsInput | string | null
+    recibe_comision?: BoolFieldUpdateOperationsInput | boolean
+    vencimiento_lic?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    botellones_danados?: BotellonDanadoUpdateManyWithoutUsuarioNestedInput
+    cargas_combustible?: CargaCombustibleUpdateManyWithoutUsuarioNestedInput
+    cuadraturas?: CuadraturaUpdateManyWithoutUsuarioNestedInput
+    guias?: GuiaDespachoUpdateManyWithoutUsuario_repartidorNestedInput
+    guias_anuladas?: GuiaDespachoUpdateManyWithoutAnulada_porNestedInput
+    log_accesos?: LogAccesoUpdateManyWithoutUsuarioNestedInput
+    mantenciones?: MantencionUpdateManyWithoutUsuarioNestedInput
+    produccion?: ProduccionDiariaUpdateManyWithoutUsuarioNestedInput
+    rutas_base?: RutaBaseUpdateManyWithoutUsuarioNestedInput
+    rutas_dia?: RutaDiaUpdateManyWithoutUsuarioNestedInput
+    stock_camion?: StockCamionUpdateManyWithoutUsuarioNestedInput
+    vehiculo?: VehiculoUpdateOneWithoutUsuariosNestedInput
+    incidencias?: IncidenciaUpdateManyWithoutUsuarioNestedInput
+    movimientos_stock?: MovimientoStockUpdateManyWithoutUsuarioNestedInput
+    user?: UserUpdateOneWithoutUsuarioNestedInput
+    cierres_caja?: CierreCajaUpdateManyWithoutUsuarioNestedInput
+  }
+
+  export type UsuarioUncheckedUpdateWithoutComprobantes_conciliadosInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    nombre?: StringFieldUpdateOperationsInput | string
+    apellido?: NullableStringFieldUpdateOperationsInput | string | null
+    rut?: StringFieldUpdateOperationsInput | string
+    telefono?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    rol?: EnumRolFieldUpdateOperationsInput | $Enums.Rol
+    vehiculo_id?: NullableStringFieldUpdateOperationsInput | string | null
+    fecha_ingreso?: DateTimeFieldUpdateOperationsInput | Date | string
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    licencia_tipo?: NullableStringFieldUpdateOperationsInput | string | null
+    recibe_comision?: BoolFieldUpdateOperationsInput | boolean
+    vencimiento_lic?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    botellones_danados?: BotellonDanadoUncheckedUpdateManyWithoutUsuarioNestedInput
+    cargas_combustible?: CargaCombustibleUncheckedUpdateManyWithoutUsuarioNestedInput
+    cuadraturas?: CuadraturaUncheckedUpdateManyWithoutUsuarioNestedInput
+    guias?: GuiaDespachoUncheckedUpdateManyWithoutUsuario_repartidorNestedInput
+    guias_anuladas?: GuiaDespachoUncheckedUpdateManyWithoutAnulada_porNestedInput
+    log_accesos?: LogAccesoUncheckedUpdateManyWithoutUsuarioNestedInput
+    mantenciones?: MantencionUncheckedUpdateManyWithoutUsuarioNestedInput
+    produccion?: ProduccionDiariaUncheckedUpdateManyWithoutUsuarioNestedInput
+    rutas_base?: RutaBaseUncheckedUpdateManyWithoutUsuarioNestedInput
+    rutas_dia?: RutaDiaUncheckedUpdateManyWithoutUsuarioNestedInput
+    stock_camion?: StockCamionUncheckedUpdateManyWithoutUsuarioNestedInput
+    incidencias?: IncidenciaUncheckedUpdateManyWithoutUsuarioNestedInput
+    movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutUsuarioNestedInput
+    cierres_caja?: CierreCajaUncheckedUpdateManyWithoutUsuarioNestedInput
+  }
+
   export type BotellonDanadoCreateManyUsuarioInput = {
     id?: string
     cuadratura_id: string
@@ -84564,6 +87145,29 @@ export namespace Prisma {
     total_general?: number
     estado?: $Enums.EstadoCierreCaja
     observaciones?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type ComprobantePagoCreateManyUsuario_concilioInput = {
+    id?: string
+    origen_documento?: $Enums.OrigenDocumentoComprobante
+    banco_origen?: string | null
+    monto: number
+    fecha_transaccion?: Date | string | null
+    num_operacion: string
+    rut_emisor?: string | null
+    metodo_pago?: $Enums.MetodoPago
+    estado?: $Enums.EstadoComprobantePago
+    url_archivo: string
+    nombre_archivo: string
+    mime_type: string
+    confianza_ia?: number
+    datos_ia_raw?: NullableJsonNullValueInput | InputJsonValue
+    observaciones_ia?: string | null
+    cliente_id?: string | null
+    motivo_rechazo?: string | null
+    fecha_conciliacion?: Date | string | null
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -85160,6 +87764,75 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ComprobantePagoUpdateWithoutUsuario_concilioInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    origen_documento?: EnumOrigenDocumentoComprobanteFieldUpdateOperationsInput | $Enums.OrigenDocumentoComprobante
+    banco_origen?: NullableStringFieldUpdateOperationsInput | string | null
+    monto?: FloatFieldUpdateOperationsInput | number
+    fecha_transaccion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    num_operacion?: StringFieldUpdateOperationsInput | string
+    rut_emisor?: NullableStringFieldUpdateOperationsInput | string | null
+    metodo_pago?: EnumMetodoPagoFieldUpdateOperationsInput | $Enums.MetodoPago
+    estado?: EnumEstadoComprobantePagoFieldUpdateOperationsInput | $Enums.EstadoComprobantePago
+    url_archivo?: StringFieldUpdateOperationsInput | string
+    nombre_archivo?: StringFieldUpdateOperationsInput | string
+    mime_type?: StringFieldUpdateOperationsInput | string
+    confianza_ia?: FloatFieldUpdateOperationsInput | number
+    datos_ia_raw?: NullableJsonNullValueInput | InputJsonValue
+    observaciones_ia?: NullableStringFieldUpdateOperationsInput | string | null
+    motivo_rechazo?: NullableStringFieldUpdateOperationsInput | string | null
+    fecha_conciliacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    cliente?: ClienteUpdateOneWithoutComprobantesNestedInput
+  }
+
+  export type ComprobantePagoUncheckedUpdateWithoutUsuario_concilioInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    origen_documento?: EnumOrigenDocumentoComprobanteFieldUpdateOperationsInput | $Enums.OrigenDocumentoComprobante
+    banco_origen?: NullableStringFieldUpdateOperationsInput | string | null
+    monto?: FloatFieldUpdateOperationsInput | number
+    fecha_transaccion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    num_operacion?: StringFieldUpdateOperationsInput | string
+    rut_emisor?: NullableStringFieldUpdateOperationsInput | string | null
+    metodo_pago?: EnumMetodoPagoFieldUpdateOperationsInput | $Enums.MetodoPago
+    estado?: EnumEstadoComprobantePagoFieldUpdateOperationsInput | $Enums.EstadoComprobantePago
+    url_archivo?: StringFieldUpdateOperationsInput | string
+    nombre_archivo?: StringFieldUpdateOperationsInput | string
+    mime_type?: StringFieldUpdateOperationsInput | string
+    confianza_ia?: FloatFieldUpdateOperationsInput | number
+    datos_ia_raw?: NullableJsonNullValueInput | InputJsonValue
+    observaciones_ia?: NullableStringFieldUpdateOperationsInput | string | null
+    cliente_id?: NullableStringFieldUpdateOperationsInput | string | null
+    motivo_rechazo?: NullableStringFieldUpdateOperationsInput | string | null
+    fecha_conciliacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ComprobantePagoUncheckedUpdateManyWithoutUsuario_concilioInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    origen_documento?: EnumOrigenDocumentoComprobanteFieldUpdateOperationsInput | $Enums.OrigenDocumentoComprobante
+    banco_origen?: NullableStringFieldUpdateOperationsInput | string | null
+    monto?: FloatFieldUpdateOperationsInput | number
+    fecha_transaccion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    num_operacion?: StringFieldUpdateOperationsInput | string
+    rut_emisor?: NullableStringFieldUpdateOperationsInput | string | null
+    metodo_pago?: EnumMetodoPagoFieldUpdateOperationsInput | $Enums.MetodoPago
+    estado?: EnumEstadoComprobantePagoFieldUpdateOperationsInput | $Enums.EstadoComprobantePago
+    url_archivo?: StringFieldUpdateOperationsInput | string
+    nombre_archivo?: StringFieldUpdateOperationsInput | string
+    mime_type?: StringFieldUpdateOperationsInput | string
+    confianza_ia?: FloatFieldUpdateOperationsInput | number
+    datos_ia_raw?: NullableJsonNullValueInput | InputJsonValue
+    observaciones_ia?: NullableStringFieldUpdateOperationsInput | string | null
+    cliente_id?: NullableStringFieldUpdateOperationsInput | string | null
+    motivo_rechazo?: NullableStringFieldUpdateOperationsInput | string | null
+    fecha_conciliacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type AlertaVehiculoCreateManyVehiculoInput = {
     id?: string
     tipo: $Enums.TipoAlerta
@@ -85416,6 +88089,7 @@ export namespace Prisma {
     movimientos_stock?: MovimientoStockUpdateManyWithoutUsuarioNestedInput
     user?: UserUpdateOneWithoutUsuarioNestedInput
     cierres_caja?: CierreCajaUpdateManyWithoutUsuarioNestedInput
+    comprobantes_conciliados?: ComprobantePagoUpdateManyWithoutUsuario_concilioNestedInput
   }
 
   export type UsuarioUncheckedUpdateWithoutVehiculoInput = {
@@ -85447,6 +88121,7 @@ export namespace Prisma {
     incidencias?: IncidenciaUncheckedUpdateManyWithoutUsuarioNestedInput
     movimientos_stock?: MovimientoStockUncheckedUpdateManyWithoutUsuarioNestedInput
     cierres_caja?: CierreCajaUncheckedUpdateManyWithoutUsuarioNestedInput
+    comprobantes_conciliados?: ComprobantePagoUncheckedUpdateManyWithoutUsuario_concilioNestedInput
   }
 
   export type UsuarioUncheckedUpdateManyWithoutVehiculoInput = {
@@ -85910,6 +88585,29 @@ export namespace Prisma {
     cuadratura_id?: string | null
   }
 
+  export type ComprobantePagoCreateManyClienteInput = {
+    id?: string
+    origen_documento?: $Enums.OrigenDocumentoComprobante
+    banco_origen?: string | null
+    monto: number
+    fecha_transaccion?: Date | string | null
+    num_operacion: string
+    rut_emisor?: string | null
+    metodo_pago?: $Enums.MetodoPago
+    estado?: $Enums.EstadoComprobantePago
+    url_archivo: string
+    nombre_archivo: string
+    mime_type: string
+    confianza_ia?: number
+    datos_ia_raw?: NullableJsonNullValueInput | InputJsonValue
+    observaciones_ia?: string | null
+    motivo_rechazo?: string | null
+    conciliado_por_id?: string | null
+    fecha_conciliacion?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
   export type BotellonDanadoUpdateWithoutClienteInput = {
     id?: StringFieldUpdateOperationsInput | string
     cuadratura_id?: StringFieldUpdateOperationsInput | string
@@ -86263,6 +88961,75 @@ export namespace Prisma {
     cuadratura_id?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type ComprobantePagoUpdateWithoutClienteInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    origen_documento?: EnumOrigenDocumentoComprobanteFieldUpdateOperationsInput | $Enums.OrigenDocumentoComprobante
+    banco_origen?: NullableStringFieldUpdateOperationsInput | string | null
+    monto?: FloatFieldUpdateOperationsInput | number
+    fecha_transaccion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    num_operacion?: StringFieldUpdateOperationsInput | string
+    rut_emisor?: NullableStringFieldUpdateOperationsInput | string | null
+    metodo_pago?: EnumMetodoPagoFieldUpdateOperationsInput | $Enums.MetodoPago
+    estado?: EnumEstadoComprobantePagoFieldUpdateOperationsInput | $Enums.EstadoComprobantePago
+    url_archivo?: StringFieldUpdateOperationsInput | string
+    nombre_archivo?: StringFieldUpdateOperationsInput | string
+    mime_type?: StringFieldUpdateOperationsInput | string
+    confianza_ia?: FloatFieldUpdateOperationsInput | number
+    datos_ia_raw?: NullableJsonNullValueInput | InputJsonValue
+    observaciones_ia?: NullableStringFieldUpdateOperationsInput | string | null
+    motivo_rechazo?: NullableStringFieldUpdateOperationsInput | string | null
+    fecha_conciliacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    usuario_concilio?: UsuarioUpdateOneWithoutComprobantes_conciliadosNestedInput
+  }
+
+  export type ComprobantePagoUncheckedUpdateWithoutClienteInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    origen_documento?: EnumOrigenDocumentoComprobanteFieldUpdateOperationsInput | $Enums.OrigenDocumentoComprobante
+    banco_origen?: NullableStringFieldUpdateOperationsInput | string | null
+    monto?: FloatFieldUpdateOperationsInput | number
+    fecha_transaccion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    num_operacion?: StringFieldUpdateOperationsInput | string
+    rut_emisor?: NullableStringFieldUpdateOperationsInput | string | null
+    metodo_pago?: EnumMetodoPagoFieldUpdateOperationsInput | $Enums.MetodoPago
+    estado?: EnumEstadoComprobantePagoFieldUpdateOperationsInput | $Enums.EstadoComprobantePago
+    url_archivo?: StringFieldUpdateOperationsInput | string
+    nombre_archivo?: StringFieldUpdateOperationsInput | string
+    mime_type?: StringFieldUpdateOperationsInput | string
+    confianza_ia?: FloatFieldUpdateOperationsInput | number
+    datos_ia_raw?: NullableJsonNullValueInput | InputJsonValue
+    observaciones_ia?: NullableStringFieldUpdateOperationsInput | string | null
+    motivo_rechazo?: NullableStringFieldUpdateOperationsInput | string | null
+    conciliado_por_id?: NullableStringFieldUpdateOperationsInput | string | null
+    fecha_conciliacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ComprobantePagoUncheckedUpdateManyWithoutClienteInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    origen_documento?: EnumOrigenDocumentoComprobanteFieldUpdateOperationsInput | $Enums.OrigenDocumentoComprobante
+    banco_origen?: NullableStringFieldUpdateOperationsInput | string | null
+    monto?: FloatFieldUpdateOperationsInput | number
+    fecha_transaccion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    num_operacion?: StringFieldUpdateOperationsInput | string
+    rut_emisor?: NullableStringFieldUpdateOperationsInput | string | null
+    metodo_pago?: EnumMetodoPagoFieldUpdateOperationsInput | $Enums.MetodoPago
+    estado?: EnumEstadoComprobantePagoFieldUpdateOperationsInput | $Enums.EstadoComprobantePago
+    url_archivo?: StringFieldUpdateOperationsInput | string
+    nombre_archivo?: StringFieldUpdateOperationsInput | string
+    mime_type?: StringFieldUpdateOperationsInput | string
+    confianza_ia?: FloatFieldUpdateOperationsInput | number
+    datos_ia_raw?: NullableJsonNullValueInput | InputJsonValue
+    observaciones_ia?: NullableStringFieldUpdateOperationsInput | string | null
+    motivo_rechazo?: NullableStringFieldUpdateOperationsInput | string | null
+    conciliado_por_id?: NullableStringFieldUpdateOperationsInput | string | null
+    fecha_conciliacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type ClienteRutaBaseCreateManyRuta_baseInput = {
     id?: string
     cliente_id: string
@@ -86440,6 +89207,7 @@ export namespace Prisma {
     paradas?: ParadaDiaUpdateManyWithoutClienteNestedInput
     pedidos?: PedidoUpdateManyWithoutClienteNestedInput
     incidencias?: IncidenciaUpdateManyWithoutClienteNestedInput
+    comprobantes?: ComprobantePagoUpdateManyWithoutClienteNestedInput
   }
 
   export type ClienteUncheckedUpdateWithoutSectorInput = {
@@ -86468,6 +89236,7 @@ export namespace Prisma {
     paradas?: ParadaDiaUncheckedUpdateManyWithoutClienteNestedInput
     pedidos?: PedidoUncheckedUpdateManyWithoutClienteNestedInput
     incidencias?: IncidenciaUncheckedUpdateManyWithoutClienteNestedInput
+    comprobantes?: ComprobantePagoUncheckedUpdateManyWithoutClienteNestedInput
   }
 
   export type ClienteUncheckedUpdateManyWithoutSectorInput = {

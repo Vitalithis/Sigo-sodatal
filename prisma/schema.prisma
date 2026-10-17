@@ -42,6 +42,7 @@ model Usuario {
   movimientos_stock  MovimientoStock[]
   user      User?   @relation(fields: [user_id], references: [id])
   cierres_caja       CierreCaja[]
+  comprobantes_conciliados ComprobantePago[]
 }
 
 model Vehiculo {
@@ -167,6 +168,7 @@ model Cliente {
   frecuencia           Frecuencia             @default(SEMANAL)
   semana_alterna       SemanaAlterna?
   deuda                Float                  @default(0)
+  comprobantes         ComprobantePago[]
 }
 
 model RutaBase {
@@ -650,6 +652,7 @@ model Account {
   updatedAt             DateTime  @updatedAt
 
   @@unique([providerId, accountId])
+  @@index([userId])
 }
 
 model Verification {
@@ -871,4 +874,57 @@ enum MetodoPagoCaja {
   CREDITO_OFICINA
   PAGINA_WEB
 }
+
+// ── Comprobantes de Pago y Conciliación Bancaria ──────────────────────────────
+
+enum EstadoComprobantePago {
+  PENDIENTE
+  CONCILIADO
+  RECHAZADO
+}
+
+enum OrigenDocumentoComprobante {
+  TRANSFERENCIA_BANCARIA
+  VOUCHER_POS
+  DEPOSITO_VENTANILLA
+  OTRO
+}
+
+model ComprobantePago {
+  id                 String                     @id @default(uuid())
+  origen_documento   OrigenDocumentoComprobante @default(TRANSFERENCIA_BANCARIA)
+  banco_origen       String?
+  monto              Float
+  fecha_transaccion  DateTime?
+  num_operacion      String
+  rut_emisor         String?
+  metodo_pago        MetodoPago                 @default(TRANSFERENCIA)
+  estado             EstadoComprobantePago      @default(PENDIENTE)
+
+  // Auditoría y archivo original
+  url_archivo        String                     @db.VarChar(500)
+  nombre_archivo     String                     @db.VarChar(255)
+  mime_type          String                     @db.VarChar(100)
+
+  // Metadatos IA
+  confianza_ia       Float                      @default(1.0)
+  datos_ia_raw       Json?                      @db.Json
+  observaciones_ia   String?                    @db.Text
+
+  // Conciliación con el negocio
+  cliente_id         String?
+  cliente            Cliente?                   @relation(fields: [cliente_id], references: [id])
+  motivo_rechazo     String?                    @db.Text
+  conciliado_por_id  String?
+  usuario_concilio   Usuario?                   @relation(fields: [conciliado_por_id], references: [id])
+  fecha_conciliacion DateTime?
+
+  created_at         DateTime                   @default(now())
+  updated_at         DateTime                   @updatedAt
+
+  @@unique([num_operacion, monto], name: "uq_operacion_monto")
+  @@index([estado])
+  @@index([cliente_id])
+}
+
 

@@ -29,6 +29,7 @@ import {
   Settings,
   Boxes,
   Archive,
+  Sparkles,
 } from 'lucide-react';
 import { logout } from '@/app/(auth)/login/actions';
 import ModalAjustesCuenta from './ModalAjustesCuenta';
@@ -122,10 +123,11 @@ export default function Sidebar({ rol, nombre }: SidebarProps) {
         label: 'Comercial',
         icon: DollarSign,
         items: [
-          { name: 'Comisiones',       href: '/admin/comisiones',    icon: TrendingUp   },
-          { name: 'Cierre de Caja',   href: '/admin/cierre-caja',   icon: Archive      },
-          { name: 'Cuadraturas',      href: '/admin/cuadratura',    icon: ClipboardList },
-          { name: 'Guías de Despacho',href: '/admin/guias',         icon: FileText     },
+          { name: 'Conciliación',      href: '/admin/conciliacion',  icon: Sparkles     },
+          { name: 'Comisiones',        href: '/admin/comisiones',    icon: TrendingUp   },
+          { name: 'Cierre de Caja',    href: '/admin/cierre-caja',   icon: Archive      },
+          { name: 'Cuadraturas',       href: '/admin/cuadratura',    icon: ClipboardList },
+          { name: 'Guías de Despacho', href: '/admin/guias',         icon: FileText     },
         ],
       },
     },
