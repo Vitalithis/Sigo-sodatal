@@ -11,10 +11,11 @@ export async function GET() {
         id: true,
         nombre: true,
         rut_empresa: true,
-        direccion: true
+        direccion: true,
+        deuda: true
       },
       orderBy: { nombre: 'asc' },
-      take: 100
+      take: 1000
     });
 
     return NextResponse.json(clientes);

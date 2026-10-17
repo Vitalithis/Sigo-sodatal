@@ -13,6 +13,8 @@ export interface MovimientoCartola {
   rut_emisor: string | null;
   metodo_pago: 'TRANSFERENCIA' | 'TARJETA' | 'EFECTIVO';
   observaciones: string;
+  pagina?: number;
+  linea_original?: string;
 }
 
 export interface ExtractedComprobanteData {

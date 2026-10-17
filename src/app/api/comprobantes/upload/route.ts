@@ -89,7 +89,8 @@ export async function POST(req: NextRequest) {
         nombre_archivo: file.name,
         mime_type: file.type,
         confianza_ia: 1.0,
-        observaciones_ia: m.observaciones || null
+        observaciones_ia: m.observaciones || null,
+        datos_ia_raw: m.pagina ? { pagina: m.pagina, linea_original: m.linea_original } : null
       }));
 
       // Inserción segura y masiva con anti-duplicados garantizada

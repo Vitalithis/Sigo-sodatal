@@ -1,6 +1,4 @@
-'use client';
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import {
   CheckCircle2,
   XCircle,
@@ -11,12 +9,17 @@ import {
   DollarSign,
   User,
   CreditCard,
-  FileCheck
+  FileCheck,
+  FileText,
+  Info,
+  Search,
+  ChevronDown,
+  Check
 } from 'lucide-react';
 
 interface ComprobanteFormProps {
   comprobante: any;
-  clientes: Array<{ id: string; nombre: string; rut_empresa?: string | null }>;
+  clientes: Array<{ id: string; nombre: string; rut_empresa?: string | null; deuda?: number }>;
   onConciliar: (datos: any) => Promise<void>;
   onRechazar: (motivo: string) => Promise<void>;
 }
@@ -36,10 +39,30 @@ export default function ComprobanteForm({
   const [fecha, setFecha] = useState<string>(
     comprobante?.fecha_transaccion ? new Date(comprobante.fecha_transaccion).toISOString().slice(0, 16) : ''
   );
+  const [nombreCliente, setNombreCliente] = useState<string>('');
   const [clienteId, setClienteId] = useState<string>(comprobante?.cliente_id || '');
   const [motivoRechazo, setMotivoRechazo] = useState<string>('');
   const [mostrarModalRechazo, setMostrarModalRechazo] = useState<boolean>(false);
   const [procesando, setProcesando] = useState<boolean>(false);
+  const [errorValidacion, setErrorValidacion] = useState<string | null>(null);
+
+  // Estados para el buscador desplegable de clientes del ERP
+  const [abrirBuscadorCliente, setAbrirBuscadorCliente] = useState<boolean>(false);
+  const [busquedaCliente, setBusquedaCliente] = useState<string>('');
+  const dropdownClienteRef = useRef<HTMLDivElement>(null);
+
+  // Extraer nombre por defecto sugerido desde la glosa o cliente previo
+  const sugerirNombre = (comp: any) => {
+    if (comp?.cliente?.nombre) return comp.cliente.nombre;
+    if (comp?.observaciones_ia) {
+      const limpio = String(comp.observaciones_ia)
+        .replace(/^0?\d{7,9}[0-9kK]?\s*/i, '')
+        .replace(/^(transf\.|transferencia|trf\.)\s*/i, '')
+        .trim();
+      if (limpio.length > 0) return limpio;
+    }
+    return '';
+  };
 
   useEffect(() => {
     if (comprobante) {
@@ -55,8 +78,46 @@ export default function ComprobanteForm({
           : ''
       );
       setClienteId(comprobante.cliente_id || '');
+      setNombreCliente(sugerirNombre(comprobante));
+      setErrorValidacion(null);
     }
   }, [comprobante]);
+
+  // Cerrar dropdown al hacer click fuera
+  useEffect(() => {
+    const handleClickFuera = (e: MouseEvent) => {
+      if (dropdownClienteRef.current && !dropdownClienteRef.current.contains(e.target as Node)) {
+        setAbrirBuscadorCliente(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickFuera);
+    return () => document.removeEventListener('mousedown', handleClickFuera);
+  }, []);
+
+  // Clientes filtrados para el buscador
+  const clientesFiltrados = useMemo(() => {
+    if (!busquedaCliente.trim()) return clientes.slice(0, 50);
+    const qNorm = busquedaCliente
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .trim();
+
+    return clientes
+      .filter((c) => {
+        const nomNorm = (c.nombre || '')
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .toLowerCase();
+        const rutNorm = (c.rut_empresa || '').toLowerCase();
+        return nomNorm.includes(qNorm) || rutNorm.includes(qNorm);
+      })
+      .slice(0, 50);
+  }, [clientes, busquedaCliente]);
+
+  const clienteSeleccionado = useMemo(() => {
+    return clientes.find((c) => c.id === clienteId) || null;
+  }, [clientes, clienteId]);
 
   if (!comprobante) {
     return (
@@ -76,17 +137,30 @@ export default function ComprobanteForm({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrorValidacion(null);
+
+    if (!nombreCliente.trim()) {
+      setErrorValidacion('Debes ingresar el nombre del cliente que transfirió (Obligatorio).');
+      return;
+    }
+
+    if (!monto || Number(monto) <= 0) {
+      setErrorValidacion('El monto transferido es obligatorio y debe ser mayor a $0.');
+      return;
+    }
+
     setProcesando(true);
     try {
       await onConciliar({
-        monto,
+        monto: Number(monto),
         num_operacion: numOperacion,
         banco_origen: bancoOrigen,
         rut_emisor: rutEmisor,
         origen_documento: origenDoc,
         metodo_pago: metodoPago,
         fecha_transaccion: fecha ? new Date(fecha).toISOString() : null,
-        cliente_id: clienteId || null
+        cliente_id: clienteId || null,
+        observaciones_ia: nombreCliente.trim() // Se guarda el nombre del cliente directamente en el registro
       });
     } finally {
       setProcesando(false);
@@ -280,46 +354,203 @@ export default function ComprobanteForm({
             </div>
           </div>
 
-          {/* Cliente Asociado */}
+          {/* Nombre del Cliente Obligatorio */}
           <div>
             <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
-              Asociar a Cliente en Sistema
+              Nombre del Cliente que Transfirió <span className="text-rose-500 font-bold">*</span>
             </label>
-            <select
-              value={clienteId}
-              onChange={(e) => setClienteId(e.target.value)}
-              className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none"
+            <div className="relative">
+              <User className="w-4 h-4 text-blue-500 absolute left-3 top-3" />
+              <input
+                type="text"
+                required
+                value={nombreCliente}
+                onChange={(e) => setNombreCliente(e.target.value)}
+                placeholder="Ej. Distribuidora Los Andes / Carlos Pérez"
+                className="w-full pl-9 pr-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-semibold text-slate-900 text-sm focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all placeholder:text-slate-400"
+              />
+            </div>
+            <p className="text-[11px] text-slate-500 mt-1">
+              Este nombre agrupará todos los pagos de este cliente en la tabla de historial mensual.
+            </p>
+          </div>
+
+          {/* Glosa o Detalle Bancario Original de la Cartola */}
+          {comprobante.observaciones_ia && (
+            <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-1">
+              <div className="flex items-center gap-1.5 text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                <FileText className="w-3.5 h-3.5 text-blue-600" />
+                <span>Glosa Original Detectada en PDF</span>
+              </div>
+              <p className="font-mono text-xs text-slate-700 break-words">
+                {comprobante.observaciones_ia}
+              </p>
+            </div>
+          )}
+
+          {/* Asociar a Cliente del ERP (Opcional, con Buscador Integrado) */}
+          <div className="relative" ref={dropdownClienteRef}>
+            <div className="flex items-center justify-between mb-1">
+              <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider">
+                Asociar a Cliente del Sistema (Opcional)
+              </label>
+              {clienteId && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setClienteId('');
+                    setBusquedaCliente('');
+                  }}
+                  className="text-[11px] text-slate-400 hover:text-rose-600 font-semibold transition-colors"
+                >
+                  Desvincular
+                </button>
+              )}
+            </div>
+
+            {/* Botón trigger del selector */}
+            <button
+              type="button"
+              onClick={() => {
+                setAbrirBuscadorCliente((prev) => !prev);
+                setBusquedaCliente('');
+              }}
+              className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 hover:border-slate-300 rounded-xl text-xs text-slate-900 flex items-center justify-between transition-colors focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none text-left"
             >
-              <option value="">-- No asociar aún (Revisar luego) --</option>
-              {clientes.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.nombre} {c.rut_empresa ? `• RUT: ${c.rut_empresa}` : ''}
-                </option>
-              ))}
-            </select>
+              <div className="flex items-center gap-2 truncate">
+                <Building className="w-4 h-4 text-slate-400 shrink-0" />
+                {clienteSeleccionado ? (
+                  <span className="font-semibold text-slate-900 truncate">
+                    {clienteSeleccionado.nombre}
+                    {clienteSeleccionado.rut_empresa ? (
+                      <span className="text-[10px] text-slate-400 font-mono ml-2">
+                        ({clienteSeleccionado.rut_empresa})
+                      </span>
+                    ) : null}
+                  </span>
+                ) : (
+                  <span className="text-slate-400">Buscar cliente en el sistema...</span>
+                )}
+              </div>
+              <ChevronDown className="w-4 h-4 text-slate-400 shrink-0 ml-2" />
+            </button>
+
+            {/* Dropdown con input buscador */}
+            {abrirBuscadorCliente && (
+              <div className="absolute z-30 left-0 right-0 mt-1.5 bg-white border border-slate-200 rounded-2xl shadow-xl overflow-hidden animate-in fade-in slide-in-from-top-1 duration-150">
+                {/* Input de búsqueda */}
+                <div className="p-2 border-b border-slate-100 bg-slate-50 flex items-center gap-2">
+                  <Search className="w-3.5 h-3.5 text-slate-400 shrink-0 ml-1.5" />
+                  <input
+                    type="text"
+                    autoFocus
+                    value={busquedaCliente}
+                    onChange={(e) => setBusquedaCliente(e.target.value)}
+                    placeholder="Escribe nombre o RUT para filtrar..."
+                    className="w-full bg-transparent text-xs text-slate-900 placeholder:text-slate-400 outline-none py-1"
+                  />
+                  {busquedaCliente && (
+                    <button
+                      type="button"
+                      onClick={() => setBusquedaCliente('')}
+                      className="text-slate-400 hover:text-slate-600 text-xs px-1 font-bold"
+                    >
+                      ✕
+                    </button>
+                  )}
+                </div>
+
+                {/* Lista de resultados filtrados */}
+                <div className="max-h-56 overflow-y-auto divide-y divide-slate-50 scrollbar-thin">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setClienteId('');
+                      setAbrirBuscadorCliente(false);
+                    }}
+                    className={`w-full px-3 py-2 text-left text-xs transition-colors hover:bg-slate-50 flex items-center justify-between ${
+                      !clienteId ? 'bg-blue-50/60 text-blue-800 font-bold' : 'text-slate-500'
+                    }`}
+                  >
+                    <span>-- No asociar (Solo guardar en historial de pagos) --</span>
+                    {!clienteId && <Check className="w-3.5 h-3.5 text-blue-600 shrink-0" />}
+                  </button>
+
+                  {clientesFiltrados.length === 0 ? (
+                    <div className="p-4 text-center text-xs text-slate-400 italic">
+                      No se encontraron clientes que coincidan con &quot;{busquedaCliente}&quot;.
+                    </div>
+                  ) : (
+                    clientesFiltrados.map((cli) => {
+                      const esSeleccionado = clienteId === cli.id;
+                      return (
+                        <button
+                          key={cli.id}
+                          type="button"
+                          onClick={() => {
+                            setClienteId(cli.id);
+                            if (!nombreCliente.trim()) {
+                              setNombreCliente(cli.nombre);
+                            }
+                            setAbrirBuscadorCliente(false);
+                          }}
+                          className={`w-full px-3 py-2 text-left text-xs transition-colors hover:bg-slate-50 flex items-center justify-between gap-2 ${
+                            esSeleccionado ? 'bg-blue-50/60 font-bold text-blue-900' : 'text-slate-800'
+                          }`}
+                        >
+                          <div className="truncate">
+                            <p className="truncate">{cli.nombre}</p>
+                            {cli.rut_empresa && (
+                              <p className="text-[10px] text-slate-400 font-mono">RUT: {cli.rut_empresa}</p>
+                            )}
+                          </div>
+                          {esSeleccionado && <Check className="w-3.5 h-3.5 text-blue-600 shrink-0" />}
+                        </button>
+                      );
+                    })
+                  )}
+                </div>
+
+                {clientes.length > 50 && (
+                  <div className="p-2 bg-slate-50 border-t border-slate-100 text-[10px] text-slate-400 text-center">
+                    Mostrando coincidencias principales. Escribe en el buscador para encontrar cualquier cliente.
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
 
-        {/* Botones de Acción */}
-        <div className="pt-4 border-t border-slate-100 flex items-center gap-3 mt-6">
-          <button
-            type="button"
-            onClick={() => setMostrarModalRechazo(true)}
-            disabled={procesando || comprobante.estado === 'RECHAZADO'}
-            className="flex-1 py-3 px-4 rounded-xl border border-rose-200 text-rose-700 hover:bg-rose-50 font-semibold text-xs flex items-center justify-center gap-2 transition-colors disabled:opacity-40"
-          >
-            <XCircle className="w-4 h-4" />
-            Rechazar
-          </button>
+        {/* Mensaje de error de validación */}
+        {errorValidacion && (
+          <div className="p-3 bg-rose-50 border border-rose-200 text-rose-700 text-xs rounded-xl flex items-center gap-2 mt-3">
+            <AlertTriangle className="w-4 h-4 shrink-0 text-rose-600" />
+            <span>{errorValidacion}</span>
+          </div>
+        )}
 
-          <button
-            type="submit"
-            disabled={procesando || comprobante.estado === 'CONCILIADO'}
-            className="flex-1 py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs flex items-center justify-center gap-2 shadow-sm transition-colors disabled:opacity-40"
-          >
-            <CheckCircle2 className="w-4 h-4" />
-            {procesando ? 'Procesando...' : comprobante.estado === 'CONCILIADO' ? 'Ya Conciliado' : 'Aprobar y Conciliar'}
-          </button>
+        {/* Botones de Acción */}
+        <div className="pt-4 border-t border-slate-100 mt-6 space-y-2">
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => setMostrarModalRechazo(true)}
+              disabled={procesando || comprobante.estado === 'RECHAZADO'}
+              className="flex-1 py-3 px-4 rounded-xl border border-rose-200 text-rose-700 hover:bg-rose-50 font-semibold text-xs flex items-center justify-center gap-2 transition-colors disabled:opacity-40"
+            >
+              <XCircle className="w-4 h-4" />
+              Rechazar
+            </button>
+
+            <button
+              type="submit"
+              disabled={procesando || comprobante.estado === 'CONCILIADO'}
+              className="flex-1 py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs flex items-center justify-center gap-2 shadow-sm transition-colors disabled:opacity-40"
+            >
+              <CheckCircle2 className="w-4 h-4" />
+              {procesando ? 'Guardando...' : comprobante.estado === 'CONCILIADO' ? 'Ya Conciliado' : 'Guardar Pago en Historial'}
+            </button>
+          </div>
         </div>
       </form>
 

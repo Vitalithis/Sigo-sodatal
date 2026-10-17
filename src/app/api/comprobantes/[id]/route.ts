@@ -16,7 +16,7 @@ export async function PATCH(
     const usuario = await getUsuarioActual();
     const id = params.id;
     const body = await req.json();
-    const { accion, cliente_id, monto, num_operacion, motivo_rechazo, banco_origen, rut_emisor } = body;
+    const { accion, cliente_id, monto, num_operacion, motivo_rechazo, banco_origen, rut_emisor, observaciones_ia } = body;
 
     const comprobante = await buscarComprobantePorId(id);
     if (!comprobante) {
@@ -46,7 +46,8 @@ export async function PATCH(
           num_operacion: nuevoNumOp,
           banco_origen,
           rut_emisor,
-          cliente_id
+          cliente_id,
+          observaciones_ia
         },
         usuario?.id || null
       );

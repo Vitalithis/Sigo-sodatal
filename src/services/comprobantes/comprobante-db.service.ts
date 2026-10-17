@@ -28,6 +28,7 @@ export interface RegistroComprobanteInput {
   mime_type: string;
   confianza_ia?: number;
   observaciones_ia?: string | null;
+  datos_ia_raw?: any;
 }
 
 /**
@@ -71,13 +72,14 @@ export async function insertarComprobantesLote(registros: RegistroComprobanteInp
       const mime = escapeSqlString(r.mime_type);
       const conf = typeof r.confianza_ia === 'number' ? r.confianza_ia : 1.0;
       const obs = escapeSqlString(r.observaciones_ia);
+      const rawJson = r.datos_ia_raw ? escapeSqlString(JSON.stringify(r.datos_ia_raw)) : 'NULL';
 
-      return `(${id}, ${origen}, ${banco}, ${monto}, ${fTrans}, ${numOp}, ${rut}, ${metodo}, ${estado}, ${url}, ${nom}, ${mime}, ${conf}, ${obs}, NOW(3), NOW(3))`;
+      return `(${id}, ${origen}, ${banco}, ${monto}, ${fTrans}, ${numOp}, ${rut}, ${metodo}, ${estado}, ${url}, ${nom}, ${mime}, ${conf}, ${obs}, ${rawJson}, NOW(3), NOW(3))`;
     });
 
     const sql = `
       INSERT IGNORE INTO ComprobantePago 
-      (id, origen_documento, banco_origen, monto, fecha_transaccion, num_operacion, rut_emisor, metodo_pago, estado, url_archivo, nombre_archivo, mime_type, confianza_ia, observaciones_ia, created_at, updated_at)
+      (id, origen_documento, banco_origen, monto, fecha_transaccion, num_operacion, rut_emisor, metodo_pago, estado, url_archivo, nombre_archivo, mime_type, confianza_ia, observaciones_ia, datos_ia_raw, created_at, updated_at)
       VALUES ${valueTuples.join(', ')}
     `;
 
@@ -186,15 +188,15 @@ export async function obtenerPrimerPendiente(url_archivo: string): Promise<any |
 }
 
 /**
- * Lista comprobantes por estado.
+ * Lista comprobantes por estado con soporte para límite configurable.
  */
-export async function listarComprobantesDb(estado?: string): Promise<any[]> {
+export async function listarComprobantesDb(estado?: string, limite: number = 200): Promise<any[]> {
   if ((prisma as any).comprobantePago?.findMany) {
     try {
       return await (prisma as any).comprobantePago.findMany({
         where: estado === 'TODOS' ? undefined : { estado },
         orderBy: { created_at: 'desc' },
-        take: 50,
+        take: limite,
         include: {
           cliente: { select: { id: true, nombre: true, rut_empresa: true } }
         }
@@ -210,7 +212,7 @@ export async function listarComprobantesDb(estado?: string): Promise<any[]> {
   if (estado && estado !== 'TODOS') {
     sql += ` WHERE cp.estado = ${escapeSqlString(estado)}`;
   }
-  sql += ` ORDER BY cp.created_at DESC LIMIT 50`;
+  sql += ` ORDER BY cp.created_at DESC LIMIT ${Number(limite) || 200}`;
 
   const rows: any[] = await prisma.$queryRawUnsafe(sql);
   return rows.map((r) => ({
@@ -220,7 +222,33 @@ export async function listarComprobantesDb(estado?: string): Promise<any[]> {
 }
 
 /**
+ * Cuenta cuántos comprobantes hay en un determinado estado (por defecto PENDIENTE).
+ */
+export async function contarComprobantesDb(estado: string = 'PENDIENTE'): Promise<number> {
+  if ((prisma as any).comprobantePago?.count) {
+    try {
+      return await (prisma as any).comprobantePago.count({
+        where: estado === 'TODOS' ? undefined : { estado }
+      });
+    } catch {}
+  }
+
+  let sql = `SELECT COUNT(*) as total FROM ComprobantePago`;
+  if (estado && estado !== 'TODOS') {
+    sql += ` WHERE estado = ${escapeSqlString(estado)}`;
+  }
+  try {
+    const rows: any[] = await prisma.$queryRawUnsafe(sql);
+    return Number(rows[0]?.total) || 0;
+  } catch {
+    return 0;
+  }
+}
+
+/**
  * Actualiza estado a CONCILIADO o RECHAZADO.
+ * Mantiene el comprobante registrado en la base de datos sin alterar
+ * automáticamente la cuenta corriente ni la deuda del cliente en el ERP.
  */
 export async function actualizarEstadoDb(
   id: string,
@@ -231,7 +259,7 @@ export async function actualizarEstadoDb(
   if ((prisma as any).comprobantePago?.update) {
     try {
       if (accion === 'CONCILIAR') {
-        return await (prisma as any).comprobantePago.update({
+        const actualizado = await (prisma as any).comprobantePago.update({
           where: { id },
           data: {
             estado: 'CONCILIADO',
@@ -240,11 +268,15 @@ export async function actualizarEstadoDb(
             banco_origen: datos.banco_origen,
             rut_emisor: datos.rut_emisor,
             cliente_id: datos.cliente_id || null,
+            observaciones_ia: datos.observaciones_ia !== undefined ? datos.observaciones_ia : undefined,
             conciliado_por_id: usuarioId,
             fecha_conciliacion: new Date()
           }
         });
+
+        return actualizado;
       }
+
       if (accion === 'RECHAZAR') {
         return await (prisma as any).comprobantePago.update({
           where: { id },
@@ -256,10 +288,12 @@ export async function actualizarEstadoDb(
           }
         });
       }
-    } catch {}
+    } catch (e) {
+      console.warn('Prisma update falló, recurriendo a SQL directo:', e);
+    }
   }
 
-  // Fallback SQL
+  // Fallback SQL directo
   if (accion === 'CONCILIAR') {
     const setClauses = [
       `estado = 'CONCILIADO'`,
@@ -271,6 +305,7 @@ export async function actualizarEstadoDb(
     if (datos.banco_origen !== undefined) setClauses.push(`banco_origen = ${escapeSqlString(datos.banco_origen)}`);
     if (datos.rut_emisor !== undefined) setClauses.push(`rut_emisor = ${escapeSqlString(datos.rut_emisor)}`);
     if (datos.cliente_id !== undefined) setClauses.push(`cliente_id = ${escapeSqlString(datos.cliente_id)}`);
+    if (datos.observaciones_ia !== undefined) setClauses.push(`observaciones_ia = ${escapeSqlString(datos.observaciones_ia)}`);
 
     await prisma.$executeRawUnsafe(`UPDATE ComprobantePago SET ${setClauses.join(', ')} WHERE id = ${escapeSqlString(id)}`);
   } else {

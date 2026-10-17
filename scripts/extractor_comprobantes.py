@@ -79,7 +79,7 @@ def extraer_movimientos_cartola_bancoestado(reader) -> List[Dict[str, Any]]:
     movimientos = []
     
     # Procesar páginas
-    for page in reader.pages:
+    for page_num, page in enumerate(reader.pages, start=1):
         t = page.extract_text()
         if not t:
             continue
@@ -133,7 +133,9 @@ def extraer_movimientos_cartola_bancoestado(reader) -> List[Dict[str, Any]]:
                     "num_operacion": num_op,
                     "rut_emisor": rut,
                     "metodo_pago": metodo,
-                    "observaciones": desc_limpia
+                    "observaciones": desc_limpia,
+                    "pagina": page_num,
+                    "linea_original": line.strip()
                 })
 
     return movimientos
